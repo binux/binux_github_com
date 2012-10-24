@@ -1,0 +1,701 @@
+
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="author" content="足兆叉虫">
+  <meta name="keywords" content="Binuxの杂货铺" />
+  <meta name="description" content="Binuxの杂货铺 - 足兆叉虫" />
+  <link rel="stylesheet" type="text/css" media="all" href="/assets/themes/ilost/style.css" />
+  <link rel="stylesheet" type="text/css" media="all" href="/assets/themes/ilost/pygments.css" />
+  <link href="atom.xml" type="application/atom+xml" rel="alternate" title="Binuxの杂货铺  &raquo; ATOM Feed">
+  <title>首页 - Binuxの杂货铺</title>
+</head>
+
+<body class="single single-format-standard">
+  <header>
+    <!--<form role="search" method="get" id="searchform" action="http://blog.binux.me/" >-->
+      <!--<div><label class="screen-reader-text" for="s">搜索：</label>-->
+        <!--<input type="text" value="" name="s" id="s" />-->
+        <!--<input type="submit" id="searchsubmit" value="搜索" />-->
+      <!--</div>-->
+    <!--</form>-->
+    <div class="hgroup">
+      <h1><a href="/">Binuxの杂货铺</a></h1>
+      <span class="hidden">足兆叉虫</span>
+      <a class="feedrss" href="http://blog.binux.me/atom.xml">ATOM Rss</a>
+    </div>
+    <div class="menu">
+      <ul>
+        <li><a href="/" title="首页">首页</a></li>
+        <li class="page_item"><a href="/archive.html">Archive</a></li>
+        <li class="page_item"><a href="/categories.html">Categories</a></li>
+        <!--<li class="page_item"><a href="/pages.html">Pages</a></li>-->
+        <li class="page_item"><a href="/tags.html">Tags</a></li>
+        <li class="page_item"><a href="/projects.html">Projects</a></li>
+      </ul>
+    </div>
+  </header>
+  <hr/>
+  <div id="content">
+    
+
+<article>
+
+  
+  <section class="post type-post status-publish format-standard hentry">
+    <div class="title">
+      <h2><a href="/2012/09/python-web-proxy-on-ba">运行于百度云平台的Python网页代理</a></h2>
+      <small>
+        <date class="date-pub" title="2012-09-07T12:28:37+08:00" datetime="2012-09-07T12:28:37+08:00" pubdate>
+          <span class="month">September</span>
+          <span class="day">07</span>
+          <span class="year">2012</span>
+        </date>, 
+                
+        
+           
+            <a href="/categories.html#未分类-ref" rel="category tag">未分类</a>
+          
+        
+      </small>
+    </div>
+    <div class="entry">
+      <p>最近看到好多求BAE邀请的帖子，至少现在免费，于是也去求了一个，然后顺带开了python权限。 随便看了下python环境，版本够新，该有的库和框架也比较齐全，fetchurl接口完全封装在内置库中，至少比起GAE来说，迁移成本低多了。沙盒也是恰到好处的感觉，初步感觉不错。 提供的服务也涉及各个方面，云存储，数据库，cache，队列该有的都有了。 fetch taskqueue能fetchurl和离线下载（支持最大4G，10小时下载）体现了百度的特色吧，感觉眼前一亮，虽然已经有百度网盘提供类似服务，但是作为开发平台，也能作出一些有意思的应用。 消息服务自带1000条短信1W封邮件每月。</p>
+
+<p>不过，百度依然体现了没有设计师的特色，界面和各个服务的开发包各不相同。。</p>
+
+<p>由于BAE政策和稳定性尚不明朗，不打算在上面做能够保存数据的应用。 于是，做一个网页代理吧</p>
+
+<p><a href='http://pyproxy.duapp.com/https://github.com/binux'>http://pyproxy.duapp.com/https://github.com/binux</a></p>
+
+<p>不得不说，百度网速也太不怎么样了吧。。 第一次写网页代理，地址改写还真麻烦，xmlhttprequest好歹是拦截了，js动态加载的元素就算了。。</p>
+
+<p>附上rewrite代码：</p>
+<div class='highlight'><pre><code class='python'><span class='c'>#!/usr/bin/env python</span>
+<span class='c'># -*- encoding: utf-8 -*-</span>
+<span class='c'># vim: set et sw=4 ts=4 sts=4 ff=unix fenc=utf8:</span>
+<span class='c'># Author: Binux&lt;17175297.hk@gmail.com&gt;</span>
+<span class='c'>#         http://binux.me</span>
+<span class='c'># Created on 2012-09-06 22:22:21</span>
+
+<span class='kn'>import</span> <span class='nn'>urlparse</span>
+<span class='kn'>import</span> <span class='nn'>re</span>
+
+<span class='n'>xmlhttprequest</span> <span class='o'>=</span> <span class='s'>&#39;&#39;&#39;XMLHttpRequest.prototype._open=XMLHttpRequest.prototype.open;</span>
+<span class='s'>XMLHttpRequest.prototype.open = function(m,u,a,us,p) {</span>
+<span class='s'>  var proxyurl=&#39;</span><span class='si'>%s</span><span class='s'>&#39;, baseurl=&#39;</span><span class='si'>%s</span><span class='s'>&#39;, a=document.createElement(&#39;a&#39;);</span>
+<span class='s'>  a.href=u;u=a.href.replace(proxyurl,&#39;&#39;);u=proxyurl+(u.indexOf(&#39;http&#39;)==0?u:baseurl+u);</span>
+<span class='s'>  if(console&amp;&amp;console.log){console.log(&quot;XMLHTTPRequest:&quot;,u);}</span>
+<span class='s'>  return this._open(m,u,a,us,p);</span>
+<span class='s'>}&#39;&#39;&#39;</span>
+<span class='n'>http_re</span> <span class='o'>=</span> <span class='n'>re</span><span class='o'>.</span><span class='n'>compile</span><span class='p'>(</span><span class='s'>&quot;https?://&quot;</span><span class='p'>,</span> <span class='n'>re</span><span class='o'>.</span><span class='n'>I</span><span class='p'>)</span>
+<span class='n'>href_re1</span> <span class='o'>=</span> <span class='n'>re</span><span class='o'>.</span><span class='n'>compile</span><span class='p'>(</span><span class='s'>&quot;((href|src|action)\s*=\s*</span><span class='se'>\&quot;</span><span class='s'>([^</span><span class='se'>\&quot;</span><span class='s'>&lt;&gt;]+)</span><span class='se'>\&quot;</span><span class='s'>)&quot;</span><span class='p'>,</span> <span class='n'>re</span><span class='o'>.</span><span class='n'>I</span><span class='p'>)</span>
+<span class='n'>href_re2</span> <span class='o'>=</span> <span class='n'>re</span><span class='o'>.</span><span class='n'>compile</span><span class='p'>(</span><span class='s'>&quot;((href|src|action)\s*=\s*</span><span class='se'>\&#39;</span><span class='s'>([^</span><span class='se'>\&#39;</span><span class='s'>&lt;&gt;]+)</span><span class='se'>\&#39;</span><span class='s'>)&quot;</span><span class='p'>,</span> <span class='n'>re</span><span class='o'>.</span><span class='n'>I</span><span class='p'>)</span>
+<span class='n'>href_re3</span> <span class='o'>=</span> <span class='n'>re</span><span class='o'>.</span><span class='n'>compile</span><span class='p'>(</span><span class='s'>&quot;((href|src|action)\s*=\s*([^</span><span class='se'>\&#39;\&quot;</span><span class='s'>\s&lt;&gt;]+))&quot;</span><span class='p'>,</span> <span class='n'>re</span><span class='o'>.</span><span class='n'>I</span><span class='p'>)</span>
+<span class='n'>xmlhttprequest_re</span> <span class='o'>=</span> <span class='n'>re</span><span class='o'>.</span><span class='n'>compile</span><span class='p'>(</span><span class='s'>&quot;&lt;script&quot;</span><span class='p'>,</span> <span class='n'>re</span><span class='o'>.</span><span class='n'>I</span><span class='p'>)</span>
+<span class='k'>def</span> <span class='nf'>rewrite</span><span class='p'>(</span><span class='n'>proxyurl</span><span class='p'>,</span> <span class='n'>baseurl</span><span class='p'>,</span> <span class='n'>content</span><span class='p'>):</span>
+    <span class='c'>#content = http_re.sub(proxyurl+&quot;\g&lt;0&gt;&quot;, content)</span>
+    <span class='k'>for</span> <span class='nb'>all</span><span class='p'>,</span> <span class='n'>href</span><span class='p'>,</span> <span class='n'>url</span> <span class='ow'>in</span> <span class='n'>href_re1</span><span class='o'>.</span><span class='n'>findall</span><span class='p'>(</span><span class='n'>content</span><span class='p'>):</span>
+        <span class='n'>rewrited_url</span> <span class='o'>=</span> <span class='n'>urlparse</span><span class='o'>.</span><span class='n'>urljoin</span><span class='p'>(</span><span class='n'>baseurl</span><span class='p'>,</span> <span class='n'>url</span><span class='p'>)</span>
+        <span class='k'>if</span> <span class='ow'>not</span> <span class='n'>rewrited_url</span><span class='o'>.</span><span class='n'>startswith</span><span class='p'>(</span><span class='n'>proxyurl</span><span class='p'>)</span> <span class='ow'>and</span> <span class='n'>rewrited_url</span><span class='o'>.</span><span class='n'>startswith</span><span class='p'>(</span><span class='s'>&quot;http&quot;</span><span class='p'>):</span>
+            <span class='n'>content</span> <span class='o'>=</span> <span class='n'>content</span><span class='o'>.</span><span class='n'>replace</span><span class='p'>(</span><span class='nb'>all</span><span class='p'>,</span> <span class='s'>&#39;</span><span class='si'>%s</span><span class='s'>=&quot;</span><span class='si'>%s%s</span><span class='s'>&quot;&#39;</span> <span class='o'>%</span> <span class='p'>(</span><span class='n'>href</span><span class='p'>,</span> <span class='n'>proxyurl</span><span class='p'>,</span> <span class='n'>rewrited_url</span><span class='p'>))</span>
+    <span class='k'>for</span> <span class='nb'>all</span><span class='p'>,</span> <span class='n'>href</span><span class='p'>,</span> <span class='n'>url</span> <span class='ow'>in</span> <span class='n'>href_re2</span><span class='o'>.</span><span class='n'>findall</span><span class='p'>(</span><span class='n'>content</span><span class='p'>):</span>
+        <span class='n'>rewrited_url</span> <span class='o'>=</span> <span class='n'>urlparse</span><span class='o'>.</span><span class='n'>urljoin</span><span class='p'>(</span><span class='n'>baseurl</span><span class='p'>,</span> <span class='n'>url</span><span class='p'>)</span>
+        <span class='k'>if</span> <span class='ow'>not</span> <span class='n'>rewrited_url</span><span class='o'>.</span><span class='n'>startswith</span><span class='p'>(</span><span class='n'>proxyurl</span><span class='p'>)</span> <span class='ow'>and</span> <span class='n'>rewrited_url</span><span class='o'>.</span><span class='n'>startswith</span><span class='p'>(</span><span class='s'>&quot;http&quot;</span><span class='p'>):</span>
+            <span class='n'>content</span> <span class='o'>=</span> <span class='n'>content</span><span class='o'>.</span><span class='n'>replace</span><span class='p'>(</span><span class='nb'>all</span><span class='p'>,</span> <span class='s'>&#39;</span><span class='si'>%s</span><span class='s'>=</span><span class='se'>\&#39;</span><span class='si'>%s%s</span><span class='se'>\&#39;</span><span class='s'>&#39;</span> <span class='o'>%</span> <span class='p'>(</span><span class='n'>href</span><span class='p'>,</span> <span class='n'>proxyurl</span><span class='p'>,</span> <span class='n'>rewrited_url</span><span class='p'>))</span>
+    <span class='k'>for</span> <span class='nb'>all</span><span class='p'>,</span> <span class='n'>href</span><span class='p'>,</span> <span class='n'>url</span> <span class='ow'>in</span> <span class='n'>href_re3</span><span class='o'>.</span><span class='n'>findall</span><span class='p'>(</span><span class='n'>content</span><span class='p'>):</span>
+        <span class='n'>rewrited_url</span> <span class='o'>=</span> <span class='n'>urlparse</span><span class='o'>.</span><span class='n'>urljoin</span><span class='p'>(</span><span class='n'>baseurl</span><span class='p'>,</span> <span class='n'>url</span><span class='p'>)</span>
+        <span class='k'>if</span> <span class='ow'>not</span> <span class='n'>rewrited_url</span><span class='o'>.</span><span class='n'>startswith</span><span class='p'>(</span><span class='n'>proxyurl</span><span class='p'>)</span> <span class='ow'>and</span> <span class='n'>rewrited_url</span><span class='o'>.</span><span class='n'>startswith</span><span class='p'>(</span><span class='s'>&quot;http&quot;</span><span class='p'>):</span>
+            <span class='n'>content</span> <span class='o'>=</span> <span class='n'>content</span><span class='o'>.</span><span class='n'>replace</span><span class='p'>(</span><span class='nb'>all</span><span class='p'>,</span> <span class='s'>&#39;</span><span class='si'>%s</span><span class='s'>=&quot;</span><span class='si'>%s%s</span><span class='s'>&quot;&#39;</span> <span class='o'>%</span> <span class='p'>(</span><span class='n'>href</span><span class='p'>,</span> <span class='n'>proxyurl</span><span class='p'>,</span> <span class='n'>rewrited_url</span><span class='p'>))</span>
+    <span class='n'>content</span> <span class='o'>=</span> <span class='n'>content</span><span class='o'>.</span><span class='n'>replace</span><span class='p'>(</span><span class='s'>&quot;&lt;/title&gt;&quot;</span><span class='p'>,</span> <span class='s'>&quot;&lt;/title&gt;&lt;script&gt;</span><span class='si'>%s</span><span class='s'>&lt;/script&gt;&quot;</span> <span class='o'>%</span> <span class='n'>xmlhttprequest</span> <span class='o'>%</span> <span class='p'>(</span><span class='n'>proxyurl</span><span class='p'>,</span> <span class='n'>urlparse</span><span class='o'>.</span><span class='n'>urljoin</span><span class='p'>(</span><span class='n'>baseurl</span><span class='p'>,</span> <span class='s'>&quot;/&quot;</span><span class='p'>)),</span> <span class='mi'>1</span><span class='p'>)</span>
+    <span class='k'>return</span> <span class='n'>content</span>
+    
+</code></pre>
+</div>
+<p><a href='https://gist.github.com/3663115'>https://gist.github.com/3663115</a></p>
+    </div>
+    <div class="post-meta">
+      标签：
+      
+      
+
+
+    
+     
+      
+      <a href="/tags.html#BAE-ref" class="tag-link" style="font-size: 9pt;">BAE</a>
+     
+      
+      <a href="/tags.html#proxy-ref" class="tag-link" style="font-size: 9pt;">proxy</a>
+     
+      
+      <a href="/tags.html#python-ref" class="tag-link" style="font-size: 16pt;">python</a>
+     
+      
+      <a href="/tags.html#webproxy-ref" class="tag-link" style="font-size: 9pt;">webproxy</a>
+    
+  
+
+
+
+
+      <div class="clear"></div>
+    </div>
+  </section>
+
+  
+  <section class="post type-post status-publish format-standard hentry">
+    <div class="title">
+      <h2><a href="/2012/08/find-larger-image-chrome-app">批量找原图 —— Chrome APP</a></h2>
+      <small>
+        <date class="date-pub" title="2012-08-20T11:50:41+08:00" datetime="2012-08-20T11:50:41+08:00" pubdate>
+          <span class="month">August</span>
+          <span class="day">20</span>
+          <span class="year">2012</span>
+        </date>, 
+                
+        
+           
+            <a href="/categories.html#未分类-ref" rel="category tag">未分类</a>
+          
+        
+      </small>
+    </div>
+    <div class="entry">
+      <p>经常在G+上收图，但是整理做桌面的时候经常发现分辨率不够 几百张图，一个个去google image search太慢了</p>
+
+<p>于是： <a href='http://blog.binux.me/wp-content/uploads/2012/08/1.png'><img alt='' src='http://blog.binux.me/wp-content/uploads/2012/08/1.png' /></a> <a href='https://chrome.google.com/webstore/detail/fbjeidmgokkiojabmnkgmcigfggeklak'>https://chrome.google.com/webstore/detail/fbjeidmgokkiojabmnkgmcigfggeklak</a></p>
+
+<p>拖入图片搜索 左键下载，右键预览</p>
+
+<p>source： <a href='https://github.com/binux/find-larger-images'>https://github.com/binux/find-larger-images</a></p>
+    </div>
+    <div class="post-meta">
+      标签：
+      
+      
+
+
+    
+     
+      
+      <a href="/tags.html#chrome app-ref" class="tag-link" style="font-size: 9pt;">chrome app</a>
+     
+      
+      <a href="/tags.html#image search-ref" class="tag-link" style="font-size: 9pt;">image search</a>
+    
+  
+
+
+
+
+      <div class="clear"></div>
+    </div>
+  </section>
+
+  
+  <section class="post type-post status-publish format-standard hentry">
+    <div class="title">
+      <h2><a href="/2012/07/thunderlixianexporter">迅雷离线地址导出器——ThunderLixianExporter</a></h2>
+      <small>
+        <date class="date-pub" title="2012-07-21T16:11:57+08:00" datetime="2012-07-21T16:11:57+08:00" pubdate>
+          <span class="month">July</span>
+          <span class="day">21</span>
+          <span class="year">2012</span>
+        </date>, 
+                
+        
+           
+            <a href="/categories.html#未分类-ref" rel="category tag">未分类</a>
+          
+        
+      </small>
+    </div>
+    <div class="entry">
+      <p>按照计划，将loli.lu的导出功能带到官方原生界面上了。毕竟无论什么工具，都不如官方的稳定，方便。 虽然有一个Userscript的油猴脚本，但是实际上主要代码是直接插入到页面中的。。等稳定了，有时间了再做成完全的本地版吧。</p>
+
+<h2 id='id1378'>功能特性：</h2>
+
+<pre><code>* 迅雷离线原生界面
+
+* 链接导出，aria2/wget下载命令导出，下载器导出文件，aria2 JSON-RPC支持
+
+* 可以关闭不用的功能
+
+* 统一的接口方便添加更多的下载方式</code></pre>
+
+<p><a href='http://blog.binux.me/wp-content/uploads/2012/07/1.png'><img alt='' src='http://blog.binux.me/wp-content/uploads/2012/07/1.png' /></a></p>
+
+<p>油猴脚本： <a href='https://raw.github.com/binux/ThunderLixianExporter/master/ThunderLixianExporter.user.js'>ThunderLixianExporter.user.js</a></p>
+
+<p>项目地址： <a href='http://binux.github.com/ThunderLixianExporter/'>http://binux.github.com/ThunderLixianExporter/</a></p>
+    </div>
+    <div class="post-meta">
+      标签：
+      
+      
+
+
+    
+     
+      
+      <a href="/tags.html#aria2-ref" class="tag-link" style="font-size: 11pt;">aria2</a>
+     
+      
+      <a href="/tags.html#Linux-ref" class="tag-link" style="font-size: 19pt;">Linux</a>
+     
+      
+      <a href="/tags.html#userscript-ref" class="tag-link" style="font-size: 9pt;">userscript</a>
+     
+      
+      <a href="/tags.html#YAAW-ref" class="tag-link" style="font-size: 10pt;">YAAW</a>
+     
+      
+      <a href="/tags.html#导出-ref" class="tag-link" style="font-size: 9pt;">导出</a>
+     
+      
+      <a href="/tags.html#离线地址-ref" class="tag-link" style="font-size: 9pt;">离线地址</a>
+     
+      
+      <a href="/tags.html#迅雷离线-ref" class="tag-link" style="font-size: 9pt;">迅雷离线</a>
+    
+  
+
+
+
+
+      <div class="clear"></div>
+    </div>
+  </section>
+
+  
+  <section class="post type-post status-publish format-standard hentry">
+    <div class="title">
+      <h2><a href="/2012/07/add_url_from_loli-lu_to_aria2">从LOLI.LU直接添加资源到ARIA2</a></h2>
+      <small>
+        <date class="date-pub" title="2012-07-15T21:57:17+08:00" datetime="2012-07-15T21:57:17+08:00" pubdate>
+          <span class="month">July</span>
+          <span class="day">15</span>
+          <span class="year">2012</span>
+        </date>, 
+                
+        
+           
+            <a href="/categories.html#未分类-ref" rel="category tag">未分类</a>
+          
+        
+      </small>
+    </div>
+    <div class="entry">
+      <p>首先参照YAAW以RPC模式启动ARIA2，保证YAAW能正常工作。</p>
+
+<p>在LOLI.LU中随便点开一个一个资源 &gt; 批量下载。<strong>右键点击</strong> 自定义，填入以下脚本（注意需要替换JSONRPC_PATH，和YAAW中的一样）：</p>
+<div class='highlight'><pre><code class='javascript'><span class='kd'>function</span> <span class='nx'>to_aria2</span><span class='p'>(</span><span class='nx'>taskname</span><span class='p'>,</span> <span class='nx'>links</span><span class='p'>,</span> <span class='nx'>cookie</span><span class='p'>)</span> <span class='p'>{</span>
+  <span class='nx'>$</span><span class='p'>.</span><span class='nx'>getScript</span><span class='p'>(</span><span class='s2'>&quot;https://raw.github.com/gist/3116833/aria2jsonrpc.js&quot;</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>()</span> <span class='p'>{</span>
+    <span class='kd'>var</span> <span class='nx'>aria2</span> <span class='o'>=</span> <span class='k'>new</span> <span class='nx'>ARIA2</span><span class='p'>(</span><span class='s2'>&quot;&lt;your rpc path&gt;&quot;</span><span class='p'>);</span>
+    <span class='nx'>$</span><span class='p'>.</span><span class='nx'>each</span><span class='p'>(</span><span class='nx'>links</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>i</span><span class='p'>,</span> <span class='nx'>n</span><span class='p'>)</span> <span class='p'>{</span>
+      <span class='nx'>aria2</span><span class='p'>.</span><span class='nx'>addUri</span><span class='p'>(</span><span class='nx'>n</span><span class='p'>.</span><span class='nx'>url</span><span class='p'>,</span> <span class='p'>{</span><span class='nx'>out</span><span class='o'>:</span> <span class='nx'>n</span><span class='p'>.</span><span class='nx'>title</span><span class='p'>,</span> <span class='nx'>header</span><span class='o'>:</span> <span class='s1'>&#39;Cookie: &#39;</span><span class='o'>+</span><span class='nx'>cookie</span><span class='p'>});</span>
+    <span class='p'>});</span>
+  <span class='p'>});</span>
+
+  <span class='kd'>var</span> <span class='nx'>str</span> <span class='o'>=</span> <span class='s2'>&quot;&quot;</span><span class='p'>;</span>
+  <span class='nx'>str</span> <span class='o'>+=</span> <span class='s2'>&quot;taskname = &quot;</span><span class='o'>+</span><span class='nx'>taskname</span><span class='o'>+</span><span class='s2'>&quot;\n&quot;</span><span class='p'>;</span>
+  <span class='nx'>str</span> <span class='o'>+=</span> <span class='s2'>&quot;cookie = &quot;</span><span class='o'>+</span><span class='nx'>cookie</span><span class='o'>+</span><span class='s2'>&quot;\n&quot;</span><span class='p'>;</span>
+  <span class='nx'>str</span> <span class='o'>+=</span> <span class='s2'>&quot;==========================\n&quot;</span><span class='p'>;</span>
+  <span class='nx'>$</span><span class='p'>.</span><span class='nx'>each</span><span class='p'>(</span><span class='nx'>links</span><span class='p'>,</span> <span class='kd'>function</span><span class='p'>(</span><span class='nx'>i</span><span class='p'>,</span> <span class='nx'>n</span><span class='p'>)</span> <span class='p'>{</span>
+    <span class='nx'>str</span> <span class='o'>+=</span> <span class='s2'>&quot;links[&quot;</span><span class='o'>+</span><span class='nx'>i</span><span class='o'>+</span><span class='s2'>&quot;].title = &quot;</span><span class='o'>+</span><span class='nx'>n</span><span class='p'>.</span><span class='nx'>title</span><span class='o'>+</span><span class='s2'>&quot;\n&quot;</span><span class='p'>;</span>
+  <span class='p'>});</span>
+  <span class='k'>return</span> <span class='nx'>str</span><span class='p'>;</span>
+<span class='p'>}</span>
+</code></pre>
+</div>
+<p>点击保存，点自定义，到YAAW中看是否添加成功了吧。</p>
+    </div>
+    <div class="post-meta">
+      标签：
+      
+      
+
+
+    
+     
+      
+      <a href="/tags.html#arai2-ref" class="tag-link" style="font-size: 9pt;">arai2</a>
+     
+      
+      <a href="/tags.html#Linux-ref" class="tag-link" style="font-size: 19pt;">Linux</a>
+     
+      
+      <a href="/tags.html#loli.lu-ref" class="tag-link" style="font-size: 11pt;">loli.lu</a>
+    
+  
+
+
+
+
+      <div class="clear"></div>
+    </div>
+  </section>
+
+  
+  <section class="post type-post status-publish format-standard hentry">
+    <div class="title">
+      <h2><a href="/2012/06/aria2_yaaw">aria2 + web前端 部署指南</a></h2>
+      <small>
+        <date class="date-pub" title="2012-06-22T20:36:00+08:00" datetime="2012-06-22T20:36:00+08:00" pubdate>
+          <span class="month">June</span>
+          <span class="day">22</span>
+          <span class="year">2012</span>
+        </date>, 
+                
+        
+           
+            <a href="/categories.html#未分类-ref" rel="category tag">未分类</a>
+          
+        
+      </small>
+    </div>
+    <div class="entry">
+      <p>更新了openwrt的固件版本之后，我的wr703n上的aria2终于可以开启rpc模式了。然后就是WNR3500L到货，虽然不能装openwrt，但是有optware一样ok。 虽然他们的平台各不相同，但是因为YAAW是没有依赖的，实际上都是分为三步：</p>
+
+<p>1. 挂载U盘</p>
+
+<p>2. 安装aria2</p>
+
+<p>3. 打开<a href='http://binux.github.com/yaaw/'>YAAW</a></p>
+
+<p>非常简单没有压力。</p>
+
+<h3 id='u'>第一步：挂载U盘</h3>
+
+<p><strong>openwrt:</strong> <a href='http://wiki.openwrt.org/zh-cn/doc/howto/usb.storage'>http://wiki.openwrt.org/zh-cn/doc/howto/usb.storage</a><br /> <strong>dd-wrt：</strong> 刷一个带USB的固件，固件中自动mount到/opt<br /> <strong>tomato：</strong> 刷一个带USB的固件，固件中自动mount到/opt<br /></p>
+
+<h3 id='aria2'>第二步：安装aria2</h3>
+
+<p><strong>openwrt:</strong> <code>opkg update &amp;&amp; opkg install aria2</code><br /> <strong>dd-wrt:</strong> <code>wget http://www.3iii.dk/linux/optware/optware-install-ddwrt.sh -O - | tr -d &#39;\r&#39; &gt; /tmp/optware-install.sh &amp;&amp; sh /tmp/optware-install.sh &amp;&amp; ipkg-opt update &amp;&amp; ipkg-opt install aria2</code><br /> <strong>tomato:</strong> <a href='http://tomatousb.org/tut:optware-installation'>http://tomatousb.org/tut:optware-installation</a><br /></p>
+
+<p>启动命令： <code>aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c</code><br /> 如果没有问题的话，可以将 <code>aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c -D</code> 加入开机启动<br /> 如果有问题的话，看输出的提示，有可能要加入<code>--event-poll=select</code>什么的参数<br /></p>
+
+<h3 id='yaaw'>第三步：打开<a href='http://binux.github.com/yaaw/'>YAAW</a></h3>
+
+<p>点击<a href='http://binux.github.com/yaaw/demo/'>demo</a>，在扳手处填入path： <code>http://&lt;ip_of_your_route&gt;:6800/jsonrpc</code>， 保存</p>
+
+<p>一些有用的aria2参数</p>
+
+<p>-i &#60;file&#62; 导入从loli.lu导出的aria2文件<br /> -j &#60;num&#62; 同时下载数限制，由于路由和总带宽限制，建议设为3（默认5）<br /> -x &#60;num&#62; 同一个服务器的同时链接数，建议为5-10（默认1）<br /> -k &#60;size&#62; 文件最小分片，文件最多的线程数取决于能分出多少片，当文件小于最小分片大小时，只能开出一个线程，建议为2M（默认20M）<br /> -s &#60;num&#62; 一个文件最多用几个线程下载，建议为8-10（默认5）<br /> &#8211;file-allocation &#60;none,prealloc,falloc&#62; 文件预分配，如果USB设备是U盘，SD卡，预分配浪费时间，建议为none（默认prealloc)<br /></p>
+
+<p>更多参数请访问 <a href='http://aria2.sourceforge.net/manual/en/html/'>Aria2 Manual</a></p>
+    </div>
+    <div class="post-meta">
+      标签：
+      
+      
+
+
+    
+     
+      
+      <a href="/tags.html#aria2-ref" class="tag-link" style="font-size: 11pt;">aria2</a>
+     
+      
+      <a href="/tags.html#dd-wrt-ref" class="tag-link" style="font-size: 9pt;">dd-wrt</a>
+     
+      
+      <a href="/tags.html#Linux-ref" class="tag-link" style="font-size: 19pt;">Linux</a>
+     
+      
+      <a href="/tags.html#openwrt-ref" class="tag-link" style="font-size: 9pt;">openwrt</a>
+     
+      
+      <a href="/tags.html#tomato-ref" class="tag-link" style="font-size: 9pt;">tomato</a>
+     
+      
+      <a href="/tags.html#YAAW-ref" class="tag-link" style="font-size: 10pt;">YAAW</a>
+    
+  
+
+
+
+
+      <div class="clear"></div>
+    </div>
+  </section>
+
+<nav class="navigation">
+  <a href="/archive.html">More...</a>
+</nav>
+</article>
+
+    <aside>
+      <ul id="side" class="clear">
+        <li id="links-2" class="widget widget_links"><h3 class="widgettitle">About Me</h3>
+          <ul class='xoxo blogroll'>
+            <li><a href="http://github.com/binux/" target="_blank" rel="me">github.com/binux</a></li>
+            <li><a href="" target="_blank" rel="me">gplus.to/binux</a></li>
+          </ul>
+        </li>
+        <!--<li id="tag_cloud-2" class="widget widget_tag_cloud">-->
+          <!--<h3 class="widgettitle">标签</h3>-->
+          <!--<div class="tagcloud">-->
+            <!--<ul>-->
+              <!---->
+              <!--
+
+
+    
+     
+      
+      <a href="/tags.html#getpy-ref" class="tag-link" style="font-size: 9pt;">getpy</a>
+     
+      
+      <a href="/tags.html#python-ref" class="tag-link" style="font-size: 16pt;">python</a>
+     
+      
+      <a href="/tags.html#迅雷离线-ref" class="tag-link" style="font-size: 9pt;">迅雷离线</a>
+     
+      
+      <a href="/tags.html#导出-ref" class="tag-link" style="font-size: 9pt;">导出</a>
+     
+      
+      <a href="/tags.html#web-ref" class="tag-link" style="font-size: 9pt;">web</a>
+     
+      
+      <a href="/tags.html#aria2-ref" class="tag-link" style="font-size: 11pt;">aria2</a>
+     
+      
+      <a href="/tags.html#hash-ref" class="tag-link" style="font-size: 9pt;">hash</a>
+     
+      
+      <a href="/tags.html#html-ref" class="tag-link" style="font-size: 9pt;">html</a>
+     
+      
+      <a href="/tags.html#pptp-ref" class="tag-link" style="font-size: 9pt;">pptp</a>
+     
+      
+      <a href="/tags.html#BAE-ref" class="tag-link" style="font-size: 9pt;">BAE</a>
+     
+      
+      <a href="/tags.html#chrome app-ref" class="tag-link" style="font-size: 9pt;">chrome app</a>
+     
+      
+      <a href="/tags.html#arai2-ref" class="tag-link" style="font-size: 9pt;">arai2</a>
+     
+      
+      <a href="/tags.html#bash-ref" class="tag-link" style="font-size: 9pt;">bash</a>
+     
+      
+      <a href="/tags.html#xunlei-ref" class="tag-link" style="font-size: 12pt;">xunlei</a>
+     
+      
+      <a href="/tags.html#javascript-ref" class="tag-link" style="font-size: 9pt;">javascript</a>
+     
+      
+      <a href="/tags.html#Valgrind-ref" class="tag-link" style="font-size: 9pt;">Valgrind</a>
+     
+      
+      <a href="/tags.html#frontend-ref" class="tag-link" style="font-size: 9pt;">frontend</a>
+     
+      
+      <a href="/tags.html#loli.lu-ref" class="tag-link" style="font-size: 11pt;">loli.lu</a>
+     
+      
+      <a href="/tags.html#IDM-ref" class="tag-link" style="font-size: 9pt;">IDM</a>
+     
+      
+      <a href="/tags.html#fuck-ref" class="tag-link" style="font-size: 9pt;">fuck</a>
+     
+      
+      <a href="/tags.html#文字截断-ref" class="tag-link" style="font-size: 9pt;">文字截断</a>
+     
+      
+      <a href="/tags.html#sqlalchemy-ref" class="tag-link" style="font-size: 9pt;">sqlalchemy</a>
+     
+      
+      <a href="/tags.html#baidu 404-ref" class="tag-link" style="font-size: 9pt;">baidu 404</a>
+     
+      
+      <a href="/tags.html#wireshark c++ python windows 编译-ref" class="tag-link" style="font-size: 9pt;">wireshark c++ python windows 编译</a>
+     
+      
+      <a href="/tags.html#tools-ref" class="tag-link" style="font-size: 12pt;">tools</a>
+     
+      
+      <a href="/tags.html#vpn-ref" class="tag-link" style="font-size: 9pt;">vpn</a>
+     
+      
+      <a href="/tags.html#he.net-ref" class="tag-link" style="font-size: 9pt;">he.net</a>
+     
+      
+      <a href="/tags.html#Linux-ref" class="tag-link" style="font-size: 19pt;">Linux</a>
+     
+      
+      <a href="/tags.html#C++-ref" class="tag-link" style="font-size: 9pt;">C++</a>
+     
+      
+      <a href="/tags.html#汉语拼音-ref" class="tag-link" style="font-size: 9pt;">汉语拼音</a>
+     
+      
+      <a href="/tags.html#themes-ref" class="tag-link" style="font-size: 9pt;">themes</a>
+     
+      
+      <a href="/tags.html#YAAW-ref" class="tag-link" style="font-size: 10pt;">YAAW</a>
+     
+      
+      <a href="/tags.html#webproxy-ref" class="tag-link" style="font-size: 9pt;">webproxy</a>
+     
+      
+      <a href="/tags.html#image search-ref" class="tag-link" style="font-size: 9pt;">image search</a>
+     
+      
+      <a href="/tags.html#离线地址-ref" class="tag-link" style="font-size: 9pt;">离线地址</a>
+     
+      
+      <a href="/tags.html#userscript-ref" class="tag-link" style="font-size: 9pt;">userscript</a>
+     
+      
+      <a href="/tags.html#tomato-ref" class="tag-link" style="font-size: 9pt;">tomato</a>
+     
+      
+      <a href="/tags.html#dd-wrt-ref" class="tag-link" style="font-size: 9pt;">dd-wrt</a>
+     
+      
+      <a href="/tags.html#js-ref" class="tag-link" style="font-size: 9pt;">js</a>
+     
+      
+      <a href="/tags.html#pptpd-ref" class="tag-link" style="font-size: 9pt;">pptpd</a>
+     
+      
+      <a href="/tags.html#arch-ref" class="tag-link" style="font-size: 9pt;">arch</a>
+     
+      
+      <a href="/tags.html#linux gentoo-ref" class="tag-link" style="font-size: 9pt;">linux gentoo</a>
+     
+      
+      <a href="/tags.html#proxy-ref" class="tag-link" style="font-size: 9pt;">proxy</a>
+     
+      
+      <a href="/tags.html#archlinux-ref" class="tag-link" style="font-size: 9pt;">archlinux</a>
+     
+      
+      <a href="/tags.html#vim-ref" class="tag-link" style="font-size: 9pt;">vim</a>
+     
+      
+      <a href="/tags.html#shell-ref" class="tag-link" style="font-size: 9pt;">shell</a>
+     
+      
+      <a href="/tags.html#nginx-ref" class="tag-link" style="font-size: 9pt;">nginx</a>
+     
+      
+      <a href="/tags.html#lixian-ref" class="tag-link" style="font-size: 10pt;">lixian</a>
+     
+      
+      <a href="/tags.html#chinese_digit-ref" class="tag-link" style="font-size: 9pt;">chinese_digit</a>
+     
+      
+      <a href="/tags.html#css selector-ref" class="tag-link" style="font-size: 9pt;">css selector</a>
+     
+      
+      <a href="/tags.html#css-ref" class="tag-link" style="font-size: 12pt;">css</a>
+     
+      
+      <a href="/tags.html#flexget-ref" class="tag-link" style="font-size: 10pt;">flexget</a>
+     
+      
+      <a href="/tags.html#multiprocessing-ref" class="tag-link" style="font-size: 9pt;">multiprocessing</a>
+     
+      
+      <a href="/tags.html#gentoo rtorrent-ref" class="tag-link" style="font-size: 9pt;">gentoo rtorrent</a>
+     
+      
+      <a href="/tags.html#openwrt-ref" class="tag-link" style="font-size: 9pt;">openwrt</a>
+     
+      
+      <a href="/tags.html#dropbox-ref" class="tag-link" style="font-size: 9pt;">dropbox</a>
+     
+      
+      <a href="/tags.html#web前段-ref" class="tag-link" style="font-size: 9pt;">web前段</a>
+     
+      
+      <a href="/tags.html#ie-ref" class="tag-link" style="font-size: 9pt;">ie</a>
+     
+      
+      <a href="/tags.html#pool-ref" class="tag-link" style="font-size: 9pt;">pool</a>
+     
+      
+      <a href="/tags.html#pprint-ref" class="tag-link" style="font-size: 9pt;">pprint</a>
+     
+      
+      <a href="/tags.html#gentoo-ref" class="tag-link" style="font-size: 10pt;">gentoo</a>
+    
+  
+
+
+
+-->
+            <!--</ul>-->
+          <!--</div>-->
+        <!--</li>-->
+        <li id="recent-posts-2" class="widget widget_recent_entries">
+          <h3 class="widgettitle">近期文章</h3>
+          <ul>
+            
+            <li><a href="/2012/09/python-web-proxy-on-ba" title="运行于百度云平台的Python网页代理">运行于百度云平台的Python网页代理</a></li>
+            
+            <li><a href="/2012/08/find-larger-image-chrome-app" title="批量找原图 —— Chrome APP">批量找原图 —— Chrome APP</a></li>
+            
+            <li><a href="/2012/07/thunderlixianexporter" title="迅雷离线地址导出器——ThunderLixianExporter">迅雷离线地址导出器——ThunderLixianExporter</a></li>
+            
+            <li><a href="/2012/07/add_url_from_loli-lu_to_aria2" title="从LOLI.LU直接添加资源到ARIA2">从LOLI.LU直接添加资源到ARIA2</a></li>
+            
+            <li><a href="/2012/06/aria2_yaaw" title="aria2 + web前端 部署指南">aria2 + web前端 部署指南</a></li>
+            
+            <li><a href="/2012/05/fancybox-xsse6bc8fe6b49ee5afbce887b4htmle8bdace4b989e697a0e69588" title="fancybox xss漏洞导致html转义无效">fancybox xss漏洞导致html转义无效</a></li>
+            
+            <li><a href="/2012/05/yet-another-aria2-web-frontend" title="Yet Another Aria2 Web Frontend">Yet Another Aria2 Web Frontend</a></li>
+            
+            <li><a href="/2012/04/dropbox-uploader-script" title="Dropbox Uploader Script">Dropbox Uploader Script</a></li>
+            
+            <li><a href="/2012/03/hash_algorithm_of_xunlei" title="迅雷Hash算法分析">迅雷Hash算法分析</a></li>
+            
+            <li><a href="/2012/03/jshare" title="一个网盘的终结(？)及由其而生的思考的思考">一个网盘的终结(？)及由其而生的思考的思考</a></li>
+            
+          </ul>
+        </li>
+        <!--<li id="recent-comments-2" class="widget widget_recent_comments">-->
+          <!--<h3 class="widgettitle">近期评论</h3>-->
+          <!--<ul id="recentcomments">-->
+            <!--<li class="recentcomments"><a href="" rel='external nofollow' class='url'></a> 发表在《<a href=""></a>》</li>-->
+          <!--</ul>-->
+        <!--</li>-->
+        <!--<li id="archives-2" class="widget widget_archive">-->
+          <!--<h3 class="widgettitle">文章归档</h3>-->
+          <!--<ul>-->
+            <!--<li><a href='http://blog.binux.me/2012/09/' title='2012 年九月'>2012 年九月</a></li>-->
+          <!--</ul>-->
+        <!--</li>-->
+        <!--<li id="categories-2" class="widget widget_categories">-->
+          <!--<h3 class="widgettitle">分类目录</h3>-->
+          <!--<ul>-->
+            <!--<li class="cat-item cat-item-1"><a href="http://blog.binux.me/category/uncategorized/" title="查看 未分类 下的所有文章">未分类</a></li>-->
+          <!--</ul>-->
+        <!--</li>-->
+      </ul>
+    </aside>
+    <div class="clear"></div>
+  </div>
+  <hr/>
+  <footer>
+    <div>
+      <p class="line">
+        <span class="alignright">
+          <a href="/" title="Binuxの杂货铺">首页</a> &brvbar; <a href="/atom.xml">RSS 订阅</a> &brvbar; <a href="/sitemap.txt">Sitemap</a>
+        </span>
+        iLost theme  &brvbar; Designed by <a href="http://xuui.net/">Xu.hel</a> in ChengDu. Forked by <a href="http://binux.me/">binux</a>.
+      </p>
+      <p><span class="alignright">Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a></span>&copy; 版权所有 2011-2013 <a href="http://blog.binux.me" title="Binuxの杂货铺" rel="home">Binuxの杂货铺</a></p>
+    </div>
+  </footer>
+</body>
+</html>
+

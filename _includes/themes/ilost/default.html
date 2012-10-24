@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="author" content="{{ site.author.name }}">
+  <meta name="keywords" content="{{ site.title }}" />
+  <meta name="description" content="{{ site.title }} - {{ site.author.name }}" />
+  <link rel="stylesheet" type="text/css" media="all" href="{{ ASSET_PATH }}/style.css" />
+  <link rel="stylesheet" type="text/css" media="all" href="{{ ASSET_PATH }}/pygments.css" />
+  <link href="atom.xml" type="application/atom+xml" rel="alternate" title="{{ site.title }}  &raquo; ATOM Feed">
+  <title>{{ page.title }} - {{ site.title }}</title>
+</head>
+
+<body class="single single-format-standard">
+  <header>
+    <!--<form role="search" method="get" id="searchform" action="http://blog.binux.me/" >-->
+      <!--<div><label class="screen-reader-text" for="s">搜索：</label>-->
+        <!--<input type="text" value="" name="s" id="s" />-->
+        <!--<input type="submit" id="searchsubmit" value="搜索" />-->
+      <!--</div>-->
+    <!--</form>-->
+    <div class="hgroup">
+      <h1><a href="/">{{ site.title }}</a></h1>
+      <span class="hidden">{{ site.author.name }}</span>
+      <a class="feedrss" href="http://blog.binux.me/atom.xml">ATOM Rss</a>
+    </div>
+    <div class="menu">
+      <ul>
+        <li><a href="/" title="首页">首页</a></li>
+        <li class="page_item"><a href="/archive.html">Archive</a></li>
+        <li class="page_item"><a href="/categories.html">Categories</a></li>
+        <!--<li class="page_item"><a href="/pages.html">Pages</a></li>-->
+        <li class="page_item"><a href="/tags.html">Tags</a></li>
+        <li class="page_item"><a href="/projects.html">Projects</a></li>
+      </ul>
+    </div>
+  </header>
+  <hr/>
+  <div id="content">
+    {{ content }}
+    <aside>
+      <ul id="side" class="clear">
+        <li id="links-2" class="widget widget_links"><h3 class="widgettitle">About Me</h3>
+          <ul class='xoxo blogroll'>
+            <li><a href="http://github.com/{{ site.author.github }}/" target="_blank" rel="me">github.com/{{ site.author.github }}</a></li>
+            <li><a href="{{ http://gplus.to/{{ site.author.gplus }}" target="_blank" rel="me">gplus.to/{{ site.author.gplus }}</a></li>
+          </ul>
+        </li>
+        <!--<li id="tag_cloud-2" class="widget widget_tag_cloud">-->
+          <!--<h3 class="widgettitle">标签</h3>-->
+          <!--<div class="tagcloud">-->
+            <!--<ul>-->
+              <!--{% assign tags_list = site.tags %}-->
+              <!--{% include JB/tags_list %}-->
+            <!--</ul>-->
+          <!--</div>-->
+        <!--</li>-->
+        <li id="recent-posts-2" class="widget widget_recent_entries">
+          <h3 class="widgettitle">近期文章</h3>
+          <ul>
+            {% for post in site.posts limit:10 %}
+            <li><a href="{{ post.url }}" title="{{ post.title }}">{{ post.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </li>
+        <!--<li id="recent-comments-2" class="widget widget_recent_comments">-->
+          <!--<h3 class="widgettitle">近期评论</h3>-->
+          <!--<ul id="recentcomments">-->
+            <!--<li class="recentcomments"><a href="" rel='external nofollow' class='url'></a> 发表在《<a href=""></a>》</li>-->
+          <!--</ul>-->
+        <!--</li>-->
+        <!--<li id="archives-2" class="widget widget_archive">-->
+          <!--<h3 class="widgettitle">文章归档</h3>-->
+          <!--<ul>-->
+            <!--<li><a href='http://blog.binux.me/2012/09/' title='2012 年九月'>2012 年九月</a></li>-->
+          <!--</ul>-->
+        <!--</li>-->
+        <!--<li id="categories-2" class="widget widget_categories">-->
+          <!--<h3 class="widgettitle">分类目录</h3>-->
+          <!--<ul>-->
+            <!--<li class="cat-item cat-item-1"><a href="http://blog.binux.me/category/uncategorized/" title="查看 未分类 下的所有文章">未分类</a></li>-->
+          <!--</ul>-->
+        <!--</li>-->
+      </ul>
+    </aside>
+    <div class="clear"></div>
+  </div>
+  <hr/>
+  <footer>
+    <div>
+      <p class="line">
+        <span class="alignright">
+          <a href="/" title="{{ site.title }}">首页</a> &brvbar; <a href="/atom.xml">RSS 订阅</a> &brvbar; <a href="/sitemap.txt">Sitemap</a>
+        </span>
+        iLost theme  &brvbar; Designed by <a href="http://xuui.net/">Xu.hel</a> in ChengDu. Forked by <a href="http://binux.me/">binux</a>.
+      </p>
+      <p><span class="alignright">Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a></span>&copy; 版权所有 2011-2013 <a href="{{ site.production_url }}" title="{{ site.title }}" rel="home">{{ site.title }}</a></p>
+    </div>
+  </footer>
+</body>
+</html>

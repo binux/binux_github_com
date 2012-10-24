@@ -1,0 +1,201 @@
+---
+comments: true
+date: 2011-11-18 09:12:06
+layout: post
+slug: '%e4%bd%bf%e7%94%a8valgrind%e6%a3%80%e6%b5%8b%e5%86%85%e5%ad%98%e6%b3%84%e6%bc%8f'
+title: 使用Valgrind检测内存泄漏
+wordpress_id: 23001
+categories:
+- 未分类
+tags:
+- C++
+- Linux
+- Valgrind
+---
+
+## valgrind_介绍
+
+
+
+
+[Valgrind](http://valgrind.org/)是一个GPL的软件，用于Linux（For x86, amd64 and ppc32）程序的内存调试和代码剖析。你可以在它的环境中运行你的程序来监视内存的使用情况，比如C 语言中的malloc和free或者 C++中的new和 delete。使用Valgrind的工具包，你可以自动的检测许多内存管理和线程的bug，避免花费太多的时间在bug寻找上，使得你的程序更加稳固。
+
+
+
+
+## valgrind的主要功能
+
+
+
+
+Valgrind工具包包含多个工具，如Memcheck,Cachegrind,Helgrind, Callgrind，Massif。下面分别介绍个工具的作用：
+
+
+
+
+Memcheck 工具主要检查下面的程序错误：
+
+
+
+
+
+
+  * 未初始化的内存 (Use of uninitialised memory)
+
+
+  * 已经释放了的内存 (Reading/writing memory after it has been free'd)
+
+
+  * 超过 malloc分配的内存空间(Reading/writing off the end of malloc'd blocks)
+
+
+  * 对堆栈的非法访问 (Reading/writing inappropriate areas on the stack)
+
+
+  * 申请的空间是否有释放 (Memory leaks - where pointers to malloc'd blocks are lost forever)
+
+
+  * malloc/free/new/delete申请和释放内存的匹配(Mismatched use of malloc/new/new [] vs free/delete/delete [])
+
+
+  * src和dst的重叠(Overlapping src and dst pointers in memcpy() and related functions)
+
+
+
+
+============= 我不是分割线 ===============
+
+
+
+
+最近发现我们的爬虫的内存泄漏现象已经达到完全无法接受的地步，泄漏的内存将整个内存使用完之后，继续占用swap，直到整个系统无相应，负债超过了60。。直到swap再也没有空间，内核将爬虫的程序干掉了事。。
+
+
+
+
+于是检查内存泄漏不得不立即执行，稍微google了一下，决定使用Valgrind
+
+
+
+
+下载编译安装毫无压力，就不说了，毫无意义。
+
+
+
+
+之后就是使用了。由于Valgrind能够直接对二进制的程序进行检测，完全不需要修改代码，连重新编译都不需要，所以直接上。  
+
+在这里犯了个错误，由于程序是通过启动脚本启动的，于是我就valgrind --tool=memcheck --leak-check=full 结果完全都是没有内存泄漏。。  
+
+在脚本里面程序是fork执行的，这样没法监控吧，于是这样：
+
+
+
+
+
+
+    
+    valgrind --tool=memcheck --leak-check=full bin/crawler --bigtable_implementation=Mysql --mysql_host=localhost $*
+
+
+
+
+
+
+
+OK，程序运行明显变慢了，过一段时间后CUT掉，输出好多。。于是
+
+
+
+
+
+
+    
+    valgrind --tool=memcheck --leak-check=full bin/crawler --bigtable_implementation=Mysql --mysql_host=localhost $* 2>&1 | tee memcheck
+
+
+
+
+得到如下的信息：
+
+
+
+    
+    ==18073== Memcheck, a memory error detector
+    ==18073== Copyright (C) 2002-2009, and GNU GPL'd, by Julian Seward et al.
+    ==18073== Using Valgrind-3.5.0 and LibVEX; rerun with -h for copyright info
+    ==18073== Command: bin/crawler --bigtable_implementation=Mysql --mysql_host=localhost
+    ==18073==
+    libprotobuf INFO srcs/mysql_table_client.cc:98] Database Selected.
+    libprotobuf INFO srcs/mysql_table_client.cc:103] Initialized successfully.
+    libprotobuf INFO srcs/mysql_table_client.cc:98] Database Selected.
+    libprotobuf INFO srcs/mysql_table_client.cc:103] Initialized successfully.
+    libprotobuf INFO srcs/crawl_queue.cc:48] loading processing tasks ...
+    libprotobuf INFO srcs/crawl_queue.cc:57] loading queue tasks ...
+    libprotobuf INFO srcs/crawl_queue.cc:66] loading delayed tasks ...
+    libprotobuf INFO srcs/crawl_queue.cc:74] loaded 16750 tasks ...
+    libprotobuf INFO srcs/crawl_queue.cc:77] initialize buckets ...
+    libprotobuf INFO srcs/redis_client.cc:78] RedisClient::Initialize...
+    libprotobuf INFO srcs/js_interpreter.cc:204] JavaScript-C 1.8.5 2011-03-31
+    libprotobuf INFO srcs/js_interpreter.cc:601] Setup runtime successfully.
+    
+    ................
+    
+    ==18073== 7,592 bytes in 785 blocks are definitely lost in loss record 1,498 of 1,615
+    ==18073==    at 0x4A05E1C: malloc (vg_replace_malloc.c:195)
+    ==18073==    by 0x4FD59B2: js::VectorToIdArray(JSContext*, js::AutoIdVector&, JSIdArray**) (in /usr/local/lib/libmozjs185.so.1.0.0)
+    ==18073==    by 0x4F4E262: JS_Enumerate (in /usr/local/lib/libmozjs185.so.1.0.0)
+    ==18073==    by 0x4293D7: hypercrawler::JSInterpreter::GetObjectStringArrayProperty(JSObject*, std::string const&, std::map, std::allocat
+    or > >*) (js_interpreter.cc:361)
+    ==18073==    by 0x429E96: hypercrawler::JSInterpreter::FinalizeReturnObject(unsigned long, hypercrawler::CallParserResponse*) (js_interpreter.cc:517)
+    ==18073==    by 0x42AA59: hypercrawler::JSInterpreter::CallFunction(std::string const&, hypercrawler::CallParserRequest const&, hypercrawler::CallParserResponse*) (js_interpreter.cc:567)
+    ==18073==    by 0x45974C: hypercrawler::ProcessCrawlRequest(hypercrawler::CrawlRequest&, hypercrawler::PuppetExecutionEngine&, std::string&, ypercrawler::CrawlResponse&, hyperindex::Document&, std::vector >&, std::string) (crawling_process_request.cc:170)
+    ==18073==    by 0x446B06: hypercrawler::CrawlingWorker::operator()() (crawling_worker_service.cc:186)
+    ==18073==    by 0x62C8D3F: thread_proxy (in /usr/lib/libboost_thread-mt.so.1.42.0)
+    ==18073==    by 0x3546C0673C: start_thread (in /lib64/libpthread-2.5.so)
+    ==18073==    by 0x35460D44BC: clone (in /lib64/libc-2.5.so)
+    ==18073==
+    ==18073==
+    ==18073== LEAK SUMMARY:
+    ==18073==    definitely lost: 90,928 bytes in 8,466 blocks
+    ==18073==    indirectly lost: 0 bytes in 0 blocks
+    ==18073==      possibly lost: 4,077,170 bytes in 38,041 blocks
+    ==18073==    still reachable: 21,575,205 bytes in 70,837 blocks
+    ==18073==         suppressed: 0 bytes in 0 blocks
+    ==18073== Reachable blocks (those to which a pointer was found) are not shown.
+    ==18073== To see them, rerun with: --leak-check=full --show-reachable=yes
+    ==18073==
+    ==18073== For counts of detected and suppressed errors, rerun with: -v
+    ==18073== ERROR SUMMARY: 390 errors from 259 contexts (suppressed: 4 from 4)
+
+
+
+
+**definitely lost: 90,928 bytes in 8,466 blocks**
+
+
+
+
+这个就是表示存在内存泄漏，而因为是用的SpiderMonkey存在自己内存回收机制，并且是非正常退出，possibly lost暂时能够接受。
+
+
+
+
+可以看出Valgrind，**7,592 bytes in 785 blocks are definitely lost in loss record 1,498 of 1,615**这一段的执行路径上存在内存泄漏。  
+
+通过查阅文档[JS_Enumerate](https://developer.mozilla.org/en/SpiderMonkey/JSAPI_Reference/JS_Enumerate)、[JS_EncodeString](https://developer.mozilla.org/en/JS_GetStringBytes)这两个SpiderMonkey API函数是需要用户释放内存的。。而我确实没有释放。。
+
+
+
+
+我不得不吐槽。。JS_EncodeString的文档里面**The caller may modify it and is responsible for freeing it.**，就这么一句话说到要用户负责释放。。就不能写大一点吗！  
+
+明明上面一段还是说"The array returned by JS_GetStringBytes or JS_GetStringBytesZ is automatically freed when str is finalized by the JavaScript garbage collection mechanism."来着。。
+
+
+
+
+于是，正常释放之后，再次执行Valgrind检查没问题，OK，问题解决。
+
+
+

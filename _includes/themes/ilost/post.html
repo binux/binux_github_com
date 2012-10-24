@@ -1,0 +1,45 @@
+<article>
+  <section class="post type-post status-publish format-standard hentry">
+    <div class="title">
+      <h2>{{ page.title }}</h2>
+      <small>
+        <date class="date-pub" title="{{ page.date | date_to_xmlschema }}" datetime="{{ page.date | date_to_xmlschema }}" pubdate>
+          <span class="month">{{ page.date | date: '%B' }}</span>
+          <span class="day">{{ page.date | date: '%d' }}</span>
+          <span class="year">{{ page.date | date: '%Y' }}</span>
+        </date>, 
+				{% assign categories_list = page.categories %}
+        {% if categories_list.first[0] == null %}
+          {% for category in categories_list %} 
+            <a href="{{ BASE_PATH }}{{ site.JB.categories_path }}#{{ category }}-ref" rel="category tag">{{ category | join: "/" }}</a>
+          {% endfor %}
+        {% else %}
+          {% for category in categories_list %} 
+            <a href="{{ BASE_PATH }}{{ site.JB.categories_path }}#{{ category[0] }}-ref" rel="category tag">{{ category[0] | join: "/" }}</a>
+          {% endfor %}
+        {% endif %}
+      </small>
+    </div>
+    <div class="entry">
+      {{ content }}
+    </div>
+    <div class="post-meta">
+      标签：
+      {% assign tags_list = page.tags %}
+      {% include JB/tags_list %}
+      <div class="clear"></div>
+    </div>
+    <nav class="post-nav">
+      {% if page.previous %}
+      <span class="previous"><a href="{{ page.previous.url }}" rel="prev" title="{{ page.previous.title }}">{{ page.previous.title }}</a></span>
+      {% endif %}
+      {% if page.next %}
+      <span class="next"><a href="{{ page.next.url }}" rel="next" title="{{ page.next.title }}">{{ page.next.title }}</a></span>
+      {% endif %}
+      <div class="clear"></div>
+    </nav>
+  </section>
+  <div class="comment">
+  {% include JB/comments %}
+  </div>
+</article>

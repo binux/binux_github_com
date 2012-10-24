@@ -1,0 +1,1794 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+ <title>Binuxの杂货铺</title>
+ <link href="http://blog.binux.me/atom.xml" rel="self"/>
+ <link href="http://blog.binux.me"/>
+ <updated>2012-10-25T00:54:50+08:00</updated>
+ <id>http://blog.binux.me</id>
+ <author>
+   <name>足兆叉虫</name>
+   <email>17175297.hk@gmail.com</email>
+ </author>
+
+ 
+ <entry>
+   <title>运行于百度云平台的Python网页代理</title>
+   <link href="http://blog.binux.me/2012/09/python-web-proxy-on-ba"/>
+   <updated>2012-09-07T12:28:37+08:00</updated>
+   <id>http://blog.binux.me/2012/09/python-web-proxy-on-ba</id>
+   <content type="html">&lt;p&gt;最近看到好多求BAE邀请的帖子，至少现在免费，于是也去求了一个，然后顺带开了python权限。 随便看了下python环境，版本够新，该有的库和框架也比较齐全，fetchurl接口完全封装在内置库中，至少比起GAE来说，迁移成本低多了。沙盒也是恰到好处的感觉，初步感觉不错。 提供的服务也涉及各个方面，云存储，数据库，cache，队列该有的都有了。 fetch taskqueue能fetchurl和离线下载（支持最大4G，10小时下载）体现了百度的特色吧，感觉眼前一亮，虽然已经有百度网盘提供类似服务，但是作为开发平台，也能作出一些有意思的应用。 消息服务自带1000条短信1W封邮件每月。&lt;/p&gt;
+
+&lt;p&gt;不过，百度依然体现了没有设计师的特色，界面和各个服务的开发包各不相同。。&lt;/p&gt;
+
+&lt;p&gt;由于BAE政策和稳定性尚不明朗，不打算在上面做能够保存数据的应用。 于是，做一个网页代理吧&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='http://pyproxy.duapp.com/https://github.com/binux'&gt;http://pyproxy.duapp.com/https://github.com/binux&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;不得不说，百度网速也太不怎么样了吧。。 第一次写网页代理，地址改写还真麻烦，xmlhttprequest好歹是拦截了，js动态加载的元素就算了。。&lt;/p&gt;
+
+&lt;p&gt;附上rewrite代码：&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='c'&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;span class='c'&gt;# -*- encoding: utf-8 -*-&lt;/span&gt;
+&lt;span class='c'&gt;# vim: set et sw=4 ts=4 sts=4 ff=unix fenc=utf8:&lt;/span&gt;
+&lt;span class='c'&gt;# Author: Binux&amp;lt;17175297.hk@gmail.com&amp;gt;&lt;/span&gt;
+&lt;span class='c'&gt;#         http://binux.me&lt;/span&gt;
+&lt;span class='c'&gt;# Created on 2012-09-06 22:22:21&lt;/span&gt;
+
+&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;urlparse&lt;/span&gt;
+&lt;span class='kn'&gt;import&lt;/span&gt; &lt;span class='nn'&gt;re&lt;/span&gt;
+
+&lt;span class='n'&gt;xmlhttprequest&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;&amp;#39;&amp;#39;XMLHttpRequest.prototype._open=XMLHttpRequest.prototype.open;&lt;/span&gt;
+&lt;span class='s'&gt;XMLHttpRequest.prototype.open = function(m,u,a,us,p) {&lt;/span&gt;
+&lt;span class='s'&gt;  var proxyurl=&amp;#39;&lt;/span&gt;&lt;span class='si'&gt;%s&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;, baseurl=&amp;#39;&lt;/span&gt;&lt;span class='si'&gt;%s&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;, a=document.createElement(&amp;#39;a&amp;#39;);&lt;/span&gt;
+&lt;span class='s'&gt;  a.href=u;u=a.href.replace(proxyurl,&amp;#39;&amp;#39;);u=proxyurl+(u.indexOf(&amp;#39;http&amp;#39;)==0?u:baseurl+u);&lt;/span&gt;
+&lt;span class='s'&gt;  if(console&amp;amp;&amp;amp;console.log){console.log(&amp;quot;XMLHTTPRequest:&amp;quot;,u);}&lt;/span&gt;
+&lt;span class='s'&gt;  return this._open(m,u,a,us,p);&lt;/span&gt;
+&lt;span class='s'&gt;}&amp;#39;&amp;#39;&amp;#39;&lt;/span&gt;
+&lt;span class='n'&gt;http_re&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;re&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;compile&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;https?://&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;re&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;I&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='n'&gt;href_re1&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;re&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;compile&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;((href|src|action)\s*=\s*&lt;/span&gt;&lt;span class='se'&gt;\&amp;quot;&lt;/span&gt;&lt;span class='s'&gt;([^&lt;/span&gt;&lt;span class='se'&gt;\&amp;quot;&lt;/span&gt;&lt;span class='s'&gt;&amp;lt;&amp;gt;]+)&lt;/span&gt;&lt;span class='se'&gt;\&amp;quot;&lt;/span&gt;&lt;span class='s'&gt;)&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;re&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;I&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='n'&gt;href_re2&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;re&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;compile&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;((href|src|action)\s*=\s*&lt;/span&gt;&lt;span class='se'&gt;\&amp;#39;&lt;/span&gt;&lt;span class='s'&gt;([^&lt;/span&gt;&lt;span class='se'&gt;\&amp;#39;&lt;/span&gt;&lt;span class='s'&gt;&amp;lt;&amp;gt;]+)&lt;/span&gt;&lt;span class='se'&gt;\&amp;#39;&lt;/span&gt;&lt;span class='s'&gt;)&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;re&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;I&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='n'&gt;href_re3&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;re&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;compile&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;((href|src|action)\s*=\s*([^&lt;/span&gt;&lt;span class='se'&gt;\&amp;#39;\&amp;quot;&lt;/span&gt;&lt;span class='s'&gt;\s&amp;lt;&amp;gt;]+))&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;re&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;I&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='n'&gt;xmlhttprequest_re&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;re&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;compile&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;&amp;lt;script&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;re&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;I&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;rewrite&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;proxyurl&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;baseurl&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+    &lt;span class='c'&gt;#content = http_re.sub(proxyurl+&amp;quot;\g&amp;lt;0&amp;gt;&amp;quot;, content)&lt;/span&gt;
+    &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='nb'&gt;all&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;href&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;url&lt;/span&gt; &lt;span class='ow'&gt;in&lt;/span&gt; &lt;span class='n'&gt;href_re1&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;findall&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+        &lt;span class='n'&gt;rewrited_url&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;urlparse&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;urljoin&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;baseurl&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='ow'&gt;not&lt;/span&gt; &lt;span class='n'&gt;rewrited_url&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;startswith&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;proxyurl&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;rewrited_url&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;startswith&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;http&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+            &lt;span class='n'&gt;content&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;replace&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;all&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;&lt;/span&gt;&lt;span class='si'&gt;%s&lt;/span&gt;&lt;span class='s'&gt;=&amp;quot;&lt;/span&gt;&lt;span class='si'&gt;%s%s&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;&amp;#39;&lt;/span&gt; &lt;span class='o'&gt;%&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;href&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;proxyurl&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;rewrited_url&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+    &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='nb'&gt;all&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;href&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;url&lt;/span&gt; &lt;span class='ow'&gt;in&lt;/span&gt; &lt;span class='n'&gt;href_re2&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;findall&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+        &lt;span class='n'&gt;rewrited_url&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;urlparse&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;urljoin&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;baseurl&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='ow'&gt;not&lt;/span&gt; &lt;span class='n'&gt;rewrited_url&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;startswith&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;proxyurl&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;rewrited_url&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;startswith&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;http&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+            &lt;span class='n'&gt;content&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;replace&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;all&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;&lt;/span&gt;&lt;span class='si'&gt;%s&lt;/span&gt;&lt;span class='s'&gt;=&lt;/span&gt;&lt;span class='se'&gt;\&amp;#39;&lt;/span&gt;&lt;span class='si'&gt;%s%s&lt;/span&gt;&lt;span class='se'&gt;\&amp;#39;&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;&lt;/span&gt; &lt;span class='o'&gt;%&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;href&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;proxyurl&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;rewrited_url&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+    &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='nb'&gt;all&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;href&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;url&lt;/span&gt; &lt;span class='ow'&gt;in&lt;/span&gt; &lt;span class='n'&gt;href_re3&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;findall&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+        &lt;span class='n'&gt;rewrited_url&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;urlparse&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;urljoin&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;baseurl&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;url&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='ow'&gt;not&lt;/span&gt; &lt;span class='n'&gt;rewrited_url&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;startswith&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;proxyurl&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;rewrited_url&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;startswith&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;http&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+            &lt;span class='n'&gt;content&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;replace&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nb'&gt;all&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;&lt;/span&gt;&lt;span class='si'&gt;%s&lt;/span&gt;&lt;span class='s'&gt;=&amp;quot;&lt;/span&gt;&lt;span class='si'&gt;%s%s&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;&amp;#39;&lt;/span&gt; &lt;span class='o'&gt;%&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;href&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;proxyurl&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;rewrited_url&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+    &lt;span class='n'&gt;content&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;content&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;replace&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;&amp;lt;/title&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;&amp;lt;/title&amp;gt;&amp;lt;script&amp;gt;&lt;/span&gt;&lt;span class='si'&gt;%s&lt;/span&gt;&lt;span class='s'&gt;&amp;lt;/script&amp;gt;&amp;quot;&lt;/span&gt; &lt;span class='o'&gt;%&lt;/span&gt; &lt;span class='n'&gt;xmlhttprequest&lt;/span&gt; &lt;span class='o'&gt;%&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;proxyurl&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;urlparse&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;urljoin&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;baseurl&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;/&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)),&lt;/span&gt; &lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;content&lt;/span&gt;
+    
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;a href='https://gist.github.com/3663115'&gt;https://gist.github.com/3663115&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>批量找原图 —— Chrome APP</title>
+   <link href="http://blog.binux.me/2012/08/find-larger-image-chrome-app"/>
+   <updated>2012-08-20T11:50:41+08:00</updated>
+   <id>http://blog.binux.me/2012/08/find-larger-image-chrome-app</id>
+   <content type="html">&lt;p&gt;经常在G+上收图，但是整理做桌面的时候经常发现分辨率不够 几百张图，一个个去google image search太慢了&lt;/p&gt;
+
+&lt;p&gt;于是： &lt;a href='http://blog.binux.me/wp-content/uploads/2012/08/1.png'&gt;&lt;img alt='' src='http://blog.binux.me/wp-content/uploads/2012/08/1.png' /&gt;&lt;/a&gt; &lt;a href='https://chrome.google.com/webstore/detail/fbjeidmgokkiojabmnkgmcigfggeklak'&gt;https://chrome.google.com/webstore/detail/fbjeidmgokkiojabmnkgmcigfggeklak&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;拖入图片搜索 左键下载，右键预览&lt;/p&gt;
+
+&lt;p&gt;source： &lt;a href='https://github.com/binux/find-larger-images'&gt;https://github.com/binux/find-larger-images&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>迅雷离线地址导出器——ThunderLixianExporter</title>
+   <link href="http://blog.binux.me/2012/07/thunderlixianexporter"/>
+   <updated>2012-07-21T16:11:57+08:00</updated>
+   <id>http://blog.binux.me/2012/07/thunderlixianexporter</id>
+   <content type="html">&lt;p&gt;按照计划，将loli.lu的导出功能带到官方原生界面上了。毕竟无论什么工具，都不如官方的稳定，方便。 虽然有一个Userscript的油猴脚本，但是实际上主要代码是直接插入到页面中的。。等稳定了，有时间了再做成完全的本地版吧。&lt;/p&gt;
+
+&lt;h2 id='id1378'&gt;功能特性：&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;* 迅雷离线原生界面
+
+* 链接导出，aria2/wget下载命令导出，下载器导出文件，aria2 JSON-RPC支持
+
+* 可以关闭不用的功能
+
+* 统一的接口方便添加更多的下载方式&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;a href='http://blog.binux.me/wp-content/uploads/2012/07/1.png'&gt;&lt;img alt='' src='http://blog.binux.me/wp-content/uploads/2012/07/1.png' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;油猴脚本： &lt;a href='https://raw.github.com/binux/ThunderLixianExporter/master/ThunderLixianExporter.user.js'&gt;ThunderLixianExporter.user.js&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;项目地址： &lt;a href='http://binux.github.com/ThunderLixianExporter/'&gt;http://binux.github.com/ThunderLixianExporter/&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>从LOLI.LU直接添加资源到ARIA2</title>
+   <link href="http://blog.binux.me/2012/07/add_url_from_loli-lu_to_aria2"/>
+   <updated>2012-07-15T21:57:17+08:00</updated>
+   <id>http://blog.binux.me/2012/07/add_url_from_loli-lu_to_aria2</id>
+   <content type="html">&lt;p&gt;首先参照YAAW以RPC模式启动ARIA2，保证YAAW能正常工作。&lt;/p&gt;
+
+&lt;p&gt;在LOLI.LU中随便点开一个一个资源 &amp;gt; 批量下载。&lt;strong&gt;右键点击&lt;/strong&gt; 自定义，填入以下脚本（注意需要替换JSONRPC_PATH，和YAAW中的一样）：&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='javascript'&gt;&lt;span class='kd'&gt;function&lt;/span&gt; &lt;span class='nx'&gt;to_aria2&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;taskname&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;links&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;cookie&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+  &lt;span class='nx'&gt;$&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;getScript&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;https://raw.github.com/gist/3116833/aria2jsonrpc.js&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;aria2&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='nx'&gt;ARIA2&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;&amp;lt;your rpc path&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+    &lt;span class='nx'&gt;$&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;each&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;links&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;i&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;n&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+      &lt;span class='nx'&gt;aria2&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;addUri&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;n&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;url&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='nx'&gt;out&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='nx'&gt;n&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;title&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;header&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt; &lt;span class='s1'&gt;&amp;#39;Cookie: &amp;#39;&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='nx'&gt;cookie&lt;/span&gt;&lt;span class='p'&gt;});&lt;/span&gt;
+    &lt;span class='p'&gt;});&lt;/span&gt;
+  &lt;span class='p'&gt;});&lt;/span&gt;
+
+  &lt;span class='kd'&gt;var&lt;/span&gt; &lt;span class='nx'&gt;str&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+  &lt;span class='nx'&gt;str&lt;/span&gt; &lt;span class='o'&gt;+=&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;taskname = &amp;quot;&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='nx'&gt;taskname&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+  &lt;span class='nx'&gt;str&lt;/span&gt; &lt;span class='o'&gt;+=&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;cookie = &amp;quot;&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='nx'&gt;cookie&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+  &lt;span class='nx'&gt;str&lt;/span&gt; &lt;span class='o'&gt;+=&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;==========================\n&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+  &lt;span class='nx'&gt;$&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;each&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;links&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='kd'&gt;function&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='nx'&gt;i&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nx'&gt;n&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='nx'&gt;str&lt;/span&gt; &lt;span class='o'&gt;+=&lt;/span&gt; &lt;span class='s2'&gt;&amp;quot;links[&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='nx'&gt;i&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;].title = &amp;quot;&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='nx'&gt;n&lt;/span&gt;&lt;span class='p'&gt;.&lt;/span&gt;&lt;span class='nx'&gt;title&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='s2'&gt;&amp;quot;\n&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+  &lt;span class='p'&gt;});&lt;/span&gt;
+  &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='nx'&gt;str&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;点击保存，点自定义，到YAAW中看是否添加成功了吧。&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>aria2 + web前端 部署指南</title>
+   <link href="http://blog.binux.me/2012/06/aria2_yaaw"/>
+   <updated>2012-06-22T20:36:00+08:00</updated>
+   <id>http://blog.binux.me/2012/06/aria2_yaaw</id>
+   <content type="html">&lt;p&gt;更新了openwrt的固件版本之后，我的wr703n上的aria2终于可以开启rpc模式了。然后就是WNR3500L到货，虽然不能装openwrt，但是有optware一样ok。 虽然他们的平台各不相同，但是因为YAAW是没有依赖的，实际上都是分为三步：&lt;/p&gt;
+
+&lt;p&gt;1. 挂载U盘&lt;/p&gt;
+
+&lt;p&gt;2. 安装aria2&lt;/p&gt;
+
+&lt;p&gt;3. 打开&lt;a href='http://binux.github.com/yaaw/'&gt;YAAW&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;非常简单没有压力。&lt;/p&gt;
+
+&lt;h3 id='u'&gt;第一步：挂载U盘&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;openwrt:&lt;/strong&gt; &lt;a href='http://wiki.openwrt.org/zh-cn/doc/howto/usb.storage'&gt;http://wiki.openwrt.org/zh-cn/doc/howto/usb.storage&lt;/a&gt;&lt;br /&gt; &lt;strong&gt;dd-wrt：&lt;/strong&gt; 刷一个带USB的固件，固件中自动mount到/opt&lt;br /&gt; &lt;strong&gt;tomato：&lt;/strong&gt; 刷一个带USB的固件，固件中自动mount到/opt&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id='aria2'&gt;第二步：安装aria2&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;openwrt:&lt;/strong&gt; &lt;code&gt;opkg update &amp;amp;&amp;amp; opkg install aria2&lt;/code&gt;&lt;br /&gt; &lt;strong&gt;dd-wrt:&lt;/strong&gt; &lt;code&gt;wget http://www.3iii.dk/linux/optware/optware-install-ddwrt.sh -O - | tr -d &amp;#39;\r&amp;#39; &amp;gt; /tmp/optware-install.sh &amp;amp;&amp;amp; sh /tmp/optware-install.sh &amp;amp;&amp;amp; ipkg-opt update &amp;amp;&amp;amp; ipkg-opt install aria2&lt;/code&gt;&lt;br /&gt; &lt;strong&gt;tomato:&lt;/strong&gt; &lt;a href='http://tomatousb.org/tut:optware-installation'&gt;http://tomatousb.org/tut:optware-installation&lt;/a&gt;&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;启动命令： &lt;code&gt;aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c&lt;/code&gt;&lt;br /&gt; 如果没有问题的话，可以将 &lt;code&gt;aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c -D&lt;/code&gt; 加入开机启动&lt;br /&gt; 如果有问题的话，看输出的提示，有可能要加入&lt;code&gt;--event-poll=select&lt;/code&gt;什么的参数&lt;br /&gt;&lt;/p&gt;
+
+&lt;h3 id='yaaw'&gt;第三步：打开&lt;a href='http://binux.github.com/yaaw/'&gt;YAAW&lt;/a&gt;&lt;/h3&gt;
+
+&lt;p&gt;点击&lt;a href='http://binux.github.com/yaaw/demo/'&gt;demo&lt;/a&gt;，在扳手处填入path： &lt;code&gt;http://&amp;lt;ip_of_your_route&amp;gt;:6800/jsonrpc&lt;/code&gt;， 保存&lt;/p&gt;
+
+&lt;p&gt;一些有用的aria2参数&lt;/p&gt;
+
+&lt;p&gt;-i &amp;#60;file&amp;#62; 导入从loli.lu导出的aria2文件&lt;br /&gt; -j &amp;#60;num&amp;#62; 同时下载数限制，由于路由和总带宽限制，建议设为3（默认5）&lt;br /&gt; -x &amp;#60;num&amp;#62; 同一个服务器的同时链接数，建议为5-10（默认1）&lt;br /&gt; -k &amp;#60;size&amp;#62; 文件最小分片，文件最多的线程数取决于能分出多少片，当文件小于最小分片大小时，只能开出一个线程，建议为2M（默认20M）&lt;br /&gt; -s &amp;#60;num&amp;#62; 一个文件最多用几个线程下载，建议为8-10（默认5）&lt;br /&gt; &amp;#8211;file-allocation &amp;#60;none,prealloc,falloc&amp;#62; 文件预分配，如果USB设备是U盘，SD卡，预分配浪费时间，建议为none（默认prealloc)&lt;br /&gt;&lt;/p&gt;
+
+&lt;p&gt;更多参数请访问 &lt;a href='http://aria2.sourceforge.net/manual/en/html/'&gt;Aria2 Manual&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>fancybox xss漏洞导致html转义无效</title>
+   <link href="http://blog.binux.me/2012/05/fancybox-xsse6bc8fe6b49ee5afbce887b4htmle8bdace4b989e697a0e69588"/>
+   <updated>2012-05-10T00:37:53+08:00</updated>
+   <id>http://blog.binux.me/2012/05/fancybox-xsse6bc8fe6b49ee5afbce887b4htmle8bdace4b989e697a0e69588</id>
+   <content type="html">&lt;p&gt;从老的1.3.4到新的2.0.7都有影响&lt;/p&gt;
+
+&lt;p&gt;验证： 如果对以下地址使用fancybox，当fancybox打开时会触发脚本。 xss&lt;/p&gt;
+
+&lt;p&gt;原理： fancybox在取title的时候取的是$(obj).attr(&amp;#8216;title&amp;#8217;)，没有进行转义就拼接进结果中。导致&lt;strong&gt;即使原代码进行了转义，在使用了fancybox时依旧会产生xss&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;解决方法： 1、停止使用title特性 2、修改_format_title函数，将title进行转义&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Yet Another Aria2 Web Frontend</title>
+   <link href="http://blog.binux.me/2012/05/yet-another-aria2-web-frontend"/>
+   <updated>2012-05-06T13:55:07+08:00</updated>
+   <id>http://blog.binux.me/2012/05/yet-another-aria2-web-frontend</id>
+   <content type="html">&lt;p&gt;aria2是个好软件，多线程，&lt;strong&gt;HTTP/FTP/BT通吃&lt;/strong&gt;，参数设置丰富，功能强大。在我的TL-WR703n上比transmission快多了。&lt;/p&gt;
+
+&lt;p&gt;看了官网上的3个web前端，两个是php的，一个是c的。先不说c的那个界面。。php我尝试在路由上跑，依赖实在太多。 简单man了一下aria2，这货明明可以JSON-RPC的啊，根本就用不着后端啊！　于是，就有了这个坑——YAAW。&lt;/p&gt;
+
+&lt;h3 id='yaaw'&gt;YAAW简介&lt;/h3&gt;
+
+&lt;p&gt;YAAW - Yet Another Aria2 Web Frontend 是一个纯前端实现的Aria2 Web前端界面。无需架设任何服务器，只需要在浏览器中打开即刻使用。&lt;/p&gt;
+
+&lt;h3 id='id1377'&gt;链接&lt;/h3&gt;
+
+&lt;p&gt;首页/demo： &lt;a href='http://binux.github.com/yaaw/'&gt;http://binux.github.com/yaaw/&lt;/a&gt; GitHub: &lt;a href='https://github.com/binux/yaaw'&gt;https://github.com/binux/yaaw&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Dropbox Uploader Script</title>
+   <link href="http://blog.binux.me/2012/04/dropbox-uploader-script"/>
+   <updated>2012-04-28T17:03:21+08:00</updated>
+   <id>http://blog.binux.me/2012/04/dropbox-uploader-script</id>
+   <content type="html">&lt;p&gt;Dropbox全平台并且各种工具齐全，在各个主机上都在用。用Dropbox备份VPS上的数据也很方便，但是之前看到的脚本都需要填写用户名密码，迟迟不敢用。。&lt;/p&gt;
+
+&lt;p&gt;这里推荐这个使用API的Dropbox上传脚本，通过设置沙盒，把备份目录限制在应用中，保证其他文件的安全。 而且这个脚本是用curl驱动的，只有一个文件，在linux平台下毫无压力。&lt;/p&gt;
+
+&lt;p&gt;Home page: &lt;a href='http://www.andreafabrizi.it/?dropbox_uploader'&gt;http://www.andreafabrizi.it/?dropbox_uploader&lt;/a&gt; github: &lt;a href='https://github.com/andreafabrizi/Dropbox-Uploader'&gt;https://github.com/andreafabrizi/Dropbox-Uploader&lt;/a&gt; 原始版本是需要完全权限的，我fork了一个带沙盒限制的版本： github: &lt;a href='https://github.com/binux/Dropbox-Uploader'&gt;https://github.com/binux/Dropbox-Uploader&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;使用方法： 第一次启动的时候会指引你去Dropbox创建一个应用，按照指引操作即可。&lt;/p&gt;
+
+&lt;p&gt;上传： ./dropbox_uploader.sh upload &lt;span&gt;LOCAL_FILE&lt;/span&gt; 下载： ./dropbox_uploader.sh download &lt;span&gt;REMOTE_FILE&lt;/span&gt; 删除： ./dropbox_uploader.sh delete &lt;span&gt;REMOTE_FILE&lt;/span&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>迅雷Hash算法分析</title>
+   <link href="http://blog.binux.me/2012/03/hash_algorithm_of_xunlei"/>
+   <updated>2012-03-25T13:46:57+08:00</updated>
+   <id>http://blog.binux.me/2012/03/hash_algorithm_of_xunlei</id>
+   <content type="html">&lt;p&gt;从迅雷离线获得的地址中，存在着大量的Hash值，这些hash看似都是base64,sha1,md5但却有所不同。 比如这是一个典型的离线地址&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;http://gdl.lixian.vip.xunlei.com/download?
+fid=3KUoDlBy9IotAFn5vQAHc5VUIgKiwSgmAAAAAHYA3duVUUeWgaJI4JGu5syK9PLK&amp;amp;     // base64: 与cid,size,gcid相关(size为小字节序)
+mid=666&amp;amp;                                        // maybe: always 666
+threshold=150&amp;amp;                                  // maybe: always 150
+tid=A950BAE38A2E7398186D4127315DB76F            // unknow: 256bit relate with size
+srcid=4                                         // maybe: always 4
+verno=1                                         // maybe: always 1
+g=7600DDDB9551479681A248E091AEE6CC8AF4F2CA&amp;amp;     // gcid: for normal download gcid == cid
+scn=c7&amp;amp;                                         // section
+i=3547930B96AFA7B0A1CFCC80D516ADE97A34DAE0&amp;amp;     // cid == infoid == btih == ed2k hash, files share a same cid in a bt task, cid is the btih of the torrent
+t=6&amp;amp;                                            // type: 1=normal 4=ed2k 6=bt
+ui=18×××9640&amp;amp;                                  //userid
+ti=33742×××247&amp;amp;                                //tid from get free url
+s=640205218&amp;amp;                                    //totalByte
+m=0&amp;amp;                                            // mayby: always 0
+n=01324486025B4775690D459D7F43726F770F6CBF6F345D5B46347DA817445D5B422876D1025B783236556EA51C335D2E6D0A47E45F00000000     // filename&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;根据已有的数据分析/比对，大致各个字段的含义已经标识出来了。其中除了ui,ti是与用户相关的变元，cid是来源相关的变元，其他的字段对于某一个文件来说一般是相同的。&lt;/p&gt;
+
+&lt;h2 id='cid'&gt;cid&lt;/h2&gt;
+
+&lt;p&gt;算法源码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def cid_hash_file(path):
+    h = hashlib.sha1()
+    size = os.path.getsize(path)
+    with open(path, &amp;#39;rb&amp;#39;) as stream:
+        if size &amp;lt; 0xF000:
+            h.update(stream.read())
+        else:
+            h.update(stream.read(0x5000))
+            stream.seek(size/3)
+            h.update(stream.read(0x5000))
+            stream.seek(size-0x5000)
+            h.update(stream.read(0x5000))
+    return h.hexdigest().upper()&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;算法来自于&lt;a href='https://github.com/iambus/xunlei-lixian'&gt;https://github.com/iambus/xunlei-lixian&lt;/a&gt;。 在api中，cid主要用于文件的索引。观察代码可知，cid并没有hash整个文件，而是根据文件的头/中/尾部的0x5000字节的内容计算Hash。这样就可以在不下载完整个文件，就能够查询到其他服务器上可能的相同文件。于是在下载支持range的文件的时候，即使该地址没有被索引到，但是通过cid，依旧可以被p2sp加速。 当然了，由于没有hash整个文件，文件在事实上有可能是不同的，那么根据下面这个gcid就可以唯一确定一个文件了。&lt;/p&gt;
+
+&lt;h2 id='gcid'&gt;gcid&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;def gcid_hash_file(path):
+    h = hashlib.sha1()
+    size = os.path.getsize(path)
+    psize = 0x40000
+    while size / psize &amp;gt; 0x200:
+        psize = psize &amp;lt;&amp;lt; 1
+    with open(path, &amp;#39;rb&amp;#39;) as stream:
+        data = stream.read(psize)
+        while data:
+            h.update(hashlib.sha1(data).digest())
+            data = stream.read(psize)
+    return h.hexdigest().upper()&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这个算法是我完全没有通过逆向黑盒分析而来，虽然没有做完整的测试，但是一般来说是正确的。。分析借助了loli.lu的18万个已有文件的数据，以及&lt;a href='http://coffee.xunlei.com:8000/viewthread.php?tid=692&amp;amp;extra=page%3D1'&gt;迅雷咖啡吧&lt;/a&gt;上的一句话：“如果文件很大，则计算gcid非常耗时，因此可以在大文件传输过程中计算gcid，文件传输完毕，则gcid也计算好了“。。 gcid的作用是文件的唯一键，在迅雷服务器上唯一确定一个文件。可以说，只要有了gcid，实际上是可以任意下载到需要的文件的。算法采用了分片hash再二次sha1的算法。。猜测原因是因为分片被限制在512个一下，当hash较大文件的时候，可以边下载边hash，再在最后hash那个不到512&lt;em&gt;20字节的串即可，当文件下载完成的时候就能立即得出gcid。还有一个原因是bt文件也是用sha1分片Hash的，那么获得种子文件也就同时有可能获得gcid了。同时，如果迅雷服务器保存了每个分片的sha1 hash的话，那么在下载通过cid匹配的文件同时，就能同时比较各个分片是否正确，以此保证最终结果。&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id='fid'&gt;fid&lt;/h2&gt;
+
+&lt;p&gt;算法如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def parse_fid(fid):
+    cid, size, gcid = struct.unpack(&amp;quot;&amp;lt;20sq20s&amp;quot;, fid.decode(&amp;quot;base64&amp;quot;))
+    return cid.encode(&amp;quot;hex&amp;quot;).upper(), size, gcid.encode(&amp;quot;hex&amp;quot;).upper()
+
+def gen_fid(cid, size, gcid):
+    return struct.pack(&amp;quot;&amp;lt;20sq20s&amp;quot;, cid.decode(&amp;quot;hex&amp;quot;), size, gcid.decode(&amp;quot;hex&amp;quot;)).encode(&amp;quot;base64&amp;quot;).strip()&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;首先这很明显是一个base64，但是一开始我并没有发现她们和cid,size,gcid的关系，&lt;del&gt;直到我膝盖中了一箭&lt;/del&gt;。。 fid就是cid,size,gcid的二进制然后再base64而已。但是有了fid，神马cid,size,gcid这三大要素都不是问题了。应该是用于api分析url的便利，所做的一个接口性参数。&lt;/p&gt;
+
+&lt;h2 id='tid'&gt;tid&lt;/h2&gt;
+
+&lt;p&gt;未知算法。 根据18万的文件数据，唯一能够知道的是，这个tid和文件大小一一对应。。size相同的文件tid一定相同，但是又不是size的直接hash，目前来说完全不知道这个参数的意义何在。。 如果有兴趣，您可以在&lt;a href='https://github.com/binux/lixian.xunlei/blob/master/tid.dict'&gt;https://github.com/binux/lixian.xunlei/blob/master/tid.dict&lt;/a&gt;文件里面找到目前已知的映射。。如果分析出算法了请务必告诉我。&lt;/p&gt;
+
+&lt;h2 id='n'&gt;n&lt;/h2&gt;
+
+&lt;p&gt;算法源码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;thunder_filename_mask = &amp;quot;6131E45F00000000&amp;quot;.decode(&amp;quot;hex&amp;quot;)
+def thunder_filename_encode(filename, encoding=&amp;quot;gbk&amp;quot;):
+    if isinstance(filename, unicode):
+        filename = filename.encode(encoding)
+    result = [&amp;quot;01&amp;quot;, ]
+    for i, word in enumerate(filename):
+        mask = thunder_filename_mask[i%len(thunder_filename_mask)]
+        result.append(&amp;quot;%02X&amp;quot; % (ord(word)^ord(mask)))
+    while len(result) % 8 != 1:
+        mask = thunder_filename_mask[len(result)%len(thunder_filename_mask)-1]
+        result.append(&amp;quot;%02X&amp;quot; % ord(mask))
+    return &amp;quot;&amp;quot;.join(result)
+
+def thunder_filename_decode(code, encoding=&amp;quot;gbk&amp;quot;):
+    assert code.startswith(&amp;quot;01&amp;quot;)
+    result = []
+    for i, word in enumerate(code[2:].decode(&amp;quot;hex&amp;quot;)):
+        mask = thunder_filename_mask[i%len(thunder_filename_mask)]
+        result.append(chr(ord(word)^ord(mask)))
+    result = &amp;quot;&amp;quot;.join(result).rstrip(&amp;quot;\0&amp;quot;)
+    return result.decode(encoding)&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;算法来源于&lt;a href='https://plus.google.com/109026361274947112731'&gt;+Zhang Youfu&lt;/a&gt;。简单来说这个参数就是将文件名各位用掩码进行了简单转换而已，中文的编码与最终输出的header中的相同，既编码采用utf8，最终输出的也是utf8，值得指出的是默认的编码是gbk的。迅雷在输出文件名时会截断较长的文件名，但是实际上通过传递完整的n参数，可以无视这个限制。在&lt;a href='https://github.com/binux/ThunderLixianExporter/blob/master/ThunderLixianExporter.js#L300'&gt;binux/ThunderLixianExporter&lt;/a&gt;还有一个js版本的实现。&lt;/p&gt;
+
+&lt;h2 id='id1376'&gt;总结&lt;/h2&gt;
+
+&lt;p&gt;由上面的分析可见，一个文件的离线地址完全就是根据文件的信息生成的，于是你发现了什么？对了，完全不需要通过迅雷服务器我们就可以生成自己的离线地址！如果这个文件在迅雷服务器上存在，我们可以直接下载回来！（等等，你说n。。那不就是文件名嘛。。我只关心内容。。文件名这种小问题。。） 说到做到，&lt;strong&gt;您可以通过&lt;a href='https://github.com/binux/lixian.xunlei/blob/master/check_file.py'&gt;https://github.com/binux/lixian.xunlei/blob/master/check_file.py&lt;/a&gt;这个文件直接计算出文件的cid,gcid,fid&lt;/strong&gt;，如果可能的话也能计算出tid。 然后，把fake_url添加到迅雷软件里面。然后。。就可以直接下载了！可以开启高速通道，可以在快盘秒传，运气好可以开启离线秒传。。。 over&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>一个网盘的终结(？)及由其而生的思考的思考</title>
+   <link href="http://blog.binux.me/2012/03/jshare"/>
+   <updated>2012-03-03T00:45:21+08:00</updated>
+   <id>http://blog.binux.me/2012/03/jshare</id>
+   <content type="html">&lt;p&gt;标题是思考的思考的原因是《&lt;a href='http://www.hexieshe.com/635859/'&gt;一个网盘的终结(？)及由其而生的思考—JSharer或宣布长期暂停服务&lt;/a&gt;》这样一篇文章。 在JShare还叫JShare的时候，就知道这样一个有责远大理想，而且界面很漂亮的网盘。虽然很少会去收集稀有物，所以很少去，但是深知寻找资源的不易，特别是当需要的时候。。&lt;/p&gt;
+
+&lt;p&gt;《&lt;a href='https://ra.gg/!rEOkP'&gt;标题一定要写的生存战略マル～&lt;/a&gt;》这是电磁猫那边的公告帖。&lt;strong&gt;生存战略这个词准确的反映了网盘的最大的问题——生存。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id='id1373'&gt;一、钱&lt;/h2&gt;
+
+&lt;p&gt;在二次元概念范围内，我一般都避免谈及这个词，这个即使在三次元中都俗到不行的词。但是，&lt;strong&gt;没有钱是不成的，网盘是很烧钱的。&lt;/strong&gt; 爱吗？二次元不缺少爱，但是用爱能支撑一个论坛，支撑一个PT/BT，支撑几个内部FTP，但是支撑不起网盘; 网盘所需要的服务器，带宽都太多了，太花钱了。我相信，即使是115、腾讯、迅雷，单就网盘业务来说几乎肯定是亏损的，但是作为产品链中的一环，他们能通过其他业务支撑起这项服务，但是一个ACG向的网盘，难！&lt;/p&gt;
+
+&lt;p&gt;解决的办法只有两个：&lt;/p&gt;
+
+&lt;h3 id='1'&gt;1.弄到钱&lt;/h3&gt;
+
+&lt;p&gt;这很显而易见不是吗。如果能弄到钱就能做下去啦。 但是，收钱只有两种办法，向用户收，向第三方收。&lt;/p&gt;
+
+&lt;p&gt;在中国，向用户收钱难，太难了。免费午餐吃惯了的中国网民，看到一个资源只会伸手，下载不了不骂娘就得感谢了。 即使对于有爱的人士来说，VIP收费+免费的模式是可以接受的，但是会有多少人付费？是否足以支撑这个项目？我个人认为难。&lt;/p&gt;
+
+&lt;p&gt;向第三方收钱，最简单的例子就是广告了，但是依旧存在够不够烧的问题。 要知道对于一个点击，网盘可能需要付出的是1G的流量，换来的不过是不足0.5%的概率点击广告；这样的成本还是很难消化。&lt;/p&gt;
+
+&lt;h3 id='2'&gt;2.减低运营成本&lt;/h3&gt;
+
+&lt;p&gt;既然没钱，那就少花一点。&lt;/p&gt;
+
+&lt;h4 id='p2p'&gt;P2P&lt;/h4&gt;
+
+&lt;p&gt;比如&lt;a href='http://www.loushao.net'&gt;漏勺&lt;/a&gt;就有这样的尝试，但是包括BT，PT，电驴的所有P2P方式都有一点硬伤——Peer：&lt;/p&gt;
+
+&lt;p&gt;* 持续性 没法保证资源长时间在网存活，PT可以通过定期重新发布+免费来再次刺激下载，激活资源，可能会好一些&lt;/p&gt;
+
+&lt;p&gt;* 速度稳定 当Peer少的时候，速度依赖于Peer的网络状况&lt;/p&gt;
+
+&lt;p&gt;* 时间稳定 资源是否可以下载依赖于在线的Peer，但是并不是任何时段都有种子，或者有足够的种子在线&lt;/p&gt;
+
+&lt;p&gt;以上这些问题，在遇到冷门资源的时候更加明显，无种/速度/并不是随时可以下载，即使是采用了比较先进的管理方式的PT依旧存在。 但是，&lt;strong&gt;作为一个以“实现ACG资源长久分享的长期计划，目标是解决在资源分享的过程中一直存在的资源保存不便现状”的ACG网盘来说，冷门的问题依旧需要服务器和带宽资源来解决。&lt;/strong&gt; 当然了，P2P对于热门资源的解决能力依旧是可以借鉴的，毕竟互联网中的2/8法则在这应该也是基本适用的。&lt;/p&gt;
+
+&lt;h4 id='id1374'&gt;网盘中转&lt;/h4&gt;
+
+&lt;p&gt;这是我在做了&lt;a href='http://loli.lu'&gt;loli.lu&lt;/a&gt;之后的想法。 既然P2P无法保证一致的网络状况，自己又无法支撑网盘的资源开销，那就去用别人的网盘就好了。 每一份资源在本地服务器上保留一份，然后上传到别的网盘中，用户再通过别的网盘下载。由于网盘实际上不会真正删除他们服务器上的文件，并且存在秒传这样的机制，过期/重传这样的问题实际是可以解决的。 那么，通过别的网盘，我们在保留资源持续有效的同时，通过提供多个网盘的下载，也能适应各种不同的网络环境和保持一致的下载体验。&lt;/p&gt;
+
+&lt;p&gt;当然，缺点也是有的，这样的行为不可能被其他网盘官方许可，也就是说存在用户方针风险。&lt;/p&gt;
+
+&lt;h2 id='id1375'&gt;二、版权&lt;/h2&gt;
+
+&lt;p&gt;这又是掌握着网盘命脉的，至关重要的资源。 ＡＣＧ向网盘由于自身特点，注定存在大量的非法版权的内容，注定会受到政策的影响。更加上内容是保存在服务器上的，也不接受用户私人数据，于是很难逃避版权方面的限制。 找避风港或是寻找借口，决定了这个项目的生存能力。可能转向小众是解决这个问题的一般可行办法，但是能支撑多久，天知道。&lt;/p&gt;
+
+&lt;p&gt;ＡＣＧ向网盘是个碉堡了的事情，但是真正做起来，难，太难了。&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>让非会员也能使用kuai.xunlei.com的添加网络文件功能</title>
+   <link href="http://blog.binux.me/2012/01/upload-files-with-web-url-in-kuai-xunlei-com-without-a-vip-account"/>
+   <updated>2012-01-13T02:26:26+08:00</updated>
+   <id>http://blog.binux.me/2012/01/upload-files-with-web-url-in-kuai-xunlei-com-without-a-vip-account</id>
+   <content type="html">&lt;p&gt;没什么用的功能一则： 让非会员也能使用kuai.xunlei.com的添加网络文件功能。&lt;/p&gt;
+
+&lt;p&gt;访问kuai.xunlei.com，登录，然后将下面的脚本粘贴到地址栏中执行即可：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;javascript:$(&amp;#39;#add_internet_file_btn&amp;#39;).unbind().click(function(){$(&amp;#39;#add_internet_file_layer&amp;#39;).fadeIn();$(&amp;#39;#add_internet_file_layer .addingtips&amp;#39;).hide();$(&amp;#39;#add_internet_file_layer .apply_submit_btn&amp;#39;).show();});&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;似乎这样就可以用xunlei来免费加速了，不支持BT是一大遗憾。&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>利用特定版本PHP对query处理不一致，实现Chrome’s Anti-XSS绕过</title>
+   <link href="http://blog.binux.me/2012/01/bypassing-chrome-anti-xss-filter-with-specific-version-of-php"/>
+   <updated>2012-01-04T22:19:06+08:00</updated>
+   <id>http://blog.binux.me/2012/01/bypassing-chrome-anti-xss-filter-with-specific-version-of-php</id>
+   <content type="html">&lt;p&gt;完全是为了需要发现的，以至于bypass这个词也是第一次见到。。这个漏洞利用了Chrome和PHP对于请求URL处理上的不一致，对于Chrome不认为是query请求的连接，被PHP当作query部分正常处理了，以此来绕过Chrome的XSS过滤。&lt;/p&gt;
+
+&lt;p&gt;受影响的浏览器和版本： Google Chrome - 16.0.912.63 beta Firefox - 9.0.1 Safari - 未亲自测试 Opera - 未亲自测试&lt;/p&gt;
+
+&lt;p&gt;不受影响的浏览器： IE10 - 未亲自测试，有截图&lt;/p&gt;
+
+&lt;p&gt;漏洞尚在使用中&amp;#8230; 绝对不是什么不好的用途啦..&lt;/p&gt;
+
+&lt;p&gt;826b1112bf8521831b04b2e2985f81ab&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>VPS配置记录（一）</title>
+   <link href="http://blog.binux.me/2011/12/vps-setup-log-1"/>
+   <updated>2011-12-24T11:33:03+08:00</updated>
+   <id>http://blog.binux.me/2011/12/vps-setup-log-1</id>
+   <content type="html">&lt;p&gt;一直想弄个VPS来玩，但都没有下定决心，随着&lt;del&gt;人民币升值&lt;/del&gt;VPS变得更廉价，加上最近看到&lt;a href='http://www.yardvps.com/billing/aff.php?aff=1108'&gt;yardvps&lt;/a&gt;的圣诞节20%续费优惠码，算下来一个512M XEN的VPS也不过40RMB/月了。去除省去的VPN的钱，还算不错，于是决定入手一个玩玩。&lt;/p&gt;
+
+&lt;p&gt;稍微介绍一下吧，&lt;a href='http://www.yardvps.com/billing/aff.php?aff=1108'&gt;yardvps&lt;/a&gt; (推介链接)，是无管理型的VPS提供商，机房位于洛杉矶，&lt;strong&gt;支持支付宝支付&lt;/strong&gt;。 我选的这个VPS配置如下：&lt;/p&gt;
+
+&lt;p&gt;* 内存：512 MB&lt;/p&gt;
+
+&lt;p&gt;* SWAP：1 GB&lt;/p&gt;
+
+&lt;p&gt;* CPU: 1 个 Intel(R) Xeon(R) CPU E5620 @ 2.40GHz&lt;/p&gt;
+
+&lt;p&gt;* 硬盘： 20GB&lt;/p&gt;
+
+&lt;p&gt;* 流量： 1500GB&lt;/p&gt;
+
+&lt;p&gt;* 原生IPV6、PPTP VPN&lt;/p&gt;
+
+&lt;p&gt;由于有中文页面和新浪微博+支付宝，简直就是为中国人打造的。速度方面各地都不一样，到国内骨干网能有200-300KB/S的速度。但是在我这（北京联通）还是挺悲剧的，也就30KB/S的样子，而且丢包严重。。虽然也有其他地区朋友说速度不错。。不过最好还是亲自测试以下为好 &lt;a href='http://208.87.242.2/download100.zip'&gt;官方测速100M&lt;/a&gt;，&lt;a href='http://ipv4.binux.me/CSDN-%e4%b8%ad%e6%96%87IT%e7%a4%be%e5%8c%ba-600%e4%b8%87.rar'&gt;位于我服务器上的文件&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;好，推介到此结束，下面正式开始，服务器系统用的是ArchLinux 64位版本，因为用得比较习惯了。。而且默认配置文件的分布还是比较舒服的。。&lt;/p&gt;
+
+&lt;h3 id='id1372'&gt;添加用户&lt;/h3&gt;
+
+&lt;p&gt;用adduser的交互式用户添加，比起useradd各种命令参数省心很多：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[root@localhost http]# adduser
+Login name for new user []: binux
+User ID (&amp;#39;UID&amp;#39;) [ defaults to next available ]: 
+Initial group [ users ]: 
+Additional groups (comma separated) []: bin,daemon,sys,adm,disk,wheel,log,audio
+Home directory [ /home/binux ] 
+Shell [ /bin/bash ] 
+Expiry date (YYYY-MM-DD) []: 
+
+New account will be created as follows:
+---------------------------------------
+Login name.......:  binux
+UID..............:  [ Next available ]
+Initial group....:  users
+Additional groups:  bin,daemon,sys,adm,disk,wheel,log,audio
+Home directory...:  /home/binux
+Shell............:  /bin/bash
+Expiry date......:  [ Never ]
+
+This is it... if you want to bail out, hit Control-C.  Otherwise, press
+ENTER to go ahead and make the account.&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id='etcsudoers'&gt;/etc/sudoers&lt;/h3&gt;
+
+&lt;p&gt;由于我都是用sshkey验证登录的，总是不记得密码，于是给wheel组加上了免密码sudo，至于为什么不直接用root是因为这样可以防止手抖。。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[root@localhost binux]# sudoedit /etc/sudoers
+
+## Same thing without a password
+-# %wheel ALL=(ALL) NOPASSWD: ALL
++%wheel ALL=(ALL) NOPASSWD: ALL
+
+## Uncomment to allow members of group sudo to execute any command
+-# %sudo   ALL=(ALL) ALL
++%sudo   ALL=(ALL) ALL&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后就是改掉密码什么的&lt;/p&gt;
+
+&lt;h3 id='pacman__python__vim'&gt;pacman &amp;amp;&amp;amp; python &amp;amp;&amp;amp; vim&lt;/h3&gt;
+
+&lt;p&gt;随手打开一些源&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[root@localhost ~]# vi /etc/pacman.d/mirrorlist
+Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch
+
+
+
+
+
+[root@localhost ~]# pacman -Sy
+[root@localhost ~]# pacman -S python
+[root@localhost ~]# pacman -S python2
+[root@localhost ~]# pacman -S vim&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id='nginx'&gt;nginx&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;pacman -S nginx
+
+
+
+
+
+[root@localhost ~]# vim /etc/nginx/conf/nginx.conf
+
+-#user http;
++user http;
+
+-    #keepalive_timeout  65;
++    keepalive_timeout  20;
+
+-    #gzip  on;
++    gzip  on;
+
+    server {
+        listen       80;
+        server_name  localhost;
+
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        location / {
+-            root   http;
++            root   /srv/http;
+            index  index.html index.htm;
+            autoindex on;
+        }
+
+     }
+
++    include vhost/*.conf;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这里我们已经把nginx的目录统一放到/srv/http下了。为了让nginx所在的http组也能访问修改这个路径，把这个目录的所有人改成http，然后将binux也加入这个组来修改里面的文件。 然后建立vhost目录，然后include到主配置中来，为了以后方便添加虚拟主机。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[root@localhost conf]# cd /etc/nginx/conf/
+[root@localhost conf]# mkdir vhost
+
+[root@localhost conf]# cd /srv/
+[root@localhost srv]# chown http:http http
+[root@localhost srv]# chmod 775 http
+[root@localhost srv]# usermod -a -G http binux
+
+[root@localhost srv]# rc.d start nginx&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id='pptp_server'&gt;PPTP Server&lt;/h3&gt;
+
+&lt;p&gt;参考：&lt;a href='https://wiki.archlinux.org/index.php/PPTP_Server_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87'&gt;https://wiki.archlinux.org/index.php/PPTP_Server_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)&lt;/a&gt;)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;[root@localhost ~]# pacman -S pptpd
+[root@localhost ~]# vim /etc/pptpd.conf
+
++3行
+option /etc/ppp/pptpd-options
+localip 172.16.36.1
+remoteip 172.16.36.2-254
+
+[root@localhost ~]# vim /etc/ppp/pptpd-options
+
++14行
+name pptpd
+refuse-pap
+refuse-chap
+refuse-mschap
+require-mschap-v2
+require-mppe-128
+proxyarp
+lock
+nobsdcomp
+novj
+novjccomp
+nologfd
+ms-dns 8.8.8.8
+ms-dns 8.8.4.4
+
+[root@localhost ~]# vim /etc/ppp/chap-secrets
+
++binux   pptpd   passwd  *
+
+[root@localhost ~]# vim /etc/sysctl.conf
+
+# Disable packet forwarding
+-net.ipv4.ip_forward=0
++net.ipv4.ip_forward=1
+
+[root@localhost ~]# iptables -A INPUT -i ppp+ -j ACCEPT
+[root@localhost ~]# iptables -A OUTPUT -o ppp+ -j ACCEPT
+
+[root@localhost ~]# iptables -A INPUT -p tcp --dport 1723 -j ACCEPT
+[root@localhost ~]# iptables -A INPUT -p 47 -j ACCEPT
+[root@localhost ~]# iptables -A OUTPUT -p 47 -j ACCEPT
+
+[root@localhost ~]# iptables -F FORWARD
+[root@localhost ~]# iptables -A FORWARD -j ACCEPT
+[root@localhost ~]# iptables -A POSTROUTING -t nat -o eth0 -j MASQUERADE
+[root@localhost ~]# iptables -A POSTROUTING -t nat -o ppp+ -j MASQUERADE
+
+[root@localhost ~]# rc.d save iptables&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后在线启用端口转发，然后可以启用pptpd了。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;echo 1 &amp;gt;/proc/sys/net/ipv4/ip_forward
+rc.d start pptpd&lt;/code&gt;&lt;/pre&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>[教程] 如何下载loli.lu的资源 For Windows</title>
+   <link href="http://blog.binux.me/2011/12/how_to_download_resource_from_loli-lu"/>
+   <updated>2011-12-24T00:27:20+08:00</updated>
+   <id>http://blog.binux.me/2011/12/how_to_download_resource_from_loli-lu</id>
+   <content type="html">&lt;p&gt;迅雷从早期的多线程下载，到P2SP多服务器下载，然后各种P2P吸血，到最后的迅雷离线服务，确确实实地建立起了一个互联网资源数据库。 无论是热门新番，还是上古时代的里番，几乎都能在迅雷的硬盘上找到，即使种子无人做种，即使ed2k没有资源，只要你付费，迅雷离线几乎都能满足你的欲望。&lt;/p&gt;
+
+&lt;p&gt;但是要让迅雷的吸血流氓客户端 钻进计算姬的身体里，总是觉得不舒服。于是我们有用回了干净清爽“少功能”的多线程下载软件。 ACG圈内听说的比较多的就是IDM（&lt;a href='http://www.internetdownloadmanager.com'&gt;Internet Download Manager&lt;/a&gt;）了。&lt;/p&gt;
+
+&lt;p&gt;于是这篇windows教程就说说怎么用IDM下载&lt;a href='http://loli.lu/'&gt;loli.lu&lt;/a&gt;的资源。。不过首先让我们扔掉那&lt;a href='http://blog.binux.me/2011/12/fuck-ie/'&gt;恼人的IE&lt;/a&gt;吧。。&lt;/p&gt;
+
+&lt;h3 id='id1369'&gt;工具介绍&lt;/h3&gt;
+
+&lt;h4 id='idm'&gt;IDM&lt;/h4&gt;
+
+&lt;p&gt;IDM是一个多线程下载软件。没了。。对真的没了。 没了就是这个东西的优势所在，没有乱七八糟的广告，没有没有必要的功能，一次付费&lt;del&gt;破解&lt;/del&gt;终身适用。 IDM将多线程发挥到极致，自动的续传判断，自动的最大可开启线程数判断，资源嗅探，多浏览器支持等特性，是迅雷很好的替换。&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt='' src='http://s3.binux.me/201112/2890/14352_o.jpg' /&gt;&lt;/p&gt;
+
+&lt;p&gt;您可以很容易的从互联网上寻找到付费&lt;del&gt;破解&lt;/del&gt;方式。。（我也不知道现在用的版本是哪里来的了）&lt;/p&gt;
+
+&lt;h4 id='lolilu'&gt;loli.lu&lt;/h4&gt;
+
+&lt;p&gt;是我所编写的开源项目，旨在帮助Linux和MAC用户更好的适用迅雷离线的丰富资源。在Martian支持下提供的ACG离线内容分享服务。 通过这个项目的中转，你可以免费获得可供下载的迅雷离线地址，并且可以将地址分享给好友进行下载。&lt;/p&gt;
+
+&lt;h3 id='id1370'&gt;获取下载链接&lt;/h3&gt;
+
+&lt;p&gt;访问：&lt;a href='https://loli.lu/'&gt;https://loli.lu/&lt;/a&gt;，点击右上角的登录，使用Google账户授权： &lt;a href='http://s0.binux.me/201112/2890/14223_o.png'&gt;&lt;img alt='login' src='http://s0.binux.me/201112/2890/14223_z.png' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;点击想要下载的资源，然后在批量下载对话框中选择“IDM导出”&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt='' src='http://s2.binux.me/201112/2890/14351_o.png' /&gt;&lt;/p&gt;
+
+&lt;p&gt;将导出文件保存到本地，然后打开“IDM &amp;gt; 任务 &amp;gt; 导入 &amp;gt; 从IDM导出文件”&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt='' src='http://s1.binux.me/201112/2890/14353_o.jpg' /&gt;&lt;/p&gt;
+
+&lt;p&gt;选择刚才下载到的文件，确认下链接确认就可以了。 &lt;strong&gt;注意，这个时候任务并不会立即开始，请到任务列表的最下端手动恢复任务。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt='' src='http://s1.binux.me/201112/2890/14354_o.jpg' /&gt;&lt;/p&gt;
+
+&lt;p&gt;好了，现在试试能不能满速下载吧：）&lt;/p&gt;
+
+&lt;p&gt;如果您每次都是使用“IDM导出”功能进行下载，是没有必要安装插件的，这时候您可以点击左边栏的“我无须使用浏览器下载功能”链接来关闭红色的文字提示，并且可以显示tag列表。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='http://blog.binux.me/wp-content/uploads/2011/12/LOLI.LU-迅雷离线下载分享.png'&gt;&lt;img alt='' src='http://blog.binux.me/wp-content/uploads/2011/12/LOLI.LU-迅雷离线下载分享-112x300.png' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id='id1371'&gt;添加资源&lt;/h3&gt;
+
+&lt;p&gt;在登录后就可以在右上角找到添加资源的链接啦 &lt;a href='http://s0.binux.me/201112/2890/14223_o.png'&gt;&lt;img alt='bar' src='http://s0.binux.me/201112/2890/14223_z.png' /&gt;&lt;/a&gt; &lt;img alt='add task' src='http://s1.binux.me/201112/2890/14225_o.png' /&gt; 当然了，如果觉得麻烦，也可以直接填写链接获得高速下载链接： &lt;img alt='add task 2' src='http://s0.binux.me/201112/2890/14227_o.png' /&gt;&lt;/p&gt;
+
+&lt;p&gt;对了，及时不是发布资源，获得的下载链接依旧可以分享给好友，只需要点击分享按钮，将链接复制给好友就可以了。 当然你也可以适用我们的一键分享功能： &lt;a href='http://s3.binux.me/201112/2890/14228_o.png'&gt;&lt;img alt='share' src='http://s3.binux.me/201112/2890/14228_o.png' /&gt;&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>IE难伺候啊</title>
+   <link href="http://blog.binux.me/2011/12/fuck-ie"/>
+   <updated>2011-12-23T23:35:15+08:00</updated>
+   <id>http://blog.binux.me/2011/12/fuck-ie</id>
+   <content type="html">&lt;p&gt;一开始还想要为&lt;a href='http://loli.lu/'&gt;loli.lu&lt;/a&gt;添加IE支持的，但是用linux习惯了，一直没有切到windows下看一眼loli.lu实际的效果，只是做了IE8版本以下的限制。&lt;/p&gt;
+
+&lt;p&gt;于是，我错了，即使在IE8之下。。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='http://s3.binux.me/201112/2890/14348_o.jpg'&gt;&lt;img alt='' src='http://s3.binux.me/201112/2890/14348_z.jpg' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;完全就是一团糟嘛！圆角，文字旋转不支持就算了。media query不支持，饿。。完全没法看啊这！&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='http://s1.binux.me/201112/2890/14347_o.jpg'&gt;&lt;img alt='' src='http://s1.binux.me/201112/2890/14347_o.jpg' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;也就是简单点的页面好一些，稍微可用。&lt;/p&gt;
+
+&lt;p&gt;不过好消息是IE9页面基本正常了。。于是，支持到IE9吧，反正IE也没插件，无法直接浏览器下载资源，直接蓝屏给你看！&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='http://s0.binux.me/201112/2890/14349_o.jpg'&gt;&lt;img alt='' src='http://s0.binux.me/201112/2890/14349_z.jpg' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;蓝屏，蓝屏。。额。。。。。。。。。。。。。好吧，蓝屏页面在IE下也没法看。。 IE我真的伤不起啊。。&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>[教程] Linux下使用aria2+loli.lu免费下载迅雷离线资源</title>
+   <link href="http://blog.binux.me/2011/12/howto_download_xunlei_offline_for_linux"/>
+   <updated>2011-12-20T22:28:09+08:00</updated>
+   <id>http://blog.binux.me/2011/12/howto_download_xunlei_offline_for_linux</id>
+   <content type="html">&lt;p&gt;对于Linux用户，无论你用不用Windows，都不会不知道迅雷和迅雷离线。 面对国内这苦B的网络环境，用http,ftp太慢，bt,ed2k过期，想用迅雷，额。。没客户端。。渣一样的客户端，用浏览器下吧，下一半断了还不能多线程，用命令行又有cookie验证。。。&lt;/p&gt;
+
+&lt;p&gt;这篇教程旨在帮助大家打造一个方便的高速下载平台，下载工具采用多线程的aria2c，中转网站采用&lt;a href='https://loli.lu'&gt;loli.lu&lt;/a&gt;（迅雷离线分享）的导出功能，方便地解决这个问题。&lt;/p&gt;
+
+&lt;h3 id='id1365'&gt;工具介绍&lt;/h3&gt;
+
+&lt;h4 id='aria2'&gt;aria2&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href='http://aria2.sourceforge.net'&gt;aria2c&lt;/a&gt;是一个跨平台开源，&lt;strong&gt;多线程&lt;/strong&gt;，多协议支持的下载器。 支持包括HTTP/HTTPS, FTP, BitTorrent多种内容的下载，并且支持多来源，多线程，有&lt;a href='http://sourceforge.net/apps/trac/aria2/wiki#GUIFrontends'&gt;丰富的前端&lt;/a&gt;可供选用。&lt;/p&gt;
+
+&lt;h4 id='lolilu'&gt;loli.lu&lt;/h4&gt;
+
+&lt;p&gt;是我在&lt;a href='http://4321.la/'&gt;Martian&lt;/a&gt;支持下共同创建的一个迅雷离线下载分享的&lt;a href='https://github.com/binux/lixian.xunlei'&gt;开源&lt;/a&gt;项目。旨在帮助Linux和MAC用户更好的适用迅雷离线的丰富资源。 通过这个项目的中转，你可以&lt;strong&gt;免费获得&lt;/strong&gt;可供下载的迅雷离线地址，并且可以将地址分享给好友进行下载。&lt;/p&gt;
+
+&lt;h3 id='aria2'&gt;安装aria2&lt;/h3&gt;
+
+&lt;p&gt;如果您的发行版带有包管理器，aria2很有可能已经包含在源中，直接安装即可。例如来自&lt;a href='http://sourceforge.net/apps/trac/aria2/wiki/Download'&gt;http://sourceforge.net/apps/trac/aria2/wiki/Download&lt;/a&gt;的安装说明：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Debian and Ubuntu&lt;/strong&gt;&lt;br /&gt; apt-get install aria2&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Fedora&lt;/strong&gt;&lt;br /&gt; yum install aria2&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Mandriva&lt;/strong&gt;&lt;br /&gt; urpmi aria2&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Arch&lt;/strong&gt;&lt;br /&gt; pacman -S aria2&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Gentoo&lt;/strong&gt;&lt;br /&gt; emerge aria2&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;OpenSUSE&lt;/strong&gt;&lt;br /&gt; Build Service http://download.opensuse.org/repositories/network:/utilities/&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Lunar Linux&lt;/strong&gt;&lt;br /&gt; lin aria2&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;AgiliaLinux&lt;/strong&gt;&lt;br /&gt; mpkg-install aria2&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;FreeBSD&lt;/strong&gt;&lt;br /&gt; &lt;a href='http://www.freebsd.org/cgi/cvsweb.cgi/ports/www/aria2/'&gt;http://www.freebsd.org/cgi/cvsweb.cgi/ports/www/aria2/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Mac OS X&lt;/strong&gt;&lt;br /&gt; &lt;a href='http://www.macports.org/'&gt;http://www.macports.org/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Fink&lt;/strong&gt;&lt;br /&gt; &lt;a href='http://pdb.finkproject.org/pdb/package.php/aria2'&gt;http://pdb.finkproject.org/pdb/package.php/aria2&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;Cygwin&lt;/strong&gt;&lt;br /&gt; &lt;a href='http://sourceware.org/cygwin/packages/aria2/'&gt;http://sourceware.org/cygwin/packages/aria2/&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;如果您的发行版很不幸的不在上述发行版中，请前往&lt;a href='http://sourceforge.net/projects/aria2/files/stable/'&gt;http://sourceforge.net/projects/aria2/files/stable/&lt;/a&gt;尝试适用源码安装。&lt;/p&gt;
+
+&lt;p&gt;当您安装完成之后输入&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;aria2c -v&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;出现&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;aria2 version 1.13.0
+Copyright (C) 2006, 2011 Tatsuhiro Tsujikawa
+
+......&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;表明安装成功，注意，由于aria2在1.10后参数变化，而我们的Loli.lu导出的是新的参数设定，&lt;strong&gt;需要aria2的版本高于1.10&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;h3 id='id1366'&gt;获取下载链接&lt;/h3&gt;
+
+&lt;p&gt;访问：&lt;a href='https://loli.lu/'&gt;https://loli.lu/&lt;/a&gt;，点击右上角的登录，使用Google账户授权： &lt;a href='http://s0.binux.me/201112/2890/14223_o.png'&gt;&lt;img alt='login' src='http://s0.binux.me/201112/2890/14223_z.png' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;然后点击想要下载的资源，在弹出的浮动框中的批量下载中，点击aria2的链接： &lt;a href='http://s1.binux.me/201112/2890/14224_o.png'&gt;&lt;img alt='get link' src='http://s1.binux.me/201112/2890/14224_o.png' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;之后，浮动框中会输出这个资源的所有aria2的链接：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;aria2c -c -x5 --out \[SumiSora\]\[C3\]\[01\]\[GB\]\[x264\_aac\]\[720p\]\(5393D704\)\.ass --header &amp;#39;Cookie:gdriveid=4B281B37A54B63BF6F47BBF2A8A22675;&amp;#39; &amp;#39;http://gdl.lixian.vip.xunlei.com/download?fid=umOXSXI/nn0XdbUzcpjfYhEs+g2K7wAAAAAAAFEZlKH8Vp3sMEiGuAwWb4ynfSaB&amp;amp;mid;=666&amp;amp;threshold;=150&amp;amp;tid;=F0991DB1D9D3D750F20EB62624DE99D4&amp;amp;srcid;=4&amp;amp;verno;=1&amp;amp;g;=511994A1FC569DEC304886B80C166F8CA77D2681&amp;amp;scn;=c8&amp;amp;i;=59B01E2CB9D2E7B1B5A83016DF97D4D445BAE247&amp;amp;t;=6&amp;amp;ui;=191942368&amp;amp;ti;=50569010689&amp;amp;s;=61322&amp;amp;m;=0&amp;amp;n;=01145C8D0C6F72615D3A72D7025B30315D3A76A6025B783236556E853E635D5B3753019402283533395275D36F34292E611242E45F00000000&amp;#39;
+aria2c -c -x5 --out \[SumiSora\]\[C3\]\[01\]\[GB\]\[x264\_aac\]\[720p\]\(5393D704\)\.mkv --header &amp;#39;Cookie:gdriveid=4B281B37A54B63BF6F47BBF2A8A22675;&amp;#39; &amp;#39;http://gdl.lixian.vip.xunlei.com/download?fid=2QPCJq1fI2pyx9Nbr9XkGGw/NgK7SEMVAAAAAIc3sATS9kleYgkLISA6zY0DXbEj&amp;amp;mid;=666&amp;amp;threshold;=150&amp;amp;tid;=7568C4810EDDE63A3C2982ADE0BF4234&amp;amp;srcid;=4&amp;amp;verno;=1&amp;amp;g;=8737B004D2F6495E62090B21203ACD8D035DB123&amp;amp;scn;=c10&amp;amp;i;=59B01E2CB9D2E7B1B5A83016DF97D4D445BAE247&amp;amp;t;=6&amp;amp;ui;=191942368&amp;amp;ti;=50569010689&amp;amp;s;=356731067&amp;amp;m;=0&amp;amp;n;=01145C8D0C6F72615D3A72D7025B30315D3A76A6025B783236556E853E635D5B3753019402283533395275D36F34292E6D0A47E45F00000000&amp;#39;
+......&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;现在开始下载吧&lt;/strong&gt;，先新建一个目录，比如&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir -p &amp;#39;[澄空学园][C3-魔幻三次方-][01-12][GB][720p MKV][全]&amp;#39;
+cd &amp;#39;[澄空学园][C3-魔幻三次方-][01-12][GB][720p MKV][全]&amp;#39;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;然后粘贴入这些命令&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; *** Download Progress Summary as of Tue Dec 20 22:10:06 2011 ***               
+================================================================================
+[#1 SIZE:8.7MiB/340.2MiB(2%) CN:5 SPD:170.6KiBs ETA:33m08s]
+FILE: /home/binux/work/lixian.xunlei/[SumiSora][C3][01][GB][x264_aac][720p](5393D704).mkv
+--------------------------------------------------------------------------------
+
+[#1 SIZE:11.9MiB/340.2MiB(3%) CN:5 SPD:142.4KiBs ETA:39m20s]
+    SIZE:文件大小，进度      CN:线程数 SPD:速度      ETA:剩余时间&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;对了，如果如果中间打断一个任务，只要在原来的目录下，再次执行下载命令就可以继续下载了。 如果一个任务的连接过多，也可以考虑建一个文件先保存起来，然后sh down.sh这样下载就好了。&lt;/p&gt;
+
+&lt;h3 id='id1367'&gt;添加资源&lt;/h3&gt;
+
+&lt;p&gt;在登录后就可以在右上角找到添加资源的链接啦 &lt;a href='http://s0.binux.me/201112/2890/14223_o.png'&gt;&lt;img alt='bar' src='http://s0.binux.me/201112/2890/14223_z.png' /&gt;&lt;/a&gt; &lt;img alt='add task' src='http://s1.binux.me/201112/2890/14225_o.png' /&gt; 当然了，如果觉得麻烦，也可以直接填写链接获得高速下载链接： &lt;img alt='add task 2' src='http://s0.binux.me/201112/2890/14227_o.png' /&gt;&lt;/p&gt;
+
+&lt;p&gt;对了，及时不是发布资源，获得的下载链接依旧可以分享给好友，只需要点击分享按钮，将链接复制给好友就可以了。 当然你也可以适用我们的一键分享功能： &lt;a href='http://s3.binux.me/201112/2890/14228_o.png'&gt;&lt;img alt='share' src='http://s3.binux.me/201112/2890/14228_o.png' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id='id1368'&gt;===&lt;/h3&gt;
+
+&lt;p&gt;如果有任何问题，欢迎留言，或&lt;a href='http://gplus.to/binux'&gt;+足兆叉虫&lt;/a&gt; 或者直接提交BUG：&lt;a href='https://github.com/binux/lixian.xunlei/issues'&gt;https://github.com/binux/lixian.xunlei/issues&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>迅雷离线脚本+flexget 将离线资源自动下载回本地</title>
+   <link href="http://blog.binux.me/2011/12/from_xunlei_lixian_for_flexget"/>
+   <updated>2011-12-14T14:19:07+08:00</updated>
+   <id>http://blog.binux.me/2011/12/from_xunlei_lixian_for_flexget</id>
+   <content type="html">&lt;p&gt;这个也是一篇教程，上接 &amp;#8221;&lt;a href='http://blog.binux.me/2011/12/xunlei_lixian_for_flexget/'&gt;让资源灌满你的离线空间吧 — 迅雷离线插件 for flexget&lt;/a&gt;&amp;#8220;。需要的工具依旧是flexget和lixian.xunlei插件。&lt;/p&gt;
+
+&lt;p&gt;本文是应+&lt;a href='https://plus.google.com/u/0/111086731636961623060'&gt;平芜泫&lt;/a&gt;的需求，自动将迅雷离线里面的文件下载回vps，然后再从教育网用IPV6下回本地。前两步不再复述，参考前文的步骤即可，直接步骤3。先上配置文件：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;feeds:
+  some_name:
+    from_xunlei_lixian:
+      username: &amp;quot;&amp;lt;your username&amp;gt;&amp;quot;
+      password: &amp;quot;&amp;lt;your password&amp;gt;&amp;quot;
+      limit: 30
+      fields:
+        base_path: /home/me/downloads
+    accept_all: true
+    exec:
+      auto_escape: yes
+      on_output:
+        for_accepted: mkdir -p / &amp;amp;&amp;amp; aria2c -c -x5 --out &amp;#39;//&amp;#39; --header &amp;#39;&amp;#39; &amp;#39;&amp;#39;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这又是一个yaml的配置文件，其中from_xunlei_lixian是input，accept_all是过滤器，而exec作为输出来进行下载。&lt;/p&gt;
+
+&lt;p&gt;from_xunlei_lixian中，limit限制一次取出多少条结果，fields可以将里面的参数传递到output中。 output中可以使用的字段包括&lt;/p&gt;
+
+&lt;p&gt;* title         文件名&lt;/p&gt;
+
+&lt;p&gt;* url           离线地址&lt;/p&gt;
+
+&lt;p&gt;* cookie     下载所需要的cookie&lt;/p&gt;
+
+&lt;p&gt;* taskname 所属的任务名（比如BT）&lt;/p&gt;
+
+&lt;p&gt;* size         文件大小&lt;/p&gt;
+
+&lt;p&gt;* format     文件格式（不准确）&lt;/p&gt;
+
+&lt;p&gt;* fields       在上文中设置的那些东西&lt;/p&gt;
+
+&lt;p&gt;exec的文档在&lt;a href='http://flexget.com/wiki/Plugins/exec'&gt;http://flexget.com/wiki/Plugins/exec&lt;/a&gt;，auto_escape可以escape掉文件名中的奇怪字符，on_output和for_accepted对每一个文件进行下载任务。&lt;/p&gt;
+
+&lt;p&gt;指令中：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt; mkdir -p /&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;用于在base_path下创建一个以taskname命名的文件夹，这样BT这样多文件的时候就会下载到同一个目录下了。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;aria2c -c -x5 &amp;#8211;out &amp;#8216;//&amp;#8217; &amp;#8211;header &amp;#8221; &amp;#8221;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;使用aria2c使用5个线程，将文件下载到本地。当然，也可以使用wget，这么写就可以了：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;wget -c -O &amp;#8216; //&amp;#8217; &amp;#8211;header &amp;#8221; &amp;#8221;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;好了，现在运行flexget &amp;#8211;test试试吧，flexget会输出将要执行的命令，但是并不会真正的执行，可以作为测试。&lt;/p&gt;
+
+&lt;p&gt;可能你的离线空间里面已经积累了大量已经下载回本地的文件，重新下一遍是没有意义的，对吧，来试试这个命令：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;flexget &amp;#8211;learn&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这样可以跳过下载步骤，但是这些文件依旧会记录下来，再执行flexget的时候就只会下载之后添加的文件了。&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>让资源灌满你的离线空间吧 -- 迅雷离线插件 for flexget</title>
+   <link href="http://blog.binux.me/2011/12/xunlei_lixian_for_flexget"/>
+   <updated>2011-12-14T13:30:03+08:00</updated>
+   <id>http://blog.binux.me/2011/12/xunlei_lixian_for_flexget</id>
+   <content type="html">&lt;p&gt;迅雷离线空间已经开放到1PB了，总是用不完，手头上那个100M的种子压缩包里面东西好多啊，把它塞满离线空间如何？&lt;/p&gt;
+
+&lt;p&gt;这个是一篇教程，适用于所有python环境，包括Linux, Windows, OSX, routers, NAS boxes，只要有python环境就可以。（不过搭建python环境并不是本文的内容，本文默认您已经有python了）&lt;/p&gt;
+
+&lt;h3 id='1'&gt;1、工具介绍&lt;/h3&gt;
+
+&lt;p&gt;我们这次使用的主要是两个东西&lt;/p&gt;
+
+&lt;p&gt;* &lt;a href='http://flexget.com/'&gt;flexget&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;* &lt;a href='https://github.com/binux/lixian.xunlei'&gt;lixian.xunlei&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;flexget&lt;/strong&gt;是一个能够从RSS，HTML页面，CSV文件，本地目录等等地方抓取资源，经过过滤，然后下载的一套框架。 flexget会自动监控追踪下载过的资源，保证不会被重复下载，后端可以调用各种BT，命令来处理这些资源。&lt;/p&gt;
+
+&lt;p&gt;flexget对于操作分为三种基本类型：&lt;/p&gt;
+
+&lt;p&gt;Inputs Filters Outputs&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;lixian.xunlei&lt;/strong&gt;是我写得一个lixian.xunlei.com的python API封装，本身是为了挖迅雷墙角的，不过本着一物多用的原则，提供了一个flexget的插件，支持作为资源的output向迅雷推送资源，也可以作为input从迅雷取出资源。&lt;/p&gt;
+
+&lt;h3 id='2'&gt;2、环境准备&lt;/h3&gt;
+
+&lt;p&gt;介绍完插件，那么就开始动手吧，既然需要工具，那么首先安装他们。这里以linux环境为例，不过都是python的工具，你应该能很容易在其他的环境找到对应的命令。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;安装flexget 直接从pypi中安装即可，依赖会自动解决&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;easy_install flexget&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;ol&gt;
+&lt;li&gt;安装xunlei.lixian 由于暂时还没有自动安装脚本，只能手动了。。。首先是依赖&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;easy_install requests&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;easy_install pyparsing easy_install beautifulsoup&lt;/p&gt;
+
+&lt;p&gt;然后安装插件：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;下载&lt;a href='https://gist.github.com/gists/1476520/download'&gt;https://gist.github.com/gists/1476520/download&lt;/a&gt;，将文件解压到 ~/.flexget/plugins 文件文件夹中（若文件夹不存在，创建一个）&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;注意：解压出来带了一层gist*****&lt;strong&gt;&lt;em&gt;的目录，请将文件从那个目录中拷贝出来&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id='3'&gt;3、配置&lt;/h3&gt;
+
+&lt;p&gt;flexget的配置使用的是yaml，虽然没有听说过，不过其实还是很简单的。。&lt;/p&gt;
+
+&lt;p&gt;flexget的配置文件位于  ~/.flexget/config.yml （若不存在，创建一个即可）。 一个基本的配置是这样的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;feeds:
+  Fate/Zero:
+    rss: http://bt.ktxp.com/rss-search-Fate%2FZero+%E6%BE%84%E7%A9%BA%E5%AD%A6%E5%9B%AD+720p.xml
+    accept_all: true
+    xunlei_lixian:
+      username: &amp;quot;&amp;lt;your username&amp;gt;&amp;quot;
+      password: &amp;quot;&amp;lt;your password&amp;gt;&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;flexget将多个不同的来源视为不同的feed，放在feeds下，Fate/Zero是它的名字&lt;/p&gt;
+
+&lt;p&gt;在前面我们说过，flexget有input, filter, output三种类型，在这个feed下面的配置中rss就是input, accept_all是filter, output是xunlei_lixian。&lt;/p&gt;
+
+&lt;p&gt;对于一个feed来说，input, filter, output这三个角色是必不可少的，但是使用的插件是可以变化的，通过不同的插件组合来达到各种各样的功能。 更多的input, filter, output和他们的参数可以去&lt;a href='http://flexget.com/wiki/Plugins'&gt;http://flexget.com/wiki/Plugins&lt;/a&gt;这里参看。&lt;/p&gt;
+
+&lt;p&gt;虽然这三者总是需要的，但是每次都写一次完全相同的accept_all和xunlei_lixian也是一件麻烦的事情，于是你可以这么写&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;presets:
+  global:
+    accept_all: true
+    xunlei_lixian:
+      username: &amp;quot;&amp;lt;your username&amp;gt;&amp;quot;
+      password: &amp;quot;&amp;lt;your password&amp;gt;&amp;quot;
+
+feeds:
+  Fate/Zero:
+    rss: http://bt.ktxp.com/rss-search-Fate%2FZero+%E6%BE%84%E7%A9%BA%E5%AD%A6%E5%9B%AD+720p.xml
+  C3:
+    rss: http://bt.ktxp.com/rss-search-%E9%9B%AA%E9%85%B7%E5%AD%97%E5%B9%95%E7%BB%84+C3+%E7%B9%81%E4%BD%93+RMVB.xml
+  local_file:
+    find:
+      path: /home/me/incoming
+      mask: &amp;#39;*.torrent&amp;#39;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;用presets就可以把一些公共的配置放到一起了&lt;/p&gt;
+
+&lt;p&gt;需要注意的地方是，&lt;strong&gt;如果参数中带中文，或者有其他特殊支付，比如&amp;#8217;&lt;em&gt;.torrent&amp;#8217;，请用引号包起来。&lt;/em&gt;*&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;你可能注意到了，本地文件也是可以作为input的，写法就是用find插件，像例子中那样。 不过，由于xunlei只接受种子，所有一定要记得过滤 &amp;#8217;&lt;em&gt;.torrent&amp;#8217; 啊，不然我也不知道会怎么样。。&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;好了，就是这样了，该做的都完成了，现在我们&lt;strong&gt;运行flexget&lt;/strong&gt;看看吧：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;输入命令flexget看看吧&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;如果不放心，可以先使用命令： flexget &amp;#8211;test 来试试结果是否正确。&lt;/p&gt;
+
+&lt;p&gt;如果没出什么问题的话，资源已经通通导入到你的离线空间了，慢慢下载回来吧，或者也可以参考我的下一篇教程：&lt;a href='http://blog.binux.me/2011/12/from_xunlei_lixian_for_flexget/'&gt;自动将离线空间的内容通通下回本地&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;除了这种用法，flexget也可以订阅资源到transmission中等其他软件中，配合RSS可以达到自动订阅新番的效果，具体参阅&lt;a href='http://flexget.com/wiki/Plugins'&gt;http://flexget.com/wiki/Plugins&lt;/a&gt;中对应的插件就可以了。&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>CSS实现文字中间截断效果的一种尝试</title>
+   <link href="http://blog.binux.me/2011/12/csse5ae9ee78eb0e69687e5ad97e4b8ade997b4e688aae696ade69588e69e9ce79a84e4b880e7a78de5b09de8af95"/>
+   <updated>2011-12-12T12:07:47+08:00</updated>
+   <id>http://blog.binux.me/2011/12/csse5ae9ee78eb0e69687e5ad97e4b8ade997b4e688aae696ade69588e69e9ce79a84e4b880e7a78de5b09de8af95</id>
+   <content type="html">&lt;p&gt;CSS属性&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;text-overflow: ellipsis;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;-o-text-overflow: ellipsis; white-space: nowrap;&lt;/p&gt;
+
+&lt;p&gt;能够实现文字溢出时截断，不过只能在文字结尾处。但是像文件名这样的文字，很有可能一组的前面都是相同的，只有最后的一部分是不同的。这时候需要进行文字的中部截断。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;而一般实现文字中间&lt;/strong&gt;截断都是使用：&lt;/p&gt;
+
+&lt;p&gt;1、按照字符个数在服务器端直接截断 这样做的缺陷是，文字并不是等宽的，很容易产生长短不一的情况。&lt;/p&gt;
+
+&lt;p&gt;2、用js获取文本的长度，不断删除中间的文字 虽然说这种方式最为可行，但是总是感觉不优雅。。而且爬虫爬取的时候没办法获得完整的内容&lt;/p&gt;
+
+&lt;p&gt;于是&lt;strong&gt;尝试用自己的办法来解决这个问题&lt;/strong&gt;。&lt;/p&gt;
+
+&lt;p&gt;首先这个是演示地址，和代码：&lt;a href='http://jsbin.com/okopiz'&gt;http://jsbin.com/okopiz&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;考虑到浏览器默认支持的截断其实效果还不错，为了达到中部截断的效果，可以&lt;strong&gt;将文字分成前后两个部分&lt;/strong&gt;。然后&lt;strong&gt;将前面部分的文字设置成溢出隐藏，而后面部分的文字接上&lt;/strong&gt;即可。 在实际操作中，使用了padding这个属性，&lt;strong&gt;在div尾部推出200px的空间&lt;/strong&gt;用于放置文字的结尾部分。&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt='' src='http://s0.binux.me/201112/2890/14044_o.png' /&gt;&lt;/p&gt;
+
+&lt;p&gt;只需要保证后面文字不超出200px的空间即可。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;不过，这里有个问题：&lt;/strong&gt; 如果将后面文字固定在200px空间内的话，当宽度足够显示整个文字的时候，会导致后面部分文字被推开。 而如果不这么做的话，当文字溢出，会导致后面部分位置不正确。。&lt;/p&gt;
+
+&lt;p&gt;一直没有想到好的办法解决这个问题。。。于是只好求助于js了。。这个是一个缺憾吧。。&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>使用Valgrind检测内存泄漏</title>
+   <link href="http://blog.binux.me/2011/11/e4bdbfe794a8valgrinde6a380e6b58be58685e5ad98e6b384e6bc8f"/>
+   <updated>2011-11-18T09:12:06+08:00</updated>
+   <id>http://blog.binux.me/2011/11/e4bdbfe794a8valgrinde6a380e6b58be58685e5ad98e6b384e6bc8f</id>
+   <content type="html">&lt;h2 id='valgrind_'&gt;valgrind_介绍&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href='http://valgrind.org/'&gt;Valgrind&lt;/a&gt;是一个GPL的软件，用于Linux（For x86, amd64 and ppc32）程序的内存调试和代码剖析。你可以在它的环境中运行你的程序来监视内存的使用情况，比如C 语言中的malloc和free或者 C++中的new和 delete。使用Valgrind的工具包，你可以自动的检测许多内存管理和线程的bug，避免花费太多的时间在bug寻找上，使得你的程序更加稳固。&lt;/p&gt;
+
+&lt;h2 id='valgrind'&gt;valgrind的主要功能&lt;/h2&gt;
+
+&lt;p&gt;Valgrind工具包包含多个工具，如Memcheck,Cachegrind,Helgrind, Callgrind，Massif。下面分别介绍个工具的作用：&lt;/p&gt;
+
+&lt;p&gt;Memcheck 工具主要检查下面的程序错误：&lt;/p&gt;
+
+&lt;p&gt;* 未初始化的内存 (Use of uninitialised memory)&lt;/p&gt;
+
+&lt;p&gt;* 已经释放了的内存 (Reading/writing memory after it has been free&amp;#8217;d)&lt;/p&gt;
+
+&lt;p&gt;* 超过 malloc分配的内存空间(Reading/writing off the end of malloc&amp;#8217;d blocks)&lt;/p&gt;
+
+&lt;p&gt;* 对堆栈的非法访问 (Reading/writing inappropriate areas on the stack)&lt;/p&gt;
+
+&lt;p&gt;* 申请的空间是否有释放 (Memory leaks - where pointers to malloc&amp;#8217;d blocks are lost forever)&lt;/p&gt;
+
+&lt;p&gt;* malloc/free/new/delete申请和释放内存的匹配(Mismatched use of malloc/new/new &lt;span /&gt; vs free/delete/delete &lt;span /&gt;)&lt;/p&gt;
+
+&lt;p&gt;* src和dst的重叠(Overlapping src and dst pointers in memcpy() and related functions)&lt;/p&gt;
+
+&lt;p&gt;最近发现我们的爬虫的内存泄漏现象已经达到完全无法接受的地步，泄漏的内存将整个内存使用完之后，继续占用swap，直到整个系统无相应，负债超过了60。。直到swap再也没有空间，内核将爬虫的程序干掉了事。。&lt;/p&gt;
+
+&lt;p&gt;于是检查内存泄漏不得不立即执行，稍微google了一下，决定使用Valgrind&lt;/p&gt;
+
+&lt;p&gt;下载编译安装毫无压力，就不说了，毫无意义。&lt;/p&gt;
+
+&lt;p&gt;之后就是使用了。由于Valgrind能够直接对二进制的程序进行检测，完全不需要修改代码，连重新编译都不需要，所以直接上。&lt;/p&gt;
+
+&lt;p&gt;在这里犯了个错误，由于程序是通过启动脚本启动的，于是我就valgrind &amp;#8211;tool=memcheck &amp;#8211;leak-check=full 结果完全都是没有内存泄漏。。&lt;/p&gt;
+
+&lt;p&gt;在脚本里面程序是fork执行的，这样没法监控吧，于是这样：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;valgrind --tool=memcheck --leak-check=full bin/crawler --bigtable_implementation=Mysql --mysql_host=localhost $*&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;OK，程序运行明显变慢了，过一段时间后CUT掉，输出好多。。于是&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;valgrind --tool=memcheck --leak-check=full bin/crawler --bigtable_implementation=Mysql --mysql_host=localhost $* 2&amp;gt;&amp;amp;1 | tee memcheck&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;得到如下的信息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;==18073== Memcheck, a memory error detector
+==18073== Copyright (C) 2002-2009, and GNU GPL&amp;#39;d, by Julian Seward et al.
+==18073== Using Valgrind-3.5.0 and LibVEX; rerun with -h for copyright info
+==18073== Command: bin/crawler --bigtable_implementation=Mysql --mysql_host=localhost
+==18073==
+libprotobuf INFO srcs/mysql_table_client.cc:98] Database Selected.
+libprotobuf INFO srcs/mysql_table_client.cc:103] Initialized successfully.
+libprotobuf INFO srcs/mysql_table_client.cc:98] Database Selected.
+libprotobuf INFO srcs/mysql_table_client.cc:103] Initialized successfully.
+libprotobuf INFO srcs/crawl_queue.cc:48] loading processing tasks ...
+libprotobuf INFO srcs/crawl_queue.cc:57] loading queue tasks ...
+libprotobuf INFO srcs/crawl_queue.cc:66] loading delayed tasks ...
+libprotobuf INFO srcs/crawl_queue.cc:74] loaded 16750 tasks ...
+libprotobuf INFO srcs/crawl_queue.cc:77] initialize buckets ...
+libprotobuf INFO srcs/redis_client.cc:78] RedisClient::Initialize...
+libprotobuf INFO srcs/js_interpreter.cc:204] JavaScript-C 1.8.5 2011-03-31
+libprotobuf INFO srcs/js_interpreter.cc:601] Setup runtime successfully.
+
+................
+
+==18073== 7,592 bytes in 785 blocks are definitely lost in loss record 1,498 of 1,615
+==18073==    at 0x4A05E1C: malloc (vg_replace_malloc.c:195)
+==18073==    by 0x4FD59B2: js::VectorToIdArray(JSContext*, js::AutoIdVector&amp;amp;, JSIdArray**) (in /usr/local/lib/libmozjs185.so.1.0.0)
+==18073==    by 0x4F4E262: JS_Enumerate (in /usr/local/lib/libmozjs185.so.1.0.0)
+==18073==    by 0x4293D7: hypercrawler::JSInterpreter::GetObjectStringArrayProperty(JSObject*, std::string const&amp;amp;, std::map, std::allocat
+or &amp;gt; &amp;gt;*) (js_interpreter.cc:361)
+==18073==    by 0x429E96: hypercrawler::JSInterpreter::FinalizeReturnObject(unsigned long, hypercrawler::CallParserResponse*) (js_interpreter.cc:517)
+==18073==    by 0x42AA59: hypercrawler::JSInterpreter::CallFunction(std::string const&amp;amp;, hypercrawler::CallParserRequest const&amp;amp;, hypercrawler::CallParserResponse*) (js_interpreter.cc:567)
+==18073==    by 0x45974C: hypercrawler::ProcessCrawlRequest(hypercrawler::CrawlRequest&amp;amp;, hypercrawler::PuppetExecutionEngine&amp;amp;, std::string&amp;amp;, ypercrawler::CrawlResponse&amp;amp;, hyperindex::Document&amp;amp;, std::vector &amp;gt;&amp;amp;, std::string) (crawling_process_request.cc:170)
+==18073==    by 0x446B06: hypercrawler::CrawlingWorker::operator()() (crawling_worker_service.cc:186)
+==18073==    by 0x62C8D3F: thread_proxy (in /usr/lib/libboost_thread-mt.so.1.42.0)
+==18073==    by 0x3546C0673C: start_thread (in /lib64/libpthread-2.5.so)
+==18073==    by 0x35460D44BC: clone (in /lib64/libc-2.5.so)
+==18073==
+==18073==
+==18073== LEAK SUMMARY:
+==18073==    definitely lost: 90,928 bytes in 8,466 blocks
+==18073==    indirectly lost: 0 bytes in 0 blocks
+==18073==      possibly lost: 4,077,170 bytes in 38,041 blocks
+==18073==    still reachable: 21,575,205 bytes in 70,837 blocks
+==18073==         suppressed: 0 bytes in 0 blocks
+==18073== Reachable blocks (those to which a pointer was found) are not shown.
+==18073== To see them, rerun with: --leak-check=full --show-reachable=yes
+==18073==
+==18073== For counts of detected and suppressed errors, rerun with: -v
+==18073== ERROR SUMMARY: 390 errors from 259 contexts (suppressed: 4 from 4)&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;definitely lost: 90,928 bytes in 8,466 blocks&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;这个就是表示存在内存泄漏，而因为是用的SpiderMonkey存在自己内存回收机制，并且是非正常退出，possibly lost暂时能够接受。&lt;/p&gt;
+
+&lt;p&gt;可以看出Valgrind，&lt;strong&gt;7,592 bytes in 785 blocks are definitely lost in loss record 1,498 of 1,615&lt;/strong&gt;这一段的执行路径上存在内存泄漏。&lt;/p&gt;
+
+&lt;p&gt;通过查阅文档&lt;a href='https://developer.mozilla.org/en/SpiderMonkey/JSAPI_Reference/JS_Enumerate'&gt;JS_Enumerate&lt;/a&gt;、&lt;a href='https://developer.mozilla.org/en/JS_GetStringBytes'&gt;JS_EncodeString&lt;/a&gt;这两个SpiderMonkey API函数是需要用户释放内存的。。而我确实没有释放。。&lt;/p&gt;
+
+&lt;p&gt;我不得不吐槽。。JS_EncodeString的文档里面&lt;strong&gt;The caller may modify it and is responsible for freeing it.&lt;/strong&gt;，就这么一句话说到要用户负责释放。。就不能写大一点吗！&lt;/p&gt;
+
+&lt;p&gt;明明上面一段还是说&amp;#8221;The array returned by JS_GetStringBytes or JS_GetStringBytesZ is automatically freed when str is finalized by the JavaScript garbage collection mechanism.&amp;#8221;来着。。&lt;/p&gt;
+
+&lt;p&gt;于是，正常释放之后，再次执行Valgrind检查没问题，OK，问题解决。&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>记一次神奇的BUG —— 慎用sqlalchemy的autocommit</title>
+   <link href="http://blog.binux.me/2011/11/e8aeb0e4b880e6aca1e7a59ee5a587e79a84bug-e6858ee794a8sqlalchemye79a84autocommit"/>
+   <updated>2011-11-17T11:37:18+08:00</updated>
+   <id>http://blog.binux.me/2011/11/e8aeb0e4b880e6aca1e7a59ee5a587e79a84bug-e6858ee794a8sqlalchemye79a84autocommit</id>
+   <content type="html">&lt;p&gt;东西是是用&lt;a href='http://www.sqlalchemy.org/'&gt;sqlalchemy&lt;/a&gt;写的数据处理的程序。就是从一个库里面取出数据，然后处理后写回去。&lt;/p&gt;
+
+&lt;p&gt;数据库用的是MySQL+MyISAM，因为考虑到MyISAM是不支持事务的，即使commit也没什么用，而且处理逻辑中对只是有一定可能对数据修改，还要commit太麻烦了。于是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Session(autoflush=True, autocommit=True, expire_on_commit=True)&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;由于是周末，匆匆提交了就回去了。到了周六，我惊悚的看到&lt;a href='http://pycounters.readthedocs.org/'&gt;pycounter&lt;/a&gt;做的数据统计非常完美地呈现出1/t的曲线&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt='request rate' src='http://s3.binux.me/201112/2890/14043_o.png' /&gt;&lt;/p&gt;
+
+&lt;p&gt;无论再次启动多次依旧如此。。。非常完美的1/t的曲线。。&lt;/p&gt;
+
+&lt;p&gt;由于频率是成1/t，表示用时随着“处理过”的数据量以一次指数增长，想想最近添加的代码不太可能有这样增长的操作啊。&lt;/p&gt;
+
+&lt;p&gt;由于手头正好有pycounters在操作中打入几个计数器，观察到在sqlalchemy在做session.expire_all()的操作时符合O(x)的时间特性。&lt;/p&gt;
+
+&lt;p&gt;猜测是sqlalchemy的实例cache的机制导致每次处理完后，并没有释放掉获取到的对象，而expire_all对这些对象进行了一个大循环，以标记过期。 既然问题找到了，就好办了，&lt;strong&gt;不要使用sqlalchemy的autocommit，在修改后正常进行add,commit&lt;/strong&gt;，故障消除。&lt;/p&gt;
+
+&lt;p&gt;随后查看了sqlalchemy的代码，expire_all的确是挨个expire操作的：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;for state in self.identity_map.all_states():
+    state.expire(state.dict, self.identity_map._modified)&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;而commit会将transaction close掉，清理掉identity_map，autocommit？还真没看出来怎么auto了。。&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>python 工具脚本： 线程池pool.py</title>
+   <link href="http://blog.binux.me/2011/08/python-tools-pool"/>
+   <updated>2011-08-12T11:37:18+08:00</updated>
+   <id>http://blog.binux.me/2011/08/python-tools-pool</id>
+   <content type="html">&lt;p&gt;这个脚本是仿照multiprocessing中的pool编写的（&lt;a href='http://docs.python.org/library/multiprocessing.html#module-multiprocessing.pool'&gt;http://docs.python.org/library/multiprocessing.html#module-multiprocessing.pool&lt;/a&gt;）。&lt;/p&gt;
+
+&lt;p&gt;但是，python自带的multiprocessing的Pool是基于函数的，无法在线程内部保存各个线程的独立资源。例如在操作数据库时，数据库操作大都不是线程安全的，这时就需要每个线程有自己的连接。&lt;br /&gt;其次，python自带的线程池在join之后会陷入内核态，无法接受CTRL+C，从而无法中断自行，这一点让我很是不爽。于是实现了这个线程池。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;特性：&lt;/strong&gt;&lt;br /&gt;1、仿照multiprocessing的Pool，提供apply,apply_async,map,map_async这几个类似的接口，和wait函数进行等待执行结束&lt;/p&gt;
+
+&lt;p&gt;2、worker线程为一个类：&lt;/p&gt;
+
+&lt;p&gt;&lt;span&gt;crayon lang=&amp;#8221;python&lt;/span&gt; class Work(threading.Thread): def init(self): pass def do(self, args): pass &lt;span&gt;/crayon&lt;/span&gt;&lt;/p&gt;
+
+&lt;p&gt;可以通过重载init来初始化一些线程自己的资源。重载do来自行需要的操作，参数会通过args传入。&lt;/p&gt;
+
+&lt;p&gt;3、wait时可以使用KeyboardInterrupt（CTRL+C）中断进程执行。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;缺陷：&lt;/strong&gt;线程没有返回值。。。&lt;/p&gt;
+
+&lt;p&gt;另：发现对于这种小东西gist真是方便。&lt;/p&gt;
+
+&lt;p&gt;源码：&lt;a href='https://gist.github.com/992657'&gt;https://gist.github.com/992657&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>百度你能靠谱一点吗？</title>
+   <link href="http://blog.binux.me/2011/03/baidu_404"/>
+   <updated>2011-03-28T11:42:21+08:00</updated>
+   <id>http://blog.binux.me/2011/03/baidu_404</id>
+   <content type="html">&lt;p&gt;写个test_link的脚本，想要只获取http头部来测试链接是否失效。想着国内百度连接速度快些吧，于是用百度测试。。&lt;/p&gt;
+
+&lt;p&gt;assert(test_link(&amp;#8220;http://baidu.com/xyz&amp;#8221;) == False)&lt;/p&gt;
+
+&lt;p&gt;结果。。百度返回的头居然是：&lt;/p&gt;
+&lt;pre&gt;
+ Request URL:http://www.baidu.com/xyz
+ Request Method:GET
+ Status Code:302 Found
+ Response Headers
+ Cache-Control:max-age=86400
+ Connection:Keep-Alive
+ Content-Length:222
+ Content-Type:text/html; charset=iso-8859-1
+ Date:Mon, 28 Mar 2011 11:22:25 GMT
+ Expires:Tue, 29 Mar 2011 11:22:25 GMT
+ Location:http://www.baidu.com/search/error.html
+ Server:Apache
+&lt;/pre&gt;
+&lt;p&gt;好吧。。。302就302吧，我们看看后面的这个&lt;a href='http://www.baidu.com/search/error.html'&gt;http://www.baidu.com/search/error.html&lt;/a&gt;是什么&lt;/p&gt;
+&lt;pre&gt;
+ Request URL:http://www.baidu.com/search/error.html
+ Request Method:GET
+ Status Code:200 OK
+&lt;/pre&gt;
+&lt;p&gt;喂喂，你这明显是error啊，200是怎么回事啊！明明页面上写着&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;您要访问的页面不存在&lt;/strong&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;返回一个200到底是怎么回事啊！难道就不能返回个404让爬虫知道吗？ 百度明明是个搜索引擎，写出来的网页就让自己认识是吗。。&lt;/p&gt;
+
+&lt;p&gt;google就明明白白地返回一个&lt;/p&gt;
+&lt;pre&gt;
+ Request URL:http://www.google.com/xyz
+ Request Method:GET
+ Status Code:404 Not Found
+&lt;/pre&gt;
+&lt;p&gt;类似的页面还有：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='http://www.baidu.com/forbiddenip/forbidden.html'&gt;http://www.baidu.com/forbiddenip/forbidden.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;百度你还能再靠谱一点吗？&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>python工具脚本： 获取中文汉字拼音声母 getPY.py</title>
+   <link href="http://blog.binux.me/2011/03/python-tools-getpy"/>
+   <updated>2011-03-17T14:57:26+08:00</updated>
+   <id>http://blog.binux.me/2011/03/python-tools-getpy</id>
+   <content type="html">&lt;p&gt;一般来说要获取中文汉字全拼是需要查表的，不过只需要声母的话还是很简单就能实现的。&lt;/p&gt;
+
+&lt;p&gt;方法是利用GBK编码是按照拼音的顺序编排汉字的，所以，只需要将文字转化成GBK编码，通过匹配范围即可获得声母了（当然理论上也应该能获取全拼，我猜的-。-）。&lt;/p&gt;
+
+&lt;p&gt;这样的代码网上有很多，这里也是抄袭而来，抄自何处也忘记了。。&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='c'&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;span class='c'&gt;# coding : utf-8&lt;/span&gt;
+&lt;span class='c'&gt;# author : binux(17175297.hk@gmail.com)&lt;/span&gt;
+
+&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;getFirstPY&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;word&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;encoding&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;utf-8&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='nb'&gt;isinstance&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;word&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nb'&gt;unicode&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+        &lt;span class='k'&gt;try&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='n'&gt;word&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;word&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;encode&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;gbk&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+        &lt;span class='k'&gt;except&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;?&amp;#39;&lt;/span&gt;
+    &lt;span class='k'&gt;elif&lt;/span&gt; &lt;span class='nb'&gt;isinstance&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;word&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nb'&gt;str&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+        &lt;span class='k'&gt;try&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='n'&gt;word&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;word&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;decode&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;encoding&lt;/span&gt;&lt;span class='p'&gt;)[&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;encode&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;gbk&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+        &lt;span class='k'&gt;except&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;?&amp;#39;&lt;/span&gt;
+
+    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='nb'&gt;len&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;word&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;word&lt;/span&gt;
+    &lt;span class='k'&gt;else&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+        &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nb'&gt;ord&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;word&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;])&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='mi'&gt;256&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='nb'&gt;ord&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;word&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;])&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt; &lt;span class='mi'&gt;65536&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;20319&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;20284&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;a&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;20283&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;19776&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;b&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;19775&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;19219&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;c&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;19218&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;18711&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;d&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;18710&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;18527&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;e&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;18526&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;18240&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;f&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;18239&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;17923&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;g&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;17922&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;17418&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;h&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;17417&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;16475&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;j&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;16474&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;16213&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;k&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;16212&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;15641&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;l&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;15640&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;15166&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;m&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;15165&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;14923&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;n&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;14922&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;14915&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;o&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;14914&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;14631&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;p&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;14630&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;14150&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;q&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;14149&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;14091&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;r&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;14090&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;13119&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;s&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;13118&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;12839&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;t&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;12838&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;12557&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;w&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;12556&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;11848&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;x&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;11847&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;11056&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;y&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;11055&lt;/span&gt; &lt;span class='ow'&gt;and&lt;/span&gt; &lt;span class='n'&gt;asc&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;=&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;10247&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;z&amp;#39;&lt;/span&gt;
+        &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;#39;?&amp;#39;&lt;/span&gt;
+
+&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;getPY&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;string&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;encoding&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;utf-8&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='nb'&gt;isinstance&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;string&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nb'&gt;str&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+        &lt;span class='n'&gt;string&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;string&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;decode&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;encoding&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='p'&gt;[]&lt;/span&gt;
+    &lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='n'&gt;each&lt;/span&gt; &lt;span class='ow'&gt;in&lt;/span&gt; &lt;span class='n'&gt;string&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+        &lt;span class='n'&gt;result&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;append&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;getFirstPY&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;each&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;join&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;result&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;最新的代码可以在&lt;a href='https://github.com/binux/binux-tools/blob/master/python/getPY.py'&gt;https://github.com/binux/binux-tools/blob/master/python/getPY.py&lt;/a&gt;这里找到。&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>在windows环境中编译带python-dissector支持的wireshark（MSVC2010编译器）【无法开启】</title>
+   <link href="http://blog.binux.me/2011/03/e59ca8windowse78eafe5a283e4b8ade7bc96e8af91e5b8a6python-dissectore694afe68c81e79a84wiresharkefbc88msvc2010e7bc96e8af91e599a8efbc89e38090e697a0"/>
+   <updated>2011-03-12T09:46:26+08:00</updated>
+   <id>http://blog.binux.me/2011/03/e59ca8windowse78eafe5a283e4b8ade7bc96e8af91e5b8a6python-dissectore694afe68c81e79a84wiresharkefbc88msvc2010e7bc96e8af91e599a8efbc89e38090e697a0</id>
+   <content type="html">&lt;p&gt;虽然Windows的编程非常不爽，无论是编译环境还是编辑环境什么的，搭起来累的一比。不过，既然毕设题目是QQ协议分析，我总不能去分析Linux下那个阉割的QQ吧。&lt;br /&gt;当然了，抓包之后扔到Linux下分析也是一个解决方案，不过实时的协议解析还是挺有吸引力的。&lt;/p&gt;
+
+&lt;p&gt;同时楼主一年来python上瘾，看着C++那几行开头include就头大，一直不想起手写C++，更何况Wireshark的API是C的。更可怕的是README.developer还没开始告诉你怎么写dissector呢，编程规范就一大堆，而且各种数据类型不建议使用，strlen不建议使用，strcp不建议使用。这不是从头又学一遍了嘛！&lt;/p&gt;
+
+&lt;p&gt;如果是这样还不如直接Lua搞起了， 最后顶着windows恶劣的编程环境尝试编译带python-dissector支持的wireshark。&lt;/p&gt;
+
+&lt;p&gt;step 1:&lt;br /&gt;首先需要有一份源码。。建议直接到http://www.wireshark.org/下载最新稳定版的源码即可&lt;/p&gt;
+
+&lt;p&gt;step 2:&lt;br /&gt;参照&lt;span&gt;Win32: Step-by-Step Guide&lt;/span&gt; http://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html 的过程编译即可。。完全没有压力&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;python-dissector:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在下不才，无法在windows平台下开启python-dissector支持。。&lt;/p&gt;
+
+&lt;p&gt;看了下代码，这部分代码还是相当的简单，基本上是处于测试，初步的阶段。&lt;br /&gt;编译后执行若出现xxx地址不能为read之类的报错，将epan/wspython/wspy_register.c +128行&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;void register_all_py_protocols_func(register_cb cb _U_, gpointer client_data _U_)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;函数修改为：&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='cpp'&gt;&lt;span class='n'&gt;PyObject&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;py_reg&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+&lt;span class='c1'&gt;// .....&lt;/span&gt;
+&lt;span class='cm'&gt;/* load the python register module */&lt;/span&gt;
+&lt;span class='n'&gt;py_reg&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;PyFile_FromString&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;get_py_register_file&lt;/span&gt;&lt;span class='p'&gt;(),&lt;/span&gt; &lt;span class='s'&gt;&amp;quot;r&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;
+  &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;py_reg&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='nb'&gt;NULL&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='p'&gt;{&lt;/span&gt;
+    &lt;span class='n'&gt;printf&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;no register file %sn&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;get_py_register_file&lt;/span&gt;&lt;span class='p'&gt;());&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+  &lt;span class='p'&gt;}&lt;/span&gt;
+&lt;span class='n'&gt;PyRun_SimpleFile&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;PyFile_AsFile&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;py_reg&lt;/span&gt;&lt;span class='p'&gt;),&lt;/span&gt; &lt;span class='n'&gt;get_py_register_file&lt;/span&gt;&lt;span class='p'&gt;());&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;但是，一旦开启PYTHON_EMBED=1参数之后，会导致所有的plugin无法加载。。。&lt;/p&gt;
+
+&lt;p&gt;加上开发程度不高，文档几乎没有，暂时还是放弃了。。改用直接编写c plugin的方式吧&lt;/p&gt;
+
+&lt;p&gt;PS:1.4.4中有函数原型变化，文档并没有更新：&lt;br /&gt;如：&lt;br /&gt;dissector_add_uint已经变为dissector_add&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>python工具脚本： chinese_digit.py - 中文数字 转换为 阿拉伯数字</title>
+   <link href="http://blog.binux.me/2011/03/python-tools-chinese-digit"/>
+   <updated>2011-03-06T14:38:33+08:00</updated>
+   <id>http://blog.binux.me/2011/03/python-tools-chinese-digit</id>
+   <content type="html">&lt;h2 id='id1364'&gt;简介：&lt;/h2&gt;
+
+&lt;p&gt;经常会有这种需要将中文数字如 &amp;#8220;五千三百零一&amp;#8221;，全角数字&amp;#8221;１２３４５&amp;#8221;等等各种中文数字，转换成阿拉伯数字的场合。嘛，毕竟中文比较复杂，这种东西还是很发杂的。&lt;/p&gt;
+
+&lt;p&gt;下面这段代码来源于&lt;a href='http://bbs.chinaunix.net/redirect.php?tid=1755895'&gt;http://bbs.chinaunix.net/redirect.php?tid=1755895&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;但是这段代码有如下的BUG：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;1、只能正确转换亿亿以下的数&lt;/p&gt;
+
+&lt;p&gt;2、&amp;#8221;十万&amp;#8221;等十之前没有个位数字的字符串转换错误&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;而且有如下不足：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;1、不能转换大写中文（壹贰叁）和全角数字&lt;/p&gt;
+
+&lt;p&gt;2、不能转换电话号码（如 一零零五）&lt;/p&gt;
+
+&lt;p&gt;下面是一个修改过的python脚本，支持如上的所有特性，并修正了BUG&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='c'&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;span class='c'&gt;# coding: utf-8&lt;/span&gt;
+&lt;span class='c'&gt;# author: binux(17175297.hk@gmail.com)&lt;/span&gt;
+
+&lt;span class='nb'&gt;dict&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='p'&gt;{&lt;/span&gt;&lt;span class='s'&gt;u&amp;#39;零&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;一&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;二&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;2&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;三&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;3&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;四&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;4&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;五&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;5&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;六&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;6&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;七&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;7&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;八&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;8&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;九&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;9&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;十&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;百&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;100&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;千&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;1000&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;万&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;10000&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+       &lt;span class='s'&gt;u&amp;#39;０&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;１&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;２&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;2&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;３&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;3&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;４&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;4&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;５&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;5&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;６&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;6&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;７&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;7&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;８&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;8&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;９&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;9&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+                &lt;span class='s'&gt;u&amp;#39;壹&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;贰&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;2&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;叁&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;3&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;肆&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;4&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;伍&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;5&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;陆&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;6&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;柒&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;7&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;捌&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;8&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;玖&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;9&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;拾&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;佰&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;100&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;仟&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;1000&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='s'&gt;u&amp;#39;萬&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;10000&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+       &lt;span class='s'&gt;u&amp;#39;亿&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;&lt;span class='mi'&gt;100000000&lt;/span&gt;&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;getResultForDigit&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;a&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='n'&gt;encoding&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;utf-8&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+    &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='nb'&gt;isinstance&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;a&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='nb'&gt;str&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+        &lt;span class='n'&gt;a&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;a&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;decode&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;encoding&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+
+    &lt;span class='n'&gt;count&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;
+    &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;
+    &lt;span class='n'&gt;tmp&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;
+    &lt;span class='n'&gt;Billion&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;
+    &lt;span class='k'&gt;while&lt;/span&gt; &lt;span class='n'&gt;count&lt;/span&gt; &lt;span class='o'&gt;&amp;lt;&lt;/span&gt; &lt;span class='nb'&gt;len&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;a&lt;/span&gt;&lt;span class='p'&gt;):&lt;/span&gt;
+        &lt;span class='n'&gt;tmpChr&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;a&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;count&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;
+        &lt;span class='c'&gt;#print tmpChr&lt;/span&gt;
+        &lt;span class='n'&gt;tmpNum&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='nb'&gt;dict&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;get&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;tmpChr&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt; &lt;span class='bp'&gt;None&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+        &lt;span class='c'&gt;#如果等于1亿&lt;/span&gt;
+        &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;tmpNum&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='mi'&gt;100000000&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='n'&gt;tmp&lt;/span&gt;
+            &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;tmpNum&lt;/span&gt;
+            &lt;span class='c'&gt;#获得亿以上的数量，将其保存在中间变量Billion中并清空result&lt;/span&gt;
+            &lt;span class='n'&gt;Billion&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;Billion&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='mi'&gt;100000000&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='n'&gt;result&lt;/span&gt;
+            &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;
+            &lt;span class='n'&gt;tmp&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;
+        &lt;span class='c'&gt;#如果等于1万&lt;/span&gt;
+        &lt;span class='k'&gt;elif&lt;/span&gt; &lt;span class='n'&gt;tmpNum&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='mi'&gt;10000&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='n'&gt;tmp&lt;/span&gt;
+            &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;tmpNum&lt;/span&gt;
+            &lt;span class='n'&gt;tmp&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;
+        &lt;span class='c'&gt;#如果等于十或者百，千&lt;/span&gt;
+        &lt;span class='k'&gt;elif&lt;/span&gt; &lt;span class='n'&gt;tmpNum&lt;/span&gt; &lt;span class='o'&gt;&amp;gt;=&lt;/span&gt; &lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='k'&gt;if&lt;/span&gt; &lt;span class='n'&gt;tmp&lt;/span&gt; &lt;span class='o'&gt;==&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+                &lt;span class='n'&gt;tmp&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;1&lt;/span&gt;
+            &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='n'&gt;tmpNum&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;tmp&lt;/span&gt;
+            &lt;span class='n'&gt;tmp&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='mi'&gt;0&lt;/span&gt;
+        &lt;span class='c'&gt;#如果是个位数&lt;/span&gt;
+        &lt;span class='k'&gt;elif&lt;/span&gt; &lt;span class='n'&gt;tmpNum&lt;/span&gt; &lt;span class='ow'&gt;is&lt;/span&gt; &lt;span class='ow'&gt;not&lt;/span&gt; &lt;span class='bp'&gt;None&lt;/span&gt;&lt;span class='p'&gt;:&lt;/span&gt;
+            &lt;span class='n'&gt;tmp&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;tmp&lt;/span&gt; &lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='mi'&gt;10&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='n'&gt;tmpNum&lt;/span&gt;
+        &lt;span class='n'&gt;count&lt;/span&gt; &lt;span class='o'&gt;+=&lt;/span&gt; &lt;span class='mi'&gt;1&lt;/span&gt;
+    &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='n'&gt;tmp&lt;/span&gt;
+    &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;result&lt;/span&gt; &lt;span class='o'&gt;+&lt;/span&gt; &lt;span class='n'&gt;Billion&lt;/span&gt;
+    &lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;result&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;完整版带测试用例的版本可以从这里获得：&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;** &lt;a href='https://github.com/binux/binux-tools/blob/master/python/chinese_digit.py'&gt;https://github.com/binux/binux-tools/blob/master/python/chinese_digit.py&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;测试用例来源于：&lt;a href='http://fayaa.com/code/view/37/'&gt;http://fayaa.com/code/view/37/&lt;/a&gt;（不记得一开始在哪看到的了=。=）&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>python工具脚本：pprint.py 中文支持</title>
+   <link href="http://blog.binux.me/2011/03/python-tools-pprint"/>
+   <updated>2011-03-06T14:16:25+08:00</updated>
+   <id>http://blog.binux.me/2011/03/python-tools-pprint</id>
+   <content type="html">&lt;p&gt;这是一个支持unicode的pprint修改版本，来自&lt;a href='http://groups.google.com/group/python-cn/browse_thread/thread/d881b328386ce396/e68057c8a7531326'&gt;http://groups.google.com/group/python-cn/browse_thread/thread/d881b328386ce396/e68057c8a7531326&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;默认使用pprint的时候，list, tuple, dict中的中文都显示成这个样子：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&amp;#187;&amp;gt; from pprint import pprint&lt;br /&gt;&amp;#187;&amp;gt; pprint(&lt;span&gt;&amp;#8216;中文字符串&amp;#8217;, u&amp;#8217;中文统一码字符串&amp;#8217;, {&amp;#8216;中文键名&amp;#8217;: &amp;#8216;中文键值&amp;#8217;, u&amp;#8217;中文 unicode 键名&amp;#8217;: u&amp;#8217;中文unicode 键值&amp;#8217;}&lt;/span&gt;)&lt;/p&gt;
+
+&lt;p&gt;&lt;span&gt;&amp;#8216;xe4xb8xadxe6x96x87xe5xadx97xe7xacxa6xe4xb8xb2&amp;#8217;,&lt;br /&gt;u&amp;#8217;u4e2du6587u7edfu4e00u7801u5b57u7b26u4e32&amp;#8217;,&lt;br /&gt;{u&amp;#8217;u4e2du6587 unicode u952eu540d&amp;#8217;: u&amp;#8217;u4e2du6587 unicode&lt;br /&gt;u952eu503c&amp;#8217;,&lt;br /&gt;&amp;#8216;xe4xb8xadxe6x96x87xe9x94xaexe5x90x8d&amp;#8217;:&lt;br /&gt;&amp;#8216;xe4xb8xadxe6x96x87xe9x94xaexe5x80xbc&amp;#8217;}&lt;/span&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;修改之后会把字符串中文形式输出，而不是repr的形式：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&amp;#187;&amp;gt; from pprint import pprint&lt;br /&gt;&amp;#187;&amp;gt; pprint(&lt;span&gt;&amp;#8216;中文字符串&amp;#8217;, u&amp;#8217;中文统一码字符串&amp;#8217;, {&amp;#8216;中文键名&amp;#8217;: &amp;#8216;中文键值&amp;#8217;, u&amp;#8217;中文 unicode 键名&amp;#8217;: u&amp;#8217;中文unicode 键值&amp;#8217;}&lt;/span&gt;)&lt;/p&gt;
+
+&lt;p&gt;&lt;span&gt;&amp;#8216;中文字符串&amp;#8217;,&lt;br /&gt;u&amp;#8217;中文统一码字符串&amp;#8217;,&lt;br /&gt;{u&amp;#8217;中文 unicode 键名&amp;#8217;: u&amp;#8217;中文 unicode 键值&amp;#8217;,&lt;br /&gt;&amp;#8216;中文键名&amp;#8217;: &amp;#8216;中文键值&amp;#8217;}&lt;/span&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>太尴尬了，不挂代理被墙墙，挂VPN被google墙</title>
+   <link href="http://blog.binux.me/2011/03/e5a4aae5b0b4e5b0ace4ba86efbc8ce4b88de68c82e4bba3e79086e8a2abe5a299e5a299efbc8ce68c82vpne8a2abgooglee5a299"/>
+   <updated>2011-03-05T01:28:30+08:00</updated>
+   <id>http://blog.binux.me/2011/03/e5a4aae5b0b4e5b0ace4ba86efbc8ce4b88de68c82e4bba3e79086e8a2abe5a299e5a299efbc8ce68c82vpne8a2abgooglee5a299</id>
+   <content type="html">&lt;p&gt;一直在用eduvpn的代理，价格相对便宜，也差不多够用了。不过郁闷的是，不知道他们那些家伙拿这台VPN搞了什么，所有的google ape托管的服务，包括我自己的blog都被墙了=。=&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;Your client does not have permission to get URL &lt;code&gt;/&lt;/code&gt; from this server. (Client IP address: 173.244.202.xx)&lt;/p&gt;
+
+&lt;p&gt;You are accessing this page from a forbidden country.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;结果还是得IPV6啊。。真是麻烦。虽然尝试使用IPV6的DNS，但是这完全不能把&lt;em&gt;.appspot.com解析成ipv6地址嘛！&lt;/em&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;2001:470:20::2&lt;br /&gt;74.82.42.42&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;结果还是改HOSTS：&lt;a href='https://docs.google.com/Doc?docid=0ARhAbsvps1PlZGZrZG14bnRfNjFkOWNrOWZmcQ&amp;amp;hl=zh_CN'&gt;https://docs.google.com/Doc?docid=0ARhAbsvps1PlZGZrZG14bnRfNjFkOWNrOWZmcQ&amp;amp;hl=zh_CN&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>CssFullText - CSS选择器 说明</title>
+   <link href="http://blog.binux.me/2011/02/css_selector_for_fulltext"/>
+   <updated>2011-02-11T13:19:06+08:00</updated>
+   <id>http://blog.binux.me/2011/02/css_selector_for_fulltext</id>
+   <content type="html">&lt;h2 id='css_selector_'&gt;CSS Selector 简介：&lt;/h2&gt;
+
+&lt;p&gt;CSS 选择器( css selector) 是CSS的灵魂。对于一个HTML页面来说，CSS选择器是方便的元素(element)选取工具。&lt;/p&gt;
+
+&lt;h2 id='id1359'&gt;支持的选择器类型：&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;派生选择器 ( E F)&lt;/li&gt;
+
+&lt;li&gt;id 选择器 ( E#id )&lt;/li&gt;
+
+&lt;li&gt;类选择器 ( E.class )&lt;/li&gt;
+
+&lt;li&gt;属性选择器 ( E&lt;span&gt;attr=val&lt;/span&gt; )&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;暂时不支持伪类选择器( E:last )。&lt;/p&gt;
+
+&lt;h2 id='id1360'&gt;选择器语法简介：&lt;/h2&gt;
+
+&lt;h3 id='id1361'&gt;派生选择器&lt;/h3&gt;
+
+&lt;p&gt;派生选择器用于根据元素的上下文关系定位元素。&lt;br /&gt;HTML 代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;form&amp;gt;
+  &amp;lt;label&amp;gt;Name:&amp;lt;/label&amp;gt;
+  &amp;lt;input name=&amp;quot;name&amp;quot; /&amp;gt;
+  &amp;lt;fieldset&amp;gt;
+      &amp;lt;label&amp;gt;Newsletter:&amp;lt;/label&amp;gt;
+      &amp;lt;input name=&amp;quot;newsletter&amp;quot; /&amp;gt;
+ &amp;lt;/fieldset&amp;gt;
+&amp;lt;/form&amp;gt;
+&amp;lt;input name=&amp;quot;none&amp;quot; /&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;选择器：&lt;/strong&gt;form input&lt;br /&gt;&lt;strong&gt;选择元素：&lt;/strong&gt;&lt;code&gt;&amp;lt;input name=&amp;quot;name&amp;quot; /&amp;gt;&lt;/code&gt;, &lt;code&gt;&amp;lt;input name=&amp;quot;newsletter&amp;quot; /&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;也可以使用子类选择器( E &amp;gt; F )，仅选择元素的子元素，而不会选取其孙子元素&lt;br /&gt;对于以上代码， &lt;strong&gt;选择器：&lt;/strong&gt;form &amp;gt; input&lt;br /&gt;&lt;strong&gt;选择元素：&lt;/strong&gt;&lt;code&gt;&amp;lt;input name=&amp;quot;name&amp;quot; /&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id='id_'&gt;id 选择器&lt;/h3&gt;
+
+&lt;p&gt;id 选择器用于选取特定id的元素。&lt;br /&gt;HTML 代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;div id=&amp;quot;notMe&amp;quot;&amp;gt;&amp;lt;p&amp;gt;id=&amp;quot;notMe&amp;quot;&amp;lt;/p&amp;gt;&amp;lt;/div&amp;gt;
+&amp;lt;div id=&amp;quot;myDiv&amp;quot;&amp;gt;id=&amp;quot;myDiv&amp;quot;&amp;lt;/div&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;选择器：&lt;/strong&gt;#myDiv&lt;br /&gt;&lt;strong&gt;选择元素：&lt;/strong&gt;&lt;code&gt;&amp;lt;div id=&amp;quot;myDiv&amp;quot;&amp;gt;id=&amp;quot;myDiv&amp;quot;&amp;lt;/div&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id='id1362'&gt;类选择器&lt;/h3&gt;
+
+&lt;p&gt;类选择器用于选取拥有特性class的元素。&lt;br /&gt;HTML 代码:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;div class=&amp;quot;notMe&amp;quot;&amp;gt;div class=&amp;quot;notMe&amp;quot;&amp;lt;/div&amp;gt;
+&amp;lt;div class=&amp;quot;Me myClass&amp;quot;&amp;gt;div class=&amp;quot;Me myClass&amp;quot;&amp;lt;/div&amp;gt;
+&amp;lt;span class=&amp;quot;myClass&amp;quot;&amp;gt;span class=&amp;quot;myClass&amp;quot;&amp;lt;/span&amp;gt;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;选择器：&lt;/strong&gt;.Me&lt;br /&gt;&lt;strong&gt;选择元素：&lt;/strong&gt;&lt;code&gt;&amp;lt;div class=&amp;quot;Me myClass&amp;quot;&amp;gt;div class=&amp;quot;Me myClass&amp;quot;&amp;lt;/div&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id='id1363'&gt;属性选择器&lt;/h3&gt;
+
+&lt;p&gt;选择包含特定属性的元素，不支持在同一个选择器中使用多个属性选择器（ span&lt;span&gt;hello=&amp;#8221;Cleveland&amp;#8221;&lt;/span&gt; ）&lt;br /&gt;[attribute] 包含属性&lt;br /&gt;[attribute=value] 属性等于特定值的元素&lt;br /&gt;[attribute~value] 匹配给定的属性包含特定值的元素&lt;br /&gt;[attribute!value] 匹配给定的属性不包含特定值的元素（not~ ）&lt;br /&gt;[attribute|value] 匹配如&amp;#8221;lang&amp;#8221;属性中的en, en-US, en-cockney&lt;br /&gt;[attribute^value] 匹配给定的属性以特定值开头的元素&lt;br /&gt;[attribute$value] 匹配给定的属性以特定值结尾的元素&lt;br /&gt;[attribute*value] 匹配给定的属性的值中包含给定的字符串&lt;br /&gt;&lt;strong&gt;例子&lt;/strong&gt;&lt;br /&gt;参见：&lt;a href='http://www.w3.org/TR/CSS2/selector.html#attribute-selectors'&gt;http://www.w3.org/TR/CSS2/selector.html#attribute-selectors&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Gentoo PPTP VPN使用指南</title>
+   <link href="http://blog.binux.me/2011/01/gentoo_pptp_vpn"/>
+   <updated>2011-01-28T02:31:24+08:00</updated>
+   <id>http://blog.binux.me/2011/01/gentoo_pptp_vpn</id>
+   <content type="html">&lt;h4 id='id1356'&gt;安装&lt;/h4&gt;
+
+&lt;p&gt;由于gentoo的&amp;#8221;清凉化&amp;#8221;解决方案没有提供图形化的pptp的配置方案的原因。。不得不手动配置pptp&lt;br /&gt;gentoo下安装配置请参考&lt;a href='http://en.gentoo-wiki.com/wiki/PPTP'&gt;http://en.gentoo-wiki.com/wiki/PPTP&lt;/a&gt; 。并且其提供了一个半自动化的pptp配置工具，不用手写配置文件了。。&lt;/p&gt;
+
+&lt;h4 id='id1357'&gt;使用&lt;/h4&gt;
+
+&lt;h5 id='vpn'&gt;默认通过VPN访问网络&lt;/h5&gt;
+
+&lt;p&gt;为了通过vpn上网，请在&lt;strong&gt;File:&lt;/strong&gt; /etc/ppp/peers/my_vpn文件中添加：&lt;br /&gt;defaultroute&lt;br /&gt;即可默认通过VPN连接网络&lt;/p&gt;
+
+&lt;h5 id='id1358'&gt;自动修改路由&lt;/h5&gt;
+
+&lt;p&gt;同时通过 &lt;a href='http://code.google.com/p/chnroutes/'&gt;http://code.google.com/p/chnroutes/&lt;/a&gt; 这个项目生成vpnup和vpndown脚本，重命名成100-route.sh分别cp到/etc/ppp/ip-up.d/和/etc/ppp/ip-down.d/中，及可以使国内ip走国内线路，加快访问速度，又不影响翻墙。&lt;br /&gt;不过这里有一个地方需要修改。由于上面我们通过defaultroute使得默认网关有两个，原先的vpnup无法找到默认网关，请手动修改vpnup中的OLDGW为你的网关。&lt;/p&gt;
+
+&lt;h5 id='pingtcp'&gt;能够Ping通网络，TCP连接无法访问&lt;/h5&gt;
+
+&lt;p&gt;我在使用he.net的VPN时，pon连接上，改了路由之后能够ping通www.google.com，并且能够正常DNS。但是无法网页时一直超时(后来我才注意到状态一直是sending request)。。。。&lt;br /&gt;查看了各种文档（http://pptpclient.sourceforge.net/howto-diagnosis.phtml#connections_freeze）确认是mtu过大造成。在/etc/ppp/peer/my_vpn文件中添加&lt;br /&gt;mtu 1200&lt;br /&gt;或通过ifconfig ppp0 mtu 1200测试到可用值，修改即可&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Gentoo rtorrent IPV6 支持</title>
+   <link href="http://blog.binux.me/2011/01/gentoo_rtorrent_ipv6_support"/>
+   <updated>2011-01-23T12:25:43+08:00</updated>
+   <id>http://blog.binux.me/2011/01/gentoo_rtorrent_ipv6_support</id>
+   <content type="html">&lt;p&gt;问题：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;gentoo中rtorrent连接ipv6 tracker的时候显示&amp;#8221;Track :Couldn&amp;#8217;t resolve host name&amp;#8221;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;解决：&lt;/p&gt;
+
+&lt;p&gt;既然是gentoo那么就用gentoo的emerge解决吧&lt;/p&gt;
+
+&lt;p&gt;1. 去&lt;a href='http://libtorrent.rakshasa.no/ticket/1111'&gt;http://libtorrent.rakshasa.no/ticket/1111&lt;/a&gt;找对应版本的补丁（注意，补丁修改了多次，尽量使用最新的。第一个版本甚至无法编译通过）&lt;/p&gt;
+
+&lt;p&gt;2. 将补丁下载到portage的目录&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd /usr/portage/net-libs/libtorrent/files
+# 请使用最新版本的补丁
+wget http://home.samfundet.no/~sesse/libtorrent-0.12.6-ipv6-07.patch
+mv libtorrent-0.12.6-ipv6-07.patch libtorrent-0.12.6-ipv6.patch
+
+cd ..&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3. 修改ebuild文件&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;src_prepare() {
+    epatch &amp;quot;${FILESDIR}&amp;quot;/${P}-gcc44.patch
+    epatch &amp;quot;${FILESDIR}&amp;quot;/${P}-ipv6.patch
+    elibtoolize
+}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;4. 重新生成签名, 重新emerge&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ebuild libtorrent-0.12.6.ebuild digest
+emerge libtorrent&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;同理修改rtorrent&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd /usr/portage/net-p2p/rtorrent/files
+# 请使用最新版本的补丁
+wget http://home.samfundet.no/~sesse/rtorrent-0.8.6-ipv6-07.patch
+mv rtorrent-0.8.6-ipv6-07.patch rtorrent-0.8.6-ipv6.patch
+
+cd ..
+
+
+
+
+src_prepare() {
+    epatch &amp;quot;${FILESDIR}&amp;quot;/${P}-canvas-fix.patch
+    epatch &amp;quot;${FILESDIR}&amp;quot;/${P}-ipv6.patch
+    elibtoolize
+}
+
+
+
+
+ebuild rtorrent-0.8.6.ebuild digest
+ebuild rtorrent-0.8.6.ebuild merge&lt;/code&gt;&lt;/pre&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>机器不好还是别玩gentoo了。。</title>
+   <link href="http://blog.binux.me/2011/01/gentoo_tips"/>
+   <updated>2011-01-22T03:49:03+08:00</updated>
+   <id>http://blog.binux.me/2011/01/gentoo_tips</id>
+   <content type="html">&lt;p&gt;受不了啊！！xserver编译4小时，装个chromium编译3小时，mplayer3小时。。。这也太费劲了。。&lt;/p&gt;
+
+&lt;p&gt;弄了几天，中文化，xserver，各种常用应用都弄好了，本来还打算弄点安装过程什么的 ，但是根据&amp;#8221;you are not alone&amp;#8221;原则，手册（&lt;a href='http://www.gentoo.org/doc/zh_cn/index.xml'&gt;http://www.gentoo.org/doc/zh_cn/index.xml&lt;/a&gt;）+google任何事情都能够解决了。&lt;br /&gt;而且gentoo更多的是探索发现，不自己解决就没意义了。&lt;/p&gt;
+
+&lt;p&gt;嗯，不过还是有一些TIP的。。。&lt;/p&gt;
+
+&lt;p&gt;1. emerge很强大，经常&amp;#8211;search装软件很轻松&lt;/p&gt;
+
+&lt;p&gt;2. emerge -pv 很好用，能看到将要执行的动作，方便查看版本、关联软件等信息&lt;/p&gt;
+
+&lt;p&gt;3. 软件库其实很新，不过很多都被mask了，查看 &lt;a href='http://www.gentoo.org/doc/zh_cn/handbook/handbook-x86.xml?part=3&amp;amp;chap=3'&gt;文档&lt;/a&gt; 或者使用autounmask&lt;/p&gt;
+
+&lt;p&gt;4. 编译的时候干点别的吧。。。&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Gentoo初装</title>
+   <link href="http://blog.binux.me/2011/01/first_install_genntoo"/>
+   <updated>2011-01-17T14:59:36+08:00</updated>
+   <id>http://blog.binux.me/2011/01/first_install_genntoo</id>
+   <content type="html">&lt;p&gt;看着越来越绚丽的ubuntu，不知道我的T40 PM1.5的破本还能不能支撑得了。。找了一些&lt;a href='http://linuxtoy.org/archives/lightweight-desktop-compare.html'&gt;轻量级桌面&lt;/a&gt;。但是弄个不安装x的ubuntu感觉好没意思啊。&lt;br /&gt;于是趁机尝试下传闻中的&lt;a href='http://www.gentoo.org/'&gt;gentoo&lt;/a&gt;好了。&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;首先，欢迎使用Gentoo。你将进入一个多选择和高性能的世界。Gentoo就意味着选择。当你安装Gentoo时，你将会清楚的了解到&amp;#8212;-你能够选择怎样编译软件，如何安装Gentoo，以及使用哪种系统日志程序等等。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img alt='' src='http://www.gentoo.org/images/gentoo-new.gif' /&gt;&lt;/p&gt;
+
+&lt;p&gt;安装gentoo虽然需要一些linux基础，但是只要用过mount这样子的程度，照着&lt;a href='http://www.gentoo.org/doc/zh_cn/handbook/handbook-x86.xml'&gt;Gentoo Linux x86手册&lt;/a&gt;还是没有什么问题的。&lt;/p&gt;
+
+&lt;p&gt;但是不同的是，您将获得一个自己亲手编译的内核（虽然是默认设置。。）和亲手安装的每一个软件（绝对不存在不知道干吗的软件存在）。 &lt;br /&gt;而这一切在Portage（gentoo的包管理器）的管理下，依赖关系什么都不用操心。&lt;/p&gt;
+
+&lt;p&gt;而且，比起装一个ubuntu，能清楚地看到安装程序都干了些什么。虽然麻烦，但是还是挺有成就感的。。&lt;br /&gt;恩，下一步就是慢慢调教一个自己的应用环境～～&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>SyntaxHighlighter/HighSyntax themes - VIM desert</title>
+   <link href="http://blog.binux.me/2011/01/syntaxhighlighter_themes_desert"/>
+   <updated>2011-01-16T08:35:40+08:00</updated>
+   <id>http://blog.binux.me/2011/01/syntaxhighlighter_themes_desert</id>
+   <content type="html">&lt;p&gt;&lt;a href='http://binuximage.appspot.com/img/5001-HighSyntaxThemesDesert.png'&gt;&lt;img alt='HighSyntaxThemesDesertDemo' src='http://binuximage.appspot.com/img/5001-HighSyntaxThemesDesert.png' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id='id1353'&gt;前言&lt;/h3&gt;
+
+&lt;p&gt;一直很喜欢vim的desert的配色，特别是它的comments天蓝色的配色，用了下&lt;a href='http://alexgorbatchev.com/wiki/SyntaxHighlighter'&gt;SyntaxHighlighter&lt;/a&gt;的RDark也不是很满意。于是拿它改了一下。&lt;br /&gt;顺便修改了以下边框，原来的第一行和边框上沿太接近了，于是给加了一行。。。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/**
+ * Desert SyntaxHighlighter theme based on color scheme by Hans Fugal
+ * http://www.vim.org/scripts/script.php?script_id=105
+ * Modified by Binux (http://binux.appspot.com/) 2011.1.16
+ */&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;根据vim color scheme desert修改而成。&lt;/p&gt;
+
+&lt;h3 id='id1354'&gt;使用方法&lt;/h3&gt;
+
+&lt;h4 id='syntaxhighlighter'&gt;SyntaxHighlighter&lt;/h4&gt;
+
+&lt;p&gt;1、下载css文件，更名为shThemeDesert.css&lt;br /&gt;2、将css拷贝至styles目录，在页面中引用即可。&lt;/p&gt;
+
+&lt;h4 id='highsyntax_plugin_for_micolog'&gt;HighSyntax plugin for Micolog&lt;/h4&gt;
+
+&lt;p&gt;1、下载css文件，更名为shThemeDesert.css&lt;br /&gt;2、将css添加至micolog/plugins/highsyntax/syntaxhighlighter.zip压缩文件的styles目录中。&lt;br /&gt;3、修改micolog/plugins/highsyntax/highsyntax.py，在54行添加高亮部分：&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='html'&gt;&lt;span class='nt'&gt;&amp;lt;select&lt;/span&gt; &lt;span class='na'&gt;name=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;theme&amp;quot;&lt;/span&gt; &lt;span class='na'&gt;id=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;theme&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;option&lt;/span&gt; &lt;span class='na'&gt;value=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Default&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;&amp;gt;&lt;/span&gt;Default&lt;span class='nt'&gt;&amp;lt;/option&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;option&lt;/span&gt; &lt;span class='na'&gt;value=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Django&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;&amp;gt;&lt;/span&gt;Django&lt;span class='nt'&gt;&amp;lt;/option&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;option&lt;/span&gt; &lt;span class='na'&gt;value=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Eclipse&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;&amp;gt;&lt;/span&gt;Eclipse&lt;span class='nt'&gt;&amp;lt;/option&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;option&lt;/span&gt; &lt;span class='na'&gt;value=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Emacs&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;&amp;gt;&lt;/span&gt;Emacs&lt;span class='nt'&gt;&amp;lt;/option&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;option&lt;/span&gt; &lt;span class='na'&gt;value=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;FadeToGrey&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;&amp;gt;&lt;/span&gt;FadeToGrey&lt;span class='nt'&gt;&amp;lt;/option&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;option&lt;/span&gt; &lt;span class='na'&gt;value=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Midnight&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;&amp;gt;&lt;/span&gt;Midnight&lt;span class='nt'&gt;&amp;lt;/option&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;option&lt;/span&gt; &lt;span class='na'&gt;value=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;RDark&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;&amp;gt;&lt;/span&gt;RDark&lt;span class='nt'&gt;&amp;lt;/option&amp;gt;&lt;/span&gt;
+    &lt;span class='nt'&gt;&amp;lt;option&lt;/span&gt; &lt;span class='na'&gt;value=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;Desert&amp;quot;&lt;/span&gt;&lt;span class='nt'&gt;&amp;gt;&lt;/span&gt;Desert&lt;span class='nt'&gt;&amp;lt;/option&amp;gt;&lt;/span&gt;
+&lt;span class='nt'&gt;&amp;lt;/select&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;3、在设置中启用即可&lt;/p&gt;
+
+&lt;h3 id='id1355'&gt;下载链接&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&lt;a href='http://binuximage.appspot.com/data/3001-shThemeDesert.css'&gt;http://binuximage.appspot.com/data/3001-shThemeDesert.css&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>还是没忍住。。BLOG再开</title>
+   <link href="http://blog.binux.me/2011/01/e8bf98e698afe6b2a1e5bf8de4bd8fe38082e38082bloge5868de5bc80"/>
+   <updated>2011-01-15T08:31:40+08:00</updated>
+   <id>http://blog.binux.me/2011/01/e8bf98e698afe6b2a1e5bf8de4bd8fe38082e38082bloge5868de5bc80</id>
+   <content type="html">&lt;p&gt;断断续续，乱七八糟，东写西写，也不知道开过多少个BLOG了。&lt;/p&gt;
+
+&lt;p&gt;以至&lt;a href='http://blog.hexun.com/'&gt;和讯BLOG&lt;/a&gt;都放弃给我发&lt;span&gt;和讯管理员提醒：您好久没有回来了&lt;/span&gt;的垃圾邮件了。&lt;/p&gt;
+
+&lt;p&gt;不过PYTHON的却是令人愉快的语言啊。。没事写写这，写写那，快速开始，快速结束。完全不像C++，不弄个模板都懒得写include这种麻烦的事情。&lt;/p&gt;
+
+&lt;p&gt;慢慢写了点东西，就忍不住记下来。。&lt;a href='http://appengine.google.com/'&gt;GAE&lt;/a&gt;也越来越方便，果然还是自己的地盘好啊。。没钱这样足够了。&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='python'&gt;&lt;span class='k'&gt;def&lt;/span&gt; &lt;span class='nf'&gt;parse_args&lt;/span&gt;&lt;span class='p'&gt;():&lt;/span&gt;
+    &lt;span class='k'&gt;global&lt;/span&gt; &lt;span class='n'&gt;args&lt;/span&gt;
+    &lt;span class='n'&gt;parser&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;argparse&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;ArgumentParser&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;description&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;auto convect data dump by DotaHIT to xml&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='n'&gt;parser&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;add_argument&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;FILE&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+                        &lt;span class='n'&gt;help&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;FILE to work with&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='n'&gt;parser&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;add_argument&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='s'&gt;&amp;#39;DIR&amp;#39;&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;
+                        &lt;span class='n'&gt;help&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;path dump to&amp;quot;&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;
+    &lt;span class='n'&gt;args&lt;/span&gt; &lt;span class='o'&gt;=&lt;/span&gt; &lt;span class='n'&gt;parser&lt;/span&gt;&lt;span class='o'&gt;.&lt;/span&gt;&lt;span class='n'&gt;parse_args&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;慢慢的迁移到Linux环境下，现在回到到Windows下，没有console各种不习惯啊。多么方便的命令，python脚本都没有。除了WOW和1080p硬解，哦还有QQ（因为要分析它的协议），真没什么好留恋的了&lt;/p&gt;
+
+&lt;p&gt;连两个&lt;del&gt;基友&lt;/del&gt;舍友都跟着我Linux单系统了。。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href='http://binuximage.appspot.com/img/1001-[POPGO][durarara][11][GB][X264_AAC][1280x720][76999FCB][11-14-13].JPG'&gt;&lt;img alt='wbuntu in durarara' src='http://binuximage.appspot.com/img/1001-[POPGO][durarara][11][GB][X264_AAC][1280x720][76999FCB][11-14-13].JPG' /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;虽然不知能坚持多久，不过就这样把：）&lt;/p&gt;</content>
+ </entry>
+ 
+ 
+</feed>

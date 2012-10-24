@@ -1,0 +1,42 @@
+---
+comments: true
+date: 2011-01-15 08:31:40
+layout: post
+slug: '%e8%bf%98%e6%98%af%e6%b2%a1%e5%bf%8d%e4%bd%8f%e3%80%82%e3%80%82blog%e5%86%8d%e5%bc%80'
+title: 还是没忍住。。BLOG再开
+wordpress_id: 3002
+categories:
+- 未分类
+---
+
+断断续续，乱七八糟，东写西写，也不知道开过多少个BLOG了。  
+
+以至[和讯BLOG](http://blog.hexun.com/)都放弃给我发[和讯管理员提醒：您好久没有回来了]的垃圾邮件了。
+
+
+不过PYTHON的却是令人愉快的语言啊。。没事写写这，写写那，快速开始，快速结束。完全不像C++，不弄个模板都懒得写include这种麻烦的事情。  
+
+慢慢写了点东西，就忍不住记下来。。[GAE](http://appengine.google.com/)也越来越方便，果然还是自己的地盘好啊。。没钱这样足够了。
+
+
+{% highlight python %}
+def parse_args():
+    global args
+    parser = argparse.ArgumentParser(description='auto convect data dump by DotaHIT to xml')
+    parser.add_argument('FILE',
+                        help="FILE to work with")
+    parser.add_argument('DIR',
+                        help="path dump to")
+    args = parser.parse_args()
+{% endhighlight %}
+
+
+慢慢的迁移到Linux环境下，现在回到到Windows下，没有console各种不习惯啊。多么方便的命令，python脚本都没有。除了WOW和1080p硬解，哦还有QQ（因为要分析它的协议），真没什么好留恋的了  
+
+连两个<del>基友</del>舍友都跟着我Linux单系统了。。
+
+
+[![wbuntu in durarara](http://binuximage.appspot.com/img/1001-[POPGO][durarara][11][GB][X264_AAC][1280x720][76999FCB][11-14-13].JPG)](http://binuximage.appspot.com/img/1001-[POPGO][durarara][11][GB][X264_AAC][1280x720][76999FCB][11-14-13].JPG)
+
+
+虽然不知能坚持多久，不过就这样把：）

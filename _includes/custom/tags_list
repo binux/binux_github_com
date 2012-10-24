@@ -1,0 +1,11 @@
+  {% if tags_list.first[0] == null %}
+    {% for tag in tags_list %} 
+      {% assign tagsize = site.tags[tag].size | plus:8 %}
+      <a href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag }}-ref" class="tag-link" style="font-size: {% if tagsize > 22 %}22{% else %}{{ tagsize }}{% endif %}pt;">{{ tag }}</a>
+    {% endfor %}
+  {% else %}
+    {% for tag in tags_list %} 
+      {% assign tagsize = tag[1].size | plus:8 %}
+      <a href="{{ BASE_PATH }}{{ site.JB.tags_path }}#{{ tag[0] }}-ref" class="tag-link" style="font-size: {% if tagsize > 22 %}22{% else %}{{ tagsize }}{% endif %}pt;">{{ tag[0] }}</a>
+    {% endfor %}
+  {% endif %}

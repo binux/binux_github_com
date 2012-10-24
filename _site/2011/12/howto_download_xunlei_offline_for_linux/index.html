@@ -1,0 +1,504 @@
+
+<!DOCTYPE html>
+<html dir="ltr" lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="author" content="足兆叉虫">
+  <meta name="keywords" content="Binuxの杂货铺" />
+  <meta name="description" content="Binuxの杂货铺 - 足兆叉虫" />
+  <link rel="stylesheet" type="text/css" media="all" href="/assets/themes/ilost/style.css" />
+  <link rel="stylesheet" type="text/css" media="all" href="/assets/themes/ilost/pygments.css" />
+  <link href="atom.xml" type="application/atom+xml" rel="alternate" title="Binuxの杂货铺  &raquo; ATOM Feed">
+  <title>[教程] Linux下使用aria2+loli.lu免费下载迅雷离线资源 - Binuxの杂货铺</title>
+</head>
+
+<body class="single single-format-standard">
+  <header>
+    <!--<form role="search" method="get" id="searchform" action="http://blog.binux.me/" >-->
+      <!--<div><label class="screen-reader-text" for="s">搜索：</label>-->
+        <!--<input type="text" value="" name="s" id="s" />-->
+        <!--<input type="submit" id="searchsubmit" value="搜索" />-->
+      <!--</div>-->
+    <!--</form>-->
+    <div class="hgroup">
+      <h1><a href="/">Binuxの杂货铺</a></h1>
+      <span class="hidden">足兆叉虫</span>
+      <a class="feedrss" href="http://blog.binux.me/atom.xml">ATOM Rss</a>
+    </div>
+    <div class="menu">
+      <ul>
+        <li><a href="/" title="首页">首页</a></li>
+        <li class="page_item"><a href="/archive.html">Archive</a></li>
+        <li class="page_item"><a href="/categories.html">Categories</a></li>
+        <!--<li class="page_item"><a href="/pages.html">Pages</a></li>-->
+        <li class="page_item"><a href="/tags.html">Tags</a></li>
+        <li class="page_item"><a href="/projects.html">Projects</a></li>
+      </ul>
+    </div>
+  </header>
+  <hr/>
+  <div id="content">
+    
+<article>
+  <section class="post type-post status-publish format-standard hentry">
+    <div class="title">
+      <h2>[教程] Linux下使用aria2+loli.lu免费下载迅雷离线资源</h2>
+      <small>
+        <date class="date-pub" title="2011-12-20T22:28:09+08:00" datetime="2011-12-20T22:28:09+08:00" pubdate>
+          <span class="month">December</span>
+          <span class="day">20</span>
+          <span class="year">2011</span>
+        </date>, 
+				
+        
+           
+            <a href="/categories.html#未分类-ref" rel="category tag">未分类</a>
+          
+        
+      </small>
+    </div>
+    <div class="entry">
+      <p>对于Linux用户，无论你用不用Windows，都不会不知道迅雷和迅雷离线。 面对国内这苦B的网络环境，用http,ftp太慢，bt,ed2k过期，想用迅雷，额。。没客户端。。渣一样的客户端，用浏览器下吧，下一半断了还不能多线程，用命令行又有cookie验证。。。</p>
+
+<p>这篇教程旨在帮助大家打造一个方便的高速下载平台，下载工具采用多线程的aria2c，中转网站采用<a href='https://loli.lu'>loli.lu</a>（迅雷离线分享）的导出功能，方便地解决这个问题。</p>
+
+<h3 id='id1365'>工具介绍</h3>
+
+<h4 id='aria2'>aria2</h4>
+
+<p><a href='http://aria2.sourceforge.net'>aria2c</a>是一个跨平台开源，<strong>多线程</strong>，多协议支持的下载器。 支持包括HTTP/HTTPS, FTP, BitTorrent多种内容的下载，并且支持多来源，多线程，有<a href='http://sourceforge.net/apps/trac/aria2/wiki#GUIFrontends'>丰富的前端</a>可供选用。</p>
+
+<h4 id='lolilu'>loli.lu</h4>
+
+<p>是我在<a href='http://4321.la/'>Martian</a>支持下共同创建的一个迅雷离线下载分享的<a href='https://github.com/binux/lixian.xunlei'>开源</a>项目。旨在帮助Linux和MAC用户更好的适用迅雷离线的丰富资源。 通过这个项目的中转，你可以<strong>免费获得</strong>可供下载的迅雷离线地址，并且可以将地址分享给好友进行下载。</p>
+
+<h3 id='aria2'>安装aria2</h3>
+
+<p>如果您的发行版带有包管理器，aria2很有可能已经包含在源中，直接安装即可。例如来自<a href='http://sourceforge.net/apps/trac/aria2/wiki/Download'>http://sourceforge.net/apps/trac/aria2/wiki/Download</a>的安装说明：</p>
+
+<blockquote>
+<p><strong>Debian and Ubuntu</strong><br /> apt-get install aria2</p>
+</blockquote>
+
+<blockquote>
+<p><strong>Fedora</strong><br /> yum install aria2</p>
+</blockquote>
+
+<blockquote>
+<p><strong>Mandriva</strong><br /> urpmi aria2</p>
+</blockquote>
+
+<blockquote>
+<p><strong>Arch</strong><br /> pacman -S aria2</p>
+</blockquote>
+
+<blockquote>
+<p><strong>Gentoo</strong><br /> emerge aria2</p>
+</blockquote>
+
+<blockquote>
+<p><strong>OpenSUSE</strong><br /> Build Service http://download.opensuse.org/repositories/network:/utilities/</p>
+</blockquote>
+
+<blockquote>
+<p><strong>Lunar Linux</strong><br /> lin aria2</p>
+</blockquote>
+
+<blockquote>
+<p><strong>AgiliaLinux</strong><br /> mpkg-install aria2</p>
+</blockquote>
+
+<blockquote>
+<p><strong>FreeBSD</strong><br /> <a href='http://www.freebsd.org/cgi/cvsweb.cgi/ports/www/aria2/'>http://www.freebsd.org/cgi/cvsweb.cgi/ports/www/aria2/</a></p>
+</blockquote>
+
+<blockquote>
+<p><strong>Mac OS X</strong><br /> <a href='http://www.macports.org/'>http://www.macports.org/</a></p>
+</blockquote>
+
+<blockquote>
+<p><strong>Fink</strong><br /> <a href='http://pdb.finkproject.org/pdb/package.php/aria2'>http://pdb.finkproject.org/pdb/package.php/aria2</a></p>
+</blockquote>
+
+<blockquote>
+<p><strong>Cygwin</strong><br /> <a href='http://sourceware.org/cygwin/packages/aria2/'>http://sourceware.org/cygwin/packages/aria2/</a></p>
+</blockquote>
+
+<p>如果您的发行版很不幸的不在上述发行版中，请前往<a href='http://sourceforge.net/projects/aria2/files/stable/'>http://sourceforge.net/projects/aria2/files/stable/</a>尝试适用源码安装。</p>
+
+<p>当您安装完成之后输入</p>
+
+<pre><code>aria2c -v</code></pre>
+
+<p>出现</p>
+
+<pre><code>aria2 version 1.13.0
+Copyright (C) 2006, 2011 Tatsuhiro Tsujikawa
+
+......</code></pre>
+
+<p>表明安装成功，注意，由于aria2在1.10后参数变化，而我们的Loli.lu导出的是新的参数设定，<strong>需要aria2的版本高于1.10</strong>。</p>
+
+<h3 id='id1366'>获取下载链接</h3>
+
+<p>访问：<a href='https://loli.lu/'>https://loli.lu/</a>，点击右上角的登录，使用Google账户授权： <a href='http://s0.binux.me/201112/2890/14223_o.png'><img alt='login' src='http://s0.binux.me/201112/2890/14223_z.png' /></a></p>
+
+<p>然后点击想要下载的资源，在弹出的浮动框中的批量下载中，点击aria2的链接： <a href='http://s1.binux.me/201112/2890/14224_o.png'><img alt='get link' src='http://s1.binux.me/201112/2890/14224_o.png' /></a></p>
+
+<p>之后，浮动框中会输出这个资源的所有aria2的链接：</p>
+
+<pre><code>aria2c -c -x5 --out \[SumiSora\]\[C3\]\[01\]\[GB\]\[x264\_aac\]\[720p\]\(5393D704\)\.ass --header &#39;Cookie:gdriveid=4B281B37A54B63BF6F47BBF2A8A22675;&#39; &#39;http://gdl.lixian.vip.xunlei.com/download?fid=umOXSXI/nn0XdbUzcpjfYhEs+g2K7wAAAAAAAFEZlKH8Vp3sMEiGuAwWb4ynfSaB&amp;mid;=666&amp;threshold;=150&amp;tid;=F0991DB1D9D3D750F20EB62624DE99D4&amp;srcid;=4&amp;verno;=1&amp;g;=511994A1FC569DEC304886B80C166F8CA77D2681&amp;scn;=c8&amp;i;=59B01E2CB9D2E7B1B5A83016DF97D4D445BAE247&amp;t;=6&amp;ui;=191942368&amp;ti;=50569010689&amp;s;=61322&amp;m;=0&amp;n;=01145C8D0C6F72615D3A72D7025B30315D3A76A6025B783236556E853E635D5B3753019402283533395275D36F34292E611242E45F00000000&#39;
+aria2c -c -x5 --out \[SumiSora\]\[C3\]\[01\]\[GB\]\[x264\_aac\]\[720p\]\(5393D704\)\.mkv --header &#39;Cookie:gdriveid=4B281B37A54B63BF6F47BBF2A8A22675;&#39; &#39;http://gdl.lixian.vip.xunlei.com/download?fid=2QPCJq1fI2pyx9Nbr9XkGGw/NgK7SEMVAAAAAIc3sATS9kleYgkLISA6zY0DXbEj&amp;mid;=666&amp;threshold;=150&amp;tid;=7568C4810EDDE63A3C2982ADE0BF4234&amp;srcid;=4&amp;verno;=1&amp;g;=8737B004D2F6495E62090B21203ACD8D035DB123&amp;scn;=c10&amp;i;=59B01E2CB9D2E7B1B5A83016DF97D4D445BAE247&amp;t;=6&amp;ui;=191942368&amp;ti;=50569010689&amp;s;=356731067&amp;m;=0&amp;n;=01145C8D0C6F72615D3A72D7025B30315D3A76A6025B783236556E853E635D5B3753019402283533395275D36F34292E6D0A47E45F00000000&#39;
+......</code></pre>
+
+<p><strong>现在开始下载吧</strong>，先新建一个目录，比如</p>
+
+<pre><code>mkdir -p &#39;[澄空学园][C3-魔幻三次方-][01-12][GB][720p MKV][全]&#39;
+cd &#39;[澄空学园][C3-魔幻三次方-][01-12][GB][720p MKV][全]&#39;</code></pre>
+
+<p>然后粘贴入这些命令</p>
+
+<pre><code> *** Download Progress Summary as of Tue Dec 20 22:10:06 2011 ***               
+================================================================================
+[#1 SIZE:8.7MiB/340.2MiB(2%) CN:5 SPD:170.6KiBs ETA:33m08s]
+FILE: /home/binux/work/lixian.xunlei/[SumiSora][C3][01][GB][x264_aac][720p](5393D704).mkv
+--------------------------------------------------------------------------------
+
+[#1 SIZE:11.9MiB/340.2MiB(3%) CN:5 SPD:142.4KiBs ETA:39m20s]
+    SIZE:文件大小，进度      CN:线程数 SPD:速度      ETA:剩余时间</code></pre>
+
+<p>对了，如果如果中间打断一个任务，只要在原来的目录下，再次执行下载命令就可以继续下载了。 如果一个任务的连接过多，也可以考虑建一个文件先保存起来，然后sh down.sh这样下载就好了。</p>
+
+<h3 id='id1367'>添加资源</h3>
+
+<p>在登录后就可以在右上角找到添加资源的链接啦 <a href='http://s0.binux.me/201112/2890/14223_o.png'><img alt='bar' src='http://s0.binux.me/201112/2890/14223_z.png' /></a> <img alt='add task' src='http://s1.binux.me/201112/2890/14225_o.png' /> 当然了，如果觉得麻烦，也可以直接填写链接获得高速下载链接： <img alt='add task 2' src='http://s0.binux.me/201112/2890/14227_o.png' /></p>
+
+<p>对了，及时不是发布资源，获得的下载链接依旧可以分享给好友，只需要点击分享按钮，将链接复制给好友就可以了。 当然你也可以适用我们的一键分享功能： <a href='http://s3.binux.me/201112/2890/14228_o.png'><img alt='share' src='http://s3.binux.me/201112/2890/14228_o.png' /></a></p>
+
+<h3 id='id1368'>===</h3>
+
+<p>如果有任何问题，欢迎留言，或<a href='http://gplus.to/binux'>+足兆叉虫</a> 或者直接提交BUG：<a href='https://github.com/binux/lixian.xunlei/issues'>https://github.com/binux/lixian.xunlei/issues</a></p>
+    </div>
+    <div class="post-meta">
+      标签：
+      
+      
+
+
+    
+    
+  
+
+
+
+
+      <div class="clear"></div>
+    </div>
+    <nav class="post-nav">
+      
+      <span class="previous"><a href="/2011/12/from_xunlei_lixian_for_flexget" rel="prev" title="迅雷离线脚本+flexget 将离线资源自动下载回本地">迅雷离线脚本+flexget 将离线资源自动下载回本地</a></span>
+      
+      
+      <span class="next"><a href="/2011/12/fuck-ie" rel="next" title="IE难伺候啊">IE难伺候啊</a></span>
+      
+      <div class="clear"></div>
+    </nav>
+  </section>
+  <div class="comment">
+  
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'binux'; // required: replace example with your forum shortname
+    var disqus_identifier = '26041 http://blog.binux.me/?p=26041';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+  </div>
+</article>
+
+
+    <aside>
+      <ul id="side" class="clear">
+        <li id="links-2" class="widget widget_links"><h3 class="widgettitle">About Me</h3>
+          <ul class='xoxo blogroll'>
+            <li><a href="http://github.com/binux/" target="_blank" rel="me">github.com/binux</a></li>
+            <li><a href="" target="_blank" rel="me">gplus.to/binux</a></li>
+          </ul>
+        </li>
+        <!--<li id="tag_cloud-2" class="widget widget_tag_cloud">-->
+          <!--<h3 class="widgettitle">标签</h3>-->
+          <!--<div class="tagcloud">-->
+            <!--<ul>-->
+              <!---->
+              <!--
+
+
+    
+     
+      
+      <a href="/tags.html#getpy-ref" class="tag-link" style="font-size: 9pt;">getpy</a>
+     
+      
+      <a href="/tags.html#python-ref" class="tag-link" style="font-size: 16pt;">python</a>
+     
+      
+      <a href="/tags.html#迅雷离线-ref" class="tag-link" style="font-size: 9pt;">迅雷离线</a>
+     
+      
+      <a href="/tags.html#导出-ref" class="tag-link" style="font-size: 9pt;">导出</a>
+     
+      
+      <a href="/tags.html#web-ref" class="tag-link" style="font-size: 9pt;">web</a>
+     
+      
+      <a href="/tags.html#aria2-ref" class="tag-link" style="font-size: 11pt;">aria2</a>
+     
+      
+      <a href="/tags.html#hash-ref" class="tag-link" style="font-size: 9pt;">hash</a>
+     
+      
+      <a href="/tags.html#html-ref" class="tag-link" style="font-size: 9pt;">html</a>
+     
+      
+      <a href="/tags.html#pptp-ref" class="tag-link" style="font-size: 9pt;">pptp</a>
+     
+      
+      <a href="/tags.html#BAE-ref" class="tag-link" style="font-size: 9pt;">BAE</a>
+     
+      
+      <a href="/tags.html#chrome app-ref" class="tag-link" style="font-size: 9pt;">chrome app</a>
+     
+      
+      <a href="/tags.html#arai2-ref" class="tag-link" style="font-size: 9pt;">arai2</a>
+     
+      
+      <a href="/tags.html#bash-ref" class="tag-link" style="font-size: 9pt;">bash</a>
+     
+      
+      <a href="/tags.html#xunlei-ref" class="tag-link" style="font-size: 12pt;">xunlei</a>
+     
+      
+      <a href="/tags.html#javascript-ref" class="tag-link" style="font-size: 9pt;">javascript</a>
+     
+      
+      <a href="/tags.html#Valgrind-ref" class="tag-link" style="font-size: 9pt;">Valgrind</a>
+     
+      
+      <a href="/tags.html#frontend-ref" class="tag-link" style="font-size: 9pt;">frontend</a>
+     
+      
+      <a href="/tags.html#loli.lu-ref" class="tag-link" style="font-size: 11pt;">loli.lu</a>
+     
+      
+      <a href="/tags.html#IDM-ref" class="tag-link" style="font-size: 9pt;">IDM</a>
+     
+      
+      <a href="/tags.html#fuck-ref" class="tag-link" style="font-size: 9pt;">fuck</a>
+     
+      
+      <a href="/tags.html#文字截断-ref" class="tag-link" style="font-size: 9pt;">文字截断</a>
+     
+      
+      <a href="/tags.html#sqlalchemy-ref" class="tag-link" style="font-size: 9pt;">sqlalchemy</a>
+     
+      
+      <a href="/tags.html#baidu 404-ref" class="tag-link" style="font-size: 9pt;">baidu 404</a>
+     
+      
+      <a href="/tags.html#wireshark c++ python windows 编译-ref" class="tag-link" style="font-size: 9pt;">wireshark c++ python windows 编译</a>
+     
+      
+      <a href="/tags.html#tools-ref" class="tag-link" style="font-size: 12pt;">tools</a>
+     
+      
+      <a href="/tags.html#vpn-ref" class="tag-link" style="font-size: 9pt;">vpn</a>
+     
+      
+      <a href="/tags.html#he.net-ref" class="tag-link" style="font-size: 9pt;">he.net</a>
+     
+      
+      <a href="/tags.html#Linux-ref" class="tag-link" style="font-size: 19pt;">Linux</a>
+     
+      
+      <a href="/tags.html#C++-ref" class="tag-link" style="font-size: 9pt;">C++</a>
+     
+      
+      <a href="/tags.html#汉语拼音-ref" class="tag-link" style="font-size: 9pt;">汉语拼音</a>
+     
+      
+      <a href="/tags.html#themes-ref" class="tag-link" style="font-size: 9pt;">themes</a>
+     
+      
+      <a href="/tags.html#YAAW-ref" class="tag-link" style="font-size: 10pt;">YAAW</a>
+     
+      
+      <a href="/tags.html#webproxy-ref" class="tag-link" style="font-size: 9pt;">webproxy</a>
+     
+      
+      <a href="/tags.html#image search-ref" class="tag-link" style="font-size: 9pt;">image search</a>
+     
+      
+      <a href="/tags.html#离线地址-ref" class="tag-link" style="font-size: 9pt;">离线地址</a>
+     
+      
+      <a href="/tags.html#userscript-ref" class="tag-link" style="font-size: 9pt;">userscript</a>
+     
+      
+      <a href="/tags.html#tomato-ref" class="tag-link" style="font-size: 9pt;">tomato</a>
+     
+      
+      <a href="/tags.html#dd-wrt-ref" class="tag-link" style="font-size: 9pt;">dd-wrt</a>
+     
+      
+      <a href="/tags.html#js-ref" class="tag-link" style="font-size: 9pt;">js</a>
+     
+      
+      <a href="/tags.html#pptpd-ref" class="tag-link" style="font-size: 9pt;">pptpd</a>
+     
+      
+      <a href="/tags.html#arch-ref" class="tag-link" style="font-size: 9pt;">arch</a>
+     
+      
+      <a href="/tags.html#linux gentoo-ref" class="tag-link" style="font-size: 9pt;">linux gentoo</a>
+     
+      
+      <a href="/tags.html#proxy-ref" class="tag-link" style="font-size: 9pt;">proxy</a>
+     
+      
+      <a href="/tags.html#archlinux-ref" class="tag-link" style="font-size: 9pt;">archlinux</a>
+     
+      
+      <a href="/tags.html#vim-ref" class="tag-link" style="font-size: 9pt;">vim</a>
+     
+      
+      <a href="/tags.html#shell-ref" class="tag-link" style="font-size: 9pt;">shell</a>
+     
+      
+      <a href="/tags.html#nginx-ref" class="tag-link" style="font-size: 9pt;">nginx</a>
+     
+      
+      <a href="/tags.html#lixian-ref" class="tag-link" style="font-size: 10pt;">lixian</a>
+     
+      
+      <a href="/tags.html#chinese_digit-ref" class="tag-link" style="font-size: 9pt;">chinese_digit</a>
+     
+      
+      <a href="/tags.html#css selector-ref" class="tag-link" style="font-size: 9pt;">css selector</a>
+     
+      
+      <a href="/tags.html#css-ref" class="tag-link" style="font-size: 12pt;">css</a>
+     
+      
+      <a href="/tags.html#flexget-ref" class="tag-link" style="font-size: 10pt;">flexget</a>
+     
+      
+      <a href="/tags.html#multiprocessing-ref" class="tag-link" style="font-size: 9pt;">multiprocessing</a>
+     
+      
+      <a href="/tags.html#gentoo rtorrent-ref" class="tag-link" style="font-size: 9pt;">gentoo rtorrent</a>
+     
+      
+      <a href="/tags.html#openwrt-ref" class="tag-link" style="font-size: 9pt;">openwrt</a>
+     
+      
+      <a href="/tags.html#dropbox-ref" class="tag-link" style="font-size: 9pt;">dropbox</a>
+     
+      
+      <a href="/tags.html#web前段-ref" class="tag-link" style="font-size: 9pt;">web前段</a>
+     
+      
+      <a href="/tags.html#ie-ref" class="tag-link" style="font-size: 9pt;">ie</a>
+     
+      
+      <a href="/tags.html#pool-ref" class="tag-link" style="font-size: 9pt;">pool</a>
+     
+      
+      <a href="/tags.html#pprint-ref" class="tag-link" style="font-size: 9pt;">pprint</a>
+     
+      
+      <a href="/tags.html#gentoo-ref" class="tag-link" style="font-size: 10pt;">gentoo</a>
+    
+  
+
+
+
+-->
+            <!--</ul>-->
+          <!--</div>-->
+        <!--</li>-->
+        <li id="recent-posts-2" class="widget widget_recent_entries">
+          <h3 class="widgettitle">近期文章</h3>
+          <ul>
+            
+            <li><a href="/2012/09/python-web-proxy-on-ba" title="运行于百度云平台的Python网页代理">运行于百度云平台的Python网页代理</a></li>
+            
+            <li><a href="/2012/08/find-larger-image-chrome-app" title="批量找原图 —— Chrome APP">批量找原图 —— Chrome APP</a></li>
+            
+            <li><a href="/2012/07/thunderlixianexporter" title="迅雷离线地址导出器——ThunderLixianExporter">迅雷离线地址导出器——ThunderLixianExporter</a></li>
+            
+            <li><a href="/2012/07/add_url_from_loli-lu_to_aria2" title="从LOLI.LU直接添加资源到ARIA2">从LOLI.LU直接添加资源到ARIA2</a></li>
+            
+            <li><a href="/2012/06/aria2_yaaw" title="aria2 + web前端 部署指南">aria2 + web前端 部署指南</a></li>
+            
+            <li><a href="/2012/05/fancybox-xsse6bc8fe6b49ee5afbce887b4htmle8bdace4b989e697a0e69588" title="fancybox xss漏洞导致html转义无效">fancybox xss漏洞导致html转义无效</a></li>
+            
+            <li><a href="/2012/05/yet-another-aria2-web-frontend" title="Yet Another Aria2 Web Frontend">Yet Another Aria2 Web Frontend</a></li>
+            
+            <li><a href="/2012/04/dropbox-uploader-script" title="Dropbox Uploader Script">Dropbox Uploader Script</a></li>
+            
+            <li><a href="/2012/03/hash_algorithm_of_xunlei" title="迅雷Hash算法分析">迅雷Hash算法分析</a></li>
+            
+            <li><a href="/2012/03/jshare" title="一个网盘的终结(？)及由其而生的思考的思考">一个网盘的终结(？)及由其而生的思考的思考</a></li>
+            
+          </ul>
+        </li>
+        <!--<li id="recent-comments-2" class="widget widget_recent_comments">-->
+          <!--<h3 class="widgettitle">近期评论</h3>-->
+          <!--<ul id="recentcomments">-->
+            <!--<li class="recentcomments"><a href="" rel='external nofollow' class='url'></a> 发表在《<a href=""></a>》</li>-->
+          <!--</ul>-->
+        <!--</li>-->
+        <!--<li id="archives-2" class="widget widget_archive">-->
+          <!--<h3 class="widgettitle">文章归档</h3>-->
+          <!--<ul>-->
+            <!--<li><a href='http://blog.binux.me/2012/09/' title='2012 年九月'>2012 年九月</a></li>-->
+          <!--</ul>-->
+        <!--</li>-->
+        <!--<li id="categories-2" class="widget widget_categories">-->
+          <!--<h3 class="widgettitle">分类目录</h3>-->
+          <!--<ul>-->
+            <!--<li class="cat-item cat-item-1"><a href="http://blog.binux.me/category/uncategorized/" title="查看 未分类 下的所有文章">未分类</a></li>-->
+          <!--</ul>-->
+        <!--</li>-->
+      </ul>
+    </aside>
+    <div class="clear"></div>
+  </div>
+  <hr/>
+  <footer>
+    <div>
+      <p class="line">
+        <span class="alignright">
+          <a href="/" title="Binuxの杂货铺">首页</a> &brvbar; <a href="/atom.xml">RSS 订阅</a> &brvbar; <a href="/sitemap.txt">Sitemap</a>
+        </span>
+        iLost theme  &brvbar; Designed by <a href="http://xuui.net/">Xu.hel</a> in ChengDu. Forked by <a href="http://binux.me/">binux</a>.
+      </p>
+      <p><span class="alignright">Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a></span>&copy; 版权所有 2011-2013 <a href="http://blog.binux.me" title="Binuxの杂货铺" rel="home">Binuxの杂货铺</a></p>
+    </div>
+  </footer>
+</body>
+</html>
+

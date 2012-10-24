@@ -1,0 +1,83 @@
+---
+comments: true
+date: 2012-06-22 20:36:00
+layout: post
+slug: aria2_yaaw
+title: aria2 + web前端 部署指南
+wordpress_id: 26136
+categories:
+- 未分类
+tags:
+- aria2
+- dd-wrt
+- Linux
+- openwrt
+- tomato
+- YAAW
+---
+
+更新了openwrt的固件版本之后，我的wr703n上的aria2终于可以开启rpc模式了。然后就是WNR3500L到货，虽然不能装openwrt，但是有optware一样ok。
+虽然他们的平台各不相同，但是因为YAAW是没有依赖的，实际上都是分为三步：
+
+
+
+
+	
+  1. 挂载U盘
+
+	
+  2. 安装aria2
+
+	
+  3. 打开[YAAW](http://binux.github.com/yaaw/)
+
+
+
+非常简单没有压力。
+
+
+
+=============================================
+
+
+### 第一步：挂载U盘
+
+
+**openwrt:**  [http://wiki.openwrt.org/zh-cn/doc/howto/usb.storage](http://wiki.openwrt.org/zh-cn/doc/howto/usb.storage)<br>
+**dd-wrt：**  刷一个带USB的固件，固件中自动mount到/opt<br>
+**tomato：**  刷一个带USB的固件，固件中自动mount到/opt<br>
+
+
+
+
+### 第二步：安装aria2
+
+
+**openwrt:** ``opkg update && opkg install aria2``<br>
+**dd-wrt:** ``wget http://www.3iii.dk/linux/optware/optware-install-ddwrt.sh -O - | tr -d '\r' > /tmp/optware-install.sh && sh /tmp/optware-install.sh && ipkg-opt update && ipkg-opt install aria2``<br>
+**tomato:** [http://tomatousb.org/tut:optware-installation](http://tomatousb.org/tut:optware-installation)<br>
+
+启动命令： ``aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c``<br>
+如果没有问题的话，可以将 ``aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c -D`` 加入开机启动<br>
+如果有问题的话，看输出的提示，有可能要加入``--event-poll=select``什么的参数<br>
+
+
+
+
+### 第三步：打开[YAAW](http://binux.github.com/yaaw/)
+
+
+点击[demo](http://binux.github.com/yaaw/demo/)，在扳手处填入path： ``http://<ip_of_your_route>:6800/jsonrpc``， 保存
+
+
+=============================================
+一些有用的aria2参数
+
+-i &lt;file&gt; 导入从loli.lu导出的aria2文件<br>
+-j &lt;num&gt; 同时下载数限制，由于路由和总带宽限制，建议设为3（默认5）<br>
+-x &lt;num&gt; 同一个服务器的同时链接数，建议为5-10（默认1）<br>
+-k &lt;size&gt; 文件最小分片，文件最多的线程数取决于能分出多少片，当文件小于最小分片大小时，只能开出一个线程，建议为2M（默认20M）<br>
+-s &lt;num&gt; 一个文件最多用几个线程下载，建议为8-10（默认5）<br>
+--file-allocation &lt;none,prealloc,falloc&gt; 文件预分配，如果USB设备是U盘，SD卡，预分配浪费时间，建议为none（默认prealloc)<br>
+
+更多参数请访问 [Aria2 Manual](http://aria2.sourceforge.net/manual/en/html/)
