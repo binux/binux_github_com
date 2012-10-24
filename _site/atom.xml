@@ -4,7 +4,7 @@
  <title>Binuxの杂货铺</title>
  <link href="http://blog.binux.me/atom.xml" rel="self"/>
  <link href="http://blog.binux.me"/>
- <updated>2012-10-25T00:54:50+08:00</updated>
+ <updated>2012-10-25T01:04:25+08:00</updated>
  <id>http://blog.binux.me</id>
  <author>
    <name>足兆叉虫</name>
@@ -93,7 +93,7 @@
    <id>http://blog.binux.me/2012/07/thunderlixianexporter</id>
    <content type="html">&lt;p&gt;按照计划，将loli.lu的导出功能带到官方原生界面上了。毕竟无论什么工具，都不如官方的稳定，方便。 虽然有一个Userscript的油猴脚本，但是实际上主要代码是直接插入到页面中的。。等稳定了，有时间了再做成完全的本地版吧。&lt;/p&gt;
 
-&lt;h2 id='id1378'&gt;功能特性：&lt;/h2&gt;
+&lt;h2 id='id26'&gt;功能特性：&lt;/h2&gt;
 
 &lt;pre&gt;&lt;code&gt;* 迅雷离线原生界面
 
@@ -203,7 +203,7 @@
 
 &lt;p&gt;YAAW - Yet Another Aria2 Web Frontend 是一个纯前端实现的Aria2 Web前端界面。无需架设任何服务器，只需要在浏览器中打开即刻使用。&lt;/p&gt;
 
-&lt;h3 id='id1377'&gt;链接&lt;/h3&gt;
+&lt;h3 id='id25'&gt;链接&lt;/h3&gt;
 
 &lt;p&gt;首页/demo： &lt;a href='http://binux.github.com/yaaw/'&gt;http://binux.github.com/yaaw/&lt;/a&gt; GitHub: &lt;a href='https://github.com/binux/yaaw'&gt;https://github.com/binux/yaaw&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -332,7 +332,7 @@ def thunder_filename_decode(code, encoding=&amp;quot;gbk&amp;quot;):
 
 &lt;p&gt;算法来源于&lt;a href='https://plus.google.com/109026361274947112731'&gt;+Zhang Youfu&lt;/a&gt;。简单来说这个参数就是将文件名各位用掩码进行了简单转换而已，中文的编码与最终输出的header中的相同，既编码采用utf8，最终输出的也是utf8，值得指出的是默认的编码是gbk的。迅雷在输出文件名时会截断较长的文件名，但是实际上通过传递完整的n参数，可以无视这个限制。在&lt;a href='https://github.com/binux/ThunderLixianExporter/blob/master/ThunderLixianExporter.js#L300'&gt;binux/ThunderLixianExporter&lt;/a&gt;还有一个js版本的实现。&lt;/p&gt;
 
-&lt;h2 id='id1376'&gt;总结&lt;/h2&gt;
+&lt;h2 id='id24'&gt;总结&lt;/h2&gt;
 
 &lt;p&gt;由上面的分析可见，一个文件的离线地址完全就是根据文件的信息生成的，于是你发现了什么？对了，完全不需要通过迅雷服务器我们就可以生成自己的离线地址！如果这个文件在迅雷服务器上存在，我们可以直接下载回来！（等等，你说n。。那不就是文件名嘛。。我只关心内容。。文件名这种小问题。。） 说到做到，&lt;strong&gt;您可以通过&lt;a href='https://github.com/binux/lixian.xunlei/blob/master/check_file.py'&gt;https://github.com/binux/lixian.xunlei/blob/master/check_file.py&lt;/a&gt;这个文件直接计算出文件的cid,gcid,fid&lt;/strong&gt;，如果可能的话也能计算出tid。 然后，把fake_url添加到迅雷软件里面。然后。。就可以直接下载了！可以开启高速通道，可以在快盘秒传，运气好可以开启离线秒传。。。 over&lt;/p&gt;</content>
  </entry>
@@ -346,7 +346,7 @@ def thunder_filename_decode(code, encoding=&amp;quot;gbk&amp;quot;):
 
 &lt;p&gt;《&lt;a href='https://ra.gg/!rEOkP'&gt;标题一定要写的生存战略マル～&lt;/a&gt;》这是电磁猫那边的公告帖。&lt;strong&gt;生存战略这个词准确的反映了网盘的最大的问题——生存。&lt;/strong&gt;&lt;/p&gt;
 
-&lt;h2 id='id1373'&gt;一、钱&lt;/h2&gt;
+&lt;h2 id='id21'&gt;一、钱&lt;/h2&gt;
 
 &lt;p&gt;在二次元概念范围内，我一般都避免谈及这个词，这个即使在三次元中都俗到不行的词。但是，&lt;strong&gt;没有钱是不成的，网盘是很烧钱的。&lt;/strong&gt; 爱吗？二次元不缺少爱，但是用爱能支撑一个论坛，支撑一个PT/BT，支撑几个内部FTP，但是支撑不起网盘; 网盘所需要的服务器，带宽都太多了，太花钱了。我相信，即使是115、腾讯、迅雷，单就网盘业务来说几乎肯定是亏损的，但是作为产品链中的一环，他们能通过其他业务支撑起这项服务，但是一个ACG向的网盘，难！&lt;/p&gt;
 
@@ -376,13 +376,13 @@ def thunder_filename_decode(code, encoding=&amp;quot;gbk&amp;quot;):
 
 &lt;p&gt;以上这些问题，在遇到冷门资源的时候更加明显，无种/速度/并不是随时可以下载，即使是采用了比较先进的管理方式的PT依旧存在。 但是，&lt;strong&gt;作为一个以“实现ACG资源长久分享的长期计划，目标是解决在资源分享的过程中一直存在的资源保存不便现状”的ACG网盘来说，冷门的问题依旧需要服务器和带宽资源来解决。&lt;/strong&gt; 当然了，P2P对于热门资源的解决能力依旧是可以借鉴的，毕竟互联网中的2/8法则在这应该也是基本适用的。&lt;/p&gt;
 
-&lt;h4 id='id1374'&gt;网盘中转&lt;/h4&gt;
+&lt;h4 id='id22'&gt;网盘中转&lt;/h4&gt;
 
 &lt;p&gt;这是我在做了&lt;a href='http://loli.lu'&gt;loli.lu&lt;/a&gt;之后的想法。 既然P2P无法保证一致的网络状况，自己又无法支撑网盘的资源开销，那就去用别人的网盘就好了。 每一份资源在本地服务器上保留一份，然后上传到别的网盘中，用户再通过别的网盘下载。由于网盘实际上不会真正删除他们服务器上的文件，并且存在秒传这样的机制，过期/重传这样的问题实际是可以解决的。 那么，通过别的网盘，我们在保留资源持续有效的同时，通过提供多个网盘的下载，也能适应各种不同的网络环境和保持一致的下载体验。&lt;/p&gt;
 
 &lt;p&gt;当然，缺点也是有的，这样的行为不可能被其他网盘官方许可，也就是说存在用户方针风险。&lt;/p&gt;
 
-&lt;h2 id='id1375'&gt;二、版权&lt;/h2&gt;
+&lt;h2 id='id23'&gt;二、版权&lt;/h2&gt;
 
 &lt;p&gt;这又是掌握着网盘命脉的，至关重要的资源。 ＡＣＧ向网盘由于自身特点，注定存在大量的非法版权的内容，注定会受到政策的影响。更加上内容是保存在服务器上的，也不接受用户私人数据，于是很难逃避版权方面的限制。 找避风港或是寻找借口，决定了这个项目的生存能力。可能转向小众是解决这个问题的一般可行办法，但是能支撑多久，天知道。&lt;/p&gt;
 
@@ -444,7 +444,7 @@ def thunder_filename_decode(code, encoding=&amp;quot;gbk&amp;quot;):
 
 &lt;p&gt;好，推介到此结束，下面正式开始，服务器系统用的是ArchLinux 64位版本，因为用得比较习惯了。。而且默认配置文件的分布还是比较舒服的。。&lt;/p&gt;
 
-&lt;h3 id='id1372'&gt;添加用户&lt;/h3&gt;
+&lt;h3 id='id20'&gt;添加用户&lt;/h3&gt;
 
 &lt;p&gt;用adduser的交互式用户添加，比起useradd各种命令参数省心很多：&lt;/p&gt;
 
@@ -623,7 +623,7 @@ rc.d start pptpd&lt;/code&gt;&lt;/pre&gt;</content>
 
 &lt;p&gt;于是这篇windows教程就说说怎么用IDM下载&lt;a href='http://loli.lu/'&gt;loli.lu&lt;/a&gt;的资源。。不过首先让我们扔掉那&lt;a href='http://blog.binux.me/2011/12/fuck-ie/'&gt;恼人的IE&lt;/a&gt;吧。。&lt;/p&gt;
 
-&lt;h3 id='id1369'&gt;工具介绍&lt;/h3&gt;
+&lt;h3 id='id17'&gt;工具介绍&lt;/h3&gt;
 
 &lt;h4 id='idm'&gt;IDM&lt;/h4&gt;
 
@@ -637,7 +637,7 @@ rc.d start pptpd&lt;/code&gt;&lt;/pre&gt;</content>
 
 &lt;p&gt;是我所编写的开源项目，旨在帮助Linux和MAC用户更好的适用迅雷离线的丰富资源。在Martian支持下提供的ACG离线内容分享服务。 通过这个项目的中转，你可以免费获得可供下载的迅雷离线地址，并且可以将地址分享给好友进行下载。&lt;/p&gt;
 
-&lt;h3 id='id1370'&gt;获取下载链接&lt;/h3&gt;
+&lt;h3 id='id18'&gt;获取下载链接&lt;/h3&gt;
 
 &lt;p&gt;访问：&lt;a href='https://loli.lu/'&gt;https://loli.lu/&lt;/a&gt;，点击右上角的登录，使用Google账户授权： &lt;a href='http://s0.binux.me/201112/2890/14223_o.png'&gt;&lt;img alt='login' src='http://s0.binux.me/201112/2890/14223_z.png' /&gt;&lt;/a&gt;&lt;/p&gt;
 
@@ -659,7 +659,7 @@ rc.d start pptpd&lt;/code&gt;&lt;/pre&gt;</content>
 
 &lt;p&gt;&lt;a href='http://blog.binux.me/wp-content/uploads/2011/12/LOLI.LU-迅雷离线下载分享.png'&gt;&lt;img alt='' src='http://blog.binux.me/wp-content/uploads/2011/12/LOLI.LU-迅雷离线下载分享-112x300.png' /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id='id1371'&gt;添加资源&lt;/h3&gt;
+&lt;h3 id='id19'&gt;添加资源&lt;/h3&gt;
 
 &lt;p&gt;在登录后就可以在右上角找到添加资源的链接啦 &lt;a href='http://s0.binux.me/201112/2890/14223_o.png'&gt;&lt;img alt='bar' src='http://s0.binux.me/201112/2890/14223_z.png' /&gt;&lt;/a&gt; &lt;img alt='add task' src='http://s1.binux.me/201112/2890/14225_o.png' /&gt; 当然了，如果觉得麻烦，也可以直接填写链接获得高速下载链接： &lt;img alt='add task 2' src='http://s0.binux.me/201112/2890/14227_o.png' /&gt;&lt;/p&gt;
 
@@ -699,7 +699,7 @@ rc.d start pptpd&lt;/code&gt;&lt;/pre&gt;</content>
 
 &lt;p&gt;这篇教程旨在帮助大家打造一个方便的高速下载平台，下载工具采用多线程的aria2c，中转网站采用&lt;a href='https://loli.lu'&gt;loli.lu&lt;/a&gt;（迅雷离线分享）的导出功能，方便地解决这个问题。&lt;/p&gt;
 
-&lt;h3 id='id1365'&gt;工具介绍&lt;/h3&gt;
+&lt;h3 id='id13'&gt;工具介绍&lt;/h3&gt;
 
 &lt;h4 id='aria2'&gt;aria2&lt;/h4&gt;
 
@@ -776,7 +776,7 @@ Copyright (C) 2006, 2011 Tatsuhiro Tsujikawa
 
 &lt;p&gt;表明安装成功，注意，由于aria2在1.10后参数变化，而我们的Loli.lu导出的是新的参数设定，&lt;strong&gt;需要aria2的版本高于1.10&lt;/strong&gt;。&lt;/p&gt;
 
-&lt;h3 id='id1366'&gt;获取下载链接&lt;/h3&gt;
+&lt;h3 id='id14'&gt;获取下载链接&lt;/h3&gt;
 
 &lt;p&gt;访问：&lt;a href='https://loli.lu/'&gt;https://loli.lu/&lt;/a&gt;，点击右上角的登录，使用Google账户授权： &lt;a href='http://s0.binux.me/201112/2890/14223_o.png'&gt;&lt;img alt='login' src='http://s0.binux.me/201112/2890/14223_z.png' /&gt;&lt;/a&gt;&lt;/p&gt;
 
@@ -806,13 +806,13 @@ FILE: /home/binux/work/lixian.xunlei/[SumiSora][C3][01][GB][x264_aac][720p](5393
 
 &lt;p&gt;对了，如果如果中间打断一个任务，只要在原来的目录下，再次执行下载命令就可以继续下载了。 如果一个任务的连接过多，也可以考虑建一个文件先保存起来，然后sh down.sh这样下载就好了。&lt;/p&gt;
 
-&lt;h3 id='id1367'&gt;添加资源&lt;/h3&gt;
+&lt;h3 id='id15'&gt;添加资源&lt;/h3&gt;
 
 &lt;p&gt;在登录后就可以在右上角找到添加资源的链接啦 &lt;a href='http://s0.binux.me/201112/2890/14223_o.png'&gt;&lt;img alt='bar' src='http://s0.binux.me/201112/2890/14223_z.png' /&gt;&lt;/a&gt; &lt;img alt='add task' src='http://s1.binux.me/201112/2890/14225_o.png' /&gt; 当然了，如果觉得麻烦，也可以直接填写链接获得高速下载链接： &lt;img alt='add task 2' src='http://s0.binux.me/201112/2890/14227_o.png' /&gt;&lt;/p&gt;
 
 &lt;p&gt;对了，及时不是发布资源，获得的下载链接依旧可以分享给好友，只需要点击分享按钮，将链接复制给好友就可以了。 当然你也可以适用我们的一键分享功能： &lt;a href='http://s3.binux.me/201112/2890/14228_o.png'&gt;&lt;img alt='share' src='http://s3.binux.me/201112/2890/14228_o.png' /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id='id1368'&gt;===&lt;/h3&gt;
+&lt;h3 id='id16'&gt;===&lt;/h3&gt;
 
 &lt;p&gt;如果有任何问题，欢迎留言，或&lt;a href='http://gplus.to/binux'&gt;+足兆叉虫&lt;/a&gt; 或者直接提交BUG：&lt;a href='https://github.com/binux/lixian.xunlei/issues'&gt;https://github.com/binux/lixian.xunlei/issues&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -1395,7 +1395,7 @@ or &amp;gt; &amp;gt;*) (js_interpreter.cc:361)
    <link href="http://blog.binux.me/2011/03/python-tools-chinese-digit"/>
    <updated>2011-03-06T14:38:33+08:00</updated>
    <id>http://blog.binux.me/2011/03/python-tools-chinese-digit</id>
-   <content type="html">&lt;h2 id='id1364'&gt;简介：&lt;/h2&gt;
+   <content type="html">&lt;h2 id='id12'&gt;简介：&lt;/h2&gt;
 
 &lt;p&gt;经常会有这种需要将中文数字如 &amp;#8220;五千三百零一&amp;#8221;，全角数字&amp;#8221;１２３４５&amp;#8221;等等各种中文数字，转换成阿拉伯数字的场合。嘛，毕竟中文比较复杂，这种东西还是很发杂的。&lt;/p&gt;
 
@@ -1524,7 +1524,7 @@ or &amp;gt; &amp;gt;*) (js_interpreter.cc:361)
 
 &lt;p&gt;CSS 选择器( css selector) 是CSS的灵魂。对于一个HTML页面来说，CSS选择器是方便的元素(element)选取工具。&lt;/p&gt;
 
-&lt;h2 id='id1359'&gt;支持的选择器类型：&lt;/h2&gt;
+&lt;h2 id='id7'&gt;支持的选择器类型：&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;派生选择器 ( E F)&lt;/li&gt;
@@ -1538,9 +1538,9 @@ or &amp;gt; &amp;gt;*) (js_interpreter.cc:361)
 
 &lt;p&gt;暂时不支持伪类选择器( E:last )。&lt;/p&gt;
 
-&lt;h2 id='id1360'&gt;选择器语法简介：&lt;/h2&gt;
+&lt;h2 id='id8'&gt;选择器语法简介：&lt;/h2&gt;
 
-&lt;h3 id='id1361'&gt;派生选择器&lt;/h3&gt;
+&lt;h3 id='id9'&gt;派生选择器&lt;/h3&gt;
 
 &lt;p&gt;派生选择器用于根据元素的上下文关系定位元素。&lt;br /&gt;HTML 代码:&lt;/p&gt;
 
@@ -1567,7 +1567,7 @@ or &amp;gt; &amp;gt;*) (js_interpreter.cc:361)
 
 &lt;p&gt;&lt;strong&gt;选择器：&lt;/strong&gt;#myDiv&lt;br /&gt;&lt;strong&gt;选择元素：&lt;/strong&gt;&lt;code&gt;&amp;lt;div id=&amp;quot;myDiv&amp;quot;&amp;gt;id=&amp;quot;myDiv&amp;quot;&amp;lt;/div&amp;gt;&lt;/code&gt;&lt;/p&gt;
 
-&lt;h3 id='id1362'&gt;类选择器&lt;/h3&gt;
+&lt;h3 id='id10'&gt;类选择器&lt;/h3&gt;
 
 &lt;p&gt;类选择器用于选取拥有特性class的元素。&lt;br /&gt;HTML 代码:&lt;/p&gt;
 
@@ -1577,7 +1577,7 @@ or &amp;gt; &amp;gt;*) (js_interpreter.cc:361)
 
 &lt;p&gt;&lt;strong&gt;选择器：&lt;/strong&gt;.Me&lt;br /&gt;&lt;strong&gt;选择元素：&lt;/strong&gt;&lt;code&gt;&amp;lt;div class=&amp;quot;Me myClass&amp;quot;&amp;gt;div class=&amp;quot;Me myClass&amp;quot;&amp;lt;/div&amp;gt;&lt;/code&gt;&lt;/p&gt;
 
-&lt;h3 id='id1363'&gt;属性选择器&lt;/h3&gt;
+&lt;h3 id='id11'&gt;属性选择器&lt;/h3&gt;
 
 &lt;p&gt;选择包含特定属性的元素，不支持在同一个选择器中使用多个属性选择器（ span&lt;span&gt;hello=&amp;#8221;Cleveland&amp;#8221;&lt;/span&gt; ）&lt;br /&gt;[attribute] 包含属性&lt;br /&gt;[attribute=value] 属性等于特定值的元素&lt;br /&gt;[attribute~value] 匹配给定的属性包含特定值的元素&lt;br /&gt;[attribute!value] 匹配给定的属性不包含特定值的元素（not~ ）&lt;br /&gt;[attribute|value] 匹配如&amp;#8221;lang&amp;#8221;属性中的en, en-US, en-cockney&lt;br /&gt;[attribute^value] 匹配给定的属性以特定值开头的元素&lt;br /&gt;[attribute$value] 匹配给定的属性以特定值结尾的元素&lt;br /&gt;[attribute*value] 匹配给定的属性的值中包含给定的字符串&lt;br /&gt;&lt;strong&gt;例子&lt;/strong&gt;&lt;br /&gt;参见：&lt;a href='http://www.w3.org/TR/CSS2/selector.html#attribute-selectors'&gt;http://www.w3.org/TR/CSS2/selector.html#attribute-selectors&lt;/a&gt;&lt;/p&gt;</content>
  </entry>
@@ -1587,17 +1587,17 @@ or &amp;gt; &amp;gt;*) (js_interpreter.cc:361)
    <link href="http://blog.binux.me/2011/01/gentoo_pptp_vpn"/>
    <updated>2011-01-28T02:31:24+08:00</updated>
    <id>http://blog.binux.me/2011/01/gentoo_pptp_vpn</id>
-   <content type="html">&lt;h4 id='id1356'&gt;安装&lt;/h4&gt;
+   <content type="html">&lt;h4 id='id4'&gt;安装&lt;/h4&gt;
 
 &lt;p&gt;由于gentoo的&amp;#8221;清凉化&amp;#8221;解决方案没有提供图形化的pptp的配置方案的原因。。不得不手动配置pptp&lt;br /&gt;gentoo下安装配置请参考&lt;a href='http://en.gentoo-wiki.com/wiki/PPTP'&gt;http://en.gentoo-wiki.com/wiki/PPTP&lt;/a&gt; 。并且其提供了一个半自动化的pptp配置工具，不用手写配置文件了。。&lt;/p&gt;
 
-&lt;h4 id='id1357'&gt;使用&lt;/h4&gt;
+&lt;h4 id='id5'&gt;使用&lt;/h4&gt;
 
 &lt;h5 id='vpn'&gt;默认通过VPN访问网络&lt;/h5&gt;
 
 &lt;p&gt;为了通过vpn上网，请在&lt;strong&gt;File:&lt;/strong&gt; /etc/ppp/peers/my_vpn文件中添加：&lt;br /&gt;defaultroute&lt;br /&gt;即可默认通过VPN连接网络&lt;/p&gt;
 
-&lt;h5 id='id1358'&gt;自动修改路由&lt;/h5&gt;
+&lt;h5 id='id6'&gt;自动修改路由&lt;/h5&gt;
 
 &lt;p&gt;同时通过 &lt;a href='http://code.google.com/p/chnroutes/'&gt;http://code.google.com/p/chnroutes/&lt;/a&gt; 这个项目生成vpnup和vpndown脚本，重命名成100-route.sh分别cp到/etc/ppp/ip-up.d/和/etc/ppp/ip-down.d/中，及可以使国内ip走国内线路，加快访问速度，又不影响翻墙。&lt;br /&gt;不过这里有一个地方需要修改。由于上面我们通过defaultroute使得默认网关有两个，原先的vpnup无法找到默认网关，请手动修改vpnup中的OLDGW为你的网关。&lt;/p&gt;
 
@@ -1717,7 +1717,7 @@ ebuild rtorrent-0.8.6.ebuild merge&lt;/code&gt;&lt;/pre&gt;</content>
    <id>http://blog.binux.me/2011/01/syntaxhighlighter_themes_desert</id>
    <content type="html">&lt;p&gt;&lt;a href='http://binuximage.appspot.com/img/5001-HighSyntaxThemesDesert.png'&gt;&lt;img alt='HighSyntaxThemesDesertDemo' src='http://binuximage.appspot.com/img/5001-HighSyntaxThemesDesert.png' /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h3 id='id1353'&gt;前言&lt;/h3&gt;
+&lt;h3 id='id1'&gt;前言&lt;/h3&gt;
 
 &lt;p&gt;一直很喜欢vim的desert的配色，特别是它的comments天蓝色的配色，用了下&lt;a href='http://alexgorbatchev.com/wiki/SyntaxHighlighter'&gt;SyntaxHighlighter&lt;/a&gt;的RDark也不是很满意。于是拿它改了一下。&lt;br /&gt;顺便修改了以下边框，原来的第一行和边框上沿太接近了，于是给加了一行。。。&lt;/p&gt;
 
@@ -1729,7 +1729,7 @@ ebuild rtorrent-0.8.6.ebuild merge&lt;/code&gt;&lt;/pre&gt;</content>
 
 &lt;p&gt;根据vim color scheme desert修改而成。&lt;/p&gt;
 
-&lt;h3 id='id1354'&gt;使用方法&lt;/h3&gt;
+&lt;h3 id='id2'&gt;使用方法&lt;/h3&gt;
 
 &lt;h4 id='syntaxhighlighter'&gt;SyntaxHighlighter&lt;/h4&gt;
 
@@ -1752,7 +1752,7 @@ ebuild rtorrent-0.8.6.ebuild merge&lt;/code&gt;&lt;/pre&gt;</content>
 &lt;/div&gt;
 &lt;p&gt;3、在设置中启用即可&lt;/p&gt;
 
-&lt;h3 id='id1355'&gt;下载链接&lt;/h3&gt;
+&lt;h3 id='id3'&gt;下载链接&lt;/h3&gt;
 
 &lt;blockquote&gt;
 &lt;p&gt;&lt;a href='http://binuximage.appspot.com/data/3001-shThemeDesert.css'&gt;http://binuximage.appspot.com/data/3001-shThemeDesert.css&lt;/a&gt;&lt;/p&gt;
