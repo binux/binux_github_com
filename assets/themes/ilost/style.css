@@ -337,3 +337,6 @@ header .menu li{padding:3px 6px;}
 .tag-link{margin-right: 8px;}
 code{margin: 0 2px; padding: 0px 5px; background-color: #FEE9CC; border-radius: 3px;}
 pre code, .highlight code{margin: 0; padding: 0; background-color: transparent; border: none;}
+aside ul li .dsq-widget-item .dsq-widget-meta {display:block;outline:medium none;}
+aside ul li .dsq-widget-item .dsq-widget-meta a{display:inline;outline:medium none;background:transparent;}
+aside ul li .dsq-widget-item li a{display:block;outline:medium none;background:transparent;}
