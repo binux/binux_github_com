@@ -16,7 +16,7 @@ tags:
 几百张图，一个个去google image search太慢了
 
 于是：
-[![](http://blog.binux.me/wp-content/uploads/2012/08/1.png)](http://blog.binux.me/wp-content/uploads/2012/08/1.png)
+![](/assets/image/find-larger-images.jpg)
 [https://chrome.google.com/webstore/detail/fbjeidmgokkiojabmnkgmcigfggeklak](https://chrome.google.com/webstore/detail/fbjeidmgokkiojabmnkgmcigfggeklak)
 
 拖入图片搜索

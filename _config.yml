@@ -17,7 +17,7 @@ author :
   email : 17175297.hk@gmail.com
   github : binux
   twitter : roybinux
-  gplus: binux
+  #gplus: binux
 
 # The production_url is only used when full-domain names are needed
 # such as sitemap.txt 
@@ -100,7 +100,7 @@ JB :
   analytics :
     provider : google 
     google : 
-        tracking_id : 'UA-8625344-6'
+        tracking_id : 'UA-36392342-1'
     getclicky :
       site_id : 
     mixpanel :
