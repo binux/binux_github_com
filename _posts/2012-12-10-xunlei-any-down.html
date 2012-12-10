@@ -1,0 +1,82 @@
+---
+layout: post
+title: "迅雷随便下"
+description: ""
+category: 
+tags: [xunlei, loli.lu, python]
+---
+{% include JB/setup %}
+
+<p>本来这个漏洞在loli.lu关闭的时候就已经被发现，并且也告知了相关人员，而且我一度认为这个漏洞是有意留下的。后来经<a href="https://plus.google.com/u/1/112035543705440091116" target="_blank">+李草木</a>提起，发现为数众多的迅雷云点播破解依旧用的是这个漏洞。<b>既然要玩，就要玩票大的。</b></p>
+
+<ul>
+  <li> 无需会员，无需登陆</li>
+  <li> 任意地址，任意类型，立即提取下载链接</li>
+  <li> 管开坑，<b>不管填</b></li>
+</ul>
+
+<hr />
+
+<section style="margin-top: 20px;">
+<script src="http://dynamic.vod.lixian.xunlei.com/fx"></script>
+<script src="http://lib.sinaapp.com/js/jquery/1.8.3/jquery.min.js"></script>
+<form id="xunlei-form">
+  <input id="xunlei-url" type=text placeholder="在这里填入各种链接" style="width:550px" /> <input type="submit" value="go" id="xunlei-go" />
+</form>
+
+<table><tbody id="result-table"></tbody></table>
+
+<script>
+$("#xunlei-form").on("submit", function() {
+  var url = $("#xunlei-url").val();
+  if (url) {
+    $("#result-table").empty().append("<tr><td>loading</td></tr>")
+    $.getJSON("http://pyproxy.duapp.com/get?callback=?", {url: url},
+      function(data) {
+        data = data.data;
+        if (data.items && data.items.length) {
+          $("#result-table").empty()
+          $.each(data.items, function(n, e) {
+            if (e.url) {
+              $("#result-table").append("<tr><td><a href='"+e.url+"' target='_blank'>"+e.title+"</a></td><td>"+format_size(parseInt(e.size))+"</td></tr>");
+            } else {
+              $("#result-table").append("<tr><td>"+e.title+"</td><td>"+format_size(parseInt(e.size))+"</td></tr>");
+            }
+          });
+        } else {
+          $("#result-table").empty().append("<tr><td>没有找到资源</td></tr>");
+        }
+      }).error(function() {
+        $("#result-table").empty().append("<tr><td>请求出错</td></tr>")
+      });
+  } else {
+    $("#result-table").empty().append("<tr><td>需要url</td></tr>")
+  }
+  return false;
+});
+function format_size(spare_size)
+{
+  if (spare_size == 0)
+    return "0B";
+	var spare_str;
+	var spare_left;
+	if( spare_size >= 1024*1024*1024  )
+	{
+		spare_left = Math.floor(spare_size/(1024*1024*1024)*10);
+		spare_str = (spare_left/10).toString()+"GB";
+	}else if( spare_size >= 1024*1024 ){
+		spare_left = (Math.floor(spare_size*100/(1024*1024)))/100;
+		spare_str = spare_left.toString()+"MB";
+	}
+	else if(spare_size >= 1024){
+		spare_left = Math.floor(spare_size/1024);
+		spare_str = spare_left.toString()+"KB";
+	}
+	else{
+		spare_str = spare_size + "B";
+	}
+
+	return spare_str;
+}
+</script>
+</section>
