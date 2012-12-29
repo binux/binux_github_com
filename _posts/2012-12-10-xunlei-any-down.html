@@ -31,7 +31,7 @@ $("#xunlei-form").on("submit", function() {
   var url = $("#xunlei-url").val();
   if (url) {
     $("#result-table").empty().append("<tr><td>loading</td></tr>")
-    $.getJSON("http://pyproxy.duapp.com/get?callback=?", {url: url},
+    $.getJSON("http://roybinux.duapp.com/get?callback=?", {url: url},
       function(data) {
         data = data.data;
         if (data.items && data.items.length) {
