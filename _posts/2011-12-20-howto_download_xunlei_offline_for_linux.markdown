@@ -9,6 +9,11 @@ categories:
 - 未分类
 ---
 
+> loli.lu已关闭！  
+> 如需使用迅雷会员功能，请[购买迅雷会员服务](http://vip.xunlei.com/)  
+> 如需在OSX，Linux环境下下载迅雷离线，请参阅[ThunderLixianExporter](/2012/07/thunderlixianexporter/)
+
+
 对于Linux用户，无论你用不用Windows，都不会不知道迅雷和迅雷离线。
 面对国内这苦B的网络环境，用http,ftp太慢，bt,ed2k过期，想用迅雷，额。。没客户端。。渣一样的客户端，用浏览器下吧，下一半断了还不能多线程，用命令行又有cookie验证。。。
 

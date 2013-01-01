@@ -15,6 +15,8 @@ tags:
 - xunlei
 ---
 
+**<font color=red>OUT OF DATA</font>**
+
 迅雷离线空间已经开放到1PB了，总是用不完，手头上那个100M的种子压缩包里面东西好多啊，把它塞满离线空间如何？
 
 这个是一篇教程，适用于所有python环境，包括Linux, Windows, OSX, routers, NAS boxes，只要有python环境就可以。（不过搭建python环境并不是本文的内容，本文默认您已经有python了）

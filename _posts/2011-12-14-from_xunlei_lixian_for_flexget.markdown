@@ -15,6 +15,8 @@ tags:
 - xunlei
 ---
 
+**<font color=red>OUT OF DATA</font>**
+
 这个也是一篇教程，上接 "[让资源灌满你的离线空间吧 — 迅雷离线插件 for flexget](http://blog.binux.me/2011/12/xunlei_lixian_for_flexget/)"。需要的工具依旧是flexget和lixian.xunlei插件。
 
 本文是应+[平芜泫](https://plus.google.com/u/0/111086731636961623060)的需求，自动将迅雷离线里面的文件下载回vps，然后再从教育网用IPV6下回本地。前两步不再复述，参考前文的步骤即可，直接步骤3。先上配置文件：

@@ -13,6 +13,10 @@ tags:
 - loli.lu
 ---
 
+> loli.lu已关闭！  
+> 如需使用迅雷会员功能，请[购买迅雷会员服务](http://vip.xunlei.com/)  
+> 如需在OSX，Linux环境下下载迅雷离线，请参阅[ThunderLixianExporter](/2012/07/thunderlixianexporter/)
+
 首先参照YAAW以RPC模式启动ARIA2，保证YAAW能正常工作。
 
 在LOLI.LU中随便点开一个一个资源 > 批量下载。**右键点击** 自定义，填入以下脚本（注意需要替换JSONRPC_PATH，和YAAW中的一样）：

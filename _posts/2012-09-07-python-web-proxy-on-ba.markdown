@@ -27,6 +27,22 @@ fetch taskqueue能fetchurl和离线下载（支持最大4G，10小时下载）�
 
 [http://pyproxy.duapp.com/https://github.com/binux](http://pyproxy.duapp.com/https://github.com/binux)
 
+其他API：  
+
+[http://pyproxy.duapp.com/rewrite/http://www.baidu.com/](http://pyproxy.duapp.com/rewrite/http://www.baidu.com/)  
+使用这个地址访问会将页面上的url都加上代理的前缀
+
+[http://pyproxy.duapp.com/allow_origin/http://httpbin.duapp.com/ip](http://pyproxy.duapp.com/allow_origin/http://httpbin.duapp.com/ip)  
+用于ajax跨域读取，比如这样：  
+您的IP是：<span id="origin_ip"></span> 请自行查看源码  
+<script src="http://lib.sinaapp.com/js/jquery/1.8.3/jquery.min.js"></script>
+<script>
+ $.get("http://pyproxy.duapp.com/allow_origin/http://httpbin.duapp.com/ip",
+  function(data) {
+  $("#origin_ip").text(data.origin);
+});
+</script>
+
 不得不说，百度网速也太不怎么样了吧。。
 第一次写网页代理，地址改写还真麻烦，xmlhttprequest好歹是拦截了，js动态加载的元素就算了。。
 
