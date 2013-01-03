@@ -139,7 +139,7 @@ aria2亦可以用于PT下载, 下载的关键在于伪装
 
 {% highlight bash %}
 enable-dht=false
-bt-enable-lpd=true
+bt-enable-lpd=false
 enable-peer-exchange=false
 #修改特征
 user-agent=uTorrent/2210(25130)
