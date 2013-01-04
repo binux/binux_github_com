@@ -114,7 +114,7 @@ dir=/some/where
 #另一种Linux文件缓存方式, 使用前确保您使用的内核支持此选项, 需要1.15及以上版本(?)
 #enable-mmap=true
 #文件预分配, 能有效降低文件碎片, 提高磁盘性能. 缺点是预分配时间较长
-#所需时间 none > falloc > trunc > prealloc, falloc和trunc需要文件系统和内核支持
+#所需时间 none < falloc ? trunc << prealloc, falloc和trunc需要文件系统和内核支持
 file-allocation=prealloc
 {% endhighlight %}
 
@@ -135,9 +135,11 @@ follow-torrent=true
 #BT监听端口, 当端口屏蔽时使用
 #listen-port=6881-6999
 {% endhighlight %}
+
 aria2亦可以用于PT下载, 下载的关键在于伪装
 
 {% highlight bash %}
+#不确定是否需要，为保险起见，need more test
 enable-dht=false
 bt-enable-lpd=false
 enable-peer-exchange=false
