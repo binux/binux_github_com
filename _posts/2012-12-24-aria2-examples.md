@@ -151,7 +151,7 @@ seed-ratio=0
 #保存会话
 force-save=true
 bt-hash-check-seed=true
-check-integrity=true
+bt-seed-unverified=true
 bt-save-metadata=true
 {% endhighlight %}
 
