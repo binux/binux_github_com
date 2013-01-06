@@ -35,7 +35,7 @@ tags:
     * 统一的接口方便添加更多的下载方式
 
 
-[![](http://blog.binux.me/wp-content/uploads/2012/07/1.png)](http://blog.binux.me/wp-content/uploads/2012/07/1.png)
+[![](https://raw.github.com/binux/ThunderLixianExporter/master/ThunderLixianExporter.png)](https://raw.github.com/binux/ThunderLixianExporter/master/ThunderLixianExporter.png)
 
 
 油猴脚本： [ThunderLixianExporter.user.js](https://raw.github.com/binux/ThunderLixianExporter/master/ThunderLixianExporter.user.js)
