@@ -94,6 +94,8 @@ max-overall-upload-limit=0
 max-upload-limit=0
 #断开速度过慢的连接
 #lowest-speed-limit=0
+#验证用，需要1.16.1之后的release版本
+#referer=*
 {% endhighlight %}
 
 ###进度保存相关
@@ -102,6 +104,8 @@ aria2c只有在正常退出时(ctrl-c), 突然断电是无法保存进度的. �
 {% highlight bash %}
 input-file=/some/where/aria2.session
 save-session=/some/where/aria2.session
+#定时保存会话，需要1.16.1之后的release版
+#save-session-interval=60
 {% endhighlight %}
 
 ###磁盘相关
@@ -153,6 +157,8 @@ force-save=true
 bt-hash-check-seed=true
 bt-seed-unverified=true
 bt-save-metadata=true
+#定时保存会话，需要1.16.1之后的某个release版本（比如1.16.2）
+#save-session-interval=60
 {% endhighlight %}
 
 ##常见问题
