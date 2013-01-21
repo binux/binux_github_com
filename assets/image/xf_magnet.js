@@ -6,8 +6,8 @@
 jQuery.ajax({
   url: 'http://pyproxy.duapp.com/http://httpbin.duapp.com/cookies/set?userid=21',
   cache: true,
-  dataType: 'json',
-  complete: function() {
+  dataType: 'script',
+  success: function() {
     XF.widget.msgbox.show('磁力链已启用!', 1, 1000, false);
     jQuery('#input_tips').text('请输入HTTP/eD2k/magnet链接');
     EventHandler._trigger_add_task = EventHandler.trigger_add_task;
