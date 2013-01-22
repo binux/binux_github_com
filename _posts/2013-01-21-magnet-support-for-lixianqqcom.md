@@ -25,4 +25,4 @@ tags: []
 
 
 地址：[https://gist.github.com/4585941](https://gist.github.com/4585941) 使用LGPL许可证发布  
-书签：`javascript:void((function(){var d=document;var s=d.createElement('script');s.src='http://blog.binux.me/assets/image/xf_magnet.js';s.id='binux_script';d.body.appendChild(s)})())`
+书签：<a href="javascript:void((function(){var d=document;var s=d.createElement('script');s.src='http://blog.binux.me/assets/image/xf_magnet.js';s.id='binux_script';d.body.appendChild(s)})())">xf_magnet</a>
