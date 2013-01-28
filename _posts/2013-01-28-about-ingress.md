@@ -3,7 +3,7 @@ layout: post
 title: "Ingress Portals Map"
 description: ""
 category: 
-tags: [ingress,python]
+tags: [ingress, python]
 ---
 {% include JB/setup %}
 
