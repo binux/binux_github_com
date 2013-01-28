@@ -13,9 +13,9 @@ jQuery.ajax({
     EventHandler._trigger_add_task = EventHandler.trigger_add_task;
     EventHandler.trigger_add_task = function(task_id) {
       var url = ($('dl_url_id').value).replace(/,/g, "_");
-      var hash = url.match(/^magnet:\?xt=urn:btih:(\w+)/i)[1];
+      var hash = url.match(/^magnet:\?xt=urn:btih:(\w+)/i);
       if (hash) {
-        check_bt_task(hash);
+        check_bt_task(hash[1]);
       } else {
         EventHandler._trigger_add_task(task_id);
       }
