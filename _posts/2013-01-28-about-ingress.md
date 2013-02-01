@@ -21,20 +21,20 @@ ingress是google出品的AR（增强现实）游戏，与以往的游戏不同�
  * 直接显示等级，中立portal
  * 显示24小时内即将变为中立portal
  
-北京：[http://s.binux.me/ingress/beijing.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/beijing.kmz)  
-香港：[http://s.binux.me/ingress/hongkong.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/hongkong.kmz)  
-台湾：[http://s.binux.me/ingress/taiwan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/taiwan.kmz)  
-天津：[http://s.binux.me/ingress/tianjin.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/tianjin.kmz)  
-上海：[http://s.binux.me/ingress/shanghai.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/shanghai.kmz)  
-成都：[http://s.binux.me/ingress/cengdu.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/cengdu.kmz)  
-桂林：[http://s.binux.me/ingress/guilin.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/guilin.kmz)  
-广州：[http://s.binux.me/ingress/guangzhou.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/guangzhou.kmz)  
-重庆：[http://s.binux.me/ingress/congqing.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/congqing.kmz)  
-澳门：[http://s.binux.me/ingress/macao.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/macao.kmz)  
-武汉：[http://s.binux.me/ingress/wuhan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/wuhan.kmz)  
-南京：[http://s.binux.me/ingress/nanjing.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/nanjing.kmz)  
-郑州：[http://s.binux.me/ingress/zhengzhou.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/zhengzhou.kmz)  
-太原：[http://s.binux.me/ingress/taiyuan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/taiyuan.kmz)  
+北京：[http://s.binux.me/ingress/beijing.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/beijing.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_beijing.kmz)  
+香港：[http://s.binux.me/ingress/hongkong.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/hongkong.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_hongkong.kmz)  
+台湾：[http://s.binux.me/ingress/taiwan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/taiwan.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_taiwan.kmz)  
+天津：[http://s.binux.me/ingress/tianjin.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/tianjin.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_tianjin.kmz)  
+上海：[http://s.binux.me/ingress/shanghai.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/shanghai.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_shanghai.kmz)  
+成都：[http://s.binux.me/ingress/cengdu.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/cengdu.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_cengdu.kmz)  
+桂林：[http://s.binux.me/ingress/guilin.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/guilin.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_guilin.kmz)  
+广州：[http://s.binux.me/ingress/guangzhou.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/guangzhou.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_guangzhou.kmz)  
+重庆：[http://s.binux.me/ingress/congqing.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/congqing.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_congqing.kmz)  
+澳门：[http://s.binux.me/ingress/macao.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/macao.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_macao.kmz)  
+武汉：[http://s.binux.me/ingress/wuhan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/wuhan.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_wuhan.kmz)  
+南京：[http://s.binux.me/ingress/nanjing.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/nanjing.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_nanjing.kmz)  
+郑州：[http://s.binux.me/ingress/zhengzhou.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/zhengzhou.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_zhengzhou.kmz)  
+太原：[http://s.binux.me/ingress/taiyuan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/taiyuan.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_taiyuan.kmz)  
 
 如果上述城市范围不正确，或者您所在的城市不在上述列表中，欢迎留言。
 
