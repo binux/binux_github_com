@@ -21,6 +21,8 @@ ingress是google出品的AR（增强现实）游戏，与以往的游戏不同�
  * 直接显示等级，中立portal
  * 显示24小时内即将变为中立portal
  
+ **求图标！**
+ 
 北京：[http://s.binux.me/ingress/beijing.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/beijing.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_beijing.kmz)  
 香港：[http://s.binux.me/ingress/hongkong.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/hongkong.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_hongkong.kmz)  
 台湾：[http://s.binux.me/ingress/taiwan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/taiwan.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_taiwan.kmz)  
@@ -35,6 +37,7 @@ ingress是google出品的AR（增强现实）游戏，与以往的游戏不同�
 南京：[http://s.binux.me/ingress/nanjing.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/nanjing.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_nanjing.kmz)  
 郑州：[http://s.binux.me/ingress/zhengzhou.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/zhengzhou.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_zhengzhou.kmz)  
 太原：[http://s.binux.me/ingress/taiyuan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/taiyuan.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_taiyuan.kmz)  
+哈尔滨：[http://s.binux.me/ingress/taiyuan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/haerbin.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_haerbin.kmz)  
 
 如果上述城市范围不正确，或者您所在的城市不在上述列表中，欢迎留言。
 
