@@ -38,8 +38,13 @@ ingress是google出品的AR（增强现实）游戏，与以往的游戏不同�
 郑州：[http://s.binux.me/ingress/zhengzhou.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/zhengzhou.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_zhengzhou.kmz)  
 太原：[http://s.binux.me/ingress/taiyuan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/taiyuan.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_taiyuan.kmz)  
 哈尔滨：[http://s.binux.me/ingress/taiyuan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/haerbin.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_haerbin.kmz)  
+西安：[http://s.binux.me/ingress/xian.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/xian.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_xian.kmz)  
+济南：[http://s.binux.me/ingress/jinan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/jinan.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_jinan.kmz)  
+海南：[http://s.binux.me/ingress/hainan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/hainan.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_hainan.kmz)  
+长沙：[http://s.binux.me/ingress/changsha.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/changsha.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_changsha.kmz)  
 
 如果上述城市范围不正确，或者您所在的城市不在上述列表中，欢迎留言。
 
 **如何添加到我的地图：**
 打开[http://maps.google.com/](http://maps.google.com/) > 点击“我的地点” > 新建 > 导入。在弹出框内填入如：http://s.binux.me/ingress/beijing.kmz的url即可。
+西安：[http://s.binux.me/ingress/taiyuan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/haerbin.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_haerbin.kmz)  
