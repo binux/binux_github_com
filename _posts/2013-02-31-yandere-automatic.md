@@ -3,7 +3,7 @@ layout: post
 title: "收图自动化"
 description: ""
 category: 
-tags: [yande.re,python]
+tags: [yande.re, python]
 ---
 {% include JB/setup %}
 
@@ -16,7 +16,7 @@ tags: [yande.re,python]
 主人早上好，北京的雾霾天气已被weather block plus拦截，室内健康指数98分，已打败73.5%的北京用户，赶快购买空气清新插件提升您的健康指数。室内壁纸5D（试用版）已根据您的喜好为您挑选了壁纸，10分钟广告后显示。冰箱余菜已更新，您是要先洗澡，先吃早餐还是打一炮？【选择】使用左手还是右手？（67.8%的用户推荐使用左手）【选择】今日热榜 / Kimer猜 。。。。。。
 
 
-###正文
+##正文
 咳咳，扯远了，虽然G+福利满地，但是有收不全、怕收重、格式命名不统一，还是喜欢自己收图。最常用的方案是用支持内容离线的RSS阅读器订阅图站的RSS。我订阅的有
 
 * [yande.re](https://yande.re/post/atom?tags=) 建议用atom的，输出带分辨率
@@ -28,10 +28,10 @@ tags: [yande.re,python]
 1. google reader订阅，标星
 2. [ifttt](https://ifttt.com/)将url追加到dropbox的文件里
 3. 脚本收图
-
 ![ifttt](/assets/image/ifttt.png)
 
-####脚本收图
+
+###脚本收图
 
 虽然我用google reader进行筛选，但是直接全收也是可以的，方法也类似。  
 首先，创建一个ifttt账号，现在应该已经开放注册了吧。
@@ -49,7 +49,8 @@ tags: [yande.re,python]
 1. 下载 [imgurl.py](https://gist.github.com/binux/5071536/raw/imgurl.py)
 2. 在下载目录执行`python imgurl.py [刚才ifttt创建的文件] | xargs -n 1 wget`
 
-####自动分享到pinterest
+
+###自动分享到pinterest
 
 **您需要一台VPS**
 本来是打算自动分享到pinterest和G+的，但是G+没有publish的API，唯一的write API——moments还没上线。等有了再弄吧。  
