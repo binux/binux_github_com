@@ -39,7 +39,7 @@ tags: [yande.re, python]
 1. 登陆 > `Create a Recipe`
 2. this选择 `Google Reader` Trigger选择 `New starred item`（如果全收，this选择 `Feed` Trigger选 `New feed item`）
 3. then选择`Dropbox` Trigger选`Append to a text file`
-4. file name： {{FeedTitle}} （每个网站一个文件） content： {{ItemUrl}}
+4. file name： \{\{FeedTitle\}\} （每个网站一个文件） content： \{\{ItemUrl\}\}
 5. 保存即可
 
 现在在reader中标星，过一会就会收到Dropbox的文件更新提示。
@@ -63,7 +63,7 @@ tags: [yande.re, python]
 6. 登陆[ifttt](https://ifttt.com/) > `Create a Recipe`
 7. this选择 `Google Reader` Trigger选择 `New starred item`
 8. then选择 `WordPress` Blog URL： `ifttt.captnemo.in`, Username,password任意填。Trigger选`Create a post`
-9. Title: {{ItemTitle}}, Body: {{ItemUrl}}, Tags: `http://[VPS的hostname/ip]:8888/`
+9. Title: \{\{ItemTitle\}\}, Body: \{\{ItemUrl\}\}, Tags: `http://[VPS的hostname/ip]:8888/`
 
 保存即可，比如[我的pinterest](http://pinterest.com/binux/auto/)。img_share.py可以设置`--username --password`验证（与第8步对应，不设置不验证），可以`--port`修改端口。具体`python img_share.py --help` 即可。
 
