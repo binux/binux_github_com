@@ -7,7 +7,7 @@ tags: [yande.re, python]
 ---
 {% include JB/setup %}
 
-从小开始，我对“自动”特别着迷。小时候，去妈妈的工厂帮忙折包装盒，每个动作都是一样的，很无聊。我就想，如果我发明一个机器，重复折纸盒的动作，那我不就可以什么都不干，在家领工资了吗？于是，你也知道了，这份工作叫程序员。。。
+从小开始，我对“自动”特别着迷。小时候，去妈妈的工厂帮忙折包装盒，每个动作都是一样的，很无聊。我就想，如果我发明一个机器，重复折纸盒的动作，那我不就可以什么都不干，在家领工资了吗？于是，你也知道了，**这份工作叫程序员**。。。
 
 虽然机器在不断地自动运行，我也没能在家什么都不干就领到工资。互联网的大潮下，自动变得如此简单，甚至有人说，互联网就是印钞机，只要程序还在执行，编写程序的人都放半年假都能赚钱。所以说，程序员这个职业是自我毁灭的，他们从来不自己干活，他们编写自动的程序不断填充着这个世界，直到他们自己都不再被需要。这不，互联网已被竞相涌入的程序员和他们的程序占满，“用户需求”已经不能满足程序员的饥渴，他们又开始创造需求，这个世界上只要有互联网公司和快递公司就好了，他们想。
 
@@ -21,7 +21,7 @@ tags: [yande.re, python]
 
 * [yande.re](https://yande.re/post/atom?tags=) 建议用atom的，输出带分辨率
 * [konachan.com](konachan.com/post/atom?tags=) 壁纸向
-* [danbooru]('http://pyproxy.duapp.com/s;ssd%2Fdata%2Fpreview;data/re;((<img%20src%3D"http%3A%2F%2Fdanbooru.donmai.us%2Fdata%2F%5Cw%2B.)jpg"%2F>);%5C1%5C2png"%20%2F>/http://danbooru.donmai.us/posts.atom') 很杂，转烧输出大图
+* [danbooru](http://pyproxy.duapp.com/s;ssd%2Fdata%2Fpreview;data/re;\(\(<img%20src%3D"http%3A%2F%2Fdanbooru.donmai.us%2Fdata%2F%5Cw%2B.\)jpg"%2F>\);%5C1%5C2png"%20%2F>/http://danbooru.donmai.us/posts.atom) 很杂，转烧输出大图
 
 使用google reader订阅，看到好图就标星，月底统一收。但是每个月几百张收到手软。现在使用的方案是：
 
@@ -39,7 +39,7 @@ tags: [yande.re, python]
 1. 登陆 > `Create a Recipe`
 2. this选择 `Google Reader` Trigger选择 `New starred item`（如果全收，this选择 `Feed` Trigger选 `New feed item`）
 3. then选择`Dropbox` Trigger选`Append to a text file`
-4. file name： `{{FeedTitle}}`（每个网站一个文件） content： `{{ItemUrl}}`
+4. file name： `\{\{FeedTitle\}\}`（每个网站一个文件） content： `\{\{ItemUrl\}\}`
 5. 保存即可
 
 现在在reader中标星，过一会就会收到Dropbox的文件更新提示。
@@ -58,13 +58,13 @@ tags: [yande.re, python]
 1. VPS环境需要python2.6+，`easy_install requests tornado`
 2. VPS下载 [img_share.py](https://gist.github.com/binux/5075775/raw/img_share.py)
 3. 登陆[http://pinterest.com/](http://pinterest.com/)，提取cookie
-4. 访问[http://pinterest.com/me/](view-source:http://pinterest.com/binux/) > 查看源码，查找`<ul class="BoardListUl">`，提取要发布到board的id，在对应的<li data属性中，比如`215258125878507279`这样的串
+4. 访问[http://pinterest.com/me/](view-source:http://pinterest.com/me/) > 查看源码，查找`<ul class="BoardListUl">`，提取要发布到board的id，在对应的<li data属性中，比如`215258125878507279`这样的串
 5. 用`python img_share.py  --pinterest_cookie='[第3步]' --pinterest_board=[第4步]` 命令启动
 6. 登陆[ifttt](https://ifttt.com/) > `Create a Recipe`
 7. this选择 `Google Reader` Trigger选择 `New starred item`
 8. then选择 `WordPress` Blog URL： `ifttt.captnemo.in`, Username,password任意填。Trigger选`Create a post`
-9. Title: `{{ItemTitle}}`, Body: `{{ItemUrl}}`, Tags: `http://[VPS的hostname/ip]:8888/`
+9. Title: `\{\{ItemTitle\}\}`, Body: `\{\{ItemUrl\}\}`, Tags: `http://[VPS的hostname/ip]:8888/`
 
 保存即可，比如[我的pinterest](http://pinterest.com/binux/auto/)。img_share.py可以设置`--username --password`验证（与第8步对应，不设置不验证），可以`--port`修改端口。具体`python img_share.py --help` 即可。
 
-本文写于2013年02月31日
+**本文写于2013年02月31日**
