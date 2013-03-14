@@ -65,6 +65,6 @@ tags: [yande.re, python]
 8. then选择 `WordPress` Blog URL： `ifttt.captnemo.in`, Username,password任意填。Trigger选`Create a post`
 9. Title: \{\{ItemTitle\}\}, Body: \{\{ItemUrl\}\}, Tags: `http://[VPS的hostname/ip]:8888/`
 
-保存即可，比如[我的pinterest](http://pinterest.com/binux/auto/)。img_share.py可以设置`--username --password`验证（与第8步对应，不设置不验证），可以`--port`修改端口。具体`python img_share.py --help` 即可。
+保存即可，比如[我的pinterest](http://pinterest.com/binux/auto/)。img_share.py可以设置`--username --password`验证（与第8步对应，不设置不验证），可以`--port`修改端口。具体`python img_share.py --help` 即可。
 
 **本文写于2013年02月31日**
