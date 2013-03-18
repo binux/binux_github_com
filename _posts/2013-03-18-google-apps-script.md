@@ -86,6 +86,6 @@ API请参考 [Default Services](https://developers.google.com/apps-script/defaul
 
 
 ## 总结
-GAS比起 [GAE](http://appengine.google.com) 更加简单，但是功能足够强大，通过在线的调试器，写一两行代码比GAE要轻松不少。我JavaScript是在 [w3school](http://www.w3school.com.cn/index.html) 学的，没看过一本JS的书，完全野生程序猿，在这里只是为了抛砖引玉，希望您能通过 GAS 能玩出更多有意思的东西。
+GAS比起 [GAE](http://appengine.google.com) 更加简单，但是功能足够强大，通过在线的调试器，写一两行代码比GAE要轻松不少。我JavaScript是在 [w3school](http://www.w3school.com.cn/index.html) 学的，完全野生程序猿，在这里只是为了抛砖引玉，希望您能通过 GAS 能玩出更多有意思的东西。
 
 
