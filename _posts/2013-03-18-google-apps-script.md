@@ -35,7 +35,9 @@ tags: [GAS, google_apps_script, javascript]
 API请参考 [Default Services](https://developers.google.com/apps-script/defaultservices)，上方的 [Execution Methods for Scripts](https://developers.google.com/apps-script/execution_methods) 等文章对环境以及常见的需求有一些介绍，建议阅读。
 
 ## 应用示例
+
 ### RSS转烧
+
 虽然HTML输出有限制，但 [XML、JSON、JSONP](https://developers.google.com/apps-script/content_service) 却没有限制的，配合 [urlfetch](https://developers.google.com/apps-script/service_urlfetch)，非常适合用来做RSS转烧，全文输出（这里建议用上缓存或者数据存储）等功能。
 
 **示例：**
@@ -47,6 +49,9 @@ API请参考 [Default Services](https://developers.google.com/apps-script/defaul
 2. 以自己的身份执行、访问权限为允许匿名
 
 **说明：**这里展示的是图站 [yande.re](https://yande.re/) 的sample画质输出以及title修改，这是我的第一个脚本，这里稍微尝试了一下环境以及urlfetch的功能，应该还是蛮简单的。
+
+[danbooru](https://script.google.com/macros/s/AKfycbw4yYvSaKebIaHrlzM0BRJcb8DraGST_3EFHlIBX7ZRZ4JKlGk/exec) [源码](https://script.google.com/d/1HT85VFrLj_5kHH2ek3ONGgnHGhSSnYooZT_6ywCe-EOHIbvDvVrv1CX_/edit?usp=sharing)  
+[konachan](https://script.google.com/macros/s/AKfycby56iyEAOfVKpjspuV7e_vzfSLBOel4x02AXzFW1UoEfMJSwGnj/exec) [源码](https://script.google.com/d/1PZBEnh63gfP9N6RpkgFlyoim_IpSrke5KxMjGUC_ApgGNoNnodfil3v1/edit?usp=sharing)
 
 ### reader2gplus
 自动将Google Reader中加星的条目同步到Google+上（反正Google Reader也快死了。。这个也用不了多久了吧。。）
