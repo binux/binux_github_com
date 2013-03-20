@@ -13,6 +13,13 @@ CONFIG = {
   'theme_package_version' => "0.1.0"
 }
 
+## -- Rsync Deploy config -- ##
+## Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
+ssh_user       = "binux@o.stdyun.net"
+ssh_port       = "22"
+document_root  = "~/stdyun.binux.me/"
+public_dir     = "_site"
+
 # Path configuration helper
 module JB
   class Path
@@ -102,6 +109,13 @@ end # task :preview
 
 # Public: Alias - Maintains backwards compatability for theme switching.
 task :switch_theme => "theme:switch"
+
+task :deploy do
+  command = "jekyll --no-auto && rsync -avz --delete "
+  command << "-e 'ssh -p #{ssh_port}' " unless ssh_port.nil?
+  command << "#{public_dir}/ #{ssh_user}:#{document_root}"
+  sh command
+end
 
 namespace :theme do
   
