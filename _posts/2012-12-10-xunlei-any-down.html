@@ -53,7 +53,6 @@ $("#xunlei-form").on("submit", function() {
     } else {
       $("#result-table").empty().append("<tr><td>需要url</td></tr>")
     }
-    return false;
   }
 
   if (!window.xunlei_userid) {
@@ -64,6 +63,7 @@ $("#xunlei-form").on("submit", function() {
   } else {
     doo();
   }
+  return false;
 });
 function format_size(spare_size)
 {
