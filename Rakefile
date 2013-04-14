@@ -17,7 +17,7 @@ CONFIG = {
 ## Be sure your public key is listed in your server's ~/.ssh/authorized_keys file
 ssh_user       = "binux@o.stdyun.net"
 ssh_port       = "22"
-document_root  = "~/stdyun.binux.me/"
+document_root  = "~/blog.binux.me/"
 public_dir     = "_site"
 
 # Path configuration helper

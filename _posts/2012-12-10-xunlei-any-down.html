@@ -10,9 +10,9 @@ tags: [xunlei, loli.lu, python]
 <p>本来这个漏洞在loli.lu关闭的时候就已经被发现，并且也告知了相关人员，而且我一度认为这个漏洞是有意留下的。后来经<a href="https://plus.google.com/u/1/112035543705440091116" target="_blank">+李草木</a>提起，发现为数众多的迅雷云点播破解依旧用的是这个漏洞。<b>既然要玩，就要玩票大的。</b></p>
 
 <ul>
-  <li> 无需会员，无需登陆</li>
   <li> 任意地址，任意类型，立即提取下载链接</li>
   <li> 管开坑，<b>不管填</b></li>
+  <li><b>您可能需要登陆一个迅雷账号（不需要VIP）</b></li>
 </ul>
 
 <hr />
@@ -28,31 +28,42 @@ tags: [xunlei, loli.lu, python]
 
 <script>
 $("#xunlei-form").on("submit", function() {
-  var url = $("#xunlei-url").val();
-  if (url) {
-    $("#result-table").empty().append("<tr><td>loading</td></tr>")
-    $.getJSON("http://roybinux.duapp.com/get?callback=?", {url: url},
-      function(data) {
-        data = data.data;
-        if (data.items && data.items.length) {
-          $("#result-table").empty()
-          $.each(data.items, function(n, e) {
-            if (e.url) {
-              $("#result-table").append("<tr><td><a href='"+e.url+"' target='_blank'>"+e.title+"</a></td><td>"+format_size(parseInt(e.size))+"</td></tr>");
-            } else {
-              $("#result-table").append("<tr><td>"+e.title+"</td><td>"+format_size(parseInt(e.size))+"</td></tr>");
-            }
-          });
-        } else {
-          $("#result-table").empty().append("<tr><td>没有找到资源</td></tr>");
-        }
-      }).error(function() {
-        $("#result-table").empty().append("<tr><td>请求出错</td></tr>")
-      });
-  } else {
-    $("#result-table").empty().append("<tr><td>需要url</td></tr>")
+  function doo() {
+    var url = $("#xunlei-url").val();
+    if (url) {
+      $("#result-table").empty().append("<tr><td>loading</td></tr>")
+      $.getJSON("http://roybinux.duapp.com/get?callback=?", {url: url, userid: window.xunlei_userid},
+        function(data) {
+          data = data.data;
+          if (data.items && data.items.length) {
+            $("#result-table").empty()
+            $.each(data.items, function(n, e) {
+              if (e.url) {
+                $("#result-table").append("<tr><td><a href='"+e.url+"' target='_blank'>"+e.title+"</a></td><td>"+format_size(parseInt(e.size))+"</td></tr>");
+              } else {
+                $("#result-table").append("<tr><td>"+e.title+"</td><td>"+format_size(parseInt(e.size))+"</td></tr>");
+              }
+            });
+          } else {
+            $("#result-table").empty().append("<tr><td>没有找到资源</td></tr>");
+          }
+        }).error(function() {
+          $("#result-table").empty().append("<tr><td>请求出错</td></tr>")
+        });
+    } else {
+      $("#result-table").empty().append("<tr><td>需要url</td></tr>")
+    }
+    return false;
   }
-  return false;
+
+  if (!window.xunlei_userid) {
+    $.getJSON('http://i.vod.xunlei.com/req_subBT?jsonp=?', function(data) {
+      window.xunlei_userid = data.resp.userid;
+      doo();
+    });
+  } else {
+    doo();
+  }
 });
 function format_size(spare_size)
 {
