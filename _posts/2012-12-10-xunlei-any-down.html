@@ -57,7 +57,7 @@ $("#xunlei-form").on("submit", function() {
 
   if (!window.xunlei_userid) {
     $.getJSON('http://i.vod.xunlei.com/req_subBT?jsonp=?', function(data) {
-      window.xunlei_userid = data.resp.userid;
+      window.xunlei_userid = data.resp.userid || 21;
       doo();
     });
   } else {
