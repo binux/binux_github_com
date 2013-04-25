@@ -42,6 +42,15 @@ ingress是google出品的AR（增强现实）游戏，与以往的游戏不同�
 济南：[http://s.binux.me/ingress/jinan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/jinan.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_jinan.kmz)  
 海南：[http://s.binux.me/ingress/hainan.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/hainan.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_hainan.kmz)  
 长沙：[http://s.binux.me/ingress/changsha.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/changsha.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_changsha.kmz)  
+南宁：[http://s.binux.me/ingress/nanning.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/nanning.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_nanning.kmz)  
+昆明：[http://s.binux.me/ingress/kunming.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/kunming.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_kunming.kmz)  
+长春：[http://s.binux.me/ingress/changchun.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/changchun.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_changchun.kmz)  
+汕头：[http://s.binux.me/ingress/shantou.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/shantou.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_shantou.kmz)  
+廊坊：[http://s.binux.me/ingress/langfang.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/langfang.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_langfang.kmz)  
+徐州：[http://s.binux.me/ingress/xuzhou.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/xuzhou.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_xuzhou.kmz)  
+德阳：[http://s.binux.me/ingress/deyang.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/deyang.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_deyang.kmz)  
+茂名：[http://s.binux.me/ingress/maoming.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/maoming.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_maoming.kmz)  
+厦门：[http://s.binux.me/ingress/xiamen.kmz](https://maps.google.com/?q=http://s.binux.me/ingress/xiamen.kmz) | [坐标修正](https://maps.google.com/?q=http://s.binux.me/ingress/fixed_xiamen.kmz)  
 
 如果上述城市范围不正确，或者您所在的城市不在上述列表中，欢迎留言。
 
