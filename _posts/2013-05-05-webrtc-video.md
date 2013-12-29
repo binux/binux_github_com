@@ -37,4 +37,11 @@ DEMO： [http://webrtc.binux.me/](http://webrtc.binux.me/)
 * 支持额外的HTTP，WebSocket节点，保证内容随时可用，并能保持P2P加速的特性
 * 通信数据量统计，等等。。。
 
+注：
+
+* 视频边下边播需要MP4、webm、ogg格式
+* HTTP节点需要CORS来源允许
+* WebSocket节点，文件置于 `project_path/data/` 下，文件名只能包含英文和数字，通过 `ws://host:port/file/filename` 添加
+
+
 因为WebRTC协议还非常不完善，这个项目更多的是demo性质的，但是这个demo展现了WEB+P2P的更多可能。

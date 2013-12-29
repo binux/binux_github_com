@@ -110,12 +110,13 @@ end # task :preview
 # Public: Alias - Maintains backwards compatability for theme switching.
 task :switch_theme => "theme:switch"
 
+desc "deploy to stdyun"
 task :deploy do
   command = "jekyll --no-auto && rsync -avz --delete "
   command << "-e 'ssh -p #{ssh_port}' " unless ssh_port.nil?
   command << "#{public_dir}/ #{ssh_user}:#{document_root}"
   sh command
-end
+end # task :deploy
 
 namespace :theme do
   
