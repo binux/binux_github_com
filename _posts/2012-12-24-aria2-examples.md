@@ -59,8 +59,15 @@ rpc-listen-all=true
 
 如果启动时出现 `Initializing EpollEventPoll failed.` 或相似错误, 在配置中加上 `event-poll=select`
 
+**使用token验证（建议使用，需要1.18.4以上版本，帐号密码方式将在后续版本中停用！）**
 
-如果需要使用密码验证（需要1.15.2以上版本）
+{% highlight bash %}
+# token验证
+rpc-secret=secret
+{% endhighlight %}
+在YAAW中使用 `http://token:secret@hostname:port/jsonrpc` 的地址格式设置secret.
+
+如果需要使用密码验证（需要1.15.2以上，1.18.6以下版本）
 
 {% highlight bash %}
 #用户名

@@ -112,7 +112,7 @@ task :switch_theme => "theme:switch"
 
 desc "deploy to stdyun"
 task :deploy do
-  command = "jekyll --no-auto && rsync -avz --delete "
+  command = "jekyll b && rsync -avz --delete "
   command << "-e 'ssh -p #{ssh_port}' " unless ssh_port.nil?
   command << "#{public_dir}/ #{ssh_user}:#{document_root}"
   sh command
