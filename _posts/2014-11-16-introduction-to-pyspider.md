@@ -42,7 +42,7 @@ pyspider 的主要特性
 脚本样例
 =======
 
-<pre>
+{% highlight python %}
 from libs.base_handler import *
 
 class Handler(BaseHandler):
@@ -63,8 +63,7 @@ class Handler(BaseHandler):
                 "url": response.url,
                 "title": response.doc('title').text(),
                 }
-
-</pre>
+{% endhighlight %}
 
 例如这就是创建任务后默认生成的一个脚本示例。
 
