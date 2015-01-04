@@ -52,7 +52,7 @@ dd{margin-bottom:1.6em;}
 strong{font-weight:bold;}
 small{font-size:smaller;}
 cite,em,i{font-style:italic;}
-blockquote{margin:0 3em;padding:0.5em 1.6em;font-style:italic;font-weight:normal;font-family:Georgia,serif;border-left:3px solid #21759B;background-color:#fdfdfd;}
+blockquote{margin:0;padding:0;font-style:italic;font-weight:normal;font-family:Georgia,serif;border-left:3px solid #21759B;background-color:#fdfdfd;}
 blockquote em,blockquote i,blockquote cite{font-style:normal;}
 blockquote cite{color:#666;font-weight:300;letter-spacing:0.05em;text-transform:uppercase;font:12px "Helvetica Neue",Helvetica,Arial,sans-serif;}
 pre{overflow:auto;background:#fdfdfd;margin-bottom:1.6em;padding:0.7em 1.6em;line-height:1.5;font:12px Monaco,'MonacoRegular','Courier New',monospace;color:#222;border-left:3px #d5e6b3 solid;}
