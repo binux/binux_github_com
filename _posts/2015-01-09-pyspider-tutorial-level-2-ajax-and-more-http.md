@@ -20,7 +20,7 @@ AJAX
 
 当一个网站使用了 AJAX 的时候，除了用 pyspider 抓取到的页面和浏览器看到的不同以外。你在浏览器中打开这样的页面，或者点击『展开』的时候，常常会看到『加载中』或者类似的图标/动画。例如，当你尝试抓取：[http://movie.douban.com/explore](http://movie.douban.com/explore)
 
-![douban explore](assets/image/douban_explore.png)
+![douban explore](/assets/image/douban_explore.png)
 
 你会发现电影是『载入中...』
 
@@ -35,11 +35,11 @@ AJAX
 
 在页面加载的过程中，你会在面板中看到所有的资源请求。
 
-![douban explore network panel](assets/image/douban_explore_network_panel.png)
+![douban explore network panel](/assets/image/douban_explore_network_panel.png)
 
 AJAX 一般是通过 [XMLHttpRequest] 对象接口发送请求的，XMLHttpRequest 一般被缩写为 XHR。点击网络面板上漏斗形的过滤按钮，过滤出 XHR 请求。挨个查看每个请求，通过访问路径和预览，找到包含信息的请求：[http://movie.douban.com/j/search\_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page\_limit=20&page_start=0](http://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0)
 
-![douban explore xhr preview](assets/image/douban_explore_xhr_preview.png)
+![douban explore xhr preview](/assets/image/douban_explore_xhr_preview.png)
 
 在豆瓣这个例子中，XHR 请求并不多，可以挨个查看来确认。但在 XHR 请求较多的时候，可能需要结合触发动作的时间，请求的路径等信息帮助在大量的请求中找到包含信息的关键请求。这需要抓取或者前端的相关经验。所以，有一个我一直在提的观点，学习抓取的最好方法是：学会写网站。
 
@@ -92,7 +92,7 @@ If-Modified-Since: Fri, 09 Aug 2013 23:54:35 GMT
 
 你可以通过前面用过的 [Chrome Developer Tools](https://developer.chrome.com/devtools) 工具查看到这些信息：
 
-![request headers](assets/image/request-headers.png)
+![request headers](/assets/image/request-headers.png)
 
 在大多数时候，使用正确的 `method`, `path`, `headers` 和 `body` 总是能抓取到你需要的信息的。
 
