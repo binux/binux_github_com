@@ -11,6 +11,8 @@ tags: [pyspider, scrape, crawl, css selector]
 
 在 教程一 中，我们将要爬取的网站是豆瓣电影：[http://movie.douban.com/](http://movie.douban.com/)
 
+你可以在: [http://demo.pyspider.org/debug/tutorial_douban_movie](http://demo.pyspider.org/debug/tutorial_douban_movie) 获得完整的代码，和进行测试。
+
 开始之前
 ------
 
@@ -52,9 +54,9 @@ tags: [pyspider, scrape, crawl, css selector]
 
 
 {% highlight python %}
-    @every(minutes=24 * 60)
-    def on_start(self):
-        self.crawl('http://movie.douban.com/tag/', callback=self.index_page)
+@every(minutes=24 * 60)
+def on_start(self):
+    self.crawl('http://movie.douban.com/tag/', callback=self.index_page)
 {% endhighlight %}
 
 > * `self.crawl` 告诉 pyspider 抓取指定页面，然后使用 `callback` 函数对结果进行解析。
@@ -99,7 +101,7 @@ CSS选择器，顾名思义，是 [CSS] 用来定位需要设置样式的元素 
 
 在 pyspider 中，内置了 `response.doc` 的 [PyQuery] 对象，让你可以使用类似 jQuery 的语法操作 DOM 元素。你可以在 [PyQuery] 的页面上找到完整的文档。
 
-#### CSS Selector Helper
+### CSS Selector Helper
 
 在 pyspider 中，还内置了一个 `CSS Selector Helper`，当你点击页面上的元素的时候，可以帮你生成它的 CSS选择器 表达式。你可以点击 `Enable CSS selector helper` 按钮，然后切换到 `web` 页面：
 
@@ -108,22 +110,21 @@ CSS选择器，顾名思义，是 [CSS] 用来定位需要设置样式的元素 
 开启后，鼠标放在元素上，会被黄色高亮，点击后，所有拥有相同 CSS选择器 表达式的元素会被高亮。表达式会被插入到 python 代码当前光标位置。创建下面的代码，将光标停留在单引号中间：
 
 {% highlight python %}
-    def list_page(self, response):
-        for each in response.doc('').items():
+def list_page(self, response):
+    for each in response.doc('').items():
 {% endhighlight %}
 
 点击一个电影的链接，CSS选择器 表达式将会插入到你的代码中，如此重复，插入翻页的链接：
 
 {% highlight python %}
-    def list_page(self, response):
-        for each in response.doc('HTML>BODY>DIV#wrapper>DIV#content>DIV.grid-16-8.clearfix>DIV.article>DIV>TABLE TR.item>TD>DIV.pl2>A').items():
-            self.crawl(each.attr.href, callback=self.detail_page)
-        # 翻页
-        for each in response.doc('HTML>BODY>DIV#wrapper>DIV#content>DIV.grid-16-8.clearfix>DIV.article>DIV.paginator>A').items():
-            self.crawl(each.attr.href, callback=self.list_page)
+def list_page(self, response):
+    for each in response.doc('HTML>BODY>DIV#wrapper>DIV#content>DIV.grid-16-8.clearfix>DIV.article>DIV>TABLE TR.item>TD>DIV.pl2>A').items():
+        self.crawl(each.attr.href, callback=self.detail_page)
+    # 翻页
+    for each in response.doc('HTML>BODY>DIV#wrapper>DIV#content>DIV.grid-16-8.clearfix>DIV.article>DIV.paginator>A').items():
+        self.crawl(each.attr.href, callback=self.list_page)
 {% endhighlight %}
 
-> * 注意这里电影的 CSS选择器 由于 chrome 渲染原因，无法直接使用，需要删除 `TBODY`，并用 空格连接 TABLE 和 TR。
 > * 翻页是一个到自己的 `callback` 回调
 
 电影详情页
@@ -133,12 +134,12 @@ CSS选择器，顾名思义，是 [CSS] 用来定位需要设置样式的元素 
 
 {% highlight python %}
 def detail_page(self, response):
-        return {
-            "url": response.url,
-            "title": response.doc('HTML>BODY>DIV#wrapper>DIV#content>H1>SPAN').text(),
-            "rating": response.doc('HTML>BODY>DIV#wrapper>DIV#content>DIV.grid-16-8.clearfix>DIV.article>DIV.indent.clearfix>DIV.subjectwrap.clearfix>DIV#interest_sectl>DIV.rating_wrap.clearbox>P.rating_self.clearfix>STRONG.ll.rating_num').text(),
-            "导演": [x.text() for x in response.doc('a[rel="v:directedBy"]').items()],
-        }
+    return {
+        "url": response.url,
+        "title": response.doc('HTML>BODY>DIV#wrapper>DIV#content>H1>SPAN').text(),
+        "rating": response.doc('HTML>BODY>DIV#wrapper>DIV#content>DIV.grid-16-8.clearfix>DIV.article>DIV.indent.clearfix>DIV.subjectwrap.clearfix>DIV#interest_sectl>DIV.rating_wrap.clearbox>P.rating_self.clearfix>STRONG.ll.rating_num').text(),
+        "导演": [x.text() for x in response.doc('a[rel="v:directedBy"]').items()],
+    }
 {% endhighlight %}
 
 注意，你会发现 `css selector helper` 并不是总是能提取到合适的 CSS选择器 表达式。你可以在 [Chrome Dev Tools](https://developer.chrome.com/devtools) 的帮助下，写一个合适的表达式：
@@ -146,6 +147,8 @@ def detail_page(self, response):
 ![Chrome Dev Tools](/assets/image/chrome_dev_tools.png)
 
 右键点击需要提取的元素，点击审查元素。你并不需要像自动生成的表达式那样写出所有的祖先节点，只要写出那些能区分你不需要的元素的关键节点的属性就可以了。不过这需要抓取和网页前端的经验。所以，学习抓取的最好方法就是学会这个页面/网站是怎么写的。
+
+你也可以在 Chrome Dev Tools 的 Javascript Console 中，使用 `$$(a[rel="v:directedBy"])` 测试 CSS Selector。
 
 开始抓取
 -------
@@ -158,8 +161,7 @@ def detail_page(self, response):
 ![pyspider index page](/assets/image/pyspider_index_page.png)
 
 
-[万维网]:      http://zh.wikipedia.org/wiki/%E4%B8%87%E7%BB%B4%E7%BD%91
-[URL]:        sdf
+[万维网]:     http://zh.wikipedia.org/wiki/%E4%B8%87%E7%BB%B4%E7%BD%91
 [HTTP]:       http://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE
 [HTML]:       http://zh.wikipedia.org/wiki/HTML
 [URL]:        http://zh.wikipedia.org/wiki/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6
