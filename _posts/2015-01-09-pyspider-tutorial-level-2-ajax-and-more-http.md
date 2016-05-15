@@ -45,7 +45,7 @@ AJAX 一般是通过 [XMLHttpRequest] 对象接口发送请求的，XMLHttpReque
 
 现在可以在新窗口中打开 [http://movie.douban.com/j/search\_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page\_limit=20&page_start=0](http://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0)，你会看到包含电影数据的 [JSON] 原始数据。推荐安装 [JSONView](https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc)（[Firfox版](http://jsonview.com/)）插件，这样可以看到更好看的 JSON 格式，展开折叠列等功能。然后，我们根据 [JSON] 数据，编写一个提取电影名和评分的脚本：
 
-``` python
+{% highlight python %}
 class Handler(BaseHandler):
     def on_start(self):
         self.crawl('http://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0',
@@ -57,7 +57,7 @@ class Handler(BaseHandler):
             "rate": x['rate'],
             "url": x['url']
         } for x in response.json['subjects']]
-```
+{% endhighlight %}
 
 > * 你可以使用 `response.json` 将结果转为一个 python 的 `dict` 对象
 
@@ -72,7 +72,7 @@ HTTP
 
 一个典型的 HTTP 请求包如下，这个请求是发往 [http://example.com/](http://example.com/) 的：
 
-``` http
+{% highlight bash %}
 GET / HTTP/1.1
 Host: example.com
 Connection: keep-alive
@@ -84,7 +84,7 @@ Accept-Encoding: gzip, deflate, sdch
 Accept-Language: zh-CN,zh;q=0.8
 If-None-Match: "359670651"
 If-Modified-Since: Fri, 09 Aug 2013 23:54:35 GMT
-```
+{% endhighlight %}
 
 > * 请求的第一行包含 `method`, `path` 和 HTTP 协议的版本信息
 > * 余下的行被称为 header，是以 `key: value` 的形式呈现的
@@ -120,12 +120,12 @@ Referer 用于告诉服务器，你访问的上一个网页是什么。常常被
 
 当使用 XHR 发送 AJAX 请求时会带上的 Header，常被用于判断是不是 AJAX 请求。例如在 [北邮人论坛](http://bbs.byr.cn/) 中，你需要：
 
-``` python
+{% highlight python %}
     def on_start(self):
         self.crawl('http://bbs.byr.cn/board/Python',
                    headers={'X-Requested-With': 'XMLHttpRequest'},
                    callback=self.index_page)
-```
+{% endhighlight %}
 
 带有 `headers={'X-Requested-With': 'XMLHttpRequest'}` 才能抓取到内容。
 

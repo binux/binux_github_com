@@ -18,7 +18,7 @@ tags: [python,pyspider]
 
 当 pyspider 连上 PhantomJS 代理后，你就能通过在 `self.crawl` 中添加 `fetch_type='js'` 的参数，开启使用 PhantomJS 抓取。例如，在教程二中，我们尝试抓取的 [http://movie.douban.com/explore](http://movie.douban.com/explore) 就可以通过 PhantomJS 直接抓取：
 
-``` python
+{% highlight python %}
 class Handler(BaseHandler):
     def on_start(self):
         self.crawl('http://movie.douban.com/explore',
@@ -32,7 +32,7 @@ class Handler(BaseHandler):
             "rate": x('p strong').text(),
             "url": x.attr.href,
         } for x in response.doc('a.item').items()]
-```
+{% endhighlight %}
 
 > * 我在这里使用了一些 PyQuery 的 API，你可以在 [PyQuery complete API](https://pythonhosted.org/pyquery/api.html) 获得完整的 API 手册。
 
@@ -41,14 +41,14 @@ class Handler(BaseHandler):
 
 你会发现，在上面我们使用 [PhantomJS] 抓取的豆瓣热门电影只有 20 条。当你点击『加载更多』时，能获得更多的热门电影。为了获得更多的电影，我们可以使用 `self.crawl` 的 `js_script` 参数，在页面上执行一段脚本，点击加载更多：
 
-``` python
+{% highlight python %}
     def on_start(self):
         self.crawl('http://movie.douban.com/explore#more',
                    fetch_type='js', js_script="""
                    function() {
                      setTimeout("$('.more').click()", 1000);
                    }""", callback=self.phantomjs_parser)
-```
+{% endhighlight %}
 
 > * 这个脚本默认在页面加载结束后执行，你可以通过 `js_run_at` [参数](http://docs.pyspider.org/en/latest//apis/self.crawl/#enable-javascript-fetcher-need-support-by-fetcher) 修改这个行为
 > * 由于是 AJAX 异步加载的，在页面加载完成时，第一页的电影可能还没有加载完，所以我们用 `setTimeout` 延迟 1 秒执行。

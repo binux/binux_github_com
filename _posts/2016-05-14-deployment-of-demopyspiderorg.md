@@ -20,10 +20,10 @@ demo.pyspider.org 的**数据库为 [PostgreSQL]**，理由是测试目的，磁
 
 它们也是跑在 docker 中的：
 
-```
+{% highlight bash %}
 docker run --name postgres -v /data/postgres/:/var/lib/postgresql/data -d -p $LOCAL_IP:5432:5432 -e POSTGRES_PASSWORD="" postgres
 docker run --name redis -d -p  $LOCAL_IP:6379:6379 redis
-```
+{% endhighlight %}
 
 由于前面说过，机器间有内网，通过绑定内网 IP，没有做鉴权（反正 demo 会泄露）。
 
@@ -32,21 +32,21 @@ scheduler
 
 由于 scheduler 只能运行一个，并且需要进行大量的数据库操作，它与上面的数据库和消息队列部署在一台单独的机器上。
 
-```
+{% highlight bash %}
 docker run --name scheduler -d -p $LOCAL_IP:23333:23333 --restart=always binux/pyspider \
  --taskdb "sqlalchemy+postgresql+taskdb://binux@10.21.0.7/taskdb" \
  --resultdb "sqlalchemy+postgresql+resultdb://binux@10.21.0.7/resultdb" \
  --projectdb "sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb" \
  --message-queue "redis://10.21.0.7:6379/1" \
  scheduler --inqueue-limit 5000 --delete-time 43200
-```
+{% endhighlight %}
 
 其他组件
 =======
 
 所有其他的组件（fetcher, processor, result_worker）在剩余的两台 VPS 上以相同的配置启动。他们都是通过 docker-compose 管理的
 
-```
+{% highlight yaml %}
 phantomjs:
   image: 'binux/pyspider:latest'
   command: phantomjs
@@ -120,7 +120,7 @@ nginx:
     - /home/binux/nfs/profile/nginx/nginx.conf:/etc/nginx/nginx.conf
     - /home/binux/nfs/profile/nginx/conf.d/:/etc/nginx/conf.d/
   restart: always
-```
+{% endhighlight %}
 
 然后通过 `docker-compose scale phantomjs=2 processor=2 webui=4` 指定启动两个 phantomjs 进程，两个 processor 进程，4个 webui 进程。
 
