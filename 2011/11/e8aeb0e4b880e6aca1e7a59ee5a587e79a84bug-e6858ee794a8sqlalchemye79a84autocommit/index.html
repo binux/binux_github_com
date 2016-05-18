@@ -1,0 +1,233 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>记一次神奇的BUG —— 慎用sqlalchemy的autocommit | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="东西是是用sqlalchemy写的数据处理的程序。就是从一个库里面取出数据，然后处理后写回去。
+数据库用的是MySQL+MyISAM，因为考虑到MyISAM是不支持事务的，即使commit也没什么用，而且处理逻辑中对只是有一定可能对数据修改，还要commit太麻烦了。于是：
+Session(auto">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="记一次神奇的BUG —— 慎用sqlalchemy的autocommit"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="true" title="Binuxの杂货铺" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-11-17T11:37:18.000Z"><a href="/2011/11/e8aeb0e4b880e6aca1e7a59ee5a587e79a84bug-e6858ee794a8sqlalchemye79a84autocommit/">2011-11-17</a></time>
+      
+      
+  
+    <h1 class="title">记一次神奇的BUG —— 慎用sqlalchemy的autocommit</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>东西是是用<a href="http://www.sqlalchemy.org/" target="_blank" rel="external">sqlalchemy</a>写的数据处理的程序。就是从一个库里面取出数据，然后处理后写回去。</p>
+<p>数据库用的是MySQL+MyISAM，因为考虑到MyISAM是不支持事务的，即使commit也没什么用，而且处理逻辑中对只是有一定可能对数据修改，还要commit太麻烦了。于是：</p>
+<pre><code>Session(autoflush=True, autocommit=True, expire_on_commit=True)
+</code></pre><p>由于是周末，匆匆提交了就回去了。到了周六，我惊悚的看到<a href="http://pycounters.readthedocs.org/" target="_blank" rel="external">pycounter</a>做的数据统计非常完美地呈现出1/t的曲线</p>
+<p><img src="http://s3.binux.me/201112/2890/14043_o.png" alt="request rate"></p>
+<p>无论再次启动多次依旧如此。。。非常完美的1/t的曲线。。</p>
+<p>=======================================================================</p>
+<p>由于频率是成1/t，表示用时随着“处理过”的数据量以一次指数增长，想想最近添加的代码不太可能有这样增长的操作啊。</p>
+<p>由于手头正好有pycounters在操作中打入几个计数器，观察到在sqlalchemy在做session.expire_all()的操作时符合O(x)的时间特性。</p>
+<p>猜测是sqlalchemy的实例cache的机制导致每次处理完后，并没有释放掉获取到的对象，而expire_all对这些对象进行了一个大循环，以标记过期。<br>既然问题找到了，就好办了，<strong>不要使用sqlalchemy的autocommit，在修改后正常进行add,commit</strong>，故障消除。</p>
+<p>随后查看了sqlalchemy的代码，expire_all的确是挨个expire操作的：</p>
+<pre><code>for state in self.identity_map.all_states():
+    state.expire(state.dict, self.identity_map._modified)
+</code></pre><p>而commit会将transaction close掉，清理掉identity_map，autocommit？还真没看出来怎么auto了。。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/未分类/">未分类</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/python/">python</a>, <a href="/tags/sqlalchemy/">sqlalchemy</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:blog.binux.me">
+  </form>
+</div>
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
+      </li>
+    
+      <li>
+        <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
+      </li>
+    
+      <li>
+        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
+      </li>
+    
+      <li>
+        <a href="/2015/07/uk/">英国</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="http://binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'binux';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

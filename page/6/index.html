@@ -1,0 +1,692 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>第 6 页 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="true" title="Binuxの杂货铺" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-03-28T10:42:21.000Z"><a href="/2011/03/baidu_404/">2011-03-28</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/03/baidu_404/">百度你能靠谱一点吗？</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>写个test_link的脚本，想要只获取http头部来测试链接是否失效。想着国内百度连接速度快些吧，于是用百度测试。。</p>
+<p>assert(test_link(“<a href="http://baidu.com/xyz" target="_blank" rel="external">http://baidu.com/xyz</a>“) == False)</p>
+<p>结果。。百度返回的头居然是：</p>
+<pre>
+ Request URL:http://www.baidu.com/xyz
+ Request Method:GET
+ Status Code:302 Found
+ Response Headers
+ Cache-Control:max-age=86400
+ Connection:Keep-Alive
+ Content-Length:222
+ Content-Type:text/html; charset=iso-8859-1
+ Date:Mon, 28 Mar 2011 11:22:25 GMT
+ Expires:Tue, 29 Mar 2011 11:22:25 GMT
+ Location:http://www.baidu.com/search/error.html
+ Server:Apache
+</pre>
+
+
+<p>好吧。。。302就302吧，我们看看后面的这个<a href="http://www.baidu.com/search/error.html" target="_blank" rel="external">http://www.baidu.com/search/error.html</a>是什么</p>
+<pre>
+ Request URL:http://www.baidu.com/search/error.html
+ Request Method:GET
+ Status Code:200 OK
+</pre>
+
+
+<p>喂喂，你这明显是error啊，200是怎么回事啊！明明页面上写着</p>
+<blockquote>
+<p><strong>您要访问的页面不存在</strong></p>
+</blockquote>
+<p>返回一个200到底是怎么回事啊！难道就不能返回个404让爬虫知道吗？<br>百度明明是个搜索引擎，写出来的网页就让自己认识是吗。。</p>
+<p>google就明明白白地返回一个</p>
+<pre>
+ Request URL:http://www.google.com/xyz
+ Request Method:GET
+ Status Code:404 Not Found
+</pre>
+
+
+<p>类似的页面还有：</p>
+<p><a href="http://www.baidu.com/forbiddenip/forbidden.html" target="_blank" rel="external">http://www.baidu.com/forbiddenip/forbidden.html</a></p>
+<p>百度你还能再靠谱一点吗？</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-03-17T14:57:26.000Z"><a href="/2011/03/python-tools-getpy/">2011-03-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/03/python-tools-getpy/">python工具脚本： 获取中文汉字拼音声母 getPY.py</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>一般来说要获取中文汉字全拼是需要查表的，不过只需要声母的话还是很简单就能实现的。</p>
+<p>方法是利用GBK编码是按照拼音的顺序编排汉字的，所以，只需要将文字转化成GBK编码，通过匹配范围即可获得声母了（当然理论上也应该能获取全拼，我猜的-。-）。</p>
+<p>这样的代码网上有很多，这里也是抄袭而来，抄自何处也忘记了。。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding : utf-8</span></span><br><span class="line"><span class="comment"># author : binux(17175297.hk@gmail.com)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getFirstPY</span><span class="params">(word, encoding=<span class="string">'utf-8'</span>)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(word, unicode):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            word = word[<span class="number">0</span>].encode(<span class="string">'gbk'</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'?'</span></span><br><span class="line">    <span class="keyword">elif</span> isinstance(word, str):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            word = word.decode(encoding)[<span class="number">0</span>].encode(<span class="string">'gbk'</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'?'</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> len(word) == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> word</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        asc = ord(word[<span class="number">0</span>])*<span class="number">256</span> + ord(word[<span class="number">1</span>]) - <span class="number">65536</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-20319</span> <span class="keyword">and</span> asc &lt;= <span class="number">-20284</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'a'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-20283</span> <span class="keyword">and</span> asc &lt;= <span class="number">-19776</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'b'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-19775</span> <span class="keyword">and</span> asc &lt;= <span class="number">-19219</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'c'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-19218</span> <span class="keyword">and</span> asc &lt;= <span class="number">-18711</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'d'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-18710</span> <span class="keyword">and</span> asc &lt;= <span class="number">-18527</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'e'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-18526</span> <span class="keyword">and</span> asc &lt;= <span class="number">-18240</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'f'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-18239</span> <span class="keyword">and</span> asc &lt;= <span class="number">-17923</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'g'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-17922</span> <span class="keyword">and</span> asc &lt;= <span class="number">-17418</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'h'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-17417</span> <span class="keyword">and</span> asc &lt;= <span class="number">-16475</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'j'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-16474</span> <span class="keyword">and</span> asc &lt;= <span class="number">-16213</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'k'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-16212</span> <span class="keyword">and</span> asc &lt;= <span class="number">-15641</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'l'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-15640</span> <span class="keyword">and</span> asc &lt;= <span class="number">-15166</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'m'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-15165</span> <span class="keyword">and</span> asc &lt;= <span class="number">-14923</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'n'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-14922</span> <span class="keyword">and</span> asc &lt;= <span class="number">-14915</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'o'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-14914</span> <span class="keyword">and</span> asc &lt;= <span class="number">-14631</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'p'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-14630</span> <span class="keyword">and</span> asc &lt;= <span class="number">-14150</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'q'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-14149</span> <span class="keyword">and</span> asc &lt;= <span class="number">-14091</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'r'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-14090</span> <span class="keyword">and</span> asc &lt;= <span class="number">-13119</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'s'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-13118</span> <span class="keyword">and</span> asc &lt;= <span class="number">-12839</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'t'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-12838</span> <span class="keyword">and</span> asc &lt;= <span class="number">-12557</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'w'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-12556</span> <span class="keyword">and</span> asc &lt;= <span class="number">-11848</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'x'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-11847</span> <span class="keyword">and</span> asc &lt;= <span class="number">-11056</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'y'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-11055</span> <span class="keyword">and</span> asc &lt;= <span class="number">-10247</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'z'</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">'?'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPY</span><span class="params">(string, encoding=<span class="string">"utf-8"</span>)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(string, str):</span><br><span class="line">        string = string.decode(encoding)</span><br><span class="line"></span><br><span class="line">    result = []</span><br><span class="line">    <span class="keyword">for</span> each <span class="keyword">in</span> string:</span><br><span class="line">        result.append(getFirstPY(each))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">""</span>.join(result)</span><br></pre></td></tr></table></figure>
+<p>最新的代码可以在<a href="https://github.com/binux/binux-tools/blob/master/python/getPY.py" target="_blank" rel="external">https://github.com/binux/binux-tools/blob/master/python/getPY.py</a>这里找到。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-03-12T09:46:26.000Z"><a href="/2011/03/e59ca8windowse78eafe5a283e4b8ade7bc96e8af91e5b8a6python-dissectore694afe68c81e79a84wiresharkefbc88msvc2010e7bc96e8af91e599a8efbc89e38090e697a0/">2011-03-12</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/03/e59ca8windowse78eafe5a283e4b8ade7bc96e8af91e5b8a6python-dissectore694afe68c81e79a84wiresharkefbc88msvc2010e7bc96e8af91e599a8efbc89e38090e697a0/">在windows环境中编译带python-dissector支持的wireshark（MSVC2010编译器）【无法开启】</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>虽然Windows的编程非常不爽，无论是编译环境还是编辑环境什么的，搭起来累的一比。不过，既然毕设题目是QQ协议分析，我总不能去分析Linux下那个阉割的QQ吧。<br>当然了，抓包之后扔到Linux下分析也是一个解决方案，不过实时的协议解析还是挺有吸引力的。</p>
+<p>同时楼主一年来python上瘾，看着C++那几行开头include就头大，一直不想起手写C++，更何况Wireshark的API是C的。更可怕的是README.developer还没开始告诉你怎么写dissector呢，编程规范就一大堆，而且各种数据类型不建议使用，strlen不建议使用，strcp不建议使用。这不是从头又学一遍了嘛！  </p>
+<p>如果是这样还不如直接Lua搞起了， 最后顶着windows恶劣的编程环境尝试编译带python-dissector支持的wireshark。</p>
+<p>step 1:<br>首先需要有一份源码。。建议直接到<a href="http://www.wireshark.org/下载最新稳定版的源码即可" target="_blank" rel="external">http://www.wireshark.org/下载最新稳定版的源码即可</a></p>
+<p>step 2:<br>参照[Win32: Step-by-Step Guide]  <a href="http://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html" target="_blank" rel="external">http://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html</a>  的过程编译即可。。完全没有压力</p>
+<p><strong>python-dissector:</strong></p>
+<p>在下不才，无法在windows平台下开启python-dissector支持。。</p>
+<p>看了下代码，这部分代码还是相当的简单，基本上是处于测试，初步的阶段。<br>编译后执行若出现xxx地址不能为read之类的报错，将epan/wspython/wspy_register.c +128行</p>
+<p><code>void register_all_py_protocols_func(register_cb cb _U_, gpointer client_data _U_)</code></p>
+<p>函数修改为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PyObject * py_reg;</span><br><span class="line"><span class="comment">// .....</span></span><br><span class="line"><span class="comment">/* load the python register module */</span></span><br><span class="line">py_reg = PyFile_FromString(get_py_register_file(), <span class="string">"r"</span>);</span><br><span class="line">  <span class="keyword">if</span> (py_reg == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"no register file %sn"</span>, get_py_register_file());</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">PyRun_SimpleFile(PyFile_AsFile(py_reg), get_py_register_file());</span><br></pre></td></tr></table></figure>
+<p>但是，一旦开启PYTHON_EMBED=1参数之后，会导致所有的plugin无法加载。。。</p>
+<p>加上开发程度不高，文档几乎没有，暂时还是放弃了。。改用直接编写c plugin的方式吧</p>
+<p>========================<br>PS:1.4.4中有函数原型变化，文档并没有更新：<br>如：<br>dissector_add_uint已经变为dissector_add</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-03-06T14:38:33.000Z"><a href="/2011/03/python-tools-chinese-digit/">2011-03-06</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/03/python-tools-chinese-digit/">python工具脚本： chinese_digit.py - 中文数字 转换为 阿拉伯数字</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h2><p>经常会有这种需要将中文数字如 “五千三百零一”，全角数字”１２３４５”等等各种中文数字，转换成阿拉伯数字的场合。嘛，毕竟中文比较复杂，这种东西还是很发杂的。</p>
+<p>下面这段代码来源于<a href="http://bbs.chinaunix.net/redirect.php?tid=1755895" target="_blank" rel="external">http://bbs.chinaunix.net/redirect.php?tid=1755895</a>。</p>
+<p><strong>但是这段代码有如下的BUG：</strong></p>
+<p>1、只能正确转换亿亿以下的数</p>
+<p>2、”十万”等十之前没有个位数字的字符串转换错误</p>
+<p><strong>而且有如下不足：</strong></p>
+<p>1、不能转换大写中文（壹贰叁）和全角数字</p>
+<p>2、不能转换电话号码（如 一零零五）</p>
+<p>下面是一个修改过的python脚本，支持如上的所有特性，并修正了BUG</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="comment"># author: binux(17175297.hk@gmail.com)</span></span><br><span class="line"></span><br><span class="line">dict =&#123;<span class="string">u'零'</span>:<span class="number">0</span>, <span class="string">u'一'</span>:<span class="number">1</span>, <span class="string">u'二'</span>:<span class="number">2</span>, <span class="string">u'三'</span>:<span class="number">3</span>, <span class="string">u'四'</span>:<span class="number">4</span>, <span class="string">u'五'</span>:<span class="number">5</span>, <span class="string">u'六'</span>:<span class="number">6</span>, <span class="string">u'七'</span>:<span class="number">7</span>, <span class="string">u'八'</span>:<span class="number">8</span>, <span class="string">u'九'</span>:<span class="number">9</span>, <span class="string">u'十'</span>:<span class="number">10</span>, <span class="string">u'百'</span>:<span class="number">100</span>, <span class="string">u'千'</span>:<span class="number">1000</span>, <span class="string">u'万'</span>:<span class="number">10000</span>,</span><br><span class="line">       <span class="string">u'０'</span>:<span class="number">0</span>, <span class="string">u'１'</span>:<span class="number">1</span>, <span class="string">u'２'</span>:<span class="number">2</span>, <span class="string">u'３'</span>:<span class="number">3</span>, <span class="string">u'４'</span>:<span class="number">4</span>, <span class="string">u'５'</span>:<span class="number">5</span>, <span class="string">u'６'</span>:<span class="number">6</span>, <span class="string">u'７'</span>:<span class="number">7</span>, <span class="string">u'８'</span>:<span class="number">8</span>, <span class="string">u'９'</span>:<span class="number">9</span>,</span><br><span class="line">                <span class="string">u'壹'</span>:<span class="number">1</span>, <span class="string">u'贰'</span>:<span class="number">2</span>, <span class="string">u'叁'</span>:<span class="number">3</span>, <span class="string">u'肆'</span>:<span class="number">4</span>, <span class="string">u'伍'</span>:<span class="number">5</span>, <span class="string">u'陆'</span>:<span class="number">6</span>, <span class="string">u'柒'</span>:<span class="number">7</span>, <span class="string">u'捌'</span>:<span class="number">8</span>, <span class="string">u'玖'</span>:<span class="number">9</span>, <span class="string">u'拾'</span>:<span class="number">10</span>, <span class="string">u'佰'</span>:<span class="number">100</span>, <span class="string">u'仟'</span>:<span class="number">1000</span>, <span class="string">u'萬'</span>:<span class="number">10000</span>,</span><br><span class="line">       <span class="string">u'亿'</span>:<span class="number">100000000</span>&#125;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getResultForDigit</span><span class="params">(a, encoding=<span class="string">"utf-8"</span>)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(a, str):</span><br><span class="line">        a = a.decode(encoding)</span><br><span class="line"></span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    result = <span class="number">0</span></span><br><span class="line">    tmp = <span class="number">0</span></span><br><span class="line">    Billion = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> count &lt; len(a):</span><br><span class="line">        tmpChr = a[count]</span><br><span class="line">        <span class="comment">#print tmpChr</span></span><br><span class="line">        tmpNum = dict.get(tmpChr, <span class="keyword">None</span>)</span><br><span class="line">        <span class="comment">#如果等于1亿</span></span><br><span class="line">        <span class="keyword">if</span> tmpNum == <span class="number">100000000</span>:</span><br><span class="line">            result = result + tmp</span><br><span class="line">            result = result * tmpNum</span><br><span class="line">            <span class="comment">#获得亿以上的数量，将其保存在中间变量Billion中并清空result</span></span><br><span class="line">            Billion = Billion * <span class="number">100000000</span> + result</span><br><span class="line">            result = <span class="number">0</span></span><br><span class="line">            tmp = <span class="number">0</span></span><br><span class="line">        <span class="comment">#如果等于1万</span></span><br><span class="line">        <span class="keyword">elif</span> tmpNum == <span class="number">10000</span>:</span><br><span class="line">            result = result + tmp</span><br><span class="line">            result = result * tmpNum</span><br><span class="line">            tmp = <span class="number">0</span></span><br><span class="line">        <span class="comment">#如果等于十或者百，千</span></span><br><span class="line">        <span class="keyword">elif</span> tmpNum &gt;= <span class="number">10</span>:</span><br><span class="line">            <span class="keyword">if</span> tmp == <span class="number">0</span>:</span><br><span class="line">                tmp = <span class="number">1</span></span><br><span class="line">            result = result + tmpNum * tmp</span><br><span class="line">            tmp = <span class="number">0</span></span><br><span class="line">        <span class="comment">#如果是个位数</span></span><br><span class="line">        <span class="keyword">elif</span> tmpNum <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">            tmp = tmp * <span class="number">10</span> + tmpNum</span><br><span class="line">        count += <span class="number">1</span></span><br><span class="line">    result = result + tmp</span><br><span class="line">    result = result + Billion</span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<p>**完整版带测试用例的版本可以从这里获得：</p>
+<p>** <a href="https://github.com/binux/binux-tools/blob/master/python/chinese_digit.py" target="_blank" rel="external">https://github.com/binux/binux-tools/blob/master/python/chinese_digit.py</a></p>
+<p>测试用例来源于：<a href="http://fayaa.com/code/view/37/" target="_blank" rel="external">http://fayaa.com/code/view/37/</a>（不记得一开始在哪看到的了=。=）</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-03-06T14:16:25.000Z"><a href="/2011/03/python-tools-pprint/">2011-03-06</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/03/python-tools-pprint/">python工具脚本：pprint.py 中文支持</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>这是一个支持unicode的pprint修改版本，来自<a href="http://groups.google.com/group/python-cn/browse_thread/thread/d881b328386ce396/e68057c8a7531326" target="_blank" rel="external">http://groups.google.com/group/python-cn/browse_thread/thread/d881b328386ce396/e68057c8a7531326</a></p>
+<p>默认使用pprint的时候，list, tuple, dict中的中文都显示成这个样子：</p>
+<blockquote>
+<p>>>> from pprint import pprint<br>>>> pprint([‘中文字符串’, u’中文统一码字符串’, {‘中文键名’: ‘中文键值’, u’中文 unicode 键名’: u’中文unicode 键值’}])</p>
+<p>[‘xe4xb8xadxe6x96x87xe5xadx97xe7xacxa6xe4xb8xb2’,<br>u’u4e2du6587u7edfu4e00u7801u5b57u7b26u4e32’,<br>{u’u4e2du6587 unicode u952eu540d’: u’u4e2du6587 unicode<br>u952eu503c’,<br>‘xe4xb8xadxe6x96x87xe9x94xaexe5x90x8d’:<br>‘xe4xb8xadxe6x96x87xe9x94xaexe5x80xbc’}]</p>
+</blockquote>
+<p>修改之后会把字符串中文形式输出，而不是repr的形式：</p>
+<blockquote>
+<p>>>> from pprint import pprint<br>>>> pprint([‘中文字符串’, u’中文统一码字符串’, {‘中文键名’: ‘中文键值’, u’中文 unicode 键名’: u’中文unicode 键值’}])</p>
+<p>[‘中文字符串’,<br>u’中文统一码字符串’,<br>{u’中文 unicode 键名’: u’中文 unicode 键值’,<br>‘中文键名’: ‘中文键值’}]</p>
+</blockquote>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-03-05T01:28:30.000Z"><a href="/2011/03/e5a4aae5b0b4e5b0ace4ba86efbc8ce4b88de68c82e4bba3e79086e8a2abe5a299e5a299efbc8ce68c82vpne8a2abgooglee5a299/">2011-03-05</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/03/e5a4aae5b0b4e5b0ace4ba86efbc8ce4b88de68c82e4bba3e79086e8a2abe5a299e5a299efbc8ce68c82vpne8a2abgooglee5a299/">太尴尬了，不挂代理被墙墙，挂VPN被google墙</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>一直在用eduvpn的代理，价格相对便宜，也差不多够用了。不过郁闷的是，不知道他们那些家伙拿这台VPN搞了什么，所有的google ape托管的服务，包括我自己的blog都被墙了=。=</p>
+<blockquote>
+<p>Your client does not have permission to get URL <code>/</code> from this server. (Client IP address: 173.244.202.xx)  </p>
+<p>You are accessing this page from a forbidden country.</p>
+</blockquote>
+<p>结果还是得IPV6啊。。真是麻烦。虽然尝试使用IPV6的DNS，但是这完全不能把*.appspot.com解析成ipv6地址嘛！</p>
+<blockquote>
+<p>2001:470:20::2<br>74.82.42.42</p>
+</blockquote>
+<p>结果还是改HOSTS：<a href="https://docs.google.com/Doc?docid=0ARhAbsvps1PlZGZrZG14bnRfNjFkOWNrOWZmcQ&amp;hl=zh_CN" target="_blank" rel="external">https://docs.google.com/Doc?docid=0ARhAbsvps1PlZGZrZG14bnRfNjFkOWNrOWZmcQ&amp;hl=zh_CN</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-02-11T13:19:06.000Z"><a href="/2011/02/css_selector_for_fulltext/">2011-02-11</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/02/css_selector_for_fulltext/">CssFullText - CSS选择器 说明</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="CSS-Selector-简介："><a href="#CSS-Selector-简介：" class="headerlink" title="CSS Selector 简介："></a>CSS Selector 简介：</h2><p>CSS 选择器( css selector) 是CSS的灵魂。对于一个HTML页面来说，CSS选择器是方便的元素(element)选取工具。</p>
+<h2 id="支持的选择器类型："><a href="#支持的选择器类型：" class="headerlink" title="支持的选择器类型："></a>支持的选择器类型：</h2><ul>
+<li>派生选择器 ( E F)</li>
+<li>id 选择器 ( E#id )</li>
+<li>类选择器 ( E.class )</li>
+<li>属性选择器 ( E[attr=val] )</li>
+</ul>
+<p>暂时不支持伪类选择器( E:last )。</p>
+<h2 id="选择器语法简介："><a href="#选择器语法简介：" class="headerlink" title="选择器语法简介："></a>选择器语法简介：</h2><h3 id="派生选择器"><a href="#派生选择器" class="headerlink" title="派生选择器"></a>派生选择器</h3><p>派生选择器用于根据元素的上下文关系定位元素。<br>HTML 代码:</p>
+<pre><code>&lt;form&gt;
+  &lt;label&gt;Name:&lt;/label&gt;
+  &lt;input name=&quot;name&quot; /&gt;
+  &lt;fieldset&gt;
+      &lt;label&gt;Newsletter:&lt;/label&gt;
+      &lt;input name=&quot;newsletter&quot; /&gt;
+ &lt;/fieldset&gt;
+&lt;/form&gt;
+&lt;input name=&quot;none&quot; /&gt;
+</code></pre><p><strong>选择器：</strong>form input<br><strong>选择元素：</strong><code>&lt;input name=&quot;name&quot; /&gt;</code>, <code>&lt;input name=&quot;newsletter&quot; /&gt;</code></p>
+<p>也可以使用子类选择器( E &gt; F )，仅选择元素的子元素，而不会选取其孙子元素<br>对于以上代码， <strong>选择器：</strong>form &gt; input<br><strong>选择元素：</strong><code>&lt;input name=&quot;name&quot; /&gt;</code></p>
+<h3 id="id-选择器"><a href="#id-选择器" class="headerlink" title="id 选择器"></a>id 选择器</h3><p>id 选择器用于选取特定id的元素。<br>HTML 代码:</p>
+<pre><code>&lt;div id=&quot;notMe&quot;&gt;&lt;p&gt;id=&quot;notMe&quot;&lt;/p&gt;&lt;/div&gt;
+&lt;div id=&quot;myDiv&quot;&gt;id=&quot;myDiv&quot;&lt;/div&gt;
+</code></pre><p><strong>选择器：</strong>#myDiv<br><strong>选择元素：</strong><code>&lt;div id=&quot;myDiv&quot;&gt;id=&quot;myDiv&quot;&lt;/div&gt;</code></p>
+<h3 id="类选择器"><a href="#类选择器" class="headerlink" title="类选择器"></a>类选择器</h3><p>类选择器用于选取拥有特性class的元素。<br>HTML 代码:</p>
+<pre><code>&lt;div class=&quot;notMe&quot;&gt;div class=&quot;notMe&quot;&lt;/div&gt;
+&lt;div class=&quot;Me myClass&quot;&gt;div class=&quot;Me myClass&quot;&lt;/div&gt;
+&lt;span class=&quot;myClass&quot;&gt;span class=&quot;myClass&quot;&lt;/span&gt;
+</code></pre><p><strong>选择器：</strong>.Me<br><strong>选择元素：</strong><code>&lt;div class=&quot;Me myClass&quot;&gt;div class=&quot;Me myClass&quot;&lt;/div&gt;</code></p>
+<h3 id="属性选择器"><a href="#属性选择器" class="headerlink" title="属性选择器"></a>属性选择器</h3><p>选择包含特定属性的元素，不支持在同一个选择器中使用多个属性选择器（ span[hello=”Cleveland”][goodbye=”Columbus”] ）<br>[attribute]         包含属性<br>[attribute=value]         属性等于特定值的元素<br>[attribute~value]         匹配给定的属性包含特定值的元素<br>[attribute!value]         匹配给定的属性不包含特定值的元素（not~ ）<br>[attribute|value]         匹配如”lang”属性中的en, en-US, en-cockney<br>[attribute^value]         匹配给定的属性以特定值开头的元素<br>[attribute$value]         匹配给定的属性以特定值结尾的元素<br>[attribute*value]         匹配给定的属性的值中包含给定的字符串<br><strong>例子</strong><br>参见：<a href="http://www.w3.org/TR/CSS2/selector.html#attribute-selectors" target="_blank" rel="external">http://www.w3.org/TR/CSS2/selector.html#attribute-selectors</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-01-28T02:31:24.000Z"><a href="/2011/01/gentoo_pptp_vpn/">2011-01-28</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/01/gentoo_pptp_vpn/">Gentoo PPTP VPN使用指南</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>由于gentoo的”清凉化”解决方案没有提供图形化的pptp的配置方案的原因。。不得不手动配置pptp<br>gentoo下安装配置请参考<a href="http://en.gentoo-wiki.com/wiki/PPTP" target="_blank" rel="external">http://en.gentoo-wiki.com/wiki/PPTP</a> 。并且其提供了一个半自动化的pptp配置工具，不用手写配置文件了。。</p>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><h5 id="默认通过VPN访问网络"><a href="#默认通过VPN访问网络" class="headerlink" title="默认通过VPN访问网络"></a>默认通过VPN访问网络</h5><p>为了通过vpn上网，请在<strong>File:</strong> /etc/ppp/peers/my_vpn文件中添加：<br>defaultroute<br>即可默认通过VPN连接网络</p>
+<h5 id="自动修改路由"><a href="#自动修改路由" class="headerlink" title="自动修改路由"></a>自动修改路由</h5><p>同时通过 <a href="http://code.google.com/p/chnroutes/" target="_blank" rel="external">http://code.google.com/p/chnroutes/</a> 这个项目生成vpnup和vpndown脚本，重命名成100-route.sh分别cp到/etc/ppp/ip-up.d/和/etc/ppp/ip-down.d/中，及可以使国内ip走国内线路，加快访问速度，又不影响翻墙。<br>不过这里有一个地方需要修改。由于上面我们通过defaultroute使得默认网关有两个，原先的vpnup无法找到默认网关，请手动修改vpnup中的OLDGW为你的网关。</p>
+<h5 id="能够Ping通网络，TCP连接无法访问"><a href="#能够Ping通网络，TCP连接无法访问" class="headerlink" title="能够Ping通网络，TCP连接无法访问"></a>能够Ping通网络，TCP连接无法访问</h5><p>我在使用he.net的VPN时，pon连接上，改了路由之后能够ping通www.google.com，并且能够正常DNS。但是无法网页时一直超时(后来我才注意到状态一直是sending request)。。。。<br>查看了各种文档（<a href="http://pptpclient.sourceforge.net/howto-diagnosis.phtml#connections_freeze）确认是mtu过大造成。在/etc/ppp/peer/my_vpn文件中添加" target="_blank" rel="external">http://pptpclient.sourceforge.net/howto-diagnosis.phtml#connections_freeze）确认是mtu过大造成。在/etc/ppp/peer/my_vpn文件中添加</a><br>mtu 1200<br>或通过ifconfig ppp0 mtu 1200测试到可用值，修改即可</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-01-23T12:25:43.000Z"><a href="/2011/01/gentoo_rtorrent_ipv6_support/">2011-01-23</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/01/gentoo_rtorrent_ipv6_support/">Gentoo rtorrent IPV6 支持</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>问题：</p>
+<blockquote>
+<p>gentoo中rtorrent连接ipv6 tracker的时候显示”Track :Couldn’t resolve host name”</p>
+</blockquote>
+<p>解决：</p>
+<p>既然是gentoo那么就用gentoo的emerge解决吧</p>
+<ol>
+<li>去<a href="http://libtorrent.rakshasa.no/ticket/1111" target="_blank" rel="external">http://libtorrent.rakshasa.no/ticket/1111</a>找对应版本的补丁（注意，补丁修改了多次，尽量使用最新的。第一个版本甚至无法编译通过）</li>
+</ol>
+<ol>
+<li>将补丁下载到portage的目录</li>
+</ol>
+<pre><code>cd /usr/portage/net-libs/libtorrent/files
+# 请使用最新版本的补丁
+wget http://home.samfundet.no/~sesse/libtorrent-0.12.6-ipv6-07.patch
+mv libtorrent-0.12.6-ipv6-07.patch libtorrent-0.12.6-ipv6.patch
+
+cd ..
+</code></pre><ol>
+<li>修改ebuild文件</li>
+</ol>
+<pre><code>src_prepare() {
+    epatch &quot;${FILESDIR}&quot;/${P}-gcc44.patch
+    epatch &quot;${FILESDIR}&quot;/${P}-ipv6.patch
+    elibtoolize
+}
+</code></pre><ol>
+<li>重新生成签名, 重新emerge</li>
+</ol>
+<pre><code>ebuild libtorrent-0.12.6.ebuild digest
+emerge libtorrent
+</code></pre><p>同理修改rtorrent</p>
+<pre><code>cd /usr/portage/net-p2p/rtorrent/files
+# 请使用最新版本的补丁
+wget http://home.samfundet.no/~sesse/rtorrent-0.8.6-ipv6-07.patch
+mv rtorrent-0.8.6-ipv6-07.patch rtorrent-0.8.6-ipv6.patch
+
+cd ..
+
+
+
+
+src_prepare() {
+    epatch &quot;${FILESDIR}&quot;/${P}-canvas-fix.patch
+    epatch &quot;${FILESDIR}&quot;/${P}-ipv6.patch
+    elibtoolize
+}
+
+
+
+
+ebuild rtorrent-0.8.6.ebuild digest
+ebuild rtorrent-0.8.6.ebuild merge
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-01-22T03:49:03.000Z"><a href="/2011/01/gentoo_tips/">2011-01-22</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/01/gentoo_tips/">机器不好还是别玩gentoo了。。</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>受不了啊！！xserver编译4小时，装个chromium编译3小时，mplayer3小时。。。这也太费劲了。。</p>
+<p>弄了几天，中文化，xserver，各种常用应用都弄好了，本来还打算弄点安装过程什么的 ，但是根据”you are not alone”原则，手册（<a href="http://www.gentoo.org/doc/zh_cn/index.xml" target="_blank" rel="external">http://www.gentoo.org/doc/zh_cn/index.xml</a>）+google任何事情都能够解决了。<br>而且gentoo更多的是探索发现，不自己解决就没意义了。</p>
+<p>嗯，不过还是有一些TIP的。。。</p>
+<ol>
+<li>emerge很强大，经常–search装软件很轻松</li>
+</ol>
+<ol>
+<li>emerge -pv 很好用，能看到将要执行的动作，方便查看版本、关联软件等信息</li>
+</ol>
+<ol>
+<li>软件库其实很新，不过很多都被mask了，查看 <a href="http://www.gentoo.org/doc/zh_cn/handbook/handbook-x86.xml?part=3&amp;chap=3" target="_blank" rel="external">文档</a> 或者使用autounmask</li>
+</ol>
+<ol>
+<li>编译的时候干点别的吧。。。</li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+
+<nav id="pagination">
+  
+    <a href="/page/5/" class="alignleft prev">上一页</a>
+  
+  
+    <a href="/page/7/" class="alignright next">下一页</a>
+  
+  <div class="clearfix"></div>
+</nav></div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:blog.binux.me">
+  </form>
+</div>
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
+      </li>
+    
+      <li>
+        <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
+      </li>
+    
+      <li>
+        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
+      </li>
+    
+      <li>
+        <a href="/2015/07/uk/">英国</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="http://binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'binux';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

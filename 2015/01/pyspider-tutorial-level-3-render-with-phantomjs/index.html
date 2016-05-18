@@ -1,0 +1,234 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="英文原文：http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/
+在上两篇教程中，我们学习了怎么从 HTML 中提取信息，也学习了怎么处理一些请求复杂的页面。但是有一些页面，它实在太复杂了，无论是分析 API 请求的地址，">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="true" title="Binuxの杂货铺" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-01-10T00:00:00.000Z"><a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">2015-01-10</a></time>
+      
+      
+  
+    <h1 class="title">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>英文原文：<a href="http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/" target="_blank" rel="external">http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/</a></p>
+<p>在上两篇教程中，我们学习了怎么从 HTML 中提取信息，也学习了怎么处理一些请求复杂的页面。但是有一些页面，它实在太复杂了，无论是分析 API 请求的地址，还是渲染时进行了加密，让直接抓取请求非常麻烦。这时候就是 <a href="http://phantomjs.org/" target="_blank" rel="external">PhantomJS</a> 大显身手的时候了。</p>
+<p>在使用 <a href="http://phantomjs.org/" target="_blank" rel="external">PhantomJS</a> 之前，你需要安装它（<a href="http://phantomjs.org/download.html" target="_blank" rel="external">安装文档</a>）。当你安装了之后，在运行 <code>all</code> 模式的 pyspider 时就会自动启用了。当然，你也可以在 <a href="http://demo.pyspider.org/" target="_blank" rel="external">demo.pyspider.org</a> 上尝试。</p>
+<h2 id="使用-PhantomJS"><a href="#使用-PhantomJS" class="headerlink" title="使用 PhantomJS"></a>使用 PhantomJS</h2><p>当 pyspider 连上 PhantomJS 代理后，你就能通过在 <code>self.crawl</code> 中添加 <code>fetch_type=&#39;js&#39;</code> 的参数，开启使用 PhantomJS 抓取。例如，在教程二中，我们尝试抓取的 <a href="http://movie.douban.com/explore" target="_blank" rel="external">http://movie.douban.com/explore</a> 就可以通过 PhantomJS 直接抓取：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handler</span><span class="params">(BaseHandler)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_start</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.crawl(<span class="string">'http://movie.douban.com/explore'</span>,</span><br><span class="line">                   fetch_type=<span class="string">'js'</span>, callback=self.phantomjs_parser)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">phantomjs_parser</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> [&#123;</span><br><span class="line">            <span class="string">"title"</span>: <span class="string">""</span>.join(</span><br><span class="line">                s <span class="keyword">for</span> s <span class="keyword">in</span> x(<span class="string">'p'</span>).contents() <span class="keyword">if</span> isinstance(s, basestring)</span><br><span class="line">            ).strip(),</span><br><span class="line">            <span class="string">"rate"</span>: x(<span class="string">'p strong'</span>).text(),</span><br><span class="line">            <span class="string">"url"</span>: x.attr.href,</span><br><span class="line">        &#125; <span class="keyword">for</span> x <span class="keyword">in</span> response.doc(<span class="string">'a.item'</span>).items()]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>我在这里使用了一些 PyQuery 的 API，你可以在 <a href="https://pythonhosted.org/pyquery/api.html" target="_blank" rel="external">PyQuery complete API</a> 获得完整的 API 手册。</li>
+</ul>
+</blockquote>
+<h2 id="在页面上执行自定义脚本"><a href="#在页面上执行自定义脚本" class="headerlink" title="在页面上执行自定义脚本"></a>在页面上执行自定义脚本</h2><p>你会发现，在上面我们使用 <a href="http://phantomjs.org/" target="_blank" rel="external">PhantomJS</a> 抓取的豆瓣热门电影只有 20 条。当你点击『加载更多』时，能获得更多的热门电影。为了获得更多的电影，我们可以使用 <code>self.crawl</code> 的 <code>js_script</code> 参数，在页面上执行一段脚本，点击加载更多：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">on_start</span><span class="params">(self)</span>:</span></span><br><span class="line">    self.crawl(<span class="string">'http://movie.douban.com/explore#more'</span>,</span><br><span class="line">               fetch_type=<span class="string">'js'</span>, js_script=<span class="string">"""</span><br><span class="line">               function() &#123;</span><br><span class="line">                 setTimeout("$('.more').click()", 1000);</span><br><span class="line">               &#125;"""</span>, callback=self.phantomjs_parser)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>这个脚本默认在页面加载结束后执行，你可以通过 <code>js_run_at</code> <a href="http://docs.pyspider.org/en/latest//apis/self.crawl/#enable-javascript-fetcher-need-support-by-fetcher" target="_blank" rel="external">参数</a> 修改这个行为</li>
+<li>由于是 AJAX 异步加载的，在页面加载完成时，第一页的电影可能还没有加载完，所以我们用 <code>setTimeout</code> 延迟 1 秒执行。</li>
+<li>你可以间隔一定时间，多次点击，这样可以加载更多页。</li>
+<li>由于相同 URL （实际是相同 taskid） 的任务会被去重，所以这里为 URL 加了一个 <code>#more</code></li>
+</ul>
+</blockquote>
+<p>上面两个例子，都可以在 <a href="http://demo.pyspider.org/debug/tutorial_douban_explore" target="_blank" rel="external">http://demo.pyspider.org/debug/tutorial_douban_explore</a> 中找到。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/python/">python</a>, <a href="/tags/pyspider/">pyspider</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:blog.binux.me">
+  </form>
+</div>
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
+      </li>
+    
+      <li>
+        <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
+      </li>
+    
+      <li>
+        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
+      </li>
+    
+      <li>
+        <a href="/2015/07/uk/">英国</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="http://binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'binux';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

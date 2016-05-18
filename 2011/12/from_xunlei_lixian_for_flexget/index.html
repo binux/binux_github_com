@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>迅雷离线脚本+flexget 将离线资源自动下载回本地 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="OUT OF DATA
+这个也是一篇教程，上接 “让资源灌满你的离线空间吧 — 迅雷离线插件 for flexget“。需要的工具依旧是flexget和lixian.xunlei插件。
+本文是应+平芜泫的需求，自动将迅雷离线里面的文件下载回vps，然后再从教育网用IPV6下回本地。前两步不再复述，参">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="迅雷离线脚本+flexget 将离线资源自动下载回本地"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="true" title="Binuxの杂货铺" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-12-14T14:19:07.000Z"><a href="/2011/12/from_xunlei_lixian_for_flexget/">2011-12-14</a></time>
+      
+      
+  
+    <h1 class="title">迅雷离线脚本+flexget 将离线资源自动下载回本地</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><strong><font color="red">OUT OF DATA</font></strong></p>
+<p>这个也是一篇教程，上接 “<a href="http://blog.binux.me/2011/12/xunlei_lixian_for_flexget/">让资源灌满你的离线空间吧 — 迅雷离线插件 for flexget</a>“。需要的工具依旧是flexget和lixian.xunlei插件。</p>
+<p>本文是应+<a href="https://plus.google.com/u/0/111086731636961623060" target="_blank" rel="external">平芜泫</a>的需求，自动将迅雷离线里面的文件下载回vps，然后再从教育网用IPV6下回本地。前两步不再复述，参考前文的步骤即可，直接步骤3。先上配置文件：</p>
+<pre><code>feeds:
+  some_name:
+    from_xunlei_lixian:
+      username: &quot;&lt;your username&gt;&quot;
+      password: &quot;&lt;your password&gt;&quot;
+      limit: 30
+      fields:
+        base_path: /home/me/downloads
+    accept_all: true
+    exec:
+      auto_escape: yes
+      on_output:
+        for_accepted: mkdir -p {{ fields.base_path }}/{{ taskname }} &amp;&amp; aria2c -c -x5 --out &apos;{{ fields.base_path }}/{{ taskname }}/{{ title }}&apos; --header &apos;{{ cookie }}&apos; &apos;{{ url }}&apos;
+</code></pre><p>这又是一个yaml的配置文件，其中from_xunlei_lixian是input，accept_all是过滤器，而exec作为输出来进行下载。</p>
+<p>from_xunlei_lixian中，limit限制一次取出多少条结果，fields可以将里面的参数传递到output中。<br>output中可以使用的字段包括</p>
+<ul>
+<li>title         文件名</li>
+</ul>
+<ul>
+<li>url           离线地址</li>
+</ul>
+<ul>
+<li>cookie     下载所需要的cookie</li>
+</ul>
+<ul>
+<li>taskname 所属的任务名（比如BT）</li>
+</ul>
+<ul>
+<li>size         文件大小</li>
+</ul>
+<ul>
+<li>format     文件格式（不准确）</li>
+</ul>
+<ul>
+<li>fields       在上文中设置的那些东西</li>
+</ul>
+<p>exec的文档在<a href="http://flexget.com/wiki/Plugins/exec" target="_blank" rel="external">http://flexget.com/wiki/Plugins/exec</a>，auto_escape可以escape掉文件名中的奇怪字符，on_output和for_accepted对每一个文件进行下载任务。</p>
+<p>指令中：</p>
+<blockquote>
+<p> mkdir -p /</p>
+</blockquote>
+<p>用于在base_path下创建一个以taskname命名的文件夹，这样BT这样多文件的时候就会下载到同一个目录下了。</p>
+<blockquote>
+<p>aria2c -c -x5 –out ‘//迅雷离线脚本+flexget 将离线资源自动下载回本地‘ –header ‘‘ ‘‘</p>
+</blockquote>
+<p>使用aria2c使用5个线程，将文件下载到本地。当然，也可以使用wget，这么写就可以了：</p>
+<blockquote>
+<p>wget -c -O ‘ //迅雷离线脚本+flexget 将离线资源自动下载回本地‘ –header ‘‘ ‘‘</p>
+</blockquote>
+<p>好了，现在运行flexget –test试试吧，flexget会输出将要执行的命令，但是并不会真正的执行，可以作为测试。</p>
+<p>可能你的离线空间里面已经积累了大量已经下载回本地的文件，重新下一遍是没有意义的，对吧，来试试这个命令：</p>
+<blockquote>
+<p>flexget –learn</p>
+</blockquote>
+<p>这样可以跳过下载步骤，但是这些文件依旧会记录下来，再执行flexget的时候就只会下载之后添加的文件了。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/未分类/">未分类</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/Linux/">Linux</a>, <a href="/tags/python/">python</a>, <a href="/tags/flexget/">flexget</a>, <a href="/tags/lixian/">lixian</a>, <a href="/tags/xunlei/">xunlei</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:blog.binux.me">
+  </form>
+</div>
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
+      </li>
+    
+      <li>
+        <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
+      </li>
+    
+      <li>
+        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
+      </li>
+    
+      <li>
+        <a href="/2015/07/uk/">英国</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="http://binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'binux';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

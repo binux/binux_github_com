@@ -1,0 +1,232 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>python工具脚本： chinese_digit.py - 中文数字 转换为 阿拉伯数字 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="简介：经常会有这种需要将中文数字如 “五千三百零一”，全角数字”１２３４５”等等各种中文数字，转换成阿拉伯数字的场合。嘛，毕竟中文比较复杂，这种东西还是很发杂的。
+下面这段代码来源于http://bbs.chinaunix.net/redirect.php?tid=1755895。
+但是这段代码有如">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="python工具脚本： chinese_digit.py - 中文数字 转换为 阿拉伯数字"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="true" title="Binuxの杂货铺" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-03-06T14:38:33.000Z"><a href="/2011/03/python-tools-chinese-digit/">2011-03-06</a></time>
+      
+      
+  
+    <h1 class="title">python工具脚本： chinese_digit.py - 中文数字 转换为 阿拉伯数字</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h2><p>经常会有这种需要将中文数字如 “五千三百零一”，全角数字”１２３４５”等等各种中文数字，转换成阿拉伯数字的场合。嘛，毕竟中文比较复杂，这种东西还是很发杂的。</p>
+<p>下面这段代码来源于<a href="http://bbs.chinaunix.net/redirect.php?tid=1755895" target="_blank" rel="external">http://bbs.chinaunix.net/redirect.php?tid=1755895</a>。</p>
+<p><strong>但是这段代码有如下的BUG：</strong></p>
+<p>1、只能正确转换亿亿以下的数</p>
+<p>2、”十万”等十之前没有个位数字的字符串转换错误</p>
+<p><strong>而且有如下不足：</strong></p>
+<p>1、不能转换大写中文（壹贰叁）和全角数字</p>
+<p>2、不能转换电话号码（如 一零零五）</p>
+<p>下面是一个修改过的python脚本，支持如上的所有特性，并修正了BUG</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="comment"># author: binux(17175297.hk@gmail.com)</span></span><br><span class="line"></span><br><span class="line">dict =&#123;<span class="string">u'零'</span>:<span class="number">0</span>, <span class="string">u'一'</span>:<span class="number">1</span>, <span class="string">u'二'</span>:<span class="number">2</span>, <span class="string">u'三'</span>:<span class="number">3</span>, <span class="string">u'四'</span>:<span class="number">4</span>, <span class="string">u'五'</span>:<span class="number">5</span>, <span class="string">u'六'</span>:<span class="number">6</span>, <span class="string">u'七'</span>:<span class="number">7</span>, <span class="string">u'八'</span>:<span class="number">8</span>, <span class="string">u'九'</span>:<span class="number">9</span>, <span class="string">u'十'</span>:<span class="number">10</span>, <span class="string">u'百'</span>:<span class="number">100</span>, <span class="string">u'千'</span>:<span class="number">1000</span>, <span class="string">u'万'</span>:<span class="number">10000</span>,</span><br><span class="line">       <span class="string">u'０'</span>:<span class="number">0</span>, <span class="string">u'１'</span>:<span class="number">1</span>, <span class="string">u'２'</span>:<span class="number">2</span>, <span class="string">u'３'</span>:<span class="number">3</span>, <span class="string">u'４'</span>:<span class="number">4</span>, <span class="string">u'５'</span>:<span class="number">5</span>, <span class="string">u'６'</span>:<span class="number">6</span>, <span class="string">u'７'</span>:<span class="number">7</span>, <span class="string">u'８'</span>:<span class="number">8</span>, <span class="string">u'９'</span>:<span class="number">9</span>,</span><br><span class="line">                <span class="string">u'壹'</span>:<span class="number">1</span>, <span class="string">u'贰'</span>:<span class="number">2</span>, <span class="string">u'叁'</span>:<span class="number">3</span>, <span class="string">u'肆'</span>:<span class="number">4</span>, <span class="string">u'伍'</span>:<span class="number">5</span>, <span class="string">u'陆'</span>:<span class="number">6</span>, <span class="string">u'柒'</span>:<span class="number">7</span>, <span class="string">u'捌'</span>:<span class="number">8</span>, <span class="string">u'玖'</span>:<span class="number">9</span>, <span class="string">u'拾'</span>:<span class="number">10</span>, <span class="string">u'佰'</span>:<span class="number">100</span>, <span class="string">u'仟'</span>:<span class="number">1000</span>, <span class="string">u'萬'</span>:<span class="number">10000</span>,</span><br><span class="line">       <span class="string">u'亿'</span>:<span class="number">100000000</span>&#125;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getResultForDigit</span><span class="params">(a, encoding=<span class="string">"utf-8"</span>)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(a, str):</span><br><span class="line">        a = a.decode(encoding)</span><br><span class="line"></span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    result = <span class="number">0</span></span><br><span class="line">    tmp = <span class="number">0</span></span><br><span class="line">    Billion = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> count &lt; len(a):</span><br><span class="line">        tmpChr = a[count]</span><br><span class="line">        <span class="comment">#print tmpChr</span></span><br><span class="line">        tmpNum = dict.get(tmpChr, <span class="keyword">None</span>)</span><br><span class="line">        <span class="comment">#如果等于1亿</span></span><br><span class="line">        <span class="keyword">if</span> tmpNum == <span class="number">100000000</span>:</span><br><span class="line">            result = result + tmp</span><br><span class="line">            result = result * tmpNum</span><br><span class="line">            <span class="comment">#获得亿以上的数量，将其保存在中间变量Billion中并清空result</span></span><br><span class="line">            Billion = Billion * <span class="number">100000000</span> + result</span><br><span class="line">            result = <span class="number">0</span></span><br><span class="line">            tmp = <span class="number">0</span></span><br><span class="line">        <span class="comment">#如果等于1万</span></span><br><span class="line">        <span class="keyword">elif</span> tmpNum == <span class="number">10000</span>:</span><br><span class="line">            result = result + tmp</span><br><span class="line">            result = result * tmpNum</span><br><span class="line">            tmp = <span class="number">0</span></span><br><span class="line">        <span class="comment">#如果等于十或者百，千</span></span><br><span class="line">        <span class="keyword">elif</span> tmpNum &gt;= <span class="number">10</span>:</span><br><span class="line">            <span class="keyword">if</span> tmp == <span class="number">0</span>:</span><br><span class="line">                tmp = <span class="number">1</span></span><br><span class="line">            result = result + tmpNum * tmp</span><br><span class="line">            tmp = <span class="number">0</span></span><br><span class="line">        <span class="comment">#如果是个位数</span></span><br><span class="line">        <span class="keyword">elif</span> tmpNum <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">None</span>:</span><br><span class="line">            tmp = tmp * <span class="number">10</span> + tmpNum</span><br><span class="line">        count += <span class="number">1</span></span><br><span class="line">    result = result + tmp</span><br><span class="line">    result = result + Billion</span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<p>**完整版带测试用例的版本可以从这里获得：</p>
+<p>** <a href="https://github.com/binux/binux-tools/blob/master/python/chinese_digit.py" target="_blank" rel="external">https://github.com/binux/binux-tools/blob/master/python/chinese_digit.py</a></p>
+<p>测试用例来源于：<a href="http://fayaa.com/code/view/37/" target="_blank" rel="external">http://fayaa.com/code/view/37/</a>（不记得一开始在哪看到的了=。=）</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/未分类/">未分类</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/chinese-digit/">chinese_digit</a>, <a href="/tags/python/">python</a>, <a href="/tags/tools/">tools</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:blog.binux.me">
+  </form>
+</div>
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
+      </li>
+    
+      <li>
+        <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
+      </li>
+    
+      <li>
+        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
+      </li>
+    
+      <li>
+        <a href="/2015/07/uk/">英国</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="http://binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'binux';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

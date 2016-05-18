@@ -1,0 +1,1205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Binuxの杂货铺</title>
+  
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://blog.binux.me/"/>
+  <updated>2016-05-17T22:22:05.000Z</updated>
+  <id>http://blog.binux.me/</id>
+  
+  <author>
+    <name>Roy Binux</name>
+    
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>bilibili 新番承包付费意愿调查</title>
+    <link href="http://blog.binux.me/2016/05/bilibili-pay-user-analysis/"/>
+    <id>http://blog.binux.me/2016/05/bilibili-pay-user-analysis/</id>
+    <published>2016-05-14T23:00:00.000Z</published>
+    <updated>2016-05-17T22:22:05.000Z</updated>
+    
+    <content type="html">&lt;p&gt;2014年10月1日 bilibili 正版新番承包上线，我就对 bilibili 这种自愿付费的方式感到好奇。而且经常听到「正版体验不佳」，「正版动画比起盗版，有何优势呢」的言论，那么中国用户在不插广告，不优先播放，不强制的情况下，到底愿意为「爱」付多少钱呢？&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;为什么 bilibili?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;bilibili 早期，新番都是用户上传的，可以说是典型的「盗版网站」。那么这个拥有大量用户的「盗版网站」体验应该说不差吧。&lt;/p&gt;
+&lt;p&gt;随着 bilibili 开始购买版权，现在新番实际上是正版盗版共存的模式，而 bilibili 不插前置广告（当然现在有「约不约」了），不强制付费；从体验上看，特别相对其他国内视频网站，应该是最接近「盗版」的了。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h1 id=&quot;付费人数&quot;&gt;&lt;a href=&quot;#付费人数&quot; class=&quot;headerlink&quot; title=&quot;付费人数&quot;&gt;&lt;/a&gt;付费人数&lt;/h1&gt;&lt;p&gt;bilibili 新番承包人数可以非常方便的从番剧的介绍页面上获知：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/Screenshot_2016-05-15_13_41_24.png&quot; alt=&quot;sponsor count&quot;&gt;&lt;/p&gt;
+&lt;p&gt;但是由于动画的类型不同，热度不同，独播非独播用户（路人）成分不同，直接比较数字没有什么意义。需要首先找到一个基准来讨论播放和付费数之间的关系。&lt;/p&gt;
+&lt;p&gt;我抓取了新番承包上线以来新开播的 142 部新番（&lt;a href=&quot;http://demo.pyspider.org/results?project=bgm_bilibili&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://demo.pyspider.org/results?project=bgm_bilibili&lt;/a&gt;），去除话数小于10的 OAD，OVA 等，剩下 136 部。将总播放，追番人数，弹幕总数画为散点图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/Screenshot 2016-05-15 15.29.25.png&quot; alt=&quot;追番人数，弹幕总数 / 总播放&quot;&gt;&lt;/p&gt;
+&lt;p&gt;由图可知，弹幕总数和总播放数相关性比追番人数相关性更大（参照 &lt;a href=&quot;https://en.wikipedia.org/wiki/Coefficient_of_determination&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;R^2&lt;/a&gt;）。独家和非独家新番在弹幕参与度上相差不大，但是非独家的追番率比独家新番少了一半。难道非独家新番用户大多是非 bilibili 注册用户吗？这说不通啊，明明应该是反过来，非会员不得不到 bilibili 上看才对啊。。&lt;/p&gt;
+&lt;h3 id=&quot;付费比例&quot;&gt;&lt;a href=&quot;#付费比例&quot; class=&quot;headerlink&quot; title=&quot;付费比例&quot;&gt;&lt;/a&gt;付费比例&lt;/h3&gt;&lt;p&gt;在开始写这一节的时候，我本想应该挺简单的，承包人数要么和播放数正相关，要么和活跃（弹幕数）相关，要么就和追番人数相关。但是经过了3个小时，当我尝试了：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;总播放数&lt;/li&gt;
+&lt;li&gt;平均每集播放数&lt;/li&gt;
+&lt;li&gt;弹幕数&lt;/li&gt;
+&lt;li&gt;收藏（追番）人数&lt;/li&gt;
+&lt;li&gt;时间&lt;/li&gt;
+&lt;li&gt;是否独家新番&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;画了20+张图之后发现，问题并没有这么简单。很难有一个什么方法能够预测出用户的付费意愿，有很多叫好不叫座，或者叫座不叫好，导致付费比例非常分散：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/Screenshot 2016-05-15 17.55.25.png&quot; alt=&quot;承包 / 总播放数&quot;&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;图中左边是独播新番，右边为非独播&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这里面会发现一些有趣的地方：在独播和非独播中，都有一个承包比例非常高的点，分别是《电器街的漫画店》和《Fate/stay night [Unlimited Blade Works] 第一季》，他们都是2014年10月番，正好是新番承包刚上线时的作品，可能用户对承包模式的尝鲜，或者前期宣传上的增益。&lt;/p&gt;
+&lt;p&gt;将特异点排除之后，发现不管是否独播，他们的付费比例差别不大，但是非独播的方差大得多：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/Screenshot 2016-05-15 18.00.02.png&quot; alt=&quot;去除特异点后的 承包 / 总播放数&quot;&gt;&lt;/p&gt;
+&lt;p&gt;平均上来说，&lt;strong&gt;bilibili 的付费比例约为播放数的万分之 1.447，收藏人数的千分之5.373&lt;/strong&gt;。但是这只能是整体估计，具体到单个番剧就没有意义了。&lt;/p&gt;
+&lt;h3 id=&quot;用户到底为了什么付费？&quot;&gt;&lt;a href=&quot;#用户到底为了什么付费？&quot; class=&quot;headerlink&quot; title=&quot;用户到底为了什么付费？&quot;&gt;&lt;/a&gt;用户到底为了什么付费？&lt;/h3&gt;&lt;p&gt;那么，具体到每一部番剧，用户到底因为什么因素愿意付费呢？&lt;/p&gt;
+&lt;p&gt;当我将付费比例前10与付费比例后10的放在一起比较，试图找出答案的时候，我真的失败了：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/Screenshot 2016-05-15 21.11.35.png&quot; alt=&quot;承包比例&quot;&gt;&lt;/p&gt;
+&lt;p&gt;在前10中有在我看来「这什么鬼」的，在后10中也有追过的，完全搞不懂拥有更高收费比例的番剧是为什么。当然，通过加入声优，导演，制作，类型 tag 等因素，或许可能找到原因，但这样少的数据，又很容易陷入过拟合的境地（如果有兴趣，可以&lt;a href=&quot;http://demo.pyspider.org/results?project=bgm_bilibili&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;下载数据&lt;/a&gt;分析看看）。&lt;/p&gt;
+&lt;h1 id=&quot;付费金额&quot;&gt;&lt;a href=&quot;#付费金额&quot; class=&quot;headerlink&quot; title=&quot;付费金额&quot;&gt;&lt;/a&gt;付费金额&lt;/h1&gt;&lt;h3 id=&quot;人均承包金额&quot;&gt;&lt;a href=&quot;#人均承包金额&quot; class=&quot;headerlink&quot; title=&quot;人均承包金额&quot;&gt;&lt;/a&gt;人均承包金额&lt;/h3&gt;&lt;p&gt;虽然在 bilibili 页面中有承包商排名，但是并不知道付费的金额，仅在你承包的时候，给出你当前的排名。为了了解承包商们在这样没有强制金额的「捐献」中愿意付多少钱，我从1元开始承包，然后查看我当前的排名来获得各个区段的人数：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/Screenshot 2016-05-15 21.16.24.png&quot; alt=&quot;承包总榜&quot;&gt;&lt;/p&gt;
+&lt;p&gt;为了消除连载中，独播，类型等影响，这里选择了连载中，非独播的的 &lt;a href=&quot;http://bangumi.bilibili.com/anime/3461&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Re:Zero&lt;/a&gt; 和已完结，独播，稍微腐女向的 &lt;a href=&quot;http://bangumi.bilibili.com/anime/2725&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;K RETURN&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/Screenshot 2016-05-15 18.32.14.png&quot; alt=&quot;付费区间人数&quot;&gt;&lt;/p&gt;
+&lt;p&gt;从图中可以看出：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;主要用户的付费金额在 5-13（不要吐槽为什么是13，手抖了！）&lt;/li&gt;
+&lt;li&gt;不同类型的番剧，承包金额的分布几乎是完全一样的&lt;/li&gt;
+&lt;li&gt;TOP 付费用户的付费金额比较高，Re:Zero 我付到 500 元，依然有 3 个比我高的（于是我放弃了）&lt;/li&gt;
+&lt;li&gt;同样付出 150 元，在 Re:Zero 中能排到 19，而在 K 中只能排到 37，还不论 K 的付费人数实际少于 Re:Zero（腐女还是有钱人多啊）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;那么，假如我们不考虑前 3 位的土豪，&lt;strong&gt;人均承包金额约为 13.08 元&lt;/strong&gt;。因为我们并不知道土豪能为我们拉升多少身价，那，即使我们现在假设排名前三的土豪均承包五千块，人均承包金额也不过18元。为了简化，我们取20块好了。因为选取了两部因素差异蛮大的动画，得知不同因素对承包金额的分布影响不大，这个人均承包金额是可以套用到不同番剧上的。&lt;/p&gt;
+&lt;h3 id=&quot;承包收入&quot;&gt;&lt;a href=&quot;#承包收入&quot; class=&quot;headerlink&quot; title=&quot;承包收入&quot;&gt;&lt;/a&gt;承包收入&lt;/h3&gt;&lt;p&gt;那我们算一下，bilibili 通过新番承包，到底能赚多少钱呢？因为承包人数是公开的，乘以估计的人均20块的话，bilibili 承包收入收入排行：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/Screenshot 2016-05-15 18.55.03.png&quot; alt=&quot;承包收入排行&quot;&gt;&lt;/p&gt;
+&lt;p&gt;根据网上的传言，每集非独播新番版权价格大约是5万，独播更贵。那么好，我们统统算1万一集吧（对，就是这么任性）！那么也就 《Fate/stay night [Unlimited Blade Works] 第一季》 和 《电器街的漫画店》 实现了盈利。记得我们前面说过的付费比例异常吗？对，就是这两部「盈利」了的番剧。&lt;/p&gt;
+&lt;p&gt;从整体来看，bilibili 通过承包总收入为 288.7 万，平均每部番剧的承包收入是 21388 元，不打折的话，一集都买不起啊！&lt;/p&gt;
+&lt;h1 id=&quot;我想说什么&quot;&gt;&lt;a href=&quot;#我想说什么&quot; class=&quot;headerlink&quot; title=&quot;我想说什么&quot;&gt;&lt;/a&gt;我想说什么&lt;/h1&gt;&lt;p&gt;经常有人会用「正版体验不佳」作为盗版的理由，&lt;strong&gt;说得好像正版体验一样了就会付费了似的&lt;/strong&gt;。bilibili 同时有提供正版和盗版内容，正版有比盗版体验差吗？难道正版看得人就少了吗？好，就算确实看正版的人少了，我们不看绝对值，那这寒酸的千分之5.373的付费比例是怎么回事？什么「正版体验不佳」啊，「要付钱当然体验不佳」啦。&lt;/p&gt;
+&lt;p&gt;另外一个常见的理由是「学生党，没有钱」，人均 20 块太贵出不起。请回过头看看追番人数，要是每个人出&lt;strong&gt;一块钱&lt;/strong&gt;，那也要比现在这千分之5.373，人均20块的总收入高啊！&lt;strong&gt;一块钱&lt;/strong&gt;都出不起吗？这可是&lt;strong&gt;一季&lt;/strong&gt;动画，而不是一集让你出一块钱啊！看动画都是因为爱，而这份爱，连一块钱都不值吗？&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/ai.jpg&quot; alt=&quot;爱&quot;&gt;&lt;/p&gt;
+&lt;p&gt;bilibili 不想通过广告那样半强制地收回那么一点点版权费，然而看起来这「爱」并不畅销。&lt;strong&gt;所以，我弱弱地提议，各位有爱的小伙伴，在看完一季动画后（是的，不喜欢可以不承包），从微信红包（是的，不用银行卡）中拿出那么一块钱（是的，最低承包不是5块，是可以改的），承包一下你喜欢的动画吧。&lt;/strong&gt;。希望在「劣币驱逐良币」之前，良币不会先自己饿死吧。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;2014年10月1日 bilibili 正版新番承包上线，我就对 bilibili 这种自愿付费的方式感到好奇。而且经常听到「正版体验不佳」，「正版动画比起盗版，有何优势呢」的言论，那么中国用户在不插广告，不优先播放，不强制的情况下，到底愿意为「爱」付多少钱呢？&lt;/p&gt;
+&lt;
+    
+    </summary>
+    
+    
+      <category term="bilibili" scheme="http://blog.binux.me/tags/bilibili/"/>
+    
+      <category term="ACG" scheme="http://blog.binux.me/tags/ACG/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>demo.pyspider.org 部署经验</title>
+    <link href="http://blog.binux.me/2016/05/deployment-of-demopyspiderorg/"/>
+    <id>http://blog.binux.me/2016/05/deployment-of-demopyspiderorg/</id>
+    <published>2016-05-13T23:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;经常有人会问 &lt;a href=&quot;https://github.com/binux/pyspider&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;pyspider&lt;/a&gt; 怎么进行分布式部署，这里以 &lt;a href=&quot;http://demo.pyspider.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;demo.pyspider.org&lt;/a&gt; 的实际部署经验做一个例子。&lt;/p&gt;
+&lt;p&gt;因为 &lt;a href=&quot;https://github.com/binux/pyspider&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;pyspider&lt;/a&gt; 支持分布式部署，为了验证也好，为了省钱多蹭 CPU 也好, &lt;a href=&quot;http://demo.pyspider.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;demo.pyspider.org&lt;/a&gt; 通过 docker 部署在同一机房的 3 台 VPS 上，VPS 间有内网传输（实际通过 &lt;a href=&quot;http://www.tinc-vpn.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;tinc&lt;/a&gt;）。&lt;/p&gt;
+&lt;p&gt;使用 docker 的原因是实际上 pyspider 能够运行任何 python 脚本，至少需要 docker 环境逃逸。&lt;/p&gt;
+&lt;h1 id=&quot;数据库-amp-消息队列&quot;&gt;&lt;a href=&quot;#数据库-amp-消息队列&quot; class=&quot;headerlink&quot; title=&quot;数据库 &amp;amp; 消息队列&quot;&gt;&lt;/a&gt;数据库 &amp;amp; 消息队列&lt;/h1&gt;&lt;p&gt;demo.pyspider.org 的&lt;strong&gt;数据库为 &lt;a href=&quot;http://www.postgresql.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;PostgreSQL&lt;/a&gt;&lt;/strong&gt;，理由是测试目的，磁盘占用和性能的折中。&lt;strong&gt;消息队列为 &lt;a href=&quot;http://redis.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Redis&lt;/a&gt;&lt;/strong&gt;，因为部署简单。&lt;/p&gt;
+&lt;p&gt;它们也是跑在 docker 中的：&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;docker run --name postgres -v /data/postgres/:/var/lib/postgresql/data &lt;span class=&quot;_&quot;&gt;-d&lt;/span&gt; -p &lt;span class=&quot;variable&quot;&gt;$LOCAL_IP&lt;/span&gt;:5432:5432 &lt;span class=&quot;_&quot;&gt;-e&lt;/span&gt; POSTGRES_PASSWORD=&lt;span class=&quot;string&quot;&gt;&quot;&quot;&lt;/span&gt; postgres&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;docker run --name redis &lt;span class=&quot;_&quot;&gt;-d&lt;/span&gt; -p  &lt;span class=&quot;variable&quot;&gt;$LOCAL_IP&lt;/span&gt;:6379:6379 redis&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;由于前面说过，机器间有内网，通过绑定内网 IP，没有做鉴权（反正 demo 会泄露）。&lt;/p&gt;
+&lt;h1 id=&quot;scheduler&quot;&gt;&lt;a href=&quot;#scheduler&quot; class=&quot;headerlink&quot; title=&quot;scheduler&quot;&gt;&lt;/a&gt;scheduler&lt;/h1&gt;&lt;p&gt;由于 scheduler 只能运行一个，并且需要进行大量的数据库操作，它与上面的数据库和消息队列部署在一台单独的机器上。&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;docker run --name scheduler &lt;span class=&quot;_&quot;&gt;-d&lt;/span&gt; -p &lt;span class=&quot;variable&quot;&gt;$LOCAL_IP&lt;/span&gt;:23333:23333 --restart=always binux/pyspider \&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; --taskdb &lt;span class=&quot;string&quot;&gt;&quot;sqlalchemy+postgresql+taskdb://binux@10.21.0.7/taskdb&quot;&lt;/span&gt; \&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; --resultdb &lt;span class=&quot;string&quot;&gt;&quot;sqlalchemy+postgresql+resultdb://binux@10.21.0.7/resultdb&quot;&lt;/span&gt; \&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; --projectdb &lt;span class=&quot;string&quot;&gt;&quot;sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb&quot;&lt;/span&gt; \&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; --message-queue &lt;span class=&quot;string&quot;&gt;&quot;redis://10.21.0.7:6379/1&quot;&lt;/span&gt; \&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt; scheduler --inqueue-limit 5000 --delete-time 43200&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;h1 id=&quot;其他组件&quot;&gt;&lt;a href=&quot;#其他组件&quot; class=&quot;headerlink&quot; title=&quot;其他组件&quot;&gt;&lt;/a&gt;其他组件&lt;/h1&gt;&lt;p&gt;所有其他的组件（fetcher, processor, result_worker）在剩余的两台 VPS 上以相同的配置启动。他们都是通过 docker-compose 管理的&lt;/p&gt;
+&lt;figure class=&quot;highlight yaml&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;39&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;40&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;41&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;42&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;43&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;44&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;45&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;46&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;47&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;48&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;49&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;50&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;51&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;52&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;53&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;54&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;55&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;56&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;57&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;58&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;59&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;60&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;61&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;62&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;63&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;64&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;65&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;66&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;67&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;68&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;69&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;70&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;71&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;72&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;73&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;phantomjs:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  image:&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;binux/pyspider:latest&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  command:&lt;/span&gt; phantomjs&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  cpu_shares:&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;512&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  environment:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;bullet&quot;&gt;    -&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;EXCLUDE_PORTS=5000,23333,24444&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  expose:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;bullet&quot;&gt;    -&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;25555&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  mem_limit:&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;512&lt;/span&gt;m&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  restart:&lt;/span&gt; always&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;phantomjs-lb:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  image:&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;dockercloud/haproxy:latest&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  links:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;bullet&quot;&gt;    -&lt;/span&gt; phantomjs&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  restart:&lt;/span&gt; always&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;fetcher:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  image:&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;binux/pyspider:latest&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  command:&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;--message-queue &quot;redis://10.21.0.7:6379/1&quot; --phantomjs-proxy &quot;phantomjs:80&quot; fetcher --xmlrpc&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  cpu_shares:&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;512&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  environment:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;bullet&quot;&gt;    -&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;EXCLUDE_PORTS=5000,25555,23333&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  links:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;bullet&quot;&gt;    -&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;phantomjs-lb:phantomjs&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  mem_limit:&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;128&lt;/span&gt;m&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  restart:&lt;/span&gt; always&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;fetcher-lb:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  image:&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;dockercloud/haproxy:latest&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  links:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;bullet&quot;&gt;    -&lt;/span&gt; fetcher&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  restart:&lt;/span&gt; always&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;processor:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  image:&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;binux/pyspider:latest&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  command:&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;--projectdb &quot;sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb&quot; --message-queue &quot;redis://10.21.0.7:6379/1&quot; processor&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  cpu_shares:&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;512&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  mem_limit:&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;256&lt;/span&gt;m&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  restart:&lt;/span&gt; always&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;result-worker:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  image:&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;binux/pyspider:latest&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  command:&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;--taskdb &quot;sqlalchemy+postgresql+taskdb://binux@10.21.0.7/taskdb&quot;  --projectdb &quot;sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb&quot; --resultdb &quot;sqlalchemy+postgresql+resultdb://binux@10.21.0.7/resultdb&quot; --message-queue &quot;redis://10.21.0.7:6379/1&quot; result_worker&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  cpu_shares:&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;512&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  mem_limit:&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;256&lt;/span&gt;m&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  restart:&lt;/span&gt; always&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;webui:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  image:&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;binux/pyspider:latest&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  command:&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;--taskdb &quot;sqlalchemy+postgresql+taskdb://binux@10.21.0.7/taskdb&quot;  --projectdb &quot;sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb&quot; --resultdb &quot;sqlalchemy+postgresql+resultdb://binux@10.21.0.7/resultdb&quot; --message-queue &quot;redis://10.21.0.7:6379/1&quot; webui --max-rate 0.2 --max-burst 3 --scheduler-rpc &quot;http://o4.i.binux.me:23333/&quot; --fetcher-rpc &quot;http://fetcher/&quot;&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  cpu_shares:&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;512&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  environment:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;bullet&quot;&gt;    -&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;EXCLUDE_PORTS=24444,25555,23333&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  links:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;bullet&quot;&gt;    -&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;fetcher-lb:fetcher&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  mem_limit:&lt;/span&gt; &lt;span class=&quot;number&quot;&gt;256&lt;/span&gt;m&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  restart:&lt;/span&gt; always&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;webui-lb:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  image:&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;dockercloud/haproxy:latest&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  links:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;bullet&quot;&gt;    -&lt;/span&gt; webui&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  restart:&lt;/span&gt; always&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;nginx:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  image:&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;nginx&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  links:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;bullet&quot;&gt;    -&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;webui-lb:HAPROXY&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  ports:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;bullet&quot;&gt;    -&lt;/span&gt; &lt;span class=&quot;string&quot;&gt;&#39;0.0.0.0:80:80&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  volumes:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;bullet&quot;&gt;    -&lt;/span&gt; /home/binux/nfs/profile/nginx/nginx.conf:/etc/nginx/nginx.conf&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;bullet&quot;&gt;    -&lt;/span&gt; /home/binux/nfs/profile/nginx/conf.d/:/etc/nginx/conf.d/&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;attr&quot;&gt;  restart:&lt;/span&gt; always&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;然后通过 &lt;code&gt;docker-compose scale phantomjs=2 processor=2 webui=4&lt;/code&gt; 指定启动两个 phantomjs 进程，两个 processor 进程，4个 webui 进程。&lt;/p&gt;
+&lt;h4 id=&quot;phantomjs&quot;&gt;&lt;a href=&quot;#phantomjs&quot; class=&quot;headerlink&quot; title=&quot;phantomjs&quot;&gt;&lt;/a&gt;phantomjs&lt;/h4&gt;&lt;p&gt;由于 phantomjs 有内存泄露问题，限制下内存就好了。&lt;code&gt;EXCLUDE_PORTS&lt;/code&gt; 是为了下面的 haproxy 能够正确的均衡负载正确端口。&lt;/p&gt;
+&lt;h4 id=&quot;phantomjs-lb&quot;&gt;&lt;a href=&quot;#phantomjs-lb&quot; class=&quot;headerlink&quot; title=&quot;phantomjs-lb&quot;&gt;&lt;/a&gt;phantomjs-lb&lt;/h4&gt;&lt;p&gt;通过 &lt;a href=&quot;https://hub.docker.com/r/dockercloud/haproxy/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;haproxy&lt;/a&gt; 自动负载均衡，只要将服务链接上去，就会将请求分发到不定多个 phantomjs 实例上，同时只暴露一个对外服务端口。&lt;/p&gt;
+&lt;h4 id=&quot;fetcher&quot;&gt;&lt;a href=&quot;#fetcher&quot; class=&quot;headerlink&quot; title=&quot;fetcher&quot;&gt;&lt;/a&gt;fetcher&lt;/h4&gt;&lt;p&gt;链接 &lt;code&gt;phantomjs-lb:phantomjs&lt;/code&gt;，注意这里的 &lt;code&gt;--phantomjs-proxy &amp;quot;phantomjs:80&amp;quot;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;由于 fetcher 是异步 http 请求，如果没有发生堵塞，单个 fetcher 一般就足够了。&lt;/p&gt;
+&lt;h4 id=&quot;fetcher-lb&quot;&gt;&lt;a href=&quot;#fetcher-lb&quot; class=&quot;headerlink&quot; title=&quot;fetcher-lb&quot;&gt;&lt;/a&gt;fetcher-lb&lt;/h4&gt;&lt;p&gt;同 phantomjs-lb&lt;/p&gt;
+&lt;h4 id=&quot;processor&quot;&gt;&lt;a href=&quot;#processor&quot; class=&quot;headerlink&quot; title=&quot;processor&quot;&gt;&lt;/a&gt;processor&lt;/h4&gt;&lt;p&gt;processor 为最消耗 CPU 的组件，建议根据 CPU 的数量部署 +1/2 个。&lt;/p&gt;
+&lt;h4 id=&quot;result-worker&quot;&gt;&lt;a href=&quot;#result-worker&quot; class=&quot;headerlink&quot; title=&quot;result-worker&quot;&gt;&lt;/a&gt;result-worker&lt;/h4&gt;&lt;p&gt;默认的 result-worker 只是在写数据库，除非发生堵塞，或者你重载了 result_worker，一个就够。&lt;/p&gt;
+&lt;h4 id=&quot;webui&quot;&gt;&lt;a href=&quot;#webui&quot; class=&quot;headerlink&quot; title=&quot;webui&quot;&gt;&lt;/a&gt;webui&lt;/h4&gt;&lt;p&gt;首先，webui 为了安全性，限制了最大抓取速率 &lt;code&gt;--max-rate 0.2 --max-burst 3&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;然后通过实际的 fetcher 进行抓取 &lt;code&gt;--fetcher-rpc &amp;quot;http://fetcher/&amp;quot;&lt;/code&gt; 而不是 webui 自己发起请求，最大程度模拟环境（IP，库版本），因为以前遇到过调试的时候没问题，跑起来失败，然后在调试器复现又没法复现的问题。fetcher-rpc 可以不用，这样的会 webui 会自己直接发起请求。&lt;/p&gt;
+&lt;p&gt;因为 demo.pyspider.org 主要就是提供通过页面来尝试 pyspider, 这里的负载较大，而且实现上是同步的，任何脚本执行，抓取都是堵塞了，多一些 webui 会比较好。&lt;/p&gt;
+&lt;h4 id=&quot;webui-lb&quot;&gt;&lt;a href=&quot;#webui-lb&quot; class=&quot;headerlink&quot; title=&quot;webui-lb&quot;&gt;&lt;/a&gt;webui-lb&lt;/h4&gt;&lt;p&gt;同 phantpmjs-lb&lt;/p&gt;
+&lt;h4 id=&quot;nginx&quot;&gt;&lt;a href=&quot;#nginx&quot; class=&quot;headerlink&quot; title=&quot;nginx&quot;&gt;&lt;/a&gt;nginx&lt;/h4&gt;&lt;p&gt;这里做了一些前端缓存&lt;/p&gt;
+&lt;h4 id=&quot;其他&quot;&gt;&lt;a href=&quot;#其他&quot; class=&quot;headerlink&quot; title=&quot;其他&quot;&gt;&lt;/a&gt;其他&lt;/h4&gt;&lt;p&gt;因为懒得管，每小时我会重启除了 scheduler 以外的其他组件（反正会重试）。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;经常有人会问 &lt;a href=&quot;https://github.com/binux/pyspider&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;pyspider&lt;/a&gt; 怎么进行分布式部署，这里以 &lt;a href=&quot;http://demo.pyspide
+    
+    </summary>
+    
+    
+      <category term="pyspider" scheme="http://blog.binux.me/tags/pyspider/"/>
+    
+      <category term="deployment" scheme="http://blog.binux.me/tags/deployment/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>足兆叉虫的2015</title>
+    <link href="http://blog.binux.me/2015/12/uk2/"/>
+    <id>http://blog.binux.me/2015/12/uk2/</id>
+    <published>2015-12-31T00:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;我是从来不记日子的，这导致我也不知道有些事情是2015年发生的，还是2014年发生的，亦或只是我的臆想。即便如此，2015年也是变化的一年。&lt;/p&gt;
+&lt;p&gt;跳槽，工资没涨…… 到这里居然和2013年是一样的，但是当我在2015写下这篇日志的时候，国内已经2016。&lt;/p&gt;
+&lt;p&gt;说来惭愧，这一年除了一月写了几篇教程之后，不但 blog 落下了，开源也没有做多少。看着 pyspider 的 star 数蹭蹭涨到 5813，但是并没有太多精力去更新。希望在 2016 年能有时间把 slime 模式的坑填了吧。&lt;/p&gt;
+&lt;p&gt;其他的项目也就在年末的时候又重新玩了一把 WebRTC，基于的 &lt;a href=&quot;https://webtorrent.io&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;WebTorrent&lt;/a&gt; 经过一年的开发，已经成熟了很多，feross 在 javascript 上从 tracker 到 BT 协议都实现了一遍，比起我那时山寨的好了非常多，虽然 hybrid 模式还有很多问题。。。对了 2015 年参与过 technical review 的 &lt;a href=&quot;https://www.packtpub.com/web-development/learning-webrtc&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Learning WebRTC&lt;/a&gt; 也出版了，算是一次挺有趣的经历吧。&lt;/p&gt;
+&lt;p&gt;8月到英国之后，就是各种适应，加上新公司的蜜月期，一门心思放在了公司的项目上。在新公司才算是第一次接触到了机器学习，给我带来了很多新的思路，有种能成的感觉吧。&lt;/p&gt;
+&lt;p&gt;希望2016年能更有趣吧。&lt;/p&gt;
+&lt;h2 id=&quot;英国（二）&quot;&gt;&lt;a href=&quot;#英国（二）&quot; class=&quot;headerlink&quot; title=&quot;英国（二）&quot;&gt;&lt;/a&gt;英国（二）&lt;/h2&gt;&lt;p&gt;然后说一些「关于英国生活」类似的东西吧，想到什么写什么&lt;/p&gt;
+&lt;h3 id=&quot;衣食住行&quot;&gt;&lt;a href=&quot;#衣食住行&quot; class=&quot;headerlink&quot; title=&quot;衣食住行&quot;&gt;&lt;/a&gt;衣食住行&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;夏天不热，这个冬天不冷&lt;/li&gt;
+&lt;li&gt;冬天是雨季，几乎一半时间在下雨，但是从来没有在上下班的时候下&lt;/li&gt;
+&lt;li&gt;英国不负「难吃国」之名，只要是英文店名的地方，那真是难吃 + 贵&lt;/li&gt;
+&lt;li&gt;中午的饭点是1-2点，晚餐饭点是8-9点&lt;/li&gt;
+&lt;li&gt;一个很大问题是，看菜单很多时候不知道是什么东西，查字典也没用&lt;/li&gt;
+&lt;li&gt;一盒 200g 的毛豆都要卖20-30RMB，而且还被他们视为高贵的健康食品&lt;/li&gt;
+&lt;li&gt;有很多中国人开的中餐馆和日式便当，这是唯一能吃的东西（除了 KFC）&lt;/li&gt;
+&lt;li&gt;超市的肉类品种和部位很不同，炒出来很老，我用了3个月才想出来怎么吃&lt;/li&gt;
+&lt;li&gt;鸡翅鸡腿比鸡胸便宜，只要10RMB/斤&lt;/li&gt;
+&lt;li&gt;肉比蔬菜便宜&lt;/li&gt;
+&lt;li&gt;住非常贵，北京的7-8倍&lt;/li&gt;
+&lt;li&gt;行非常贵，北京的5-10倍&lt;/li&gt;
+&lt;li&gt;伦敦很小，和北京比起来&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;公司&quot;&gt;&lt;a href=&quot;#公司&quot; class=&quot;headerlink&quot; title=&quot;公司&quot;&gt;&lt;/a&gt;公司&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;公司现在有40+个人，但是有15种国籍，22+种语言&lt;/li&gt;
+&lt;li&gt;有4个华裔同事，但是任意两者之间只能用英语交流（除英语外会的语言分别是普通话，粤语，日语，马来语，德语）&lt;/li&gt;
+&lt;li&gt;没有印度人&lt;/li&gt;
+&lt;li&gt;一年25天年假，8天法定假日，没有年终奖&lt;/li&gt;
+&lt;li&gt;不加班的主要原因是没有晚餐，肚子饿&lt;/li&gt;
+&lt;li&gt;公司以外听不懂别人说什么 =_=&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我是从来不记日子的，这导致我也不知道有些事情是2015年发生的，还是2014年发生的，亦或只是我的臆想。即便如此，2015年也是变化的一年。&lt;/p&gt;
+&lt;p&gt;跳槽，工资没涨…… 到这里居然和2013年是一样的，但是当我在2015写下这篇日志的时候，国内已经2016。&lt;/p&gt;
+
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>英国</title>
+    <link href="http://blog.binux.me/2015/07/uk/"/>
+    <id>http://blog.binux.me/2015/07/uk/</id>
+    <published>2015-07-20T23:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;半年没有更新 blog 了，&lt;del&gt;其实我在憋(wan)个(W)大(O)招(W)&lt;/del&gt;。一年半以前，我说过&lt;a href=&quot;http://blog.binux.me/2013/12/2013/&quot;&gt;「想学日语，想出国」&lt;/a&gt;，虽然这一年半也是没有干劲地随随便便过的，但是至少出国了。&lt;/p&gt;
+&lt;p&gt;目的地英国，工作，8月初。&lt;/p&gt;
+&lt;p&gt;要说经历，其实简单到爆。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;投简历（依旧是只投一家）&lt;/li&gt;
+&lt;li&gt;视频面试（用我8年没用过的蹩脚英语）&lt;/li&gt;
+&lt;li&gt;考雅思（而且只要4分，我只做了套剑9就去了）&lt;/li&gt;
+&lt;li&gt;对方办 &lt;a href=&quot;https://www.gov.uk/tier-2-general/eligibility&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;certificates of sponsorship&lt;/a&gt;（虽然每月有名额限制，按照打分排，但是以往的数据，只要满足条件，名额都够。）&lt;/li&gt;
+&lt;li&gt;办签证（不像旅游签证，不用行程单，不用资产证明，有 COS 就 ok）&lt;/li&gt;
+&lt;li&gt;买机票&lt;/li&gt;
+&lt;li&gt;over&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;工资没涨，物价大涨，难吃，加上烂英语，瞬间感觉生活甚是艰辛。。。不过， there is always a way，就当作一次挑战吧。&lt;/p&gt;
+&lt;p&gt;就酱&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;半年没有更新 blog 了，&lt;del&gt;其实我在憋(wan)个(W)大(O)招(W)&lt;/del&gt;。一年半以前，我说过&lt;a href=&quot;http://blog.binux.me/2013/12/2013/&quot;&gt;「想学日语，想出国」&lt;/a&gt;，虽然这一年半也是没有干劲地随随便便过的，
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</title>
+    <link href="http://blog.binux.me/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/"/>
+    <id>http://blog.binux.me/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/</id>
+    <published>2015-01-10T00:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;英文原文：&lt;a href=&quot;http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;在上两篇教程中，我们学习了怎么从 HTML 中提取信息，也学习了怎么处理一些请求复杂的页面。但是有一些页面，它实在太复杂了，无论是分析 API 请求的地址，还是渲染时进行了加密，让直接抓取请求非常麻烦。这时候就是 &lt;a href=&quot;http://phantomjs.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;PhantomJS&lt;/a&gt; 大显身手的时候了。&lt;/p&gt;
+&lt;p&gt;在使用 &lt;a href=&quot;http://phantomjs.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;PhantomJS&lt;/a&gt; 之前，你需要安装它（&lt;a href=&quot;http://phantomjs.org/download.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;安装文档&lt;/a&gt;）。当你安装了之后，在运行 &lt;code&gt;all&lt;/code&gt; 模式的 pyspider 时就会自动启用了。当然，你也可以在 &lt;a href=&quot;http://demo.pyspider.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;demo.pyspider.org&lt;/a&gt; 上尝试。&lt;/p&gt;
+&lt;h2 id=&quot;使用-PhantomJS&quot;&gt;&lt;a href=&quot;#使用-PhantomJS&quot; class=&quot;headerlink&quot; title=&quot;使用 PhantomJS&quot;&gt;&lt;/a&gt;使用 PhantomJS&lt;/h2&gt;&lt;p&gt;当 pyspider 连上 PhantomJS 代理后，你就能通过在 &lt;code&gt;self.crawl&lt;/code&gt; 中添加 &lt;code&gt;fetch_type=&amp;#39;js&amp;#39;&lt;/code&gt; 的参数，开启使用 PhantomJS 抓取。例如，在教程二中，我们尝试抓取的 &lt;a href=&quot;http://movie.douban.com/explore&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://movie.douban.com/explore&lt;/a&gt; 就可以通过 PhantomJS 直接抓取：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Handler&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(BaseHandler)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;on_start&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(self)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        self.crawl(&lt;span class=&quot;string&quot;&gt;&#39;http://movie.douban.com/explore&#39;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                   fetch_type=&lt;span class=&quot;string&quot;&gt;&#39;js&#39;&lt;/span&gt;, callback=self.phantomjs_parser)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;phantomjs_parser&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(self, response)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; [&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;string&quot;&gt;&quot;title&quot;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&quot;&quot;&lt;/span&gt;.join(&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                s &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; s &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; x(&lt;span class=&quot;string&quot;&gt;&#39;p&#39;&lt;/span&gt;).contents() &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; isinstance(s, basestring)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            ).strip(),&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;string&quot;&gt;&quot;rate&quot;&lt;/span&gt;: x(&lt;span class=&quot;string&quot;&gt;&#39;p strong&#39;&lt;/span&gt;).text(),&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;string&quot;&gt;&quot;url&quot;&lt;/span&gt;: x.attr.href,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125; &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; x &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; response.doc(&lt;span class=&quot;string&quot;&gt;&#39;a.item&#39;&lt;/span&gt;).items()]&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;我在这里使用了一些 PyQuery 的 API，你可以在 &lt;a href=&quot;https://pythonhosted.org/pyquery/api.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;PyQuery complete API&lt;/a&gt; 获得完整的 API 手册。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;在页面上执行自定义脚本&quot;&gt;&lt;a href=&quot;#在页面上执行自定义脚本&quot; class=&quot;headerlink&quot; title=&quot;在页面上执行自定义脚本&quot;&gt;&lt;/a&gt;在页面上执行自定义脚本&lt;/h2&gt;&lt;p&gt;你会发现，在上面我们使用 &lt;a href=&quot;http://phantomjs.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;PhantomJS&lt;/a&gt; 抓取的豆瓣热门电影只有 20 条。当你点击『加载更多』时，能获得更多的热门电影。为了获得更多的电影，我们可以使用 &lt;code&gt;self.crawl&lt;/code&gt; 的 &lt;code&gt;js_script&lt;/code&gt; 参数，在页面上执行一段脚本，点击加载更多：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;on_start&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(self)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    self.crawl(&lt;span class=&quot;string&quot;&gt;&#39;http://movie.douban.com/explore#more&#39;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;               fetch_type=&lt;span class=&quot;string&quot;&gt;&#39;js&#39;&lt;/span&gt;, js_script=&lt;span class=&quot;string&quot;&gt;&quot;&quot;&quot;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;               function() &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                 setTimeout(&quot;$(&#39;.more&#39;).click()&quot;, 1000);&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;               &amp;#125;&quot;&quot;&quot;&lt;/span&gt;, callback=self.phantomjs_parser)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;这个脚本默认在页面加载结束后执行，你可以通过 &lt;code&gt;js_run_at&lt;/code&gt; &lt;a href=&quot;http://docs.pyspider.org/en/latest//apis/self.crawl/#enable-javascript-fetcher-need-support-by-fetcher&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;参数&lt;/a&gt; 修改这个行为&lt;/li&gt;
+&lt;li&gt;由于是 AJAX 异步加载的，在页面加载完成时，第一页的电影可能还没有加载完，所以我们用 &lt;code&gt;setTimeout&lt;/code&gt; 延迟 1 秒执行。&lt;/li&gt;
+&lt;li&gt;你可以间隔一定时间，多次点击，这样可以加载更多页。&lt;/li&gt;
+&lt;li&gt;由于相同 URL （实际是相同 taskid） 的任务会被去重，所以这里为 URL 加了一个 &lt;code&gt;#more&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;上面两个例子，都可以在 &lt;a href=&quot;http://demo.pyspider.org/debug/tutorial_douban_explore&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://demo.pyspider.org/debug/tutorial_douban_explore&lt;/a&gt; 中找到。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;英文原文：&lt;a href=&quot;http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://docs.pyspider.org
+    
+    </summary>
+    
+    
+      <category term="python" scheme="http://blog.binux.me/tags/python/"/>
+    
+      <category term="pyspider" scheme="http://blog.binux.me/tags/pyspider/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>pyspider 爬虫教程（二）：AJAX 和 HTTP</title>
+    <link href="http://blog.binux.me/2015/01/pyspider-tutorial-level-2-ajax-and-more-http/"/>
+    <id>http://blog.binux.me/2015/01/pyspider-tutorial-level-2-ajax-and-more-http/</id>
+    <published>2015-01-09T00:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;在上一篇教程中，我们使用 &lt;code&gt;self.crawl&lt;/code&gt; API 抓取豆瓣电影的 HTML 内容，并使用 CSS 选择器解析了一些内容。不过，现在的网站通过使用 &lt;a href=&quot;http://www.w3school.com.cn/ajax/ajax_intro.asp&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;AJAX&lt;/a&gt; 等技术，在你与服务器交互的同时，不用重新加载整个页面。但是，这些交互手段，让抓取变得稍微难了一些：你会发现，这些网页在抓回来后，和浏览器中的并不相同。你需要的信息并不在返回 HTML 代码中。&lt;/p&gt;
+&lt;p&gt;在这一篇教程中，我们会讨论这些技术 和 抓取他们的方法。（英文版：&lt;a href=&quot;http://docs.pyspider.org/en/latest/tutorial/AJAX-and-more-HTTP/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;AJAX-and-more-HTTP&lt;/a&gt;）&lt;/p&gt;
+&lt;h2 id=&quot;AJAX&quot;&gt;&lt;a href=&quot;#AJAX&quot; class=&quot;headerlink&quot; title=&quot;AJAX&quot;&gt;&lt;/a&gt;AJAX&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;http://www.w3school.com.cn/ajax/ajax_intro.asp&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;AJAX&lt;/a&gt; 是 Asynchronous JavaScript and XML（异步的 JavaScript 和 XML）的缩写。AJAX 通过使用原有的 web 标准组件，实现了在不重新加载整个页面的情况下，与服务器进行数据交互。例如在新浪微博中，你可以展开一条微博的评论，而不需要重新加载，或者打开一个新的页面。但是这些内容并不是一开始就在页面中的（这样页面就太大了），而是在你点击的时候被加载进来的。这就导致了你抓取这个页面的时候，并不能获得这些评论信息（因为你没有『展开』）。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.w3school.com.cn/ajax/ajax_intro.asp&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;AJAX&lt;/a&gt; 的一种常见用法是使用 &lt;a href=&quot;http://www.w3school.com.cn/ajax/ajax_intro.asp&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;AJAX&lt;/a&gt; 加载 &lt;a href=&quot;http://www.w3school.com.cn/json/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;JSON&lt;/a&gt; 数据，然后在浏览器端渲染。如果能直接抓取到 &lt;a href=&quot;http://www.w3school.com.cn/json/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;JSON&lt;/a&gt; 数据，会比 HTML 更容易解析。&lt;/p&gt;
+&lt;p&gt;当一个网站使用了 AJAX 的时候，除了用 pyspider 抓取到的页面和浏览器看到的不同以外。你在浏览器中打开这样的页面，或者点击『展开』的时候，常常会看到『加载中』或者类似的图标/动画。例如，当你尝试抓取：&lt;a href=&quot;http://movie.douban.com/explore&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://movie.douban.com/explore&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/douban_explore.png&quot; alt=&quot;douban explore&quot;&gt;&lt;/p&gt;
+&lt;p&gt;你会发现电影是『载入中…』&lt;/p&gt;
+&lt;h3 id=&quot;找到真实的请求&quot;&gt;&lt;a href=&quot;#找到真实的请求&quot; class=&quot;headerlink&quot; title=&quot;找到真实的请求&quot;&gt;&lt;/a&gt;找到真实的请求&lt;/h3&gt;&lt;p&gt;由于 AJAX 实际上也是通过 HTTP 传输数据的，所以我们可以通过 &lt;a href=&quot;https://developer.chrome.com/devtools&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Chrome Developer Tools&lt;/a&gt; 找到真实的请求，直接发起真实请求的抓取就可以获得数据了。&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;打开一个新窗口&lt;/li&gt;
+&lt;li&gt;按 &lt;code&gt;Ctrl&lt;/code&gt;+&lt;code&gt;Shift&lt;/code&gt;+&lt;code&gt;I&lt;/code&gt; (在 Mac 上请按 &lt;code&gt;Cmd&lt;/code&gt;+&lt;code&gt;Opt&lt;/code&gt;+&lt;code&gt;I&lt;/code&gt;) 打开开发者工具。&lt;/li&gt;
+&lt;li&gt;切换到网络（ Netwotk 面板）&lt;/li&gt;
+&lt;li&gt;在窗口中打开 &lt;a href=&quot;http://movie.douban.com/explore&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://movie.douban.com/explore&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;在页面加载的过程中，你会在面板中看到所有的资源请求。&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/douban_explore_network_panel.png&quot; alt=&quot;douban explore network panel&quot;&gt;&lt;/p&gt;
+&lt;p&gt;AJAX 一般是通过 &lt;a href=&quot;http://www.w3school.com.cn/ajax/ajax_xmlhttprequest_create.asp&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;XMLHttpRequest&lt;/a&gt; 对象接口发送请求的，XMLHttpRequest 一般被缩写为 XHR。点击网络面板上漏斗形的过滤按钮，过滤出 XHR 请求。挨个查看每个请求，通过访问路径和预览，找到包含信息的请求：&lt;a href=&quot;http://movie.douban.com/j/search_subjects?type=movie&amp;amp;tag=%E7%83%AD%E9%97%A8&amp;amp;sort=recommend&amp;amp;page_limit=20&amp;amp;page_start=0&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://movie.douban.com/j/search_subjects?type=movie&amp;amp;tag=%E7%83%AD%E9%97%A8&amp;amp;sort=recommend&amp;amp;page_limit=20&amp;amp;page_start=0&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/douban_explore_xhr_preview.png&quot; alt=&quot;douban explore xhr preview&quot;&gt;&lt;/p&gt;
+&lt;p&gt;在豆瓣这个例子中，XHR 请求并不多，可以挨个查看来确认。但在 XHR 请求较多的时候，可能需要结合触发动作的时间，请求的路径等信息帮助在大量的请求中找到包含信息的关键请求。这需要抓取或者前端的相关经验。所以，有一个我一直在提的观点，学习抓取的最好方法是：学会写网站。&lt;/p&gt;
+&lt;p&gt;现在可以在新窗口中打开 &lt;a href=&quot;http://movie.douban.com/j/search_subjects?type=movie&amp;amp;tag=%E7%83%AD%E9%97%A8&amp;amp;sort=recommend&amp;amp;page_limit=20&amp;amp;page_start=0&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://movie.douban.com/j/search_subjects?type=movie&amp;amp;tag=%E7%83%AD%E9%97%A8&amp;amp;sort=recommend&amp;amp;page_limit=20&amp;amp;page_start=0&lt;/a&gt;，你会看到包含电影数据的 &lt;a href=&quot;http://www.w3school.com.cn/json/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;JSON&lt;/a&gt; 原始数据。推荐安装 &lt;a href=&quot;https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;JSONView&lt;/a&gt;（&lt;a href=&quot;http://jsonview.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Firfox版&lt;/a&gt;）插件，这样可以看到更好看的 JSON 格式，展开折叠列等功能。然后，我们根据 &lt;a href=&quot;http://www.w3school.com.cn/json/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;JSON&lt;/a&gt; 数据，编写一个提取电影名和评分的脚本：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Handler&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(BaseHandler)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;on_start&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(self)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        self.crawl(&lt;span class=&quot;string&quot;&gt;&#39;http://movie.douban.com/j/search_subjects?type=movie&amp;amp;tag=%E7%83%AD%E9%97%A8&amp;amp;sort=recommend&amp;amp;page_limit=20&amp;amp;page_start=0&#39;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                   callback=self.json_parser)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;json_parser&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(self, response)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; [&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;string&quot;&gt;&quot;title&quot;&lt;/span&gt;: x[&lt;span class=&quot;string&quot;&gt;&#39;title&#39;&lt;/span&gt;],&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;string&quot;&gt;&quot;rate&quot;&lt;/span&gt;: x[&lt;span class=&quot;string&quot;&gt;&#39;rate&#39;&lt;/span&gt;],&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;string&quot;&gt;&quot;url&quot;&lt;/span&gt;: x[&lt;span class=&quot;string&quot;&gt;&#39;url&#39;&lt;/span&gt;]&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &amp;#125; &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; x &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; response.json[&lt;span class=&quot;string&quot;&gt;&#39;subjects&#39;&lt;/span&gt;]]&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;你可以使用 &lt;code&gt;response.json&lt;/code&gt; 将结果转为一个 python 的 &lt;code&gt;dict&lt;/code&gt; 对象&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;你可以在 &lt;a href=&quot;http://demo.pyspider.org/debug/tutorial_douban_explore&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://demo.pyspider.org/debug/tutorial_douban_explore&lt;/a&gt; 获得完整的代码，并进行调试。脚本中还有一个使用 &lt;a href=&quot;http://phantomjs.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;PhantomJS&lt;/a&gt; 渲染的提取版本，将会在下一篇教程中介绍。&lt;/p&gt;
+&lt;h2 id=&quot;HTTP&quot;&gt;&lt;a href=&quot;#HTTP&quot; class=&quot;headerlink&quot; title=&quot;HTTP&quot;&gt;&lt;/a&gt;HTTP&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;HTTP&lt;/a&gt; 是用来传输网页内容的协议。在前面的教程中，我们已经通过 &lt;code&gt;self.crawl&lt;/code&gt; 接口提交了 URL 进行了抓取。这些抓取就是通过 HTTP 协议传输的。&lt;/p&gt;
+&lt;p&gt;在抓取过程中，你可能会遇到类似 &lt;code&gt;403 Forbidden&lt;/code&gt;，或者需要登录的情况，这时候你就需要正确的 HTTP 参数进行抓取了。&lt;/p&gt;
+&lt;p&gt;一个典型的 HTTP 请求包如下，这个请求是发往 &lt;a href=&quot;http://example.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://example.com/&lt;/a&gt; 的：&lt;/p&gt;
+&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;GET / HTTP/1.1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;Host: example.com&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;Connection: keep-alive&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;Cache-Control: max-age=0&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.45 Safari/537.36&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;Referer: http://en.wikipedia.org/wiki/Example.com&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;Accept-Encoding: gzip, deflate, sdch&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;Accept-Language: zh-CN,zh;q=0.8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;If-None-Match: &lt;span class=&quot;string&quot;&gt;&quot;359670651&quot;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;If-Modified-Since: Fri, 09 Aug 2013 23:54:35 GMT&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;请求的第一行包含 &lt;code&gt;method&lt;/code&gt;, &lt;code&gt;path&lt;/code&gt; 和 HTTP 协议的版本信息&lt;/li&gt;
+&lt;li&gt;余下的行被称为 header，是以 &lt;code&gt;key: value&lt;/code&gt; 的形式呈现的&lt;/li&gt;
+&lt;li&gt;如果是 POST 请求，在请求结尾可能还会有 &lt;code&gt;body&lt;/code&gt; 内容&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;你可以通过前面用过的 &lt;a href=&quot;https://developer.chrome.com/devtools&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Chrome Developer Tools&lt;/a&gt; 工具查看到这些信息：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/request-headers.png&quot; alt=&quot;request headers&quot;&gt;&lt;/p&gt;
+&lt;p&gt;在大多数时候，使用正确的 &lt;code&gt;method&lt;/code&gt;, &lt;code&gt;path&lt;/code&gt;, &lt;code&gt;headers&lt;/code&gt; 和 &lt;code&gt;body&lt;/code&gt; 总是能抓取到你需要的信息的。&lt;/p&gt;
+&lt;h3 id=&quot;HTTP-Method&quot;&gt;&lt;a href=&quot;#HTTP-Method&quot; class=&quot;headerlink&quot; title=&quot;HTTP Method&quot;&gt;&lt;/a&gt;HTTP Method&lt;/h3&gt;&lt;p&gt;&lt;a href=&quot;http://www.w3school.com.cn/tags/html_ref_httpmethods.asp&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;HTTP Method&lt;/a&gt; 告诉服务器对 URL 资源期望进行的操作。例如在打开一个 URL 的时候使用的是 GET 方式，而在提交数据的时候一般使用 POST。&lt;/p&gt;
+&lt;p&gt;TODO： need example here&lt;/p&gt;
+&lt;h3 id=&quot;HTTP-Headers&quot;&gt;&lt;a href=&quot;#HTTP-Headers&quot; class=&quot;headerlink&quot; title=&quot;HTTP Headers&quot;&gt;&lt;/a&gt;HTTP Headers&lt;/h3&gt;&lt;p&gt;HTTP Headers 是请求所带的一个参数列表，你可以在 &lt;a href=&quot;http://en.wikipedia.org/wiki/List_of_HTTP_header_fields&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;这里&lt;/a&gt; 找到完整的常用 Headers 列表。一些常用的需要注意的有：&lt;/p&gt;
+&lt;h4 id=&quot;User-Agent&quot;&gt;&lt;a href=&quot;#User-Agent&quot; class=&quot;headerlink&quot; title=&quot;User-Agent&quot;&gt;&lt;/a&gt;User-Agent&lt;/h4&gt;&lt;p&gt;UA 是标识你使用的浏览器，或抓取程序的一段字符串。pyspider 使用的默认 UA 是 &lt;code&gt;pyspider/VERSION (+http://pyspider.org/)&lt;/code&gt;。网站常用这个字符串来区分用户的操作系统和浏览器，以及判断对方是否是爬虫。所以在抓取的时候，常常会对 UA 进行伪装。&lt;/p&gt;
+&lt;p&gt;在 pyspider 中，你可以通过 &lt;code&gt;self.crawl(URL, headers={&amp;#39;User-Agent&amp;#39;: &amp;#39;pyspider&amp;#39;})&lt;/code&gt;，或者是 &lt;code&gt;crawl_config = {&amp;#39;headers&amp;#39;: {&amp;#39;User-Agent&amp;#39;: &amp;#39;xxxx&amp;#39;}}&lt;/code&gt; 来指定脚本级别的 UA。详细请查看 &lt;a href=&quot;http://docs.pyspider.org/en/latest/apis/self.crawl/#fetch&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;API 文档&lt;/a&gt;。&lt;/p&gt;
+&lt;h4 id=&quot;Referer&quot;&gt;&lt;a href=&quot;#Referer&quot; class=&quot;headerlink&quot; title=&quot;Referer&quot;&gt;&lt;/a&gt;Referer&lt;/h4&gt;&lt;p&gt;Referer 用于告诉服务器，你访问的上一个网页是什么。常常被用于防盗链，在抓取图片的时候可能会用到。&lt;/p&gt;
+&lt;h4 id=&quot;X-Requested-With&quot;&gt;&lt;a href=&quot;#X-Requested-With&quot; class=&quot;headerlink&quot; title=&quot;X-Requested-With&quot;&gt;&lt;/a&gt;X-Requested-With&lt;/h4&gt;&lt;p&gt;当使用 XHR 发送 AJAX 请求时会带上的 Header，常被用于判断是不是 AJAX 请求。例如在 &lt;a href=&quot;http://bbs.byr.cn/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;北邮人论坛&lt;/a&gt; 中，你需要：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;on_start&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(self)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    self.crawl(&lt;span class=&quot;string&quot;&gt;&#39;http://bbs.byr.cn/board/Python&#39;&lt;/span&gt;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;               headers=&amp;#123;&lt;span class=&quot;string&quot;&gt;&#39;X-Requested-With&#39;&lt;/span&gt;: &lt;span class=&quot;string&quot;&gt;&#39;XMLHttpRequest&#39;&lt;/span&gt;&amp;#125;,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;               callback=self.index_page)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;带有 &lt;code&gt;headers={&amp;#39;X-Requested-With&amp;#39;: &amp;#39;XMLHttpRequest&amp;#39;}&lt;/code&gt; 才能抓取到内容。&lt;/p&gt;
+&lt;h3 id=&quot;HTTP-Cookie&quot;&gt;&lt;a href=&quot;#HTTP-Cookie&quot; class=&quot;headerlink&quot; title=&quot;HTTP Cookie&quot;&gt;&lt;/a&gt;HTTP Cookie&lt;/h3&gt;&lt;p&gt;虽然 &lt;code&gt;Cookie&lt;/code&gt; 只是 HTTP Header 中的一个，但是因为非常重要，但是拿出来说一下。&lt;code&gt;Cookie&lt;/code&gt; 被 HTTP 请求用来区分、追踪用户的身份，当你在一个网站登录的时候，就是通过写入 &lt;code&gt;Cookie&lt;/code&gt; 字段来记录登录状态的。&lt;/p&gt;
+&lt;p&gt;当遇到需要登录的网站，你需要通过设置 Cookie 参数，来请求需要登录的内容。Cookie 可以通过开发者工具的请求面板，或者是资源面板中获得。在 pyspider 中，你也可以使用 &lt;code&gt;response.cookies&lt;/code&gt; 获得返回的 cookie，并使用 &lt;code&gt;self.crawl(URL, cookie={&amp;#39;key&amp;#39;: &amp;#39;value&amp;#39;})&lt;/code&gt; 来设置请求的 Cookie 参数。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在上一篇教程中，我们使用 &lt;code&gt;self.crawl&lt;/code&gt; API 抓取豆瓣电影的 HTML 内容，并使用 CSS 选择器解析了一些内容。不过，现在的网站通过使用 &lt;a href=&quot;http://www.w3school.com.cn/ajax/ajax_in
+    
+    </summary>
+    
+    
+      <category term="pyspider" scheme="http://blog.binux.me/tags/pyspider/"/>
+    
+      <category term="scrape" scheme="http://blog.binux.me/tags/scrape/"/>
+    
+      <category term="crawl" scheme="http://blog.binux.me/tags/crawl/"/>
+    
+      <category term="AJAX" scheme="http://blog.binux.me/tags/AJAX/"/>
+    
+      <category term="HTTP" scheme="http://blog.binux.me/tags/HTTP/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>pyspider 爬虫教程（一）：HTML 和 CSS 选择器</title>
+    <link href="http://blog.binux.me/2015/01/pyspider-tutorial-level-1-html-and-css-selector/"/>
+    <id>http://blog.binux.me/2015/01/pyspider-tutorial-level-1-html-and-css-selector/</id>
+    <published>2015-01-04T00:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;虽然以前写过 &lt;a href=&quot;http://blog.binux.me/2013/09/howto-crawl-web/&quot;&gt;如何抓取WEB页面&lt;/a&gt; 和 &lt;a href=&quot;http://blog.binux.me/2014/07/how-to-extract-data-from-web/&quot;&gt;如何从 WEB 页面中提取信息&lt;/a&gt;。但是感觉还是需要一篇 step by step 的教程，不然没有一个总体的认识。不过，没想到这个教程居然会变成一篇&lt;a href=&quot;http://docs.pyspider.org/en/latest/tutorial/HTML-and-CSS-Selector/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;译文&lt;/a&gt;，在这个爬虫教程系列文章中，会以实际的例子，由浅入深讨论爬取（抓取和解析）的一些关键问题。&lt;/p&gt;
+&lt;p&gt;在 教程一 中，我们将要爬取的网站是豆瓣电影：&lt;a href=&quot;http://movie.douban.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://movie.douban.com/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;你可以在: &lt;a href=&quot;http://demo.pyspider.org/debug/tutorial_douban_movie&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://demo.pyspider.org/debug/tutorial_douban_movie&lt;/a&gt; 获得完整的代码，和进行测试。&lt;/p&gt;
+&lt;h2 id=&quot;开始之前&quot;&gt;&lt;a href=&quot;#开始之前&quot; class=&quot;headerlink&quot; title=&quot;开始之前&quot;&gt;&lt;/a&gt;开始之前&lt;/h2&gt;&lt;p&gt;由于教程是基于 pyspider 的，你可以安装一个 pyspider（&lt;a href=&quot;http://docs.pyspider.org/en/latest/Quickstart/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Quickstart&lt;/a&gt;，也可以直接使用 pyspider 的 demo 环境： &lt;a href=&quot;http://demo.pyspider.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://demo.pyspider.org/&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;你还应该至少对万维网是什么有一个简单的认识：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E4%B8%87%E7%BB%B4%E7%BD%91&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;万维网&lt;/a&gt;是一个由许多互相链接的超文本页面（以下简称网页）组成的系统。&lt;/li&gt;
+&lt;li&gt;网页使用网址（&lt;a href=&quot;http://zh.wikipedia.org/wiki/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;URL&lt;/a&gt;）定位，并链接彼此&lt;/li&gt;
+&lt;li&gt;网页使用 &lt;a href=&quot;http://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;HTTP&lt;/a&gt; 协议传输&lt;/li&gt;
+&lt;li&gt;网页使用 &lt;a href=&quot;http://zh.wikipedia.org/wiki/HTML&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;HTML&lt;/a&gt; 描述外观和语义&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;所以，爬网页实际上就是：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;找到包含我们需要的信息的网址（URL）列表&lt;/li&gt;
+&lt;li&gt;通过 HTTP 协议把页面下载回来&lt;/li&gt;
+&lt;li&gt;从页面的 HTML 中解析出需要的信息&lt;/li&gt;
+&lt;li&gt;找到更多这个的 URL，回到 2 继续&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&quot;选取一个开始网址&quot;&gt;&lt;a href=&quot;#选取一个开始网址&quot; class=&quot;headerlink&quot; title=&quot;选取一个开始网址&quot;&gt;&lt;/a&gt;选取一个开始网址&lt;/h2&gt;&lt;p&gt;既然我们要爬所有的电影，首先我们需要抓一个电影列表，一个好的列表应该：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;包含足够多的电影的 URL&lt;/li&gt;
+&lt;li&gt;通过翻页，可以遍历到所有的电影&lt;/li&gt;
+&lt;li&gt;一个按照更新时间排序的列表，可以更快抓到最新更新的电影&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我们在 &lt;a href=&quot;http://movie.douban.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://movie.douban.com/&lt;/a&gt; 扫了一遍，发现并没有一个列表能包含所有电影，只能退而求其次，通过抓取分类下的所有的标签列表页，来遍历所有的电影： &lt;a href=&quot;http://movie.douban.com/tag/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://movie.douban.com/tag/&lt;/a&gt; &lt;/p&gt;
+&lt;h3 id=&quot;创建一个项目&quot;&gt;&lt;a href=&quot;#创建一个项目&quot; class=&quot;headerlink&quot; title=&quot;创建一个项目&quot;&gt;&lt;/a&gt;创建一个项目&lt;/h3&gt;&lt;p&gt;在 pyspider 的 dashboard 的右下角，点击 “Create” 按钮&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/creating_project.png&quot; alt=&quot;Creating a project&quot;&gt;&lt;/p&gt;
+&lt;p&gt;替换 &lt;code&gt;on_start&lt;/code&gt; 函数的 &lt;code&gt;self.crawl&lt;/code&gt; 的 URL：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;@every(minutes=24 * 60)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;on_start&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(self)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    self.crawl(&lt;span class=&quot;string&quot;&gt;&#39;http://movie.douban.com/tag/&#39;&lt;/span&gt;, callback=self.index_page)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;self.crawl&lt;/code&gt; 告诉 pyspider 抓取指定页面，然后使用 &lt;code&gt;callback&lt;/code&gt; 函数对结果进行解析。&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;(http://docs.pyspider.org/en/latest/apis/@every/&quot;&gt;&lt;code&gt;@every&lt;/code&gt;&lt;/a&gt;) 修饰器，表示 &lt;code&gt;on_start&lt;/code&gt; 每天会执行一次，这样就能抓到最新的电影了。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;点击绿色的 &lt;code&gt;run&lt;/code&gt; 执行，你会看到 &lt;code&gt;follows&lt;/code&gt; 上面有一个红色的 1，切换到 &lt;code&gt;follows&lt;/code&gt; 面板，点击绿色的播放按钮：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/run_one_step.png&quot; alt=&quot;Run ont step&quot;&gt;&lt;/p&gt;
+&lt;h2 id=&quot;Tag-列表页&quot;&gt;&lt;a href=&quot;#Tag-列表页&quot; class=&quot;headerlink&quot; title=&quot;Tag 列表页&quot;&gt;&lt;/a&gt;Tag 列表页&lt;/h2&gt;&lt;p&gt;在 &lt;a href=&quot;http://movie.douban.com/tag/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;tag 列表页&lt;/a&gt; 中，我们需要提取出所有的 电影列表页 的 URL。你可能已经发现了，sample handler 已经提取了非常多大的 URL，所有，一种可行的提取列表页 URL 的方法就是用正则从中过滤出来：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; re&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;...&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;    @config(age=10 * 24 * 60 * 60)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;index_page&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(self, response)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; each &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; response.doc(&lt;span class=&quot;string&quot;&gt;&#39;a[href^=&quot;http&quot;]&#39;&lt;/span&gt;).items():&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            &lt;span class=&quot;keyword&quot;&gt;if&lt;/span&gt; re.match(&lt;span class=&quot;string&quot;&gt;&quot;http://movie.douban.com/tag/\w+&quot;&lt;/span&gt;, each.attr.href, re.U):&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                self.crawl(each.attr.href, callback=self.list_page)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;由于 电影列表页和 tag列表页长的并不一样，在这里新建了一个 &lt;code&gt;callback&lt;/code&gt; 为 &lt;code&gt;self.list_page&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;@config(age=10 * 24 * 60 * 60)&lt;/code&gt; 在这表示我们认为 10 天内页面有效，不会再次进行更新抓取&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;由于 pyspider 是纯 Python 环境，你可以使用 Python 强大的内置库，或者你熟悉的第三方库对页面进行解析。不过更推荐使用 CSS选择器。&lt;/p&gt;
+&lt;h2 id=&quot;电影列表页&quot;&gt;&lt;a href=&quot;#电影列表页&quot; class=&quot;headerlink&quot; title=&quot;电影列表页&quot;&gt;&lt;/a&gt;电影列表页&lt;/h2&gt;&lt;p&gt;再次点击 &lt;code&gt;run&lt;/code&gt; 让我们进入一个电影列表页(&lt;code&gt;list_page&lt;/code&gt;)。在这个页面中我们需要提取：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;电影的链接，例如，&lt;a href=&quot;http://movie.douban.com/subject/1292052/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://movie.douban.com/subject/1292052/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;下一页的链接，用来翻页&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;CSS选择器&quot;&gt;&lt;a href=&quot;#CSS选择器&quot; class=&quot;headerlink&quot; title=&quot;CSS选择器&quot;&gt;&lt;/a&gt;CSS选择器&lt;/h3&gt;&lt;p&gt;CSS选择器，顾名思义，是 &lt;a href=&quot;http://www.w3school.com.cn/css/css_intro.asp&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;CSS&lt;/a&gt; 用来定位需要设置样式的元素 所使用的表达式。既然前端程序员都使用 CSS选择器 为页面上的不同元素设置样式，我们也可以通过它定位需要的元素。你可以在 &lt;a href=&quot;http://www.w3school.com.cn/cssref/css_selectors.asp&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;CSS 选择器参考手册&lt;/a&gt; 这里学习更多的 CSS选择器 语法。&lt;/p&gt;
+&lt;p&gt;在 pyspider 中，内置了 &lt;code&gt;response.doc&lt;/code&gt; 的 &lt;a href=&quot;https://pythonhosted.org/pyquery/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;PyQuery&lt;/a&gt; 对象，让你可以使用类似 jQuery 的语法操作 DOM 元素。你可以在 &lt;a href=&quot;https://pythonhosted.org/pyquery/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;PyQuery&lt;/a&gt; 的页面上找到完整的文档。&lt;/p&gt;
+&lt;h3 id=&quot;CSS-Selector-Helper&quot;&gt;&lt;a href=&quot;#CSS-Selector-Helper&quot; class=&quot;headerlink&quot; title=&quot;CSS Selector Helper&quot;&gt;&lt;/a&gt;CSS Selector Helper&lt;/h3&gt;&lt;p&gt;在 pyspider 中，还内置了一个 &lt;code&gt;CSS Selector Helper&lt;/code&gt;，当你点击页面上的元素的时候，可以帮你生成它的 CSS选择器 表达式。你可以点击 &lt;code&gt;Enable CSS selector helper&lt;/code&gt; 按钮，然后切换到 &lt;code&gt;web&lt;/code&gt; 页面：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/css_selector_helper.png&quot; alt=&quot;css selector helper&quot;&gt;&lt;/p&gt;
+&lt;p&gt;开启后，鼠标放在元素上，会被黄色高亮，点击后，所有拥有相同 CSS选择器 表达式的元素会被高亮。表达式会被插入到 python 代码当前光标位置。创建下面的代码，将光标停留在单引号中间：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;list_page&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(self, response)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; each &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; response.doc(&lt;span class=&quot;string&quot;&gt;&#39;&#39;&lt;/span&gt;).items():&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;点击一个电影的链接，CSS选择器 表达式将会插入到你的代码中，如此重复，插入翻页的链接：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;list_page&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(self, response)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; each &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; response.doc(&lt;span class=&quot;string&quot;&gt;&#39;HTML&amp;gt;BODY&amp;gt;DIV#wrapper&amp;gt;DIV#content&amp;gt;DIV.grid-16-8.clearfix&amp;gt;DIV.article&amp;gt;DIV&amp;gt;TABLE TR.item&amp;gt;TD&amp;gt;DIV.pl2&amp;gt;A&#39;&lt;/span&gt;).items():&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        self.crawl(each.attr.href, callback=self.detail_page)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;comment&quot;&gt;# 翻页&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; each &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; response.doc(&lt;span class=&quot;string&quot;&gt;&#39;HTML&amp;gt;BODY&amp;gt;DIV#wrapper&amp;gt;DIV#content&amp;gt;DIV.grid-16-8.clearfix&amp;gt;DIV.article&amp;gt;DIV.paginator&amp;gt;A&#39;&lt;/span&gt;).items():&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        self.crawl(each.attr.href, callback=self.list_page)&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;翻页是一个到自己的 &lt;code&gt;callback&lt;/code&gt; 回调&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;电影详情页&quot;&gt;&lt;a href=&quot;#电影详情页&quot; class=&quot;headerlink&quot; title=&quot;电影详情页&quot;&gt;&lt;/a&gt;电影详情页&lt;/h2&gt;&lt;p&gt;再次点击 &lt;code&gt;run&lt;/code&gt;，follow 到详情页。使用 &lt;code&gt;css selector helper&lt;/code&gt; 分别添加电影标题，打分和导演：&lt;/p&gt;
+&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;detail_page&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(self, response)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;string&quot;&gt;&quot;url&quot;&lt;/span&gt;: response.url,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;string&quot;&gt;&quot;title&quot;&lt;/span&gt;: response.doc(&lt;span class=&quot;string&quot;&gt;&#39;HTML&amp;gt;BODY&amp;gt;DIV#wrapper&amp;gt;DIV#content&amp;gt;H1&amp;gt;SPAN&#39;&lt;/span&gt;).text(),&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;string&quot;&gt;&quot;rating&quot;&lt;/span&gt;: response.doc(&lt;span class=&quot;string&quot;&gt;&#39;HTML&amp;gt;BODY&amp;gt;DIV#wrapper&amp;gt;DIV#content&amp;gt;DIV.grid-16-8.clearfix&amp;gt;DIV.article&amp;gt;DIV.indent.clearfix&amp;gt;DIV.subjectwrap.clearfix&amp;gt;DIV#interest_sectl&amp;gt;DIV.rating_wrap.clearbox&amp;gt;P.rating_self.clearfix&amp;gt;STRONG.ll.rating_num&#39;&lt;/span&gt;).text(),&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;string&quot;&gt;&quot;导演&quot;&lt;/span&gt;: [x.text() &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; x &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; response.doc(&lt;span class=&quot;string&quot;&gt;&#39;a[rel=&quot;v:directedBy&quot;]&#39;&lt;/span&gt;).items()],&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;注意，你会发现 &lt;code&gt;css selector helper&lt;/code&gt; 并不是总是能提取到合适的 CSS选择器 表达式。你可以在 &lt;a href=&quot;https://developer.chrome.com/devtools&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Chrome Dev Tools&lt;/a&gt; 的帮助下，写一个合适的表达式：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/chrome_dev_tools.png&quot; alt=&quot;Chrome Dev Tools&quot;&gt;&lt;/p&gt;
+&lt;p&gt;右键点击需要提取的元素，点击审查元素。你并不需要像自动生成的表达式那样写出所有的祖先节点，只要写出那些能区分你不需要的元素的关键节点的属性就可以了。不过这需要抓取和网页前端的经验。所以，学习抓取的最好方法就是学会这个页面/网站是怎么写的。&lt;/p&gt;
+&lt;p&gt;你也可以在 Chrome Dev Tools 的 Javascript Console 中，使用 &lt;code&gt;$$(a[rel=&amp;quot;v:directedBy&amp;quot;])&lt;/code&gt; 测试 CSS Selector。&lt;/p&gt;
+&lt;h2 id=&quot;开始抓取&quot;&gt;&lt;a href=&quot;#开始抓取&quot; class=&quot;headerlink&quot; title=&quot;开始抓取&quot;&gt;&lt;/a&gt;开始抓取&lt;/h2&gt;&lt;ol&gt;
+&lt;li&gt;使用 &lt;code&gt;run&lt;/code&gt; 单步调试你的代码，对于用一个 &lt;code&gt;callback&lt;/code&gt; 最好使用多个页面类型进行测试。&lt;strong&gt;然后保存。&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;回到 Dashboard，找到你的项目&lt;/li&gt;
+&lt;li&gt;将 &lt;code&gt;status&lt;/code&gt; 修改为 &lt;code&gt;DEBUG&lt;/code&gt; 或 &lt;code&gt;RUNNING&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;按 &lt;code&gt;run&lt;/code&gt; 按钮&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/pyspider_index_page.png&quot; alt=&quot;pyspider index page&quot;&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;虽然以前写过 &lt;a href=&quot;http://blog.binux.me/2013/09/howto-crawl-web/&quot;&gt;如何抓取WEB页面&lt;/a&gt; 和 &lt;a href=&quot;http://blog.binux.me/2014/07/how-to-extract-data-
+    
+    </summary>
+    
+    
+      <category term="css selector" scheme="http://blog.binux.me/tags/css-selector/"/>
+    
+      <category term="pyspider" scheme="http://blog.binux.me/tags/pyspider/"/>
+    
+      <category term="scrape" scheme="http://blog.binux.me/tags/scrape/"/>
+    
+      <category term="crawl" scheme="http://blog.binux.me/tags/crawl/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>迁移 Python 3</title>
+    <link href="http://blog.binux.me/2014/12/porting-to-python-3/"/>
+    <id>http://blog.binux.me/2014/12/porting-to-python-3/</id>
+    <published>2014-12-21T00:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;使用 Python 3 的呼声一直很高，Python 3 解决了很多 2 中的坑，比如 unicode，在向他们解释为什么 &lt;code&gt;print str&lt;/code&gt; 乱码，&lt;code&gt;fp.write(str)&lt;/code&gt; 时报错，在什么时候需要 &lt;code&gt;encode&lt;/code&gt;，更容易了。&lt;/p&gt;
+&lt;p&gt;但是由于一开始接触的就是 Python 2，熟悉的包都是 Python 2（我也不确定他们是否支持 Python 3）。公司机器上的 Python 2.7 就算是“最新”版本。于是一直没有升级。不过有一种说法，切换到 Python 3 的最好时机就是现在。-为了庆祝 star 过 3000-，由于见到两次要求支持 Python 3，用一个周末为 pyspider 加入了 Python 3 支持（怎么样，不难吧）。&lt;/p&gt;
+&lt;p&gt;主要参考：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://docs.python.org/3/howto/pyporting.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Porting Python 2 Code to Python 3&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;http://python-future.org/compatible_idioms.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Cheat Sheet: Writing Python 2-3 compatible code&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://pythonhosted.org/six/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Six: Python 2 and 3 Compatibility Library&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;开始之前&quot;&gt;&lt;a href=&quot;#开始之前&quot; class=&quot;headerlink&quot; title=&quot;开始之前&quot;&gt;&lt;/a&gt;开始之前&lt;/h2&gt;&lt;p&gt;其实 &lt;a href=&quot;https://docs.python.org/3/howto/pyporting.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Porting Python 2 Code to Python 3&lt;/a&gt; 这篇文章是一个非常好的索引，能让你对将要进行的工作有一个整体的把握，同时能提供细节的链接，能让你立即开始工作。而且这一节内容就来自此文的 &lt;a href=&quot;https://docs.python.org/3/howto/pyporting.html#the-short-explanation&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;The Short Explanation&lt;/a&gt; 一节。因为总结得很好，所以就不重复造轮子了。&lt;/p&gt;
+&lt;p&gt;首先，低版本的 Python 2 与 Python 3 之间的鸿沟太大了，特别是 Python 2.5(含) 以前的版本。要同时兼容他们的代价太大。而 Python 2.6 和 Python 2.7 已经带有部分 Python 3 的特性，这让迁移的代价大大降低了。同时，不建议支持 Python 3.3 以下的 3 字头版本，由于 Python 3 实际上已经 release 6 年了，这些 Python 3.x 版本也比较老了，很多特性还没有，或者包不支持。所以建议跳过他们。&lt;/p&gt;
+&lt;p&gt;其次，一定要有测试，保证测试足够的代码覆盖。Python 2 到 Python 3 从包改名到语法都有变化，几乎所有的代码都需要有修改。足够的代码覆盖，才能在这样大规模修改中，保证所有功能可用。而 pyspider 正是因为有 86% 的代码覆盖，我能这么快地完成代码迁移。&lt;/p&gt;
+&lt;p&gt;读一读 Python 2 和 Python 3 有什么不同。这个可以看看 &lt;a href=&quot;https://docs.python.org/3/whatsnew/index.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;What’s New in Python&lt;/a&gt;，特别是 &lt;a href=&quot;https://docs.python.org/3/whatsnew/3.0.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;What’s New In Python 3.0&lt;/a&gt;。当然也可以找一些中文的文章，这个方面应该还蛮多的。反正最主要的就是大量的包改名，以及 &lt;code&gt;bytes&lt;/code&gt;, &lt;code&gt;str&lt;/code&gt;, &lt;code&gt;unicode&lt;/code&gt; 三者的变化。或者你可以先读一读 &lt;a href=&quot;http://python-future.org/compatible_idioms.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Cheat Sheet&lt;/a&gt;，虽然等下我们还需要它。&lt;/p&gt;
+&lt;p&gt;好，现在可以来看看你的包依赖是否支持 Python 3 了。并不是 pip 能安装的包就是支持 Python 3 的，可能装上了依旧不能工作。你可以用 &lt;a href=&quot;https://caniusepython3.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Can I Use Python 3&lt;/a&gt; 检测包是否支持。不过我更推荐 &lt;a href=&quot;https://python3wos.appspot.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;PYTHON 3 WALL OF SUPERPOWERS&lt;/a&gt; （需要翻墙）。不过也不用担心，大部分包都是支持 Python 3 的，如果不支持，一般都会有替代，例如 pika 就可以被 ampq 替换，而 MySQL-python 能被 mysql-connector-python 替代。&lt;/p&gt;
+&lt;h2 id=&quot;第一步——查找替换&quot;&gt;&lt;a href=&quot;#第一步——查找替换&quot; class=&quot;headerlink&quot; title=&quot;第一步——查找替换&quot;&gt;&lt;/a&gt;第一步——查找替换&lt;/h2&gt;&lt;p&gt;首先我们从大的方向入手，把一些改名了的包和函数处理一下。请打开 &lt;a href=&quot;http://python-future.org/compatible_idioms.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Cheat Sheet: Writing Python 2-3 compatible code&lt;/a&gt; 参照它们一条条进行。在能搜索的地方，使用搜索统一修改，不然挨个文件太慢，而且会忘记的。因为我用的是 six 作为多环境间的桥梁。所以需要同时参考 &lt;a href=&quot;https://pythonhosted.org/six/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;six的文档&lt;/a&gt;。你可能需要打开两个窗口，同时运行 Python 2 和 Python 3，确认语句在两个环境下都能执行。&lt;/p&gt;
+&lt;p&gt;在这一步，我做了以下处理：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;相对导入 - &lt;a href=&quot;http://python-future.org/compatible_idioms.html#imports-relative-to-a-package&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Imports relative to a package&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;urlparse / urllib 库改名 - &lt;a href=&quot;https://pythonhosted.org/six/#module-six.moves.urllib.parse&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;six&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;thread 包改名，而且 &lt;code&gt;get_ident&lt;/code&gt; 函数不再存在了。将 &lt;code&gt;thread.get_ident()&lt;/code&gt; 改为 &lt;code&gt;threading.current_thread().ident&lt;/code&gt; &lt;a href=&quot;https://pythonhosted.org/six/#module-six.moves&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;six&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;basestring&lt;/code&gt; 类型不再存在，用 &lt;code&gt;six.string_types&lt;/code&gt; 代替 &lt;a href=&quot;http://python-future.org/compatible_idioms.html#basestring&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;__metaclass__&lt;/code&gt; 不再存在，用 &lt;code&gt;six.add_metaclass&lt;/code&gt; 代替 &lt;a href=&quot;http://python-future.org/compatible_idioms.html#metaclasses&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;UserDict.DictMixin&lt;/code&gt; 不再存在，用 &lt;code&gt;collections.Mapping&lt;/code&gt; 或者 &lt;code&gt;collections.MutableMapping&lt;/code&gt; 代替&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/&lt;/code&gt; 现在是真的除法了，也就是说 int / int 会得到一个 float，使用 &lt;code&gt;//&lt;/code&gt; 获得地板除效果（由于在 python 中，地板除用得少，实际上不改关系不大） &lt;a href=&quot;http://python-future.org/compatible_idioms.html#division&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;StringIO&lt;/code&gt; 现在分为 &lt;code&gt;io.BytesIO&lt;/code&gt; 和 &lt;code&gt;io.StringIO&lt;/code&gt; 视情况使用&lt;/li&gt;
+&lt;li&gt;print 现在是一个 function 了 &lt;a href=&quot;http://python-future.org/compatible_idioms.html#stringio&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;unicode&lt;/code&gt; 关键字不再存在 使用 &lt;code&gt;six.text_type&lt;/code&gt; 代替&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;__builtins__&lt;/code&gt; 不存在了，&lt;a href=&quot;https://pythonhosted.org/six/#module-six.moves&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;&lt;code&gt;six.moves.builtins&lt;/code&gt;&lt;/a&gt; &lt;a href=&quot;http://python-future.org/compatible_idioms.html#unicode-text-string-literals&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;sheet&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;reload&lt;/code&gt; 改为 &lt;a href=&quot;https://pythonhosted.org/six/#module-six.moves&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;&lt;code&gt;six.reload_module&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;dict 的 &lt;code&gt;keys&lt;/code&gt;， &lt;code&gt;items&lt;/code&gt;， &lt;code&gt;values&lt;/code&gt; 现在都是迭代器了，不返回列表，原来的 &lt;code&gt;iteritems&lt;/code&gt;, &lt;code&gt;itervalues&lt;/code&gt; 不再存在，使用 &lt;a href=&quot;https://pythonhosted.org/six/#six.iterkeys&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;six.iterkeys&lt;/a&gt; 等函数代替。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;raise exc_type, exc_value, tb&lt;/code&gt; 的形式不再支持，使用 &lt;code&gt;six.reraise(exc_type, exc_value, tb)&lt;/code&gt; 代替。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;其他的例如 try…catch，如果你在 Python 2 中就比较标准地使用 &lt;code&gt;as&lt;/code&gt;，那么这时就不用修改了。&lt;/p&gt;
+&lt;p&gt;另外，如果你和我一样有 str(object) 来获得 object 的文字结果的习惯话，每次写 &lt;code&gt;six.text_type(object)&lt;/code&gt; 太长了。可以写一些兼容性函数，然后在整个项目中使用。&lt;/p&gt;
+&lt;p&gt;注意到这里，我们并没有处理 &lt;code&gt;bytes&lt;/code&gt;, &lt;code&gt;string&lt;/code&gt;, &lt;code&gt;unicode&lt;/code&gt;，请放下他们，我们在下一节处理这些问题。&lt;/p&gt;
+&lt;h2 id=&quot;第二步——处理-unicode&quot;&gt;&lt;a href=&quot;#第二步——处理-unicode&quot; class=&quot;headerlink&quot; title=&quot;第二步——处理 unicode&quot;&gt;&lt;/a&gt;第二步——处理 unicode&lt;/h2&gt;&lt;p&gt;由于在 Python 3 中，所有的 &lt;code&gt;&amp;#39;text&amp;#39;&lt;/code&gt; 都变成 unicode 了，所以你会觉得它会是一个大问题，是否需要给所有的 &lt;code&gt;&amp;#39;text&amp;#39;&lt;/code&gt; 加上 &lt;code&gt;u&lt;/code&gt; ，或者干脆所有文件都加上 &lt;code&gt;from __future__ import unicode_literals&lt;/code&gt;？&lt;/p&gt;
+&lt;p&gt;实际上，大部分时候不需要。&lt;/p&gt;
+&lt;p&gt;在 Python 2 中，我们很少有意识地区分 &lt;code&gt;str&lt;/code&gt; 和 &lt;code&gt;unicode&lt;/code&gt;，对于大部分函数调用来说，给它 &lt;code&gt;str&lt;/code&gt; 或者 &lt;code&gt;unicode&lt;/code&gt; 都是一样的，因为他们共享大部分行为。但是在 Python 3 中，&lt;code&gt;bytes&lt;/code&gt; 和 &lt;code&gt;str&lt;/code&gt;(&lt;code&gt;unicode&lt;/code&gt;) 却大不一样。例如当你 &lt;code&gt;for c in bytes&lt;/code&gt; 时，得到的是一个 &lt;code&gt;int&lt;/code&gt; 而不是一个 &lt;code&gt;str&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;虽然不做任何修改，&lt;code&gt;&amp;#39;text&amp;#39;&lt;/code&gt; 在 Python 2 中，是 &lt;code&gt;str&lt;/code&gt;(&lt;code&gt;bytes&lt;/code&gt;)，而在 Python 3 中是 &lt;code&gt;str&lt;/code&gt;(&lt;code&gt;unicode&lt;/code&gt;)。但是提交给函数时，既然 Python 2 的函数同时支持 &lt;code&gt;str&lt;/code&gt; 和 &lt;code&gt;unicode&lt;/code&gt;，所以没有任何问题。而且，在 Python 2 中，&lt;code&gt;&amp;#39;text&amp;#39;+u&amp;#39;中文&amp;#39;&lt;/code&gt; 会自动升级为 &lt;code&gt;unicode&lt;/code&gt;，所以，只需要注意在出现中文的地方使用 &lt;code&gt;u&amp;#39;中文&amp;#39;&lt;/code&gt; 就好了（即使在 Python 2 中，这也是一个好的习惯）。而 &lt;code&gt;b&amp;#39;bytes&amp;#39;&lt;/code&gt; 的场合非常少，更多的是使用 &lt;code&gt;text.encode&lt;/code&gt; 进行转换。所以，对于习惯良好的 Python 2 代码来说，是几乎不需要修改的。&lt;/p&gt;
+&lt;p&gt;除了源代码之中的 unicode 问题，其他主要问题出现在输入输出上。但是，只要遵循：程序中流通的数据，只能是 unicode。数据进来之后必须转换成 unicode 即可。&lt;/p&gt;
+&lt;h2 id=&quot;最后&quot;&gt;&lt;a href=&quot;#最后&quot; class=&quot;headerlink&quot; title=&quot;最后&quot;&gt;&lt;/a&gt;最后&lt;/h2&gt;&lt;p&gt;运行测试，哪报错改哪就好了。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      porting pyspider project to Python 3 with Python 2 compatible
+    
+    </summary>
+    
+    
+      <category term="python" scheme="http://blog.binux.me/tags/python/"/>
+    
+      <category term="porting" scheme="http://blog.binux.me/tags/porting/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>pyspider介绍</title>
+    <link href="http://blog.binux.me/2014/11/introduction-to-pyspider/"/>
+    <id>http://blog.binux.me/2014/11/introduction-to-pyspider/</id>
+    <published>2014-11-16T00:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;虽然已经发过一篇&lt;a href=&quot;http://blog.binux.me/2014/02/pyspider-architecture/&quot;&gt;架构设计&lt;/a&gt;，但是觉得还是有必要发一篇介绍。而且拖了那么久的第二里程碑的commit数已经超过第一个版本了。。&lt;/p&gt;
+&lt;p&gt;那么由我再次介绍一下 pyspider。&lt;/p&gt;
+&lt;h1 id=&quot;缘起&quot;&gt;&lt;a href=&quot;#缘起&quot; class=&quot;headerlink&quot; title=&quot;缘起&quot;&gt;&lt;/a&gt;缘起&lt;/h1&gt;&lt;p&gt;pyspider 来源于以前做的一个垂直搜索引擎使用的爬虫后端。我们需要从200个站点（由于站点失效，不是都同时啦，同时有100+在跑吧）采集数据，并要求在5分钟内将对方网站的更新更新到库中。&lt;/p&gt;
+&lt;p&gt;所以，灵活的抓取控制是必须的。同时，由于100个站点，每天都可能会有站点失效或者改版，所以需要能够监控模板失效，以及查看抓取状态。&lt;/p&gt;
+&lt;p&gt;为了达到5分钟更新，我们使用抓取最近更新页上面的最后更新时间，以此来判断页面是否需要再次抓取。&lt;/p&gt;
+&lt;p&gt;可见，这个项目对于爬虫的监控和调度要求是非常高的。&lt;/p&gt;
+&lt;h1 id=&quot;pyspider-的主要特性&quot;&gt;&lt;a href=&quot;#pyspider-的主要特性&quot; class=&quot;headerlink&quot; title=&quot;pyspider 的主要特性&quot;&gt;&lt;/a&gt;pyspider 的主要特性&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;python 脚本控制，可以用任何你喜欢的html解析包（内置 pyquery）&lt;/li&gt;
+&lt;li&gt;WEB 界面编写调试脚本，起停脚本，监控执行状态，查看活动历史，获取结果产出&lt;/li&gt;
+&lt;li&gt;支持 MySQL, MongoDB, SQLite&lt;/li&gt;
+&lt;li&gt;支持抓取 JavaScript 的页面&lt;/li&gt;
+&lt;li&gt;组件可替换，支持单机/分布式部署，支持 Docker 部署&lt;/li&gt;
+&lt;li&gt;强大的调度控制&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;由于功能太多，更多请参考&lt;a href=&quot;https://github.com/binux/pyspider/wiki/%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;脚本编写指南&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;感谢 &lt;a href=&quot;https://plus.google.com/u/0/+PhoenixNemo/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;+PhoenixNemo&lt;/a&gt; 提供的VPS，提供了一个 demo： &lt;a href=&quot;http://demo.pyspider.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;demo.pyspider.org&lt;/a&gt;。无需安装即可体验。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://demo.pyspider.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;&lt;img src=&quot;http://ww1.sinaimg.cn/large/7d46d69fjw1emavy6e9gij21kw0uldvy.jpg&quot; alt=&quot;demo&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h1 id=&quot;脚本样例&quot;&gt;&lt;a href=&quot;#脚本样例&quot; class=&quot;headerlink&quot; title=&quot;脚本样例&quot;&gt;&lt;/a&gt;脚本样例&lt;/h1&gt;&lt;figure class=&quot;highlight python&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;20&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;from&lt;/span&gt; libs.base_handler &lt;span class=&quot;keyword&quot;&gt;import&lt;/span&gt; *&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;class&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;Handler&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(BaseHandler)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;string&quot;&gt;&#39;&#39;&#39;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    this is a sample handler&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &#39;&#39;&#39;&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;    @every(minutes=24*60, seconds=0)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;on_start&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(self)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        self.crawl(&lt;span class=&quot;string&quot;&gt;&#39;http://scrapy.org/&#39;&lt;/span&gt;, callback=self.index_page)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;span class=&quot;meta&quot;&gt;    @config(age=10*24*60*60)&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;index_page&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(self, response)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;for&lt;/span&gt; each &lt;span class=&quot;keyword&quot;&gt;in&lt;/span&gt; response.doc(&lt;span class=&quot;string&quot;&gt;&#39;a[href^=&quot;http://&quot;]&#39;&lt;/span&gt;).items():&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;            self.crawl(each.attr.href, callback=self.detail_page)&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;    &lt;span class=&quot;function&quot;&gt;&lt;span class=&quot;keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;title&quot;&gt;detail_page&lt;/span&gt;&lt;span class=&quot;params&quot;&gt;(self, response)&lt;/span&gt;:&lt;/span&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;        &lt;span class=&quot;keyword&quot;&gt;return&lt;/span&gt; &amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;string&quot;&gt;&quot;url&quot;&lt;/span&gt;: response.url,&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &lt;span class=&quot;string&quot;&gt;&quot;title&quot;&lt;/span&gt;: response.doc(&lt;span class=&quot;string&quot;&gt;&#39;title&#39;&lt;/span&gt;).text(),&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;                &amp;#125;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;例如这就是创建任务后默认生成的一个脚本示例。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;通过 &lt;code&gt;on_start&lt;/code&gt; 回调函数，作为爬取的入口点，当点击主面板上的 &lt;code&gt;run&lt;/code&gt; 的时候，就是调用这个函数，启动抓取。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;self.crawl&lt;/code&gt; 告诉调度器，我们需要抓取 &lt;code&gt;&amp;#39;http://scrapy.org/&amp;#39;&lt;/code&gt; 这个页面，然后使用 &lt;code&gt;callback=self.index_page&lt;/code&gt; 这个回调函数进行解析。&lt;/li&gt;
+&lt;li&gt;所有 &lt;code&gt;return&lt;/code&gt; 的内容默认会被捕获到 &lt;code&gt;resultdb&lt;/code&gt; 中，可以直接在 WEBUI 上看到。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;更多特性和文档&quot;&gt;&lt;a href=&quot;#更多特性和文档&quot; class=&quot;headerlink&quot; title=&quot;更多特性和文档&quot;&gt;&lt;/a&gt;更多特性和文档&lt;/h1&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/binux/pyspider/wiki&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Wiki&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/binux/pyspider/wiki/%E5%BF%AB%E9%80%9F%E6%8C%87%E5%8D%97&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;快速指南&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://github.com/binux/pyspider/wiki/%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;脚本编写指南&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;虽然已经发过一篇&lt;a href=&quot;http://blog.binux.me/2014/02/pyspider-architecture/&quot;&gt;架构设计&lt;/a&gt;，但是觉得还是有必要发一篇介绍。而且拖了那么久的第二里程碑的commit数已经超过第一个版本了。。&lt;/p&gt;
+&lt;p&gt;那么
+    
+    </summary>
+    
+    
+      <category term="python" scheme="http://blog.binux.me/tags/python/"/>
+    
+      <category term="javascript" scheme="http://blog.binux.me/tags/javascript/"/>
+    
+      <category term="crawler" scheme="http://blog.binux.me/tags/crawler/"/>
+    
+      <category term="opensource" scheme="http://blog.binux.me/tags/opensource/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>签到 —— qiandao.today 介绍</title>
+    <link href="http://blog.binux.me/2014/09/introduction-to-qiandao-today/"/>
+    <id>http://blog.binux.me/2014/09/introduction-to-qiandao-today/</id>
+    <published>2014-09-28T23:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;&lt;a href=&quot;https://qiandao.today/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;qiandao.today&lt;/a&gt; 已经上线了一个半月，这篇blog一个半月以前就应该写了。直到我刷了14遍水晶塔没有ROLL到任何装备（不对，我最后通过贪婪ROLL到了！），打了两晚麻将，把把最小胡牌距离大于5（任意更换手牌达到胡牌的最小张数），房子里刷JJ怪之后。我觉得我必须做点什么。。。&lt;/p&gt;
+&lt;p&gt;好了，不扯蛋了。自动签到是我对于 “如何请求到数据” ，进行请求自动分析的一个尝试（实际是我 &lt;a href=&quot;http://u2.dmhy.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;U2&lt;/a&gt; 因为45天没登录被封了）。通过&lt;strong&gt;浏览器捕获页面请求瀑布流，进行内容/请求分析，找出关键请求&lt;/strong&gt;。所以，签到这个项目，我就是先从 &lt;a href=&quot;https://qiandao.today/har/edit&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;HAR编辑器&lt;/a&gt; 开始做的。做的时候还玩了一下 &lt;a href=&quot;http://angularjs.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;angularjs&lt;/a&gt;。&lt;del&gt;然后其他部分都是随便写的&lt;/del&gt;&lt;/p&gt;
+&lt;p&gt;但是，对于签到来说，哪些请求是必要的，这个请求是怎么组装的（例如 token 参数怎么来），特征不明显。自动分析出来就能直接用的概率太低了，即使是人还得单步测试呢。于是 HAR编辑器 成为编辑和单步调试的辅助。自动分析变成了 “推荐相关请求”。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;用户部分系统尝试了一下 &lt;a href=&quot;http://en.wikipedia.org/wiki/PBKDF2&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;PBKDF2&lt;/a&gt; 进行密码加密。PBKDF2 的优势在于通过随机盐 加 可配置的多轮加密，加大了单个key的运算代价。&lt;/li&gt;
+&lt;li&gt;模板执行部分通过提取页面信息，和 jinja2 引擎渲染，可以动态地改变请求的 url、header、data 各个部分。&lt;/li&gt;
+&lt;li&gt;执行断言加上邮件系统，可以检测签到是否成功，在失败的时候给用户发送邮件提醒。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;本来还想要做互助打码的验证码系统的，但是通过 &lt;a href=&quot;https://plus.google.com/u/0/+%E9%9B%AA%E6%9C%88%E7%A7%8B%E6%B0%B4%E9%85%B1&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;雪月秋水&lt;/a&gt; 的 &lt;a href=&quot;https://github.com/acgotaku/GetCookies&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;cookie插件&lt;/a&gt;，其实大部分只有登录需要验证码，签到并不需要。&lt;del&gt;关键是做这个东西不好玩&lt;/del&gt;，于是就算了。&lt;/p&gt;
+&lt;p&gt;运行了一个半月，目前有11个公开签到模板，400+个签到任务，每天进行300次签到。不过由于担心单IP登录帐号过多被封，只在v2ex做了一次广告，不敢大范围推广。。。&lt;/p&gt;
+&lt;hr&gt;
+
+&lt;p&gt;以下是面向普通用户的简介：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;云代签&lt;/li&gt;
+&lt;li&gt;支持多个网站&lt;/li&gt;
+&lt;li&gt;失败邮件提醒&lt;/li&gt;
+&lt;li&gt;自制模板并分享（&lt;a href=&quot;https://github.com/binux/qiandao/blob/master/docs/har-howto.md&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;文档&lt;/a&gt;）&lt;/li&gt;
+&lt;li&gt;https 传输安全保证&lt;/li&gt;
+&lt;li&gt;一号一密用户数据加密&lt;/li&gt;
+&lt;li&gt;开放源码，支持本地执行（提供本地lite版）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;github: &lt;a href=&quot;https://github.com/binux/qiandao&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;binux/qiandao&lt;/a&gt;&lt;br&gt;网站: &lt;a href=&quot;https://qiandao.today/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://qiandao.today&lt;/a&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;https://qiandao.today/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;qiandao.today&lt;/a&gt; 已经上线了一个半月，这篇blog一个半月以前就应该写了。直到我刷了14遍水晶塔没有ROLL到任何装备（不对，我
+    
+    </summary>
+    
+    
+      <category term="qiandao.today" scheme="http://blog.binux.me/tags/qiandao-today/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何从 WEB 页面中提取信息</title>
+    <link href="http://blog.binux.me/2014/07/how-to-extract-data-from-web/"/>
+    <id>http://blog.binux.me/2014/07/how-to-extract-data-from-web/</id>
+    <published>2014-07-18T23:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;已经五个月没有更新 blog 了，这五个月全身心投入到了两个关于如何从页面上抽取结构化数据的项目上。这也是我加入某厂最主要的原因。其中一个全自动模板生成抽取器，虽然还不完全能够实用，但比1年前效果好太多，同时也让我想明白了一些问题。这都是下文主要讨论的问题。&lt;/p&gt;
+&lt;p&gt;关于 &lt;a href=&quot;https://github.com/binux/pyspider&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;pyspider&lt;/a&gt; 项目，这几天我也在慢慢填上这延期了3个月的坑，至少完成第二里程碑吧。但缺少实际应用的环境，很多东西是否工作得很好，我也不是很有把握。如果有的话，还是希望支持1-2个实际的抓取项目吧。&lt;/p&gt;
+&lt;p&gt;而 “如何获得页面/数据” 这个问题依旧是我持续关注中，想要去解决的问题。但是，既然某厂的后续解决方案是将所有抓取页面过 webkit 渲染（虽然很多时候渲染不出 或 需要点击动作，代价往往大于直接抓 API），不会有很多精力投入，待我慢慢想想。。&lt;/p&gt;
+&lt;p&gt;##四种解析模式&lt;/p&gt;
+&lt;h3 id=&quot;xpath-css选择器-正则表达式&quot;&gt;&lt;a href=&quot;#xpath-css选择器-正则表达式&quot; class=&quot;headerlink&quot; title=&quot;xpath / css选择器 / 正则表达式&quot;&gt;&lt;/a&gt;xpath / css选择器 / 正则表达式&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;示例:&lt;/strong&gt; &lt;a href=&quot;https://www.kimonolabs.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://www.kimonolabs.com/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;通过手动、自动、半自动方式，设定需要抽取元素的 &lt;a href=&quot;http://www.w3schools.com/xpath/default.asp&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;xpath&lt;/a&gt;、 &lt;a href=&quot;http://www.w3schools.com/cssref/css_selectors.asp&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;css选择器&lt;/a&gt; 或 正则表达式 进行定位提取的方法（这里需要指出的是，html 并不是正则的，正则表达式可能在部分简单提取时有效，但 &lt;strong&gt;不要用正则表达式进行页面提取&lt;/strong&gt;）。其根本思想是提供一种定位元素的规则进行页面抽取。&lt;/p&gt;
+&lt;p&gt;这个方法被用得最多，好处是有效，嗯。缺陷在于用户需要会 xpath / css选择器 / 正则语法，虽然有一些工具（例如上面的kimono、chrome的调试工具、pyspider里面的脚本）辅助生成规则，但可能通用性不足 或 区分度不够，选取到不需要的内容。这在大批量抽取时需要大量的高级人力去配置，即使是熟练工也需要5-10分钟配置一个页面（6-8个属性），需要耗费大量精力。&lt;/p&gt;
+&lt;p&gt;这种抽取方式的一种变形是：将 key 和 value 同时在页面中标出，通过 key 和 value 总是穿插出现的这一假设，省去单独为每个属性设置规则的人力，极大增快标注效率。&lt;br&gt;例如：&lt;a href=&quot;http://movie.douban.com/subject/7054604/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://movie.douban.com/subject/7054604/&lt;/a&gt; 这个页面中的  &lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;导演: 迈克尔·贝&lt;br&gt;编剧: 伊伦·克鲁格&lt;br&gt;主演: 马克·沃尔伯格…&lt;br&gt;类型: 动作 / 科幻 / 冒险&lt;br&gt;制片国家/地区: 美国 / 中国大陆&lt;br&gt;语言: 英语 / 汉语普通话 / 粤语&lt;br&gt;上映日期: 2014-06-27(美国/中国大陆)&lt;br&gt;片长: 166分钟&lt;br&gt;又名: 变形金刚：歼灭世纪(港) / 变形金刚4：灭绝时代 / 变形金刚4 / 变4 / Transformers 4&lt;br&gt;IMDb链接: tt2109248  &lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;导演/编剧/类型等 属性名 往往拥有相同的 xpath，而值的 xpath 也是独立的几种。他们一定是 key: value 的形式组织的，通过用 key 分割 value 的方式能轻松将所有信息提取出来。&lt;/p&gt;
+&lt;h3 id=&quot;data-highlighter&quot;&gt;&lt;a href=&quot;#data-highlighter&quot; class=&quot;headerlink&quot; title=&quot;data highlighter&quot;&gt;&lt;/a&gt;data highlighter&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;示例:&lt;/strong&gt; &lt;a href=&quot;http://googlewebmastercentral.blogspot.com/2012/12/introducing-data-highlighter-for-event.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://googlewebmastercentral.blogspot.com/2012/12/introducing-data-highlighter-for-event.html&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Data Highlighter 的标注方式是：给一系列相似的页面，让用户标出（高亮）每个属性在页面中的位置。通过多个页面的标注信息，寻找每个属性的特征。当然了，这个特征可以是 xpath，也可以是上下文，也有可能是机器学习的特征向量。&lt;/p&gt;
+&lt;p&gt;Data Hightlighter 通过高亮 &lt;strong&gt;多个页面中相同属性&lt;/strong&gt; 进行规则学习，省去了人为设置规则时的学习成本。实践表明，在单一页面模板下，标记2个页面就足以生成规则了。效率远大于手工设置规则。Google Data Highlighter 甚至对文字进行了切分，能在 &lt;code&gt;英语 / 汉语普通话 / 粤语&lt;/code&gt; xpath 相同的情况下，分别选出三种语言。是我目前见过的成熟度最高、通用性最好、最简便的数据抽取方式。&lt;/p&gt;
+&lt;h3 id=&quot;micro-data&quot;&gt;&lt;a href=&quot;#micro-data&quot; class=&quot;headerlink&quot; title=&quot;micro-data&quot;&gt;&lt;/a&gt;micro-data&lt;/h3&gt;&lt;p&gt;&lt;strong&gt;示例:&lt;/strong&gt; &lt;a href=&quot;http://microformats.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://microformats.org/&lt;/a&gt; 以及各大网站&lt;/p&gt;
+&lt;p&gt;页面属性标记，通过在页面数据元素上增加属性标识，通过开放的标准格式，为数据提取提供便利，例如这是豆瓣的评论数据：&lt;/p&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;5&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;line&quot;&gt;&amp;lt; p class=&amp;quot;rating_self clearfix&amp;quot; typeof=&amp;quot;v:Rating&amp;quot;&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;lt;span class=&amp;quot;ll bigstar35&amp;quot;&amp;gt;&amp;lt;/span&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;lt;strong class=&amp;quot;ll rating_num&amp;quot; property=&amp;quot;v:average&amp;quot;&amp;gt;6.7&amp;lt;/strong&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;  &amp;lt;span property=&amp;quot;v:best&amp;quot; content=&amp;quot;10.0&amp;quot;&amp;gt;&amp;lt;/span&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&quot;line&quot;&gt;&amp;lt;/p&amp;gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
+&lt;p&gt;&lt;code&gt;typeof=&amp;quot;v:Rating&amp;quot;&lt;/code&gt; 表明这里是 rating 数据，&lt;code&gt;v:best&lt;/code&gt; 表明 rating 的最大值。通过开放的 data format 标准，只按照标准抽取，就能得到包含的结构化数据。但是，需要站长的支持，在页面中加入标记才可以。&lt;/p&gt;
+&lt;p&gt;从广义上讲，主图识别，页面发布时间这样的属性，其实也可以是通过对页面内容进行分析获得的。这与 micro-data 一样，通过元素足够强的特征，对元素的含义进行理解分析。&lt;/p&gt;
+&lt;h3 id=&quot;模板生成与提取&quot;&gt;&lt;a href=&quot;#模板生成与提取&quot; class=&quot;headerlink&quot; title=&quot;模板生成与提取&quot;&gt;&lt;/a&gt;模板生成与提取&lt;/h3&gt;&lt;p&gt;&lt;img src=&quot;/assets/image/screenshot_2014-06-17_19.49.40.png&quot; alt=&quot;image&quot;&gt;&lt;/p&gt;
+&lt;p&gt;页面模板（wrapper）抽取是基于这样一个假设：结构化页面都是 通过模板 将数据库中的数据 映射成页面的。通过页面分析，得到页面模板，通过模板提取出实际的结构化数据。&lt;/p&gt;
+&lt;p&gt;例如，我使用过的方法，将多个相似页面放在一起比对，寻找等位节点（具有相同结构或表示相同数据类型的元素），将 DOM树 合并。通过比较不同页面上的同类节点，能够获知页面中哪部分是变化的，哪部分是不变的。变化的部分为数据，不变部分为模板。最后形成如上图所示的模板，页面变化部分被涂黑。这个方法类似于将多张纸叠在一起，透过光去看，就会发现变化的文字部分会比其他部分更黑。&lt;/p&gt;
+&lt;p&gt;当然了，这个方法也有缺陷，例如：&lt;a href=&quot;http://www.xdowns.com/soft/1/2/2006/Soft_34115.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;页面一&lt;/a&gt;，&lt;a href=&quot;http://www.xdowns.com/soft/10/35/2007/Soft_34731.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;页面二&lt;/a&gt; 的标题部分，一个是蓝色，一个是绿色，虽然在人类视觉上它们相差不大，但从页面结构上绿色多了一层 &lt;code&gt;&amp;lt;font&amp;gt;&lt;/code&gt;，作为算法很难理解，这样的样式表示他们是否有相同的含义，是否有区别。同理左侧推荐的蓝绿相间，即使作为人也很难理解它们有什么区别。&lt;/p&gt;
+&lt;p&gt;##两个核心问题&lt;/p&gt;
+&lt;p&gt;总结起来，以上四种解析模式都在尝试解决以下两个问题：&lt;/p&gt;
+&lt;h3 id=&quot;一个元素在说什么&quot;&gt;&lt;a href=&quot;#一个元素在说什么&quot; class=&quot;headerlink&quot; title=&quot;一个元素在说什么&quot;&gt;&lt;/a&gt;一个元素在说什么&lt;/h3&gt;&lt;p&gt;当你打开一个页面，你怎么知道一个页面在传递什么信息？你怎么知道一个元素是文章的标题？怎么知道一个元素是作者？作为人类，我们可能会看到一个元素的位置是否在页面中间，元素的字体大小、颜色，元素前面是不是有一个 “作者：”，元素内容是否长得像一个人名/时间，上下文中这个元素都在讲什么，这篇文章是什么领域，等等。人类可能会有非常多的 &lt;strong&gt;经验知识&lt;/strong&gt; ，当看到一个页面的时候能够解读出页面上的信息。&lt;/p&gt;
+&lt;p&gt;在 “xpath / css选择器 / 正则表达式” 的解析模式中，这个工作正是人肉去完成的，人去解读这个页面，找到信息所在元素。而在 “data highlighter” 的解析模式中，也需要人在多个页面中进行标注，告诉机器每个属性所在。&lt;/p&gt;
+&lt;p&gt;但是作为计算机，是否能做到这一点？micro-data 通过开放的格式约定，通过 &lt;code&gt;property&lt;/code&gt; 这一个特殊的属性标记告诉计算机一个元素说的是什么。而模板挖掘通过：xpath，元素class，id属性，上下文等特征去挖掘元素的含义。&lt;/p&gt;
+&lt;p&gt;但是，页面样式结构，在人类在没有足够的知识情况下，也有可能会无法解读，例如我们的爷爷奶奶可能就看不懂网页上说的是什么。同时，正如语言是有二义性的一样，页面结构也会如此，这给计算机去理解，页面说的是什么，带来了巨大的困难。&lt;/p&gt;
+&lt;h3 id=&quot;这个元素和其他的元素有什么区别&quot;&gt;&lt;a href=&quot;#这个元素和其他的元素有什么区别&quot; class=&quot;headerlink&quot; title=&quot;这个元素和其他的元素有什么区别&quot;&gt;&lt;/a&gt;这个元素和其他的元素有什么区别&lt;/h3&gt;&lt;p&gt;因为，大批量数据抽取是计算机的活，这需要 &lt;strong&gt;准确&lt;/strong&gt; 地告诉计算机，你想要抽取的元素是哪一个。在 “xpath / css选择器 / 正则表达式” 的解析模式中，xpath、css选择器、正则表达式正是对这一信息的描述。选取一个正确的表达式，即涵盖不同页面，又和其他属性有所区分，是一件需要经验和技巧的工作。而 “data highlighter” 将这个工作交给了计算机。“模板生成和套用” 过程中也由计算机分析出了规则。&lt;/p&gt;
+&lt;p&gt;而对于 “micro-data” 来说，这个问题有些特殊。通过开放的标准格式，程序已经能够了解每个元素在说什么了，那么定位就不再有意义。但是反过来，这又何尝不是一种定位。&lt;/p&gt;
+&lt;h3 id=&quot;结构化解析&quot;&gt;&lt;a href=&quot;#结构化解析&quot; class=&quot;headerlink&quot; title=&quot;结构化解析&quot;&gt;&lt;/a&gt;结构化解析&lt;/h3&gt;&lt;p&gt;结构化解析实质是计算机对一个页面的理解，无论这种理解是人去创建规则、做出某种约定 还是 机器学习。上面列举的四种解析方式，“xpath / css选择器 / 正则表达式” 和 “data highlighter” 回答了这个元素和其他的有什么区别。 “micro-data” 利用了一个元素在说什么。而 “模板生成与提取” 同时涉及元素说什么，它在哪。&lt;/p&gt;
+&lt;p&gt;那么作为结构化解析的究级形态是怎样？我们可以假想一个人，他打开一个页面就能知道上面说的是什么，有什么样的信息，这是人类对于：通过网页获取知识的一种能力，一种方式。计算机也是一样，结构化抽取 就是 计算机从网页中获取知识的过程。“这个元素和其他的元素有什么区别” 终究只是在无法达到：计算机理解 &lt;strong&gt;一个页面在说什么&lt;/strong&gt; 的辅助手段。理解 “一个元素在说什么” 乃至 “一个页面在说什么” 我认为是才是其究级形态，而结构化数据也不过是计算机，对于浩瀚互联网信息理解的一种表达罢了。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;已经五个月没有更新 blog 了，这五个月全身心投入到了两个关于如何从页面上抽取结构化数据的项目上。这也是我加入某厂最主要的原因。其中一个全自动模板生成抽取器，虽然还不完全能够实用，但比1年前效果好太多，同时也让我想明白了一些问题。这都是下文主要讨论的问题。&lt;/p&gt;
+&lt;p&gt;
+    
+    </summary>
+    
+    
+      <category term="html" scheme="http://blog.binux.me/tags/html/"/>
+    
+      <category term="infomation-extraction" scheme="http://blog.binux.me/tags/infomation-extraction/"/>
+    
+      <category term="wrapper-genaration" scheme="http://blog.binux.me/tags/wrapper-genaration/"/>
+    
+      <category term="xpath" scheme="http://blog.binux.me/tags/xpath/"/>
+    
+      <category term="css-selector" scheme="http://blog.binux.me/tags/css-selector/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>pyspider架构设计</title>
+    <link href="http://blog.binux.me/2014/02/pyspider-architecture/"/>
+    <id>http://blog.binux.me/2014/02/pyspider-architecture/</id>
+    <published>2014-02-28T00:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;&lt;a href=&quot;https://github.com/binux/pyspider&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;pyspider&lt;/a&gt;是我一年多之前做的一个爬虫架构的开源化实现。主要的功能需求是：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;抓取、更新调度多站点的特定的页面&lt;/li&gt;
+&lt;li&gt;需要对页面进行结构化信息提取&lt;/li&gt;
+&lt;li&gt;灵活可扩展，稳定可监控&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;而这也是绝大多数python爬虫的需求 —— 定向抓取，结构化化解析。但是面对结构迥异的各种网站，单一的抓取模式并不一定能满足，灵活的抓取控制是必须的。为了达到这个目的，单纯的配置文件往往不够灵活，于是，通过脚本去控制抓取是我最后的选择。&lt;br&gt;而去重调度，队列，抓取，异常处理，监控等功能作为框架，提供给抓取脚本，并保证灵活性。最后加上web的编辑调试环境，以及web任务监控，即成为了这套框架。&lt;/p&gt;
+&lt;p&gt;pyspider的设计基础是：&lt;strong&gt;以python脚本驱动的抓取环模型爬虫&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;通过python脚本进行结构化信息的提取，follow链接调度抓取控制，实现最大的灵活性&lt;/li&gt;
+&lt;li&gt;通过web化的脚本编写、调试环境。web展现调度状态&lt;/li&gt;
+&lt;li&gt;抓取环模型成熟稳定，模块间相互独立，通过消息队列连接，从单进程到多机分布式灵活拓展&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;del&gt;这与后来在某厂看到的spider系统整体架构上区别不大&lt;/del&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/pyspider.png&quot; alt=&quot;pyspider&quot;&gt;&lt;/p&gt;
+&lt;h1 id=&quot;功能&quot;&gt;&lt;a href=&quot;#功能&quot; class=&quot;headerlink&quot; title=&quot;功能&quot;&gt;&lt;/a&gt;功能&lt;/h1&gt;&lt;p&gt;&lt;strong&gt;webui&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;web的可视化任务监控&lt;/li&gt;
+&lt;li&gt;web脚本编写，单步调试&lt;/li&gt;
+&lt;li&gt;异常捕获、log捕获，print捕获等&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;scheduler&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;任务优先级&lt;/li&gt;
+&lt;li&gt;周期定时任务&lt;/li&gt;
+&lt;li&gt;流量控制&lt;/li&gt;
+&lt;li&gt;基于时间周期 或 前链标签（例如更新时间）的重抓取调度&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;fetcher&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;dataurl支持，用于假抓取模拟传递&lt;/li&gt;
+&lt;li&gt;method, header, cookie, proxy, etag, last_modified, timeout 等等抓取调度控制&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;可以通过适配类似 &lt;a href=&quot;http://phantomjs.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;phantomjs&lt;/a&gt; 的webkit引擎支持渲染&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;processor&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;内置的pyquery，以jQuery解析页面&lt;/li&gt;
+&lt;li&gt;在脚本中完全控制调度抓取的各项参数&lt;/li&gt;
+&lt;li&gt;可以向后链传递信息&lt;/li&gt;
+&lt;li&gt;异常捕获&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&quot;架构&quot;&gt;&lt;a href=&quot;#架构&quot; class=&quot;headerlink&quot; title=&quot;架构&quot;&gt;&lt;/a&gt;架构&lt;/h1&gt;&lt;p&gt;pyspider的架构主要分为 scheduler（调度器）, fetcher（抓取器）, processor（脚本执行）：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/pyspider-arch.png&quot; alt=&quot;pyspider-arch&quot;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;各个组件间使用消息队列连接，除了scheduler是单点的，fetcher 和 processor 都是可以多实例分布式部署的。 scheduler 负责整体的调度控制&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;任务由 scheduler 发起调度，fetcher 抓取网页内容， processor 执行预先编写的python脚本，输出结果或产生新的提链任务（发往 scheduler），形成闭环。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;每个脚本可以灵活使用各种python库对页面进行解析，使用框架API控制下一步抓取动作，通过设置回调控制解析动作。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;注：output部分设计尚未决定，因为希望输出也可以很灵活地进行。现在是在脚本中有一个&lt;code&gt;on_result&lt;/code&gt;的回调，在里面可以自行实现结果输出。&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      a spider system in python on web
+    
+    </summary>
+    
+    
+      <category term="python" scheme="http://blog.binux.me/tags/python/"/>
+    
+      <category term="spider" scheme="http://blog.binux.me/tags/spider/"/>
+    
+      <category term="opensource" scheme="http://blog.binux.me/tags/opensource/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>基于封禁IP名单的自动路由</title>
+    <link href="http://blog.binux.me/2014/01/add-blocked-ip-to-route/"/>
+    <id>http://blog.binux.me/2014/01/add-blocked-ip-to-route/</id>
+    <published>2014-01-27T00:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;年末本来很闲的，一个月把标日初级上看完了；结果前天开始被拉去做一个要求年后第一周上线的的项目。。还是本来是一个部门做的那种。。于是本月的blog只好凑字数了。。&lt;/p&gt;
+&lt;p&gt;&lt;i&gt;翻&lt;del&gt;自动&lt;/del&gt;&lt;/i&gt;墙路由基本除去apnic的国内ipv4白名单走国内方案，就剩下autoddvpn的封禁ip列表了（透明代理不考虑）。国内ip白名单的问题是，如果要玩外服DOTA，还得手动加上各种游戏的服务器IP，而autoddvpn万年不更新，很多时候根本命中不了。&lt;/p&gt;
+&lt;p&gt;于是，有了下面这个根据DNS查询记录添加封禁IP记录的方法：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Linux环境&lt;/li&gt;
+&lt;li&gt;有VPN&lt;/li&gt;
+&lt;li&gt;通过dnsmasq查询DNS，并打开日志&lt;/li&gt;
+&lt;li&gt;通过匹配gfwlist的域名判断对应ip是否被封禁，然后添加到路由表中&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;通过脚本&lt;/p&gt;
+&lt;script src=&quot;https://gist.github.com/binux/8456129.js&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;&lt;code&gt;logread -f&lt;/code&gt; 可以替换为 &lt;code&gt;tail -f 日志文件&lt;/code&gt;&lt;br&gt;&lt;code&gt;dev pptp-vpn&lt;/code&gt; 可以替换为建立VPN的链接的名字&lt;/p&gt;
+&lt;p&gt;不过，缺陷是。。第一次访问时需要过1分钟左右才能生效。。&lt;/p&gt;
+&lt;p&gt;另外，这个是福利： &lt;a href=&quot;http://f.binux.me/lifandb.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;lifandb.html&lt;/a&gt; 来自 &lt;a href=&quot;https://github.com/youxiachai/lifandb/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;github/youxiachai/lifandb&lt;/a&gt; （请用chrome打开，如果安装了adblock-plus请先禁用）&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;年末本来很闲的，一个月把标日初级上看完了；结果前天开始被拉去做一个要求年后第一周上线的的项目。。还是本来是一个部门做的那种。。于是本月的blog只好凑字数了。。&lt;/p&gt;
+&lt;p&gt;&lt;i&gt;翻&lt;del&gt;自动&lt;/del&gt;&lt;/i&gt;墙路由基本除去apnic的国内ipv4白名单走国内方案，
+    
+    </summary>
+    
+    
+      <category term="vpn" scheme="http://blog.binux.me/tags/vpn/"/>
+    
+      <category term="route" scheme="http://blog.binux.me/tags/route/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>足兆叉虫的2013</title>
+    <link href="http://blog.binux.me/2013/12/2013/"/>
+    <id>http://blog.binux.me/2013/12/2013/</id>
+    <published>2013-12-29T00:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;我是从来不记日子的，这导致我也不知道有些事情是2013年发生的，还是2012年发生的，亦或只是我的臆想。即便如此，2013年也是变化的一年。&lt;/p&gt;
+&lt;p&gt;跳槽，工资没涨，工作忙了2倍，但经手了更大的系统（虽然设计很渣），更多协调，带小弟，基本达到了初衷，也说不上是好是坏。搬离大学生活圈、一个人住，第一次有家的感觉，虽然依旧一个人。&lt;/p&gt;
+&lt;p&gt;想学日语，想出国，但完全没有干劲。&lt;/p&gt;
+&lt;p&gt;依旧是没有理想，没有希望的一年，就这样一觉不起就好了。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;我是从来不记日子的，这导致我也不知道有些事情是2013年发生的，还是2012年发生的，亦或只是我的臆想。即便如此，2013年也是变化的一年。&lt;/p&gt;
+&lt;p&gt;跳槽，工资没涨，工作忙了2倍，但经手了更大的系统（虽然设计很渣），更多协调，带小弟，基本达到了初衷，也说不上是好是坏。
+    
+    </summary>
+    
+    
+      <category term="2013" scheme="http://blog.binux.me/tags/2013/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>用FTP的方式访问迅雷离线</title>
+    <link href="http://blog.binux.me/2013/11/xunlei-lixian-ftp-proxy/"/>
+    <id>http://blog.binux.me/2013/11/xunlei-lixian-ftp-proxy/</id>
+    <published>2013-11-17T00:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;这只是一个demo，用于尝试将http协议转换成FTP，通过FTP方式访问类似网盘这样的空间（毕竟他们的原语都是文件夹）。使用 tornado ioloop 实现完全异步，在 tornado 的 iostream 之上手写了一个ftp服务器。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;如果你想要快速使用：&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;ftp方式访问迅雷：&lt;br&gt;&lt;code&gt;python -c &amp;quot;u=&amp;#39;http://f.binux.me/pyproxy.zip&amp;#39;;import urllib2,sys,tempfile;f=tempfile.NamedTemporaryFile(suffix=&amp;#39;.zip&amp;#39;);urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler()));f.write(urllib2.urlopen(u).read());sys.path.insert(0,f.name);f.flush();from xunlei_ftpserver import run;run();&amp;quot;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;http串流离线内容&lt;br&gt;&lt;code&gt;python -c &amp;quot;u=&amp;#39;http://f.binux.me/pyproxy.zip&amp;#39;;import urllib2,sys,tempfile;f=tempfile.NamedTemporaryFile(suffix=&amp;#39;.zip&amp;#39;);urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler()));f.write(urllib2.urlopen(u).read());sys.path.insert(0,f.name);f.flush();from xunlei_webserver import run;run();&amp;quot;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;另外还有一个使用代理api方式直接共享离线空间的例子：&lt;br&gt;&lt;a href=&quot;http://jsbin.com/uQinidA/2/quiet&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://jsbin.com/uQinidA/2/quiet&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;github地址：&lt;a href=&quot;https://github.com/binux/xunlei-lixian-proxy&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://github.com/binux/xunlei-lixian-proxy&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;中文简介&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;通过ftp的方式访问你的迅雷离线空间&lt;/li&gt;
+&lt;li&gt;在线串流离线空间中的视频到任何播放器&lt;/li&gt;
+&lt;li&gt;完全异步化(使用tornado ioloop)&lt;/li&gt;
+&lt;li&gt;这只是一个多协议转换的原理验证演示，不保证可以用于生产环境&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+
+&lt;p&gt;用了几天，发现tornado的iostream其实问题还是蛮多的，比如当上下游速度不一致的时候，会有大量的数据堵在上游的 read buffer 或者 下游的 write buffer 上。因为tornado是定位于web服务器的，单个请求大都不大，但是在代理文件的时候 buffer 就会占用大量的内存。代码里面有尝试修复，但是效果不理想，在小内存的 Linux 盒子上经常因为爆内存被 kill。&lt;/p&gt;
+&lt;p&gt;写了这个东西，感觉完全异步不总是好的，ftp作为有状态的协议，请求以及返回的顺序很重要，异步了之后这样的顺序就很难控制（比如客户端紧接着RETR发送了一个PWD，必须先响应完RETR才能响应PWD，但是由于是异步的，实际有可能PWD先返回了，这需要双方至少有一方严格按照顺序处理）&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;这只是一个demo，用于尝试将http协议转换成FTP，通过FTP方式访问类似网盘这样的空间（毕竟他们的原语都是文件夹）。使用 tornado ioloop 实现完全异步，在 tornado 的 iostream 之上手写了一个ftp服务器。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;
+    
+    </summary>
+    
+    
+      <category term="lixian" scheme="http://blog.binux.me/tags/lixian/"/>
+    
+      <category term="xunlei" scheme="http://blog.binux.me/tags/xunlei/"/>
+    
+      <category term="ftpserver" scheme="http://blog.binux.me/tags/ftpserver/"/>
+    
+      <category term="webserver" scheme="http://blog.binux.me/tags/webserver/"/>
+    
+      <category term="tornado" scheme="http://blog.binux.me/tags/tornado/"/>
+    
+      <category term="async" scheme="http://blog.binux.me/tags/async/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>动画新番订阅-从ktxp到迅雷离线</title>
+    <link href="http://blog.binux.me/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/"/>
+    <id>http://blog.binux.me/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/</id>
+    <published>2013-10-19T23:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;&lt;span style=&quot;font-size: 2em&quot;&gt;需要解决方案请直接跳到 &lt;strong&gt;解决方案&lt;/strong&gt; 一节&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;曾经折腾过&lt;a href=&quot;http://blog.binux.me/2011/12/from_xunlei_lixian_for_flexget/&quot;&gt;flexget+迅雷离线&lt;/a&gt;的新番订阅方案，但是因为越来越忙+越来越懒，这种挨个写配置文件的方式太麻烦了，之后就再也没用过。&lt;br&gt;于是我在想，用RSS追番的痛点在哪？&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;需要挨个构造过滤条件？&lt;/li&gt;
+&lt;li&gt;flexget配置文件太难写，不方便下载到本地？&lt;/li&gt;
+&lt;li&gt;下载的文件看不懂罗马拼音？&lt;/li&gt;
+&lt;li&gt;不方便记录进度？&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;过滤调教&quot;&gt;&lt;a href=&quot;#过滤调教&quot; class=&quot;headerlink&quot; title=&quot;过滤调教&quot;&gt;&lt;/a&gt;过滤调教&lt;/h3&gt;&lt;p&gt;首先是需要构造过滤条件，这个好说，每一集动画，每一个字幕组发布的名字只会有集数不同，那么只需要配上关键字（字幕组/作品名/格式/语言）就可以了。&lt;br&gt;即便如此，痛点依旧存在。当季连续播放的内容还好说，OVA怎么办？OAD怎么办？TV未放送怎么办？这些很可能命名方式不一样，甚至是原来追番的字幕组压根没做！&lt;br&gt;像bilibili合集或者专有tag这样人工收集固然完美，但是作为程序员，使用人工是可耻的！&lt;/p&gt;
+&lt;p&gt;于是，设想中的方案：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;抓取所有资源，对抓取到的信息，通过分词等手段对资源打tag，这些第一批产生的tag称为raw tag&lt;/li&gt;
+&lt;li&gt;对所有raw tag，通过推导规则生成衍生tag。（例如作品名归一化，作品名生成x月番，作品名+第x季关键词进行消歧义）&lt;/li&gt;
+&lt;li&gt;对不确定信息，产生不确定tag，多个不确定tag依旧可以产生衍生tag&lt;/li&gt;
+&lt;li&gt;选取主要的tag（包括raw tag，衍生tag，不确定tag）保存，以供筛选&lt;/li&gt;
+&lt;li&gt;对tag进行分类&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;方案的核心在于tag推导，而这样的推导公式可以人工配置，也可以通过机器学习/规则聚类获得。&lt;br&gt;最后给用户展现的是一堆tag（但是同一部作品只会有一个tag，即使不同字幕组译法不一样），用户首先选择作品，之后是字幕组/格式/语言等等tag组合。而OVA等资源只要能衍生出和作品一致的tag，资源就不会漏。&lt;/p&gt;
+&lt;h3 id=&quot;下载到本地&quot;&gt;&lt;a href=&quot;#下载到本地&quot; class=&quot;headerlink&quot; title=&quot;下载到本地&quot;&gt;&lt;/a&gt;下载到本地&lt;/h3&gt;&lt;p&gt;下载管理，本地资源库管理，这些其实都是大问题。不过我们不如换个思路。以现在的用户带宽，200M的一部新番在线播放根本不成问题，但是问题在于资源从哪来：bt? ftp? http? 目前可能的资源来源无外乎这三种，直接播放不就好了嘛！对于任何主流视频播放器，http，ftp自不用说，基本没有不支持的。即使http需要cookie验证，本地做一个代理就好了。bt直接播放也不是什么困难的问题，缓冲之后流式输出，甚至可以把bt/http/ftp统统封装成http/FTP协议，内容想怎么播就怎么播。&lt;/p&gt;
+&lt;h3 id=&quot;海报查看-播放进度管理&quot;&gt;&lt;a href=&quot;#海报查看-播放进度管理&quot; class=&quot;headerlink&quot; title=&quot;海报查看/播放进度管理&quot;&gt;&lt;/a&gt;海报查看/播放进度管理&lt;/h3&gt;&lt;p&gt;既然上面说到，在线播放实际上可以来源于任何媒介——只要有一个本地代理，将这些内容转换成播放器支持的格式即可。那么，web化的内容展示+本地播放也就顺理成章地得以实现。&lt;br&gt;将本地代理API开放出来，任何网站只要通过这个API即可让用户通过本地的协议转换/播放来源于任何地方的任何内容，而网站不需要花费流量。&lt;/p&gt;
+&lt;h1 id=&quot;临时解决方案&quot;&gt;&lt;a href=&quot;#临时解决方案&quot; class=&quot;headerlink&quot; title=&quot;临时解决方案&quot;&gt;&lt;/a&gt;临时解决方案&lt;/h1&gt;&lt;p&gt;好吧。。既然我连配个flexget都没时间，怎么有时间搞爬虫, tag system, 机器学习, 分词, 流式bt, http代理, 协议转换, 动画内容站呢？&lt;br&gt;既然这样，先来个简单的解决方案吧，从ktxp订阅到迅雷离线：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;第一步：&lt;/em&gt;&lt;/strong&gt;将 &lt;a href=&quot;javascript:(function%20()%7Bfunction%20add_search(e)%7B%20var%20a=$(%22#top-search-wd%22);%20if(a.hasClass(&#39;empty&#39;))a.removeClass(&#39;empty&#39;).val(&#39;&#39;);a.val(a.val()+%22%20%22+$(e).text());ktxp.search.submit()%7Dwindow.add_search=add_search;$(%22.ttitle%22).each(function(e,t)%7Bvar%20n=$(t).find(%22a:nth-child(2)%22).text();var%20r=%22%22;var%20i=%22%22,s=%22%22;$.each(n,function(e,t)%7Bif(t.match(/%5B%20%5C%5B%5C%5D%EF%BC%8F%E3%80%8E%E3%80%8F%E3%80%8C%E3%80%8D%E3%80%90&amp;%E3%80%91%EF%BC%86%E2%98%85%5C%5C%5C/%5C+%5C(%5C)%5C-_%5D/))%7Bif(i)%7Br+=&#39;%3Ca%20href=%22#%22%20onclick=%22add_search(this);return%20false;%22%3E&#39;+i+%22%3C/a%3E%22;i=%22%22%7Ds+=t%7Delse%7Bif(s)%7Br+=s;s=%22%22%7Di+=t%7D%7D);if(i)%7Br+=&#39;%3Ca%20href=%22#%22%20onclick=%22add_search(this);return%20false;%22%3E&#39;+i+%22%3C/a%3E%22;i=%22%22%7Dif(s)%7Br+=s;s=%22%22%7D$(t).find(%22a:nth-child(2)%22).replaceWith(r)%7D)%7D)()&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;ktxp筛选器&lt;/a&gt; 保存为书签&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;第二步：&lt;/em&gt;&lt;/strong&gt; 访问 bt.ktxp.com ，点击书签，你会发现标题都被分割成tag了，根据节目单+字幕组+格式+语言等筛选tag。选好之后，列表右上角有个黄色的小小的rss，复制它的url，比如&lt;a href=&quot;http://bt.ktxp.com/rss-search-%E9%AD%94%E7%AC%9B.xml&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://bt.ktxp.com/rss-search-%E9%AD%94%E7%AC%9B.xml&lt;/a&gt; 这样的。保存下载。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;第三步：&lt;/em&gt;&lt;/strong&gt; 访问 &lt;a href=&quot;https://script.google.com/macros/s/AKfycbxqWzZ6CSVaXtUBO313S8bFhleYXzv5CbfeLpEs4_WVfnTYeco/exec&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;aria2/迅雷离线订阅器&lt;/a&gt;，根据提示保存书签，访问迅雷离线，点击书签。你会看到一个aria2 path的框（如果你不用aria2，那就留空吧），和一个RSS订阅的框。将上面提取的RSS地址填到RSS订阅的框中（每行一个），点保存即可。现在，最近更新的新番会自动添加到你的迅雷离线里面了！&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;span style=&quot;font-size: 2em&quot;&gt;需要解决方案请直接跳到 &lt;strong&gt;解决方案&lt;/strong&gt; 一节&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;曾经折腾过&lt;a href=&quot;http://blog.binux.me/2011/12/from_xunlei_li
+    
+    </summary>
+    
+    
+      <category term="GAS" scheme="http://blog.binux.me/tags/GAS/"/>
+    
+      <category term="动画" scheme="http://blog.binux.me/tags/%E5%8A%A8%E7%94%BB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>如何抓取WEB页面</title>
+    <link href="http://blog.binux.me/2013/09/howto-crawl-web/"/>
+    <id>http://blog.binux.me/2013/09/howto-crawl-web/</id>
+    <published>2013-09-29T23:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;好忙好忙，忙到打完dota，看完新番，写完一个外挂就懒得更新blog的地步。。。一不小心从事spider已经快3年了，也没给爬虫写过点什么。本来打算趁着十一写个什么《三天学会爬虫》什么的，但是列了下清单，其实爬虫这东西简单到爆啊。看我一天就把它搞定了(・ω&amp;lt;)☆&lt;/p&gt;
+&lt;p&gt;##HTTP协议&lt;br&gt;WEB内容是通过HTTP协议传输的，实际上，&lt;strong&gt;任何的抓取行为都是在对浏览器的HTTP请求的模拟&lt;/strong&gt;。那么，首先通过 &lt;a href=&quot;http://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://zh.wikipedia.org/wiki/超文本传输协议&lt;/a&gt; 来对HTTP协议来进行初步的了解：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;HTTP通常通过创建到服务器80端口的TCP连接进行通信&lt;/li&gt;
+&lt;li&gt;HTTP协议的内容包括请求方式（method）, url，header，body，通常以纯文本方式发送&lt;/li&gt;
+&lt;li&gt;HTTP返回内容包括状态码，header，body，通常以纯文本方式返回&lt;/li&gt;
+&lt;li&gt;header以及body间以CRLF(\r\n)分割&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;由于富web应用越来越盛行，单纯的HTTP协议已经不能满足 -人类的欲望- 人们的需求了，websocket,  spdy等越来越多的非HTTP协议信息传输手段被使用，但是目前看来，web的主要信息依旧承载于http协议。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&quot;HTTP请求&quot;&gt;&lt;a href=&quot;#HTTP请求&quot; class=&quot;headerlink&quot; title=&quot;HTTP请求&quot;&gt;&lt;/a&gt;HTTP请求&lt;/h3&gt;&lt;p&gt;现在打开 chrome&amp;gt;菜单&amp;gt;工具&amp;gt;开发者工具 切换到network面板，访问 &lt;a href=&quot;http://www.baidu.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.baidu.com/&lt;/a&gt;，点击红色高亮处的&lt;code&gt;view source&lt;/code&gt;：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/image/http_in_chrome.png&quot; alt=&quot;http in chrome&quot;&gt;&lt;/p&gt;
+&lt;p&gt;我们可以看到一个真实的HTTP请求的全部内容（这里的换行均为CRLF）：&lt;/p&gt;
+&lt;pre&gt;
+GET / HTTP/1.1
+
+Host: www.baidu.com
+
+Connection: keep-alive
+
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.66 Safari/537.36
+
+DNT: 1
+
+Accept-Encoding: gzip,deflate,sdch
+
+Accept-Language: zh-CN,zh;q=0.8
+&lt;/pre&gt;
+
+&lt;p&gt;请求中的第一行称为&lt;a href=&quot;http://tools.ietf.org/html/rfc2616#section-5.1&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Request-Line&lt;/a&gt;，包含了&lt;code&gt;请求方式 URL HTTP版本&lt;/code&gt;，在上面的例子中，这个请求方式(method)为 &lt;code&gt;GET&lt;/code&gt;，URL为 &lt;code&gt;/&lt;/code&gt;, HTTP版本为 &lt;code&gt;HTTP/1.1&lt;/code&gt; 。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;注意到这里的URL并不是我们访问时的 &lt;a href=&quot;http://www.baidu.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.baidu.com/&lt;/a&gt; 而只是一个 &lt;code&gt;/&lt;/code&gt;，而www.baidu.com的域名在Header &lt;code&gt;Host: www.baidu.com&lt;/code&gt; 中体现。这样表示请求的资源 &lt;code&gt;/&lt;/code&gt; 是位于主机(host) &lt;code&gt;www.baidu.com&lt;/code&gt; 上的，而 &lt;code&gt;GET http://www.baidu.com/ HTTP/1.1&lt;/code&gt; 则表示请求的资源位于别的地方，通常用于http代理请求中。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;请求的后续行都是Header，其中比较重要的header有 &lt;code&gt;Host, User-Agent, Cookie, Referer, X-Requested-With&lt;/code&gt; （这个请求中未展现）。如果是POST请求，还会有body。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;虽然并不需要理解HTTP请求，只要参照chrome中展示的内容模拟请求就可以抓取到内容，但是学习一下各个header的作用有助于理解哪些元素是必须的，哪些可以被忽略或修改。&lt;/p&gt;
+&lt;p&gt;更多内容可以通过以下链接进行进一步学习：&lt;br&gt;&lt;a href=&quot;http://zh.wikipedia.org/wiki/URL&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://zh.wikipedia.org/wiki/URL&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/Query_string&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://en.wikipedia.org/wiki/Query_string&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/HTTP_POST&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://en.wikipedia.org/wiki/HTTP_POST&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;http://en.wikipedia.org/wiki/List_of_HTTP_header_fields&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://en.wikipedia.org/wiki/List_of_HTTP_header_fields&lt;/a&gt;&lt;br&gt;抱歉很多内容无法找到好的中文版本，欢迎在留言中提供&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;好了，这就是一个请求的全部，&lt;strong&gt;只要正确模拟了method，uri，header，body 这四要素，任何内容都能抓下来，而所有的四个要素，只要打开 chrome&amp;gt;菜单&amp;gt;工具&amp;gt;开发者工具 切换到network面板 就能看到&lt;/strong&gt;，怎么样，很简单吧！&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;现在我们就可以通过curl命令来模拟一个请求：&lt;br&gt;&lt;code&gt;curl -v -H &amp;quot;User-Agent: Chrome&amp;quot; http://www.baidu.com/&lt;/code&gt;&lt;br&gt;其中 &lt;code&gt;-v&lt;/code&gt; 用于显示了请求的内容，&lt;code&gt;-H&lt;/code&gt; 指定header，具体curl的使用方式可以 &lt;code&gt;man curl&lt;/code&gt; 或者你可以在chrome或者其他平台上找到很多类似的工具。&lt;br&gt;如果想看到请求是否正确，可以 &lt;code&gt;curl http://httpbin.org/get&lt;/code&gt; 这个地址，它会返回经过解析的请求内容，来看看你的请求是否符合预期（&lt;a href=&quot;http://httpbin.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://httpbin.org/&lt;/a&gt;中有包括POST在内的完整API）&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id=&quot;HTTP返回&quot;&gt;&lt;a href=&quot;#HTTP返回&quot; class=&quot;headerlink&quot; title=&quot;HTTP返回&quot;&gt;&lt;/a&gt;HTTP返回&lt;/h3&gt;&lt;p&gt;下面展示了一个http返回的header部分，body内容被省略：&lt;/p&gt;
+&lt;pre&gt;
+HTTP/1.1 200 OK
+
+Date: Mon, 30 Sep 2013 06:51:11 GMT
+
+Server: BWS/1.0
+
+Content-Length: 4379
+
+Content-Type: text/html;charset=utf-8
+
+Cache-Control: private
+
+BDPAGETYPE: 1
+
+BDUSERID: 0
+
+BDQID: 0x8e3bf8800bcc3d7e
+
+Set-Cookie: BDSVRTM=2; path=/
+
+Set-Cookie: H_PS_PSSID=3409_3381_1462_2980_3089_3502_3439; path=/; domain=.baidu.com
+
+Set-Cookie: BAIDUID=5DDF70314DF9C307385D1821EC3B9F78:FG=1; expires=Mon, 30-Sep-43 06:51:11 GMT; path=/; domain=.baidu.com
+
+Expires: Mon, 30 Sep 2013 06:51:11 GMT
+
+Content-Encoding: gzip
+
+P3P: CP=&quot; OTI DSP COR IVA OUR IND COM &quot;
+
+Connection: Keep-Alive
+&lt;/pre&gt;
+
+&lt;p&gt;其中第一行为 &lt;code&gt;HTTP版本 状态码 状态文字说明&lt;/code&gt; 之后的内容都是header，其中比较重要的有：&lt;code&gt;Content-Type,  Set-Cookie, Location, Content-Encoding&lt;/code&gt;（参见 &lt;a href=&quot;http://en.wikipedia.org/wiki/HTTP_header#Requests&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;HTTP_header#Requests&lt;/a&gt;）。返回之后的内容就是我们看到的网页内容了。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;返回中最重要的是状态码和body中的内容&lt;/strong&gt;，状态码决定抓取是否成功(200)，是否会有跳转 （&lt;a href=&quot;http://zh.wikipedia.org/zh-cn/HTTP%E7%8A%B6%E6%80%81%E7%A0%81&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;HTTP状态码&lt;/a&gt;），内容就是我们关心的内容了。&lt;/p&gt;
+&lt;h2 id=&quot;其他&quot;&gt;&lt;a href=&quot;#其他&quot; class=&quot;headerlink&quot; title=&quot;其他&quot;&gt;&lt;/a&gt;其他&lt;/h2&gt;&lt;h3 id=&quot;http库&quot;&gt;&lt;a href=&quot;#http库&quot; class=&quot;headerlink&quot; title=&quot;http库&quot;&gt;&lt;/a&gt;http库&lt;/h3&gt;&lt;p&gt;在实际抓取中，选择一个方便的HTTP库会帮你解决很多http的细节问题，比如http库会帮你：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;建立http连接&lt;/li&gt;
+&lt;li&gt;设定常用header，生成正确的http请求&lt;/li&gt;
+&lt;li&gt;get/post参数编码&lt;/li&gt;
+&lt;li&gt;跳转重定向&lt;/li&gt;
+&lt;li&gt;自动保存处理cookie&lt;/li&gt;
+&lt;li&gt;返回gzip解压，内容编码&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;python中推荐 &lt;a href=&quot;http://docs.python-requests.org/en/latest/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;requests&lt;/a&gt;，在命令行中我一般用curl进行调试。&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id=&quot;AJAX&quot;&gt;&lt;a href=&quot;#AJAX&quot; class=&quot;headerlink&quot; title=&quot;AJAX&quot;&gt;&lt;/a&gt;AJAX&lt;/h3&gt;&lt;p&gt;现在越来越多的页面使用了AJAX技术，表现为内容并不在打开的页面的源码中，而是通过称为 &lt;a href=&quot;http://zh.wikipedia.org/wiki/Ajax&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;AJAX&lt;/a&gt; 的技术，在页面打开后加载的。但实际上，&lt;strong&gt;AJAX也是通过HTTP传送信息的，只不过内容来自于页面发起的另一个http请求&lt;/strong&gt;，通过查看chome中的network列出的页面所有请求，一定可以找到内容，之后只需要模拟对应的这个请求即可。&lt;/p&gt;
+&lt;h3 id=&quot;HTML内容解析&quot;&gt;&lt;a href=&quot;#HTML内容解析&quot; class=&quot;headerlink&quot; title=&quot;HTML内容解析&quot;&gt;&lt;/a&gt;HTML内容解析&lt;/h3&gt;&lt;p&gt;web页面大都以HTML编写，对于简单的内容提取，使用正则即可。但是对付复杂的内容提取需求正则并不是一个好的选择（甚至称不上一个正确的选择），一款HTML/XML解析器+xpath/css selector是一个更有效的选择。&lt;/p&gt;
+&lt;h3 id=&quot;富web应用&quot;&gt;&lt;a href=&quot;#富web应用&quot; class=&quot;headerlink&quot; title=&quot;富web应用&quot;&gt;&lt;/a&gt;富web应用&lt;/h3&gt;&lt;p&gt;对于富web应用，可能分析AJAX请求，和内容提取的代价太高。这时可能需要上最后手段——浏览器渲染。通过 &lt;a href=&quot;http://phantomjs.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;phantomjs&lt;/a&gt; 或类似浏览器引擎，构建一个真实的浏览器执行js、渲染页面。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;好忙好忙，忙到打完dota，看完新番，写完一个外挂就懒得更新blog的地步。。。一不小心从事spider已经快3年了，也没给爬虫写过点什么。本来打算趁着十一写个什么《三天学会爬虫》什么的，但是列了下清单，其实爬虫这东西简单到爆啊。看我一天就把它搞定了(・ω&amp;lt;)☆&lt;/p
+    
+    </summary>
+    
+    
+      <category term="crawler" scheme="http://blog.binux.me/tags/crawler/"/>
+    
+      <category term="howto" scheme="http://blog.binux.me/tags/howto/"/>
+    
+      <category term="爬虫" scheme="http://blog.binux.me/tags/%E7%88%AC%E8%99%AB/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>基于WEBRTC的免插件点到点视频分享</title>
+    <link href="http://blog.binux.me/2013/05/webrtc-video/"/>
+    <id>http://blog.binux.me/2013/05/webrtc-video/</id>
+    <published>2013-05-04T23:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;h2 id=&quot;WebRTC&quot;&gt;&lt;a href=&quot;#WebRTC&quot; class=&quot;headerlink&quot; title=&quot;WebRTC&quot;&gt;&lt;/a&gt;WebRTC&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;http://www.webrtc.org/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;WebRTC&lt;/a&gt; 是基于浏览器的实时通信协议（Real-Time Communications），通过WebRTC，可以在浏览器中直接进行&lt;strong&gt;点到点&lt;/strong&gt;视频聊天和数据通信。WebRTC目前尚在协议开发中，但是已经在Chrome stable版和Firefox’s Nightly中实现，并且 &lt;a href=&quot;http://blog.chromium.org/2013/02/hello-firefox-this-is-chrome-calling.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;能够互相通信了&lt;/a&gt;。通过WebRTC，浏览器将不仅限于和服务器通行，它将能够直接在浏览器间传输数据。通过 &lt;a href=&quot;http://en.wikipedia.org/wiki/STUN&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;STUN&lt;/a&gt; 协议，即使有防火墙也没问题。&lt;/p&gt;
+&lt;p&gt;DEMO: &lt;a href=&quot;https://webrtc-experiment.appspot.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://webrtc-experiment.appspot.com/&lt;/a&gt; (需翻墙)&lt;/p&gt;
+&lt;p&gt;但是，WebRTC作为发布不到一年的协议，还存在非常多的问题：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;文档少&lt;/li&gt;
+&lt;li&gt;协议繁琐，实现与&lt;a href=&quot;http://dev.w3.org/2011/webrtc/editor/webrtc.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;W3C标准&lt;/a&gt;有出入&lt;/li&gt;
+&lt;li&gt;实现不完全，Chrome下的DateChannel不支持可靠传输，只能传text，还有长度限制&lt;/li&gt;
+&lt;li&gt;浏览器依赖&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;但是相信随着标准慢慢完善，支持的实现变多，这样点到点的通信方式一定能给Web带来更多的可能。&lt;/p&gt;
+&lt;p&gt;入门建议：参照 &lt;a href=&quot;http://dev.w3.org/2011/webrtc/editor/webrtc.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;W3C标准&lt;/a&gt; 文档，对比 &lt;a href=&quot;https://apprtc.appspot.com/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://apprtc.appspot.com/&lt;/a&gt; 实现自行尝试（apprtc是封装最浅的实现版本）。另外需要指出的是，&lt;a href=&quot;http://www.html5rocks.com/en/tutorials/webrtc/basics/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;HTML5 Rocks&lt;/a&gt; 的文档是错误的。&lt;/p&gt;
+&lt;h2 id=&quot;WebRTC-video&quot;&gt;&lt;a href=&quot;#WebRTC-video&quot; class=&quot;headerlink&quot; title=&quot;WebRTC-video&quot;&gt;&lt;/a&gt;WebRTC-video&lt;/h2&gt;&lt;p&gt;GitHub： &lt;a href=&quot;https://github.com/binux/webrtc_video&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;https://github.com/binux/webrtc_video&lt;/a&gt;&lt;br&gt;DEMO： &lt;a href=&quot;http://webrtc.binux.me/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://webrtc.binux.me/&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;这是一个用WebRTC的DataChannel特性实现的，免插件，基于浏览器P2P文件/视频分享DEMO。&lt;br&gt;只要打开浏览器就能使用，每个访问者都是分享节点：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;免插件，仅依赖浏览器随时随地地文件分享&lt;/li&gt;
+&lt;li&gt;HTML5视频边下边播&lt;/li&gt;
+&lt;li&gt;Peer-to-Peer通信，像BitTorrent一样在多用户间加速分享，传输&lt;/li&gt;
+&lt;li&gt;支持额外的HTTP，WebSocket节点，保证内容随时可用，并能保持P2P加速的特性&lt;/li&gt;
+&lt;li&gt;通信数据量统计，等等。。。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;注：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;视频边下边播需要MP4、webm、ogg格式&lt;/li&gt;
+&lt;li&gt;HTTP节点需要CORS来源允许&lt;/li&gt;
+&lt;li&gt;WebSocket节点，文件置于 &lt;code&gt;project_path/data/&lt;/code&gt; 下，文件名只能包含英文和数字，通过 &lt;code&gt;ws://host:port/file/filename&lt;/code&gt; 添加&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;因为WebRTC协议还非常不完善，这个项目更多的是demo性质的，但是这个demo展现了WEB+P2P的更多可能。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;WebRTC&quot;&gt;&lt;a href=&quot;#WebRTC&quot; class=&quot;headerlink&quot; title=&quot;WebRTC&quot;&gt;&lt;/a&gt;WebRTC&lt;/h2&gt;&lt;p&gt;&lt;a href=&quot;http://www.webrtc.org/&quot; target=&quot;_blank&quot; rel=&quot;
+    
+    </summary>
+    
+    
+      <category term="javascript" scheme="http://blog.binux.me/tags/javascript/"/>
+    
+      <category term="webrtc" scheme="http://blog.binux.me/tags/webrtc/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Google+评论组件测试</title>
+    <link href="http://blog.binux.me/2013/04/googleplus-comments-test/"/>
+    <id>http://blog.binux.me/2013/04/googleplus-comments-test/</id>
+    <published>2013-04-18T23:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">
+Google+给Blogger添加了Google+的评论组件，看起来可以移植到别的地方，于是:
+
+&lt;pre&gt;
+
+  &amp;lt;div id=&#39;gpluscomments&#39;&amp;gt;&amp;lt;/div&amp;gt;
+  &amp;lt;script src=&#39;https://apis.google.com/js/plusone.js&#39; type=&#39;text/javascript&#39;&amp;gt;&amp;lt;/script&amp;gt;
+  &amp;lt;script&amp;gt;
+    gapi.comments.render(&#39;gpluscomments&#39;, {href: &#39;{{ site.production_url }}{{ page.url }}&#39;, first_party_property: &#39;BLOGGER&#39;, view_type: &#39;FILTERED_POSTMOD&#39;})
+  &amp;lt;/script&amp;gt;
+
+&lt;/pre&gt;
+
+&lt;br&gt;
+&lt;br&gt;
+&lt;hr&gt;
+&lt;div id=&quot;gpluscomments&quot;&gt;&lt;/div&gt;
+&lt;script src=&quot;https://apis.google.com/js/plusone.js&quot; type=&quot;text/javascript&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+  gapi.comments.render(&#39;gpluscomments&#39;, {href: &#39;&#39;, first_party_property: &#39;BLOGGER&#39;, view_type: &#39;FILTERED_POSTMOD&#39;})
+&lt;/script&gt;
+</content>
+    
+    <summary type="html">
+    
+      
+Google+给Blogger添加了Google+的评论组件，看起来可以移植到别的地方，于是:
+
+&lt;pre&gt;
+
+  &amp;lt;div id=&#39;gpluscomments&#39;&amp;gt;&amp;lt;/div&amp;gt;
+  &amp;lt;script src=&#39;https://apis.google.
+    
+    </summary>
+    
+    
+      <category term="javascript" scheme="http://blog.binux.me/tags/javascript/"/>
+    
+      <category term="google+" scheme="http://blog.binux.me/tags/google/"/>
+    
+      <category term="comments" scheme="http://blog.binux.me/tags/comments/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Google Apps Script</title>
+    <link href="http://blog.binux.me/2013/03/google-apps-script/"/>
+    <id>http://blog.binux.me/2013/03/google-apps-script/</id>
+    <published>2013-03-18T00:00:00.000Z</published>
+    <updated>2016-05-17T22:01:38.000Z</updated>
+    
+    <content type="html">&lt;p&gt;&lt;a href=&quot;/2012/11/google-sb/&quot;&gt;#google你个sb&lt;/a&gt; 把Google Reader关闭了，就像 &lt;a href=&quot;/2012/11/google-sb/&quot;&gt;#google你个sb&lt;/a&gt; 里说的，&lt;strong&gt;永远不要相信有什么免费的东西，即使他是google提供的&lt;/strong&gt;。比如今天介绍的这个 &lt;a href=&quot;https://developers.google.com/apps-script/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Google Apps Script&lt;/a&gt;，请不要相信它能长久运行下去，请准备好迁移的方案。&lt;/p&gt;
+&lt;h2 id=&quot;Google-Apps-Script&quot;&gt;&lt;a href=&quot;#Google-Apps-Script&quot; class=&quot;headerlink&quot; title=&quot;Google Apps Script&quot;&gt;&lt;/a&gt;Google Apps Script&lt;/h2&gt;&lt;p&gt;简称GAS，是一个JavaScript脚本驱动的云平台，通过GAS可以方便的连接Google和其他各种服务，执行各种自动化的任务。&lt;/p&gt;
+&lt;p&gt;平台API提供了：  &lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Google服务访问（mail, docs, charts, maps, calendar甚至还有翻译）&lt;/li&gt;
+&lt;li&gt;界面&lt;/li&gt;
+&lt;li&gt;数据库&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://developers.google.com/apps-script/service_urlfetch&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;&lt;strong&gt;urlfetch&lt;/strong&gt;&lt;/a&gt;！（可以post、可以修改header、可以修改body、甚至有一个帮助使用OAuth的类）&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;https://developers.google.com/apps-script/execution_time_triggers&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;定时任务&lt;/a&gt;、&lt;a href=&quot;https://developers.google.com/apps-script/execution_container_triggers&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;触发器&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;可以发布为&lt;a href=&quot;https://developers.google.com/apps-script/execution_web_apps&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;web apps&lt;/a&gt;，可以获得get、post参数等&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;甚至还有cache、lock，俨然要什么有什么啊！虽然有&lt;a href=&quot;http://docs.google.com/macros/dashboard&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;配额&lt;/a&gt;限制，虽然HTML会被 &lt;a href=&quot;https://developers.google.com/apps-script/html_service#Caja&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;重新渲染&lt;/a&gt;，无法在页面中完整使用JavaScript，但是，冲着免费的 &lt;a href=&quot;https://developers.google.com/apps-script/service_urlfetch&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;urlfetch&lt;/a&gt; 和 &lt;a href=&quot;https://developers.google.com/apps-script/execution_time_triggers&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;定时任务&lt;/a&gt; 就大有可为啊！我能想到的各种应用可以有：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;RSS转烧&lt;/li&gt;
+&lt;li&gt;各种HTTP代理，转换，绕过&lt;/li&gt;
+&lt;li&gt;数据统计、采集&lt;/li&gt;
+&lt;li&gt;各种WebHook的定时触发、检测HTTP服务是不是挂了&lt;/li&gt;
+&lt;li&gt;各种ifttt功能（特别是google自己的服务之间的）&lt;/li&gt;
+&lt;li&gt;建一个简单的动态网站，或者给自己的静态网站提供直接API&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;只要你想，大有可为。&lt;br&gt;API请参考 &lt;a href=&quot;https://developers.google.com/apps-script/defaultservices&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Default Services&lt;/a&gt;，上方的 &lt;a href=&quot;https://developers.google.com/apps-script/execution_methods&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Execution Methods for Scripts&lt;/a&gt; 等文章对环境以及常见的需求有一些介绍，建议阅读。&lt;/p&gt;
+&lt;h2 id=&quot;应用示例&quot;&gt;&lt;a href=&quot;#应用示例&quot; class=&quot;headerlink&quot; title=&quot;应用示例&quot;&gt;&lt;/a&gt;应用示例&lt;/h2&gt;&lt;h3 id=&quot;RSS转烧&quot;&gt;&lt;a href=&quot;#RSS转烧&quot; class=&quot;headerlink&quot; title=&quot;RSS转烧&quot;&gt;&lt;/a&gt;RSS转烧&lt;/h3&gt;&lt;p&gt;虽然HTML输出有限制，但 &lt;a href=&quot;https://developers.google.com/apps-script/content_service&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;XML、JSON、JSONP&lt;/a&gt; 却没有限制的，配合 &lt;a href=&quot;https://developers.google.com/apps-script/service_urlfetch&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;urlfetch&lt;/a&gt;，非常适合用来做RSS转烧，全文输出（这里建议用上缓存或者数据存储）等功能。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;示例：&lt;/strong&gt;&lt;br&gt;&lt;a href=&quot;https://script.google.com/macros/s/AKfycbys9aUHz-WVB2j6qIKOE4-ZVtEjRrLz8VeSph26WrivKFIlH0U/exec&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;yande.re高画质转烧&lt;/a&gt; / &lt;a href=&quot;https://script.google.com/d/1A-j39cTR8lnmJMaAodHHcjpyRyEoeTtZB4AE8RR4klKYxdZtbEklGHYb/edit?usp=sharing&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;源码&lt;/a&gt;&lt;br&gt;&lt;strong&gt;发布指南：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;阅读&lt;a href=&quot;https://developers.google.com/apps-script/execution_web_apps#deploying&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Deploying Your Script as a Web App&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;以自己的身份执行、访问权限为允许匿名&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;说明：&lt;/strong&gt;这里展示的是图站 &lt;a href=&quot;https://yande.re/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;yande.re&lt;/a&gt; 的sample画质输出以及title修改，这是我的第一个脚本，这里稍微尝试了一下环境以及urlfetch的功能，应该还是蛮简单的。更多转烧：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://script.google.com/macros/s/AKfycbw4yYvSaKebIaHrlzM0BRJcb8DraGST_3EFHlIBX7ZRZ4JKlGk/exec&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;danbooru&lt;/a&gt; &lt;a href=&quot;https://script.google.com/d/1HT85VFrLj_5kHH2ek3ONGgnHGhSSnYooZT_6ywCe-EOHIbvDvVrv1CX_/edit?usp=sharing&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;源码&lt;/a&gt;&lt;br&gt;&lt;a href=&quot;https://script.google.com/macros/s/AKfycby56iyEAOfVKpjspuV7e_vzfSLBOel4x02AXzFW1UoEfMJSwGnj/exec&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;konachan&lt;/a&gt; &lt;a href=&quot;https://script.google.com/d/1PZBEnh63gfP9N6RpkgFlyoim_IpSrke5KxMjGUC_ApgGNoNnodfil3v1/edit?usp=sharing&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;源码&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;reader2gplus&quot;&gt;&lt;a href=&quot;#reader2gplus&quot; class=&quot;headerlink&quot; title=&quot;reader2gplus&quot;&gt;&lt;/a&gt;reader2gplus&lt;/h3&gt;&lt;p&gt;自动将Google Reader中加星的条目同步到Google+上（反正Google Reader也快死了。。这个也用不了多久了吧。。）&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;示例：&lt;/strong&gt;&lt;a href=&quot;https://script.google.com/macros/s/AKfycbxWjsB7_8CHlgnyKo_AVFlgf8VPm5ZQ4OuNG1xL_7NKXG6prVw/exec&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;reader2gplus&lt;/a&gt; / &lt;a href=&quot;https://script.google.com/d/1FZad9bf60QJPRs-CcX9q8Q3qFS6-oMBYi5n3DNVoqZC2Wac0YFLXrJkW/edit?usp=sharing&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;源码&lt;/a&gt;&lt;br&gt;&lt;strong&gt;发布指南：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;阅读&lt;a href=&quot;https://developers.google.com/apps-script/execution_web_apps#deploying&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Deploying Your Script as a Web App&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;首先前往 &lt;a href=&quot;https://code.google.com/apis/console/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Google API Console&lt;/a&gt; 生成一个API，启用Google+ API，并为其生成一个Web Apps的key&lt;/li&gt;
+&lt;li&gt;在script脚本编辑页面中，Project Properties新建两个key：client_id, client_secret，填写上一步生成的key和secret&lt;/li&gt;
+&lt;li&gt;发布为以访问者身份执行，分享您fork的脚本与访问权限相一致&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;说明：&lt;/strong&gt;这里使用了 &lt;a href=&quot;https://developers.google.com/apps-script/service_urlfetch&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;urlfetch&lt;/a&gt; 更多的参数，实现了OAuth2.0认证，尝试了一下 &lt;a href=&quot;https://developers.google.com/+/api/latest/moments&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Google+的新API&lt;/a&gt;，使用了 &lt;a href=&quot;https://developers.google.com/apps-script/execution_time_triggers&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;定时任务&lt;/a&gt; 、GET参数、&lt;a href=&quot;https://developers.google.com/apps-script/html_service&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;界面&lt;/a&gt; 以及 &lt;a href=&quot;https://developers.google.com/apps-script/script_user_properties#userProperties&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;用户数据存储&lt;/a&gt; 。&lt;/p&gt;
+&lt;h3 id=&quot;迅雷离线预约下载&quot;&gt;&lt;a href=&quot;#迅雷离线预约下载&quot; class=&quot;headerlink&quot; title=&quot;迅雷离线预约下载&quot;&gt;&lt;/a&gt;迅雷离线预约下载&lt;/h3&gt;&lt;p&gt;自动将迅雷离线中完成的任务添加到Aria2上&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;示例：&lt;/strong&gt;&lt;a href=&quot;https://script.google.com/macros/s/AKfycbxqWzZ6CSVaXtUBO313S8bFhleYXzv5CbfeLpEs4_WVfnTYeco/exec&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;xunlei2aria2&lt;/a&gt; / &lt;a href=&quot;https://script.google.com/d/18pQAmp0THrjN148xoBFCgsUWJ__Xgi1nsih8WrOEM6eWVDziDPVDXc42/edit?usp=sharing&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;源码&lt;/a&gt;  &lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;使用说明：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;访问示例页面，将【】中的脚本拖拽到书签栏中保存&lt;/li&gt;
+&lt;li&gt;访问迅雷离线页面（建议先新建一个文件夹），登陆，点击书签&lt;/li&gt;
+&lt;li&gt;选择要预约的文件夹，填写&lt;a href=&quot;http://binux.github.com/yaaw/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;JSON-RPC地址&lt;/a&gt;（&lt;strong&gt;需要能被外网访问&lt;/strong&gt;）&lt;/li&gt;
+&lt;li&gt;将需要下载到aria2中的任务添加或移动到预约的文件夹中，当文件从文件夹消失，文件已经被添加到aria2中了&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;发布指南：&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;阅读&lt;a href=&quot;https://developers.google.com/apps-script/execution_web_apps#deploying&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Deploying Your Script as a Web App&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;发布为以访问者身份执行，分享您fork的脚本与访问权限相一致&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;说明：&lt;/strong&gt;终于到了一个比较实用的脚本了，这里演示的是urlfetch真正有用的地方——跨API操作。所有的东西在reader2gplus中都已经用过了，但是结构要比reader2gplus好不少。&lt;/p&gt;
+&lt;h2 id=&quot;总结&quot;&gt;&lt;a href=&quot;#总结&quot; class=&quot;headerlink&quot; title=&quot;总结&quot;&gt;&lt;/a&gt;总结&lt;/h2&gt;&lt;p&gt;GAS比起 &lt;a href=&quot;http://appengine.google.com&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;GAE&lt;/a&gt; 更加简单，但是功能足够强大，通过在线的调试器，写一两行代码比GAE要轻松不少。我JavaScript是在 &lt;a href=&quot;http://www.w3school.com.cn/index.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;w3school&lt;/a&gt; 学的，完全野生程序猿，在这里只是为了抛砖引玉，希望您能通过 GAS 能玩出更多有意思的东西。&lt;/p&gt;
+</content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;/2012/11/google-sb/&quot;&gt;#google你个sb&lt;/a&gt; 把Google Reader关闭了，就像 &lt;a href=&quot;/2012/11/google-sb/&quot;&gt;#google你个sb&lt;/a&gt; 里说的，&lt;strong&gt;永远不要相信有什么免费的
+    
+    </summary>
+    
+    
+      <category term="javascript" scheme="http://blog.binux.me/tags/javascript/"/>
+    
+      <category term="GAS" scheme="http://blog.binux.me/tags/GAS/"/>
+    
+      <category term="google_apps_script" scheme="http://blog.binux.me/tags/google-apps-script/"/>
+    
+  </entry>
+  
+</feed>

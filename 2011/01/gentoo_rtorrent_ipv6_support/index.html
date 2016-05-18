@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Gentoo rtorrent IPV6 支持 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="问题：
+
+gentoo中rtorrent连接ipv6 tracker的时候显示”Track :Couldn’t resolve host name”
+
+解决：
+既然是gentoo那么就用gentoo的emerge解决吧
+
+去http://libtorrent.rakshasa.no/ticket/1">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Gentoo rtorrent IPV6 支持"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="true" title="Binuxの杂货铺" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-01-23T12:25:43.000Z"><a href="/2011/01/gentoo_rtorrent_ipv6_support/">2011-01-23</a></time>
+      
+      
+  
+    <h1 class="title">Gentoo rtorrent IPV6 支持</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>问题：</p>
+<blockquote>
+<p>gentoo中rtorrent连接ipv6 tracker的时候显示”Track :Couldn’t resolve host name”</p>
+</blockquote>
+<p>解决：</p>
+<p>既然是gentoo那么就用gentoo的emerge解决吧</p>
+<ol>
+<li>去<a href="http://libtorrent.rakshasa.no/ticket/1111" target="_blank" rel="external">http://libtorrent.rakshasa.no/ticket/1111</a>找对应版本的补丁（注意，补丁修改了多次，尽量使用最新的。第一个版本甚至无法编译通过）</li>
+</ol>
+<ol>
+<li>将补丁下载到portage的目录</li>
+</ol>
+<pre><code>cd /usr/portage/net-libs/libtorrent/files
+# 请使用最新版本的补丁
+wget http://home.samfundet.no/~sesse/libtorrent-0.12.6-ipv6-07.patch
+mv libtorrent-0.12.6-ipv6-07.patch libtorrent-0.12.6-ipv6.patch
+
+cd ..
+</code></pre><ol>
+<li>修改ebuild文件</li>
+</ol>
+<pre><code>src_prepare() {
+    epatch &quot;${FILESDIR}&quot;/${P}-gcc44.patch
+    epatch &quot;${FILESDIR}&quot;/${P}-ipv6.patch
+    elibtoolize
+}
+</code></pre><ol>
+<li>重新生成签名, 重新emerge</li>
+</ol>
+<pre><code>ebuild libtorrent-0.12.6.ebuild digest
+emerge libtorrent
+</code></pre><p>同理修改rtorrent</p>
+<pre><code>cd /usr/portage/net-p2p/rtorrent/files
+# 请使用最新版本的补丁
+wget http://home.samfundet.no/~sesse/rtorrent-0.8.6-ipv6-07.patch
+mv rtorrent-0.8.6-ipv6-07.patch rtorrent-0.8.6-ipv6.patch
+
+cd ..
+
+
+
+
+src_prepare() {
+    epatch &quot;${FILESDIR}&quot;/${P}-canvas-fix.patch
+    epatch &quot;${FILESDIR}&quot;/${P}-ipv6.patch
+    elibtoolize
+}
+
+
+
+
+ebuild rtorrent-0.8.6.ebuild digest
+ebuild rtorrent-0.8.6.ebuild merge
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/未分类/">未分类</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/gentoo-rtorrent/">gentoo rtorrent</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:blog.binux.me">
+  </form>
+</div>
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
+      </li>
+    
+      <li>
+        <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
+      </li>
+    
+      <li>
+        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
+      </li>
+    
+      <li>
+        <a href="/2015/07/uk/">英国</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="http://binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'binux';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

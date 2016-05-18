@@ -1,0 +1,236 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>运行于百度云平台的Python网页代理 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="最近看到好多求BAE邀请的帖子，至少现在免费，于是也去求了一个，然后顺带开了python权限。随便看了下python环境，版本够新，该有的库和框架也比较齐全，fetchurl接口完全封装在内置库中，至少比起GAE来说，迁移成本低多了。沙盒也是恰到好处的感觉，初步感觉不错。提供的服务也涉及各个方面，云">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="运行于百度云平台的Python网页代理"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="true" title="Binuxの杂货铺" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2012-09-07T11:28:37.000Z"><a href="/2012/09/python-web-proxy-on-ba/">2012-09-07</a></time>
+      
+      
+  
+    <h1 class="title">运行于百度云平台的Python网页代理</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>最近看到好多求BAE邀请的帖子，至少现在免费，于是也去求了一个，然后顺带开了python权限。<br>随便看了下python环境，版本够新，该有的库和框架也比较齐全，fetchurl接口完全封装在内置库中，至少比起GAE来说，迁移成本低多了。沙盒也是恰到好处的感觉，初步感觉不错。<br>提供的服务也涉及各个方面，云存储，数据库，cache，队列该有的都有了。<br>fetch taskqueue能fetchurl和离线下载（支持最大4G，10小时下载）体现了百度的特色吧，感觉眼前一亮，虽然已经有百度网盘提供类似服务，但是作为开发平台，也能作出一些有意思的应用。<br>消息服务自带1000条短信1W封邮件每月。</p>
+<p>不过，百度依然体现了没有设计师的特色，界面和各个服务的开发包各不相同。。</p>
+<p>由于BAE政策和稳定性尚不明朗，不打算在上面做能够保存数据的应用。<br>于是，做一个网页代理吧</p>
+<p><a href="http://pyproxy.duapp.com/https://github.com/binux" target="_blank" rel="external">http://pyproxy.duapp.com/https://github.com/binux</a></p>
+<p>其他API：  </p>
+<p><a href="http://pyproxy.duapp.com/rewrite/http://www.baidu.com/" target="_blank" rel="external">http://pyproxy.duapp.com/rewrite/http://www.baidu.com/</a><br>使用这个地址访问会将页面上的url都加上代理的前缀</p>
+<p><a href="http://pyproxy.duapp.com/allow_origin/http://httpbin.duapp.com/ip" target="_blank" rel="external">http://pyproxy.duapp.com/allow_origin/http://httpbin.duapp.com/ip</a><br>用于ajax跨域读取，比如这样：<br>您的IP是：<span id="origin_ip"></span> 请自行查看源码  </p>
+<script src="http://lib.sinaapp.com/js/jquery/1.8.3/jquery.min.js"></script>
+<script>
+ $.get("http://pyproxy.duapp.com/allow_origin/http://httpbin.duapp.com/ip",
+  function(data) {
+  $("#origin_ip").text(data.origin);
+});
+</script>
+
+<p>不得不说，百度网速也太不怎么样了吧。。<br>第一次写网页代理，地址改写还真麻烦，xmlhttprequest好歹是拦截了，js动态加载的元素就算了。。</p>
+<p>附上rewrite代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- encoding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># vim: set et sw=4 ts=4 sts=4 ff=unix fenc=utf8:</span></span><br><span class="line"><span class="comment"># Author: Binux&lt;17175297.hk@gmail.com&gt;</span></span><br><span class="line"><span class="comment">#         http://binux.me</span></span><br><span class="line"><span class="comment"># Created on 2012-09-06 22:22:21</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urlparse</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">xmlhttprequest = <span class="string">'''XMLHttpRequest.prototype._open=XMLHttpRequest.prototype.open;</span><br><span class="line">XMLHttpRequest.prototype.open = function(m,u,a,us,p) &#123;</span><br><span class="line">  var proxyurl='%s', baseurl='%s', a=document.createElement('a');</span><br><span class="line">  a.href=u;u=a.href.replace(proxyurl,'');u=proxyurl+(u.indexOf('http')==0?u:baseurl+u);</span><br><span class="line">  if(console&amp;&amp;console.log)&#123;console.log("XMLHTTPRequest:",u);&#125;</span><br><span class="line">  return this._open(m,u,a,us,p);</span><br><span class="line">&#125;'''</span></span><br><span class="line">http_re = re.compile(<span class="string">"https?://"</span>, re.I)</span><br><span class="line">href_re1 = re.compile(<span class="string">"((href|src|action)\s*=\s*\"([^\"&lt;&gt;]+)\")"</span>, re.I)</span><br><span class="line">href_re2 = re.compile(<span class="string">"((href|src|action)\s*=\s*\'([^\'&lt;&gt;]+)\')"</span>, re.I)</span><br><span class="line">href_re3 = re.compile(<span class="string">"((href|src|action)\s*=\s*([^\'\"\s&lt;&gt;]+))"</span>, re.I)</span><br><span class="line">xmlhttprequest_re = re.compile(<span class="string">"&lt;script"</span>, re.I)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rewrite</span><span class="params">(proxyurl, baseurl, content)</span>:</span></span><br><span class="line">    <span class="comment">#content = http_re.sub(proxyurl+"\g&lt;0&gt;", content)</span></span><br><span class="line">    <span class="keyword">for</span> all, href, url <span class="keyword">in</span> href_re1.findall(content):</span><br><span class="line">        rewrited_url = urlparse.urljoin(baseurl, url)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> rewrited_url.startswith(proxyurl) <span class="keyword">and</span> rewrited_url.startswith(<span class="string">"http"</span>):</span><br><span class="line">            content = content.replace(all, <span class="string">'%s="%s%s"'</span> % (href, proxyurl, rewrited_url))</span><br><span class="line">    <span class="keyword">for</span> all, href, url <span class="keyword">in</span> href_re2.findall(content):</span><br><span class="line">        rewrited_url = urlparse.urljoin(baseurl, url)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> rewrited_url.startswith(proxyurl) <span class="keyword">and</span> rewrited_url.startswith(<span class="string">"http"</span>):</span><br><span class="line">            content = content.replace(all, <span class="string">'%s=\'%s%s\''</span> % (href, proxyurl, rewrited_url))</span><br><span class="line">    <span class="keyword">for</span> all, href, url <span class="keyword">in</span> href_re3.findall(content):</span><br><span class="line">        rewrited_url = urlparse.urljoin(baseurl, url)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> rewrited_url.startswith(proxyurl) <span class="keyword">and</span> rewrited_url.startswith(<span class="string">"http"</span>):</span><br><span class="line">            content = content.replace(all, <span class="string">'%s="%s%s"'</span> % (href, proxyurl, rewrited_url))</span><br><span class="line">    content = content.replace(<span class="string">"&lt;/title&gt;"</span>, <span class="string">"&lt;/title&gt;&lt;script&gt;%s&lt;/script&gt;"</span> % xmlhttprequest % (proxyurl, urlparse.urljoin(baseurl, <span class="string">"/"</span>)), <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> content</span><br></pre></td></tr></table></figure>
+<p><a href="https://gist.github.com/3663115" target="_blank" rel="external">https://gist.github.com/3663115</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/未分类/">未分类</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/python/">python</a>, <a href="/tags/BAE/">BAE</a>, <a href="/tags/proxy/">proxy</a>, <a href="/tags/webproxy/">webproxy</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:blog.binux.me">
+  </form>
+</div>
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
+      </li>
+    
+      <li>
+        <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
+      </li>
+    
+      <li>
+        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
+      </li>
+    
+      <li>
+        <a href="/2015/07/uk/">英国</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="http://binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'binux';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

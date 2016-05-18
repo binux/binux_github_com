@@ -1,0 +1,239 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>基于WEBRTC的免插件点到点视频分享 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="WebRTCWebRTC 是基于浏览器的实时通信协议（Real-Time Communications），通过WebRTC，可以在浏览器中直接进行点到点视频聊天和数据通信。WebRTC目前尚在协议开发中，但是已经在Chrome stable版和Firefox’s Nightly中实现，并且 能够互相">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="基于WEBRTC的免插件点到点视频分享"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="true" title="Binuxの杂货铺" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-05-04T23:00:00.000Z"><a href="/2013/05/webrtc-video/">2013-05-05</a></time>
+      
+      
+  
+    <h1 class="title">基于WEBRTC的免插件点到点视频分享</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="WebRTC"><a href="#WebRTC" class="headerlink" title="WebRTC"></a>WebRTC</h2><p><a href="http://www.webrtc.org/" target="_blank" rel="external">WebRTC</a> 是基于浏览器的实时通信协议（Real-Time Communications），通过WebRTC，可以在浏览器中直接进行<strong>点到点</strong>视频聊天和数据通信。WebRTC目前尚在协议开发中，但是已经在Chrome stable版和Firefox’s Nightly中实现，并且 <a href="http://blog.chromium.org/2013/02/hello-firefox-this-is-chrome-calling.html" target="_blank" rel="external">能够互相通信了</a>。通过WebRTC，浏览器将不仅限于和服务器通行，它将能够直接在浏览器间传输数据。通过 <a href="http://en.wikipedia.org/wiki/STUN" target="_blank" rel="external">STUN</a> 协议，即使有防火墙也没问题。</p>
+<p>DEMO: <a href="https://webrtc-experiment.appspot.com/" target="_blank" rel="external">https://webrtc-experiment.appspot.com/</a> (需翻墙)</p>
+<p>但是，WebRTC作为发布不到一年的协议，还存在非常多的问题：</p>
+<ul>
+<li>文档少</li>
+<li>协议繁琐，实现与<a href="http://dev.w3.org/2011/webrtc/editor/webrtc.html" target="_blank" rel="external">W3C标准</a>有出入</li>
+<li>实现不完全，Chrome下的DateChannel不支持可靠传输，只能传text，还有长度限制</li>
+<li>浏览器依赖</li>
+</ul>
+<p>但是相信随着标准慢慢完善，支持的实现变多，这样点到点的通信方式一定能给Web带来更多的可能。</p>
+<p>入门建议：参照 <a href="http://dev.w3.org/2011/webrtc/editor/webrtc.html" target="_blank" rel="external">W3C标准</a> 文档，对比 <a href="https://apprtc.appspot.com/" target="_blank" rel="external">https://apprtc.appspot.com/</a> 实现自行尝试（apprtc是封装最浅的实现版本）。另外需要指出的是，<a href="http://www.html5rocks.com/en/tutorials/webrtc/basics/" target="_blank" rel="external">HTML5 Rocks</a> 的文档是错误的。</p>
+<h2 id="WebRTC-video"><a href="#WebRTC-video" class="headerlink" title="WebRTC-video"></a>WebRTC-video</h2><p>GitHub： <a href="https://github.com/binux/webrtc_video" target="_blank" rel="external">https://github.com/binux/webrtc_video</a><br>DEMO： <a href="http://webrtc.binux.me/" target="_blank" rel="external">http://webrtc.binux.me/</a></p>
+<p>这是一个用WebRTC的DataChannel特性实现的，免插件，基于浏览器P2P文件/视频分享DEMO。<br>只要打开浏览器就能使用，每个访问者都是分享节点：</p>
+<ul>
+<li>免插件，仅依赖浏览器随时随地地文件分享</li>
+<li>HTML5视频边下边播</li>
+<li>Peer-to-Peer通信，像BitTorrent一样在多用户间加速分享，传输</li>
+<li>支持额外的HTTP，WebSocket节点，保证内容随时可用，并能保持P2P加速的特性</li>
+<li>通信数据量统计，等等。。。</li>
+</ul>
+<p>注：</p>
+<ul>
+<li>视频边下边播需要MP4、webm、ogg格式</li>
+<li>HTTP节点需要CORS来源允许</li>
+<li>WebSocket节点，文件置于 <code>project_path/data/</code> 下，文件名只能包含英文和数字，通过 <code>ws://host:port/file/filename</code> 添加</li>
+</ul>
+<p>因为WebRTC协议还非常不完善，这个项目更多的是demo性质的，但是这个demo展现了WEB+P2P的更多可能。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/javascript/">javascript</a>, <a href="/tags/webrtc/">webrtc</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:blog.binux.me">
+  </form>
+</div>
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
+      </li>
+    
+      <li>
+        <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
+      </li>
+    
+      <li>
+        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
+      </li>
+    
+      <li>
+        <a href="/2015/07/uk/">英国</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="http://binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'binux';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

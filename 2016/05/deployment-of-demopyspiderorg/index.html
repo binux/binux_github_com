@@ -1,0 +1,238 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>demo.pyspider.org 部署经验 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="经常有人会问 pyspider 怎么进行分布式部署，这里以 demo.pyspider.org 的实际部署经验做一个例子。
+因为 pyspider 支持分布式部署，为了验证也好，为了省钱多蹭 CPU 也好, demo.pyspider.org 通过 docker 部署在同一机房的 3 台 VPS 上">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="demo.pyspider.org 部署经验"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="true" title="Binuxの杂货铺" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-13T23:00:00.000Z"><a href="/2016/05/deployment-of-demopyspiderorg/">2016-05-14</a></time>
+      
+      
+  
+    <h1 class="title">demo.pyspider.org 部署经验</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>经常有人会问 <a href="https://github.com/binux/pyspider" target="_blank" rel="external">pyspider</a> 怎么进行分布式部署，这里以 <a href="http://demo.pyspider.org/" target="_blank" rel="external">demo.pyspider.org</a> 的实际部署经验做一个例子。</p>
+<p>因为 <a href="https://github.com/binux/pyspider" target="_blank" rel="external">pyspider</a> 支持分布式部署，为了验证也好，为了省钱多蹭 CPU 也好, <a href="http://demo.pyspider.org/" target="_blank" rel="external">demo.pyspider.org</a> 通过 docker 部署在同一机房的 3 台 VPS 上，VPS 间有内网传输（实际通过 <a href="http://www.tinc-vpn.org/" target="_blank" rel="external">tinc</a>）。</p>
+<p>使用 docker 的原因是实际上 pyspider 能够运行任何 python 脚本，至少需要 docker 环境逃逸。</p>
+<h1 id="数据库-amp-消息队列"><a href="#数据库-amp-消息队列" class="headerlink" title="数据库 &amp; 消息队列"></a>数据库 &amp; 消息队列</h1><p>demo.pyspider.org 的<strong>数据库为 <a href="http://www.postgresql.org/" target="_blank" rel="external">PostgreSQL</a></strong>，理由是测试目的，磁盘占用和性能的折中。<strong>消息队列为 <a href="http://redis.io/" target="_blank" rel="external">Redis</a></strong>，因为部署简单。</p>
+<p>它们也是跑在 docker 中的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run --name postgres -v /data/postgres/:/var/lib/postgresql/data <span class="_">-d</span> -p <span class="variable">$LOCAL_IP</span>:5432:5432 <span class="_">-e</span> POSTGRES_PASSWORD=<span class="string">""</span> postgres</span><br><span class="line">docker run --name redis <span class="_">-d</span> -p  <span class="variable">$LOCAL_IP</span>:6379:6379 redis</span><br></pre></td></tr></table></figure>
+<p>由于前面说过，机器间有内网，通过绑定内网 IP，没有做鉴权（反正 demo 会泄露）。</p>
+<h1 id="scheduler"><a href="#scheduler" class="headerlink" title="scheduler"></a>scheduler</h1><p>由于 scheduler 只能运行一个，并且需要进行大量的数据库操作，它与上面的数据库和消息队列部署在一台单独的机器上。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run --name scheduler <span class="_">-d</span> -p <span class="variable">$LOCAL_IP</span>:23333:23333 --restart=always binux/pyspider \</span><br><span class="line"> --taskdb <span class="string">"sqlalchemy+postgresql+taskdb://binux@10.21.0.7/taskdb"</span> \</span><br><span class="line"> --resultdb <span class="string">"sqlalchemy+postgresql+resultdb://binux@10.21.0.7/resultdb"</span> \</span><br><span class="line"> --projectdb <span class="string">"sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb"</span> \</span><br><span class="line"> --message-queue <span class="string">"redis://10.21.0.7:6379/1"</span> \</span><br><span class="line"> scheduler --inqueue-limit 5000 --delete-time 43200</span><br></pre></td></tr></table></figure>
+<h1 id="其他组件"><a href="#其他组件" class="headerlink" title="其他组件"></a>其他组件</h1><p>所有其他的组件（fetcher, processor, result_worker）在剩余的两台 VPS 上以相同的配置启动。他们都是通过 docker-compose 管理的</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">phantomjs:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'binux/pyspider:latest'</span></span><br><span class="line"><span class="attr">  command:</span> phantomjs</span><br><span class="line"><span class="attr">  cpu_shares:</span> <span class="number">512</span></span><br><span class="line"><span class="attr">  environment:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'EXCLUDE_PORTS=5000,23333,24444'</span></span><br><span class="line"><span class="attr">  expose:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'25555'</span></span><br><span class="line"><span class="attr">  mem_limit:</span> <span class="number">512</span>m</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line"><span class="attr">phantomjs-lb:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'dockercloud/haproxy:latest'</span></span><br><span class="line"><span class="attr">  links:</span></span><br><span class="line"><span class="bullet">    -</span> phantomjs</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line">  </span><br><span class="line"><span class="attr">fetcher:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'binux/pyspider:latest'</span></span><br><span class="line"><span class="attr">  command:</span> <span class="string">'--message-queue "redis://10.21.0.7:6379/1" --phantomjs-proxy "phantomjs:80" fetcher --xmlrpc'</span></span><br><span class="line"><span class="attr">  cpu_shares:</span> <span class="number">512</span></span><br><span class="line"><span class="attr">  environment:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'EXCLUDE_PORTS=5000,25555,23333'</span></span><br><span class="line"><span class="attr">  links:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'phantomjs-lb:phantomjs'</span></span><br><span class="line"><span class="attr">  mem_limit:</span> <span class="number">128</span>m</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line"><span class="attr">fetcher-lb:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'dockercloud/haproxy:latest'</span></span><br><span class="line"><span class="attr">  links:</span></span><br><span class="line"><span class="bullet">    -</span> fetcher</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line">  </span><br><span class="line"><span class="attr">processor:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'binux/pyspider:latest'</span></span><br><span class="line"><span class="attr">  command:</span> <span class="string">'--projectdb "sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb" --message-queue "redis://10.21.0.7:6379/1" processor'</span></span><br><span class="line"><span class="attr">  cpu_shares:</span> <span class="number">512</span></span><br><span class="line"><span class="attr">  mem_limit:</span> <span class="number">256</span>m</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line">  </span><br><span class="line"><span class="attr">result-worker:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'binux/pyspider:latest'</span></span><br><span class="line"><span class="attr">  command:</span> <span class="string">'--taskdb "sqlalchemy+postgresql+taskdb://binux@10.21.0.7/taskdb"  --projectdb "sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb" --resultdb "sqlalchemy+postgresql+resultdb://binux@10.21.0.7/resultdb" --message-queue "redis://10.21.0.7:6379/1" result_worker'</span></span><br><span class="line"><span class="attr">  cpu_shares:</span> <span class="number">512</span></span><br><span class="line"><span class="attr">  mem_limit:</span> <span class="number">256</span>m</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line">  </span><br><span class="line"><span class="attr">webui:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'binux/pyspider:latest'</span></span><br><span class="line"><span class="attr">  command:</span> <span class="string">'--taskdb "sqlalchemy+postgresql+taskdb://binux@10.21.0.7/taskdb"  --projectdb "sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb" --resultdb "sqlalchemy+postgresql+resultdb://binux@10.21.0.7/resultdb" --message-queue "redis://10.21.0.7:6379/1" webui --max-rate 0.2 --max-burst 3 --scheduler-rpc "http://o4.i.binux.me:23333/" --fetcher-rpc "http://fetcher/"'</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  cpu_shares:</span> <span class="number">512</span></span><br><span class="line"><span class="attr">  environment:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'EXCLUDE_PORTS=24444,25555,23333'</span></span><br><span class="line"><span class="attr">  links:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'fetcher-lb:fetcher'</span></span><br><span class="line"><span class="attr">  mem_limit:</span> <span class="number">256</span>m</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line"><span class="attr">webui-lb:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'dockercloud/haproxy:latest'</span></span><br><span class="line"><span class="attr">  links:</span></span><br><span class="line"><span class="bullet">    -</span> webui</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line">  </span><br><span class="line"><span class="attr">nginx:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'nginx'</span></span><br><span class="line"><span class="attr">  links:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'webui-lb:HAPROXY'</span></span><br><span class="line"><span class="attr">  ports:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'0.0.0.0:80:80'</span></span><br><span class="line"><span class="attr">  volumes:</span></span><br><span class="line"><span class="bullet">    -</span> /home/binux/nfs/profile/nginx/nginx.conf:/etc/nginx/nginx.conf</span><br><span class="line"><span class="bullet">    -</span> /home/binux/nfs/profile/nginx/conf.d/:/etc/nginx/conf.d/</span><br><span class="line"><span class="attr">  restart:</span> always</span><br></pre></td></tr></table></figure>
+<p>然后通过 <code>docker-compose scale phantomjs=2 processor=2 webui=4</code> 指定启动两个 phantomjs 进程，两个 processor 进程，4个 webui 进程。</p>
+<h4 id="phantomjs"><a href="#phantomjs" class="headerlink" title="phantomjs"></a>phantomjs</h4><p>由于 phantomjs 有内存泄露问题，限制下内存就好了。<code>EXCLUDE_PORTS</code> 是为了下面的 haproxy 能够正确的均衡负载正确端口。</p>
+<h4 id="phantomjs-lb"><a href="#phantomjs-lb" class="headerlink" title="phantomjs-lb"></a>phantomjs-lb</h4><p>通过 <a href="https://hub.docker.com/r/dockercloud/haproxy/" target="_blank" rel="external">haproxy</a> 自动负载均衡，只要将服务链接上去，就会将请求分发到不定多个 phantomjs 实例上，同时只暴露一个对外服务端口。</p>
+<h4 id="fetcher"><a href="#fetcher" class="headerlink" title="fetcher"></a>fetcher</h4><p>链接 <code>phantomjs-lb:phantomjs</code>，注意这里的 <code>--phantomjs-proxy &quot;phantomjs:80&quot;</code></p>
+<p>由于 fetcher 是异步 http 请求，如果没有发生堵塞，单个 fetcher 一般就足够了。</p>
+<h4 id="fetcher-lb"><a href="#fetcher-lb" class="headerlink" title="fetcher-lb"></a>fetcher-lb</h4><p>同 phantomjs-lb</p>
+<h4 id="processor"><a href="#processor" class="headerlink" title="processor"></a>processor</h4><p>processor 为最消耗 CPU 的组件，建议根据 CPU 的数量部署 +1/2 个。</p>
+<h4 id="result-worker"><a href="#result-worker" class="headerlink" title="result-worker"></a>result-worker</h4><p>默认的 result-worker 只是在写数据库，除非发生堵塞，或者你重载了 result_worker，一个就够。</p>
+<h4 id="webui"><a href="#webui" class="headerlink" title="webui"></a>webui</h4><p>首先，webui 为了安全性，限制了最大抓取速率 <code>--max-rate 0.2 --max-burst 3</code>。</p>
+<p>然后通过实际的 fetcher 进行抓取 <code>--fetcher-rpc &quot;http://fetcher/&quot;</code> 而不是 webui 自己发起请求，最大程度模拟环境（IP，库版本），因为以前遇到过调试的时候没问题，跑起来失败，然后在调试器复现又没法复现的问题。fetcher-rpc 可以不用，这样的会 webui 会自己直接发起请求。</p>
+<p>因为 demo.pyspider.org 主要就是提供通过页面来尝试 pyspider, 这里的负载较大，而且实现上是同步的，任何脚本执行，抓取都是堵塞了，多一些 webui 会比较好。</p>
+<h4 id="webui-lb"><a href="#webui-lb" class="headerlink" title="webui-lb"></a>webui-lb</h4><p>同 phantpmjs-lb</p>
+<h4 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h4><p>这里做了一些前端缓存</p>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>因为懒得管，每小时我会重启除了 scheduler 以外的其他组件（反正会重试）。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/pyspider/">pyspider</a>, <a href="/tags/deployment/">deployment</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:blog.binux.me">
+  </form>
+</div>
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
+      </li>
+    
+      <li>
+        <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
+      </li>
+    
+      <li>
+        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
+      </li>
+    
+      <li>
+        <a href="/2015/07/uk/">英国</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="http://binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'binux';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

@@ -1,0 +1,857 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="true" title="Binuxの杂货铺" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-14T23:00:00.000Z"><a href="/2016/05/bilibili-pay-user-analysis/">2016-05-15</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>2014年10月1日 bilibili 正版新番承包上线，我就对 bilibili 这种自愿付费的方式感到好奇。而且经常听到「正版体验不佳」，「正版动画比起盗版，有何优势呢」的言论，那么中国用户在不插广告，不优先播放，不强制的情况下，到底愿意为「爱」付多少钱呢？</p>
+<blockquote>
+<p><strong>为什么 bilibili?</strong></p>
+<p>bilibili 早期，新番都是用户上传的，可以说是典型的「盗版网站」。那么这个拥有大量用户的「盗版网站」体验应该说不差吧。</p>
+<p>随着 bilibili 开始购买版权，现在新番实际上是正版盗版共存的模式，而 bilibili 不插前置广告（当然现在有「约不约」了），不强制付费；从体验上看，特别相对其他国内视频网站，应该是最接近「盗版」的了。</p>
+</blockquote>
+<h1 id="付费人数"><a href="#付费人数" class="headerlink" title="付费人数"></a>付费人数</h1><p>bilibili 新番承包人数可以非常方便的从番剧的介绍页面上获知：</p>
+<p><img src="/assets/image/Screenshot_2016-05-15_13_41_24.png" alt="sponsor count"></p>
+<p>但是由于动画的类型不同，热度不同，独播非独播用户（路人）成分不同，直接比较数字没有什么意义。需要首先找到一个基准来讨论播放和付费数之间的关系。</p>
+<p>我抓取了新番承包上线以来新开播的 142 部新番（<a href="http://demo.pyspider.org/results?project=bgm_bilibili" target="_blank" rel="external">http://demo.pyspider.org/results?project=bgm_bilibili</a>），去除话数小于10的 OAD，OVA 等，剩下 136 部。将总播放，追番人数，弹幕总数画为散点图：</p>
+<p><img src="/assets/image/Screenshot 2016-05-15 15.29.25.png" alt="追番人数，弹幕总数 / 总播放"></p>
+<p>由图可知，弹幕总数和总播放数相关性比追番人数相关性更大（参照 <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination" target="_blank" rel="external">R^2</a>）。独家和非独家新番在弹幕参与度上相差不大，但是非独家的追番率比独家新番少了一半。难道非独家新番用户大多是非 bilibili 注册用户吗？这说不通啊，明明应该是反过来，非会员不得不到 bilibili 上看才对啊。。</p>
+<h3 id="付费比例"><a href="#付费比例" class="headerlink" title="付费比例"></a>付费比例</h3><p>在开始写这一节的时候，我本想应该挺简单的，承包人数要么和播放数正相关，要么和活跃（弹幕数）相关，要么就和追番人数相关。但是经过了3个小时，当我尝试了：</p>
+<ul>
+<li>总播放数</li>
+<li>平均每集播放数</li>
+<li>弹幕数</li>
+<li>收藏（追番）人数</li>
+<li>时间</li>
+<li>是否独家新番</li>
+</ul>
+<p>画了20+张图之后发现，问题并没有这么简单。很难有一个什么方法能够预测出用户的付费意愿，有很多叫好不叫座，或者叫座不叫好，导致付费比例非常分散：</p>
+<p><img src="/assets/image/Screenshot 2016-05-15 17.55.25.png" alt="承包 / 总播放数"></p>
+<blockquote>
+<p>图中左边是独播新番，右边为非独播</p>
+</blockquote>
+<p>这里面会发现一些有趣的地方：在独播和非独播中，都有一个承包比例非常高的点，分别是《电器街的漫画店》和《Fate/stay night [Unlimited Blade Works] 第一季》，他们都是2014年10月番，正好是新番承包刚上线时的作品，可能用户对承包模式的尝鲜，或者前期宣传上的增益。</p>
+<p>将特异点排除之后，发现不管是否独播，他们的付费比例差别不大，但是非独播的方差大得多：</p>
+<p><img src="/assets/image/Screenshot 2016-05-15 18.00.02.png" alt="去除特异点后的 承包 / 总播放数"></p>
+<p>平均上来说，<strong>bilibili 的付费比例约为播放数的万分之 1.447，收藏人数的千分之5.373</strong>。但是这只能是整体估计，具体到单个番剧就没有意义了。</p>
+<h3 id="用户到底为了什么付费？"><a href="#用户到底为了什么付费？" class="headerlink" title="用户到底为了什么付费？"></a>用户到底为了什么付费？</h3><p>那么，具体到每一部番剧，用户到底因为什么因素愿意付费呢？</p>
+<p>当我将付费比例前10与付费比例后10的放在一起比较，试图找出答案的时候，我真的失败了：</p>
+<p><img src="/assets/image/Screenshot 2016-05-15 21.11.35.png" alt="承包比例"></p>
+<p>在前10中有在我看来「这什么鬼」的，在后10中也有追过的，完全搞不懂拥有更高收费比例的番剧是为什么。当然，通过加入声优，导演，制作，类型 tag 等因素，或许可能找到原因，但这样少的数据，又很容易陷入过拟合的境地（如果有兴趣，可以<a href="http://demo.pyspider.org/results?project=bgm_bilibili" target="_blank" rel="external">下载数据</a>分析看看）。</p>
+<h1 id="付费金额"><a href="#付费金额" class="headerlink" title="付费金额"></a>付费金额</h1><h3 id="人均承包金额"><a href="#人均承包金额" class="headerlink" title="人均承包金额"></a>人均承包金额</h3><p>虽然在 bilibili 页面中有承包商排名，但是并不知道付费的金额，仅在你承包的时候，给出你当前的排名。为了了解承包商们在这样没有强制金额的「捐献」中愿意付多少钱，我从1元开始承包，然后查看我当前的排名来获得各个区段的人数：</p>
+<p><img src="/assets/image/Screenshot 2016-05-15 21.16.24.png" alt="承包总榜"></p>
+<p>为了消除连载中，独播，类型等影响，这里选择了连载中，非独播的的 <a href="http://bangumi.bilibili.com/anime/3461" target="_blank" rel="external">Re:Zero</a> 和已完结，独播，稍微腐女向的 <a href="http://bangumi.bilibili.com/anime/2725" target="_blank" rel="external">K RETURN</a>。</p>
+<p><img src="/assets/image/Screenshot 2016-05-15 18.32.14.png" alt="付费区间人数"></p>
+<p>从图中可以看出：</p>
+<ul>
+<li>主要用户的付费金额在 5-13（不要吐槽为什么是13，手抖了！）</li>
+<li>不同类型的番剧，承包金额的分布几乎是完全一样的</li>
+<li>TOP 付费用户的付费金额比较高，Re:Zero 我付到 500 元，依然有 3 个比我高的（于是我放弃了）</li>
+<li>同样付出 150 元，在 Re:Zero 中能排到 19，而在 K 中只能排到 37，还不论 K 的付费人数实际少于 Re:Zero（腐女还是有钱人多啊）</li>
+</ul>
+<p>那么，假如我们不考虑前 3 位的土豪，<strong>人均承包金额约为 13.08 元</strong>。因为我们并不知道土豪能为我们拉升多少身价，那，即使我们现在假设排名前三的土豪均承包五千块，人均承包金额也不过18元。为了简化，我们取20块好了。因为选取了两部因素差异蛮大的动画，得知不同因素对承包金额的分布影响不大，这个人均承包金额是可以套用到不同番剧上的。</p>
+<h3 id="承包收入"><a href="#承包收入" class="headerlink" title="承包收入"></a>承包收入</h3><p>那我们算一下，bilibili 通过新番承包，到底能赚多少钱呢？因为承包人数是公开的，乘以估计的人均20块的话，bilibili 承包收入收入排行：</p>
+<p><img src="/assets/image/Screenshot 2016-05-15 18.55.03.png" alt="承包收入排行"></p>
+<p>根据网上的传言，每集非独播新番版权价格大约是5万，独播更贵。那么好，我们统统算1万一集吧（对，就是这么任性）！那么也就 《Fate/stay night [Unlimited Blade Works] 第一季》 和 《电器街的漫画店》 实现了盈利。记得我们前面说过的付费比例异常吗？对，就是这两部「盈利」了的番剧。</p>
+<p>从整体来看，bilibili 通过承包总收入为 288.7 万，平均每部番剧的承包收入是 21388 元，不打折的话，一集都买不起啊！</p>
+<h1 id="我想说什么"><a href="#我想说什么" class="headerlink" title="我想说什么"></a>我想说什么</h1><p>经常有人会用「正版体验不佳」作为盗版的理由，<strong>说得好像正版体验一样了就会付费了似的</strong>。bilibili 同时有提供正版和盗版内容，正版有比盗版体验差吗？难道正版看得人就少了吗？好，就算确实看正版的人少了，我们不看绝对值，那这寒酸的千分之5.373的付费比例是怎么回事？什么「正版体验不佳」啊，「要付钱当然体验不佳」啦。</p>
+<p>另外一个常见的理由是「学生党，没有钱」，人均 20 块太贵出不起。请回过头看看追番人数，要是每个人出<strong>一块钱</strong>，那也要比现在这千分之5.373，人均20块的总收入高啊！<strong>一块钱</strong>都出不起吗？这可是<strong>一季</strong>动画，而不是一集让你出一块钱啊！看动画都是因为爱，而这份爱，连一块钱都不值吗？</p>
+<p><img src="/assets/image/ai.jpg" alt="爱"></p>
+<p>bilibili 不想通过广告那样半强制地收回那么一点点版权费，然而看起来这「爱」并不畅销。<strong>所以，我弱弱地提议，各位有爱的小伙伴，在看完一季动画后（是的，不喜欢可以不承包），从微信红包（是的，不用银行卡）中拿出那么一块钱（是的，最低承包不是5块，是可以改的），承包一下你喜欢的动画吧。</strong>。希望在「劣币驱逐良币」之前，良币不会先自己饿死吧。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-05-13T23:00:00.000Z"><a href="/2016/05/deployment-of-demopyspiderorg/">2016-05-14</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>经常有人会问 <a href="https://github.com/binux/pyspider" target="_blank" rel="external">pyspider</a> 怎么进行分布式部署，这里以 <a href="http://demo.pyspider.org/" target="_blank" rel="external">demo.pyspider.org</a> 的实际部署经验做一个例子。</p>
+<p>因为 <a href="https://github.com/binux/pyspider" target="_blank" rel="external">pyspider</a> 支持分布式部署，为了验证也好，为了省钱多蹭 CPU 也好, <a href="http://demo.pyspider.org/" target="_blank" rel="external">demo.pyspider.org</a> 通过 docker 部署在同一机房的 3 台 VPS 上，VPS 间有内网传输（实际通过 <a href="http://www.tinc-vpn.org/" target="_blank" rel="external">tinc</a>）。</p>
+<p>使用 docker 的原因是实际上 pyspider 能够运行任何 python 脚本，至少需要 docker 环境逃逸。</p>
+<h1 id="数据库-amp-消息队列"><a href="#数据库-amp-消息队列" class="headerlink" title="数据库 &amp; 消息队列"></a>数据库 &amp; 消息队列</h1><p>demo.pyspider.org 的<strong>数据库为 <a href="http://www.postgresql.org/" target="_blank" rel="external">PostgreSQL</a></strong>，理由是测试目的，磁盘占用和性能的折中。<strong>消息队列为 <a href="http://redis.io/" target="_blank" rel="external">Redis</a></strong>，因为部署简单。</p>
+<p>它们也是跑在 docker 中的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run --name postgres -v /data/postgres/:/var/lib/postgresql/data <span class="_">-d</span> -p <span class="variable">$LOCAL_IP</span>:5432:5432 <span class="_">-e</span> POSTGRES_PASSWORD=<span class="string">""</span> postgres</span><br><span class="line">docker run --name redis <span class="_">-d</span> -p  <span class="variable">$LOCAL_IP</span>:6379:6379 redis</span><br></pre></td></tr></table></figure>
+<p>由于前面说过，机器间有内网，通过绑定内网 IP，没有做鉴权（反正 demo 会泄露）。</p>
+<h1 id="scheduler"><a href="#scheduler" class="headerlink" title="scheduler"></a>scheduler</h1><p>由于 scheduler 只能运行一个，并且需要进行大量的数据库操作，它与上面的数据库和消息队列部署在一台单独的机器上。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run --name scheduler <span class="_">-d</span> -p <span class="variable">$LOCAL_IP</span>:23333:23333 --restart=always binux/pyspider \</span><br><span class="line"> --taskdb <span class="string">"sqlalchemy+postgresql+taskdb://binux@10.21.0.7/taskdb"</span> \</span><br><span class="line"> --resultdb <span class="string">"sqlalchemy+postgresql+resultdb://binux@10.21.0.7/resultdb"</span> \</span><br><span class="line"> --projectdb <span class="string">"sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb"</span> \</span><br><span class="line"> --message-queue <span class="string">"redis://10.21.0.7:6379/1"</span> \</span><br><span class="line"> scheduler --inqueue-limit 5000 --delete-time 43200</span><br></pre></td></tr></table></figure>
+<h1 id="其他组件"><a href="#其他组件" class="headerlink" title="其他组件"></a>其他组件</h1><p>所有其他的组件（fetcher, processor, result_worker）在剩余的两台 VPS 上以相同的配置启动。他们都是通过 docker-compose 管理的</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">phantomjs:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'binux/pyspider:latest'</span></span><br><span class="line"><span class="attr">  command:</span> phantomjs</span><br><span class="line"><span class="attr">  cpu_shares:</span> <span class="number">512</span></span><br><span class="line"><span class="attr">  environment:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'EXCLUDE_PORTS=5000,23333,24444'</span></span><br><span class="line"><span class="attr">  expose:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'25555'</span></span><br><span class="line"><span class="attr">  mem_limit:</span> <span class="number">512</span>m</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line"><span class="attr">phantomjs-lb:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'dockercloud/haproxy:latest'</span></span><br><span class="line"><span class="attr">  links:</span></span><br><span class="line"><span class="bullet">    -</span> phantomjs</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line">  </span><br><span class="line"><span class="attr">fetcher:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'binux/pyspider:latest'</span></span><br><span class="line"><span class="attr">  command:</span> <span class="string">'--message-queue "redis://10.21.0.7:6379/1" --phantomjs-proxy "phantomjs:80" fetcher --xmlrpc'</span></span><br><span class="line"><span class="attr">  cpu_shares:</span> <span class="number">512</span></span><br><span class="line"><span class="attr">  environment:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'EXCLUDE_PORTS=5000,25555,23333'</span></span><br><span class="line"><span class="attr">  links:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'phantomjs-lb:phantomjs'</span></span><br><span class="line"><span class="attr">  mem_limit:</span> <span class="number">128</span>m</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line"><span class="attr">fetcher-lb:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'dockercloud/haproxy:latest'</span></span><br><span class="line"><span class="attr">  links:</span></span><br><span class="line"><span class="bullet">    -</span> fetcher</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line">  </span><br><span class="line"><span class="attr">processor:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'binux/pyspider:latest'</span></span><br><span class="line"><span class="attr">  command:</span> <span class="string">'--projectdb "sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb" --message-queue "redis://10.21.0.7:6379/1" processor'</span></span><br><span class="line"><span class="attr">  cpu_shares:</span> <span class="number">512</span></span><br><span class="line"><span class="attr">  mem_limit:</span> <span class="number">256</span>m</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line">  </span><br><span class="line"><span class="attr">result-worker:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'binux/pyspider:latest'</span></span><br><span class="line"><span class="attr">  command:</span> <span class="string">'--taskdb "sqlalchemy+postgresql+taskdb://binux@10.21.0.7/taskdb"  --projectdb "sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb" --resultdb "sqlalchemy+postgresql+resultdb://binux@10.21.0.7/resultdb" --message-queue "redis://10.21.0.7:6379/1" result_worker'</span></span><br><span class="line"><span class="attr">  cpu_shares:</span> <span class="number">512</span></span><br><span class="line"><span class="attr">  mem_limit:</span> <span class="number">256</span>m</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line">  </span><br><span class="line"><span class="attr">webui:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'binux/pyspider:latest'</span></span><br><span class="line"><span class="attr">  command:</span> <span class="string">'--taskdb "sqlalchemy+postgresql+taskdb://binux@10.21.0.7/taskdb"  --projectdb "sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb" --resultdb "sqlalchemy+postgresql+resultdb://binux@10.21.0.7/resultdb" --message-queue "redis://10.21.0.7:6379/1" webui --max-rate 0.2 --max-burst 3 --scheduler-rpc "http://o4.i.binux.me:23333/" --fetcher-rpc "http://fetcher/"'</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  cpu_shares:</span> <span class="number">512</span></span><br><span class="line"><span class="attr">  environment:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'EXCLUDE_PORTS=24444,25555,23333'</span></span><br><span class="line"><span class="attr">  links:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'fetcher-lb:fetcher'</span></span><br><span class="line"><span class="attr">  mem_limit:</span> <span class="number">256</span>m</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line"><span class="attr">webui-lb:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'dockercloud/haproxy:latest'</span></span><br><span class="line"><span class="attr">  links:</span></span><br><span class="line"><span class="bullet">    -</span> webui</span><br><span class="line"><span class="attr">  restart:</span> always</span><br><span class="line">  </span><br><span class="line"><span class="attr">nginx:</span></span><br><span class="line"><span class="attr">  image:</span> <span class="string">'nginx'</span></span><br><span class="line"><span class="attr">  links:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'webui-lb:HAPROXY'</span></span><br><span class="line"><span class="attr">  ports:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">'0.0.0.0:80:80'</span></span><br><span class="line"><span class="attr">  volumes:</span></span><br><span class="line"><span class="bullet">    -</span> /home/binux/nfs/profile/nginx/nginx.conf:/etc/nginx/nginx.conf</span><br><span class="line"><span class="bullet">    -</span> /home/binux/nfs/profile/nginx/conf.d/:/etc/nginx/conf.d/</span><br><span class="line"><span class="attr">  restart:</span> always</span><br></pre></td></tr></table></figure>
+<p>然后通过 <code>docker-compose scale phantomjs=2 processor=2 webui=4</code> 指定启动两个 phantomjs 进程，两个 processor 进程，4个 webui 进程。</p>
+<h4 id="phantomjs"><a href="#phantomjs" class="headerlink" title="phantomjs"></a>phantomjs</h4><p>由于 phantomjs 有内存泄露问题，限制下内存就好了。<code>EXCLUDE_PORTS</code> 是为了下面的 haproxy 能够正确的均衡负载正确端口。</p>
+<h4 id="phantomjs-lb"><a href="#phantomjs-lb" class="headerlink" title="phantomjs-lb"></a>phantomjs-lb</h4><p>通过 <a href="https://hub.docker.com/r/dockercloud/haproxy/" target="_blank" rel="external">haproxy</a> 自动负载均衡，只要将服务链接上去，就会将请求分发到不定多个 phantomjs 实例上，同时只暴露一个对外服务端口。</p>
+<h4 id="fetcher"><a href="#fetcher" class="headerlink" title="fetcher"></a>fetcher</h4><p>链接 <code>phantomjs-lb:phantomjs</code>，注意这里的 <code>--phantomjs-proxy &quot;phantomjs:80&quot;</code></p>
+<p>由于 fetcher 是异步 http 请求，如果没有发生堵塞，单个 fetcher 一般就足够了。</p>
+<h4 id="fetcher-lb"><a href="#fetcher-lb" class="headerlink" title="fetcher-lb"></a>fetcher-lb</h4><p>同 phantomjs-lb</p>
+<h4 id="processor"><a href="#processor" class="headerlink" title="processor"></a>processor</h4><p>processor 为最消耗 CPU 的组件，建议根据 CPU 的数量部署 +1/2 个。</p>
+<h4 id="result-worker"><a href="#result-worker" class="headerlink" title="result-worker"></a>result-worker</h4><p>默认的 result-worker 只是在写数据库，除非发生堵塞，或者你重载了 result_worker，一个就够。</p>
+<h4 id="webui"><a href="#webui" class="headerlink" title="webui"></a>webui</h4><p>首先，webui 为了安全性，限制了最大抓取速率 <code>--max-rate 0.2 --max-burst 3</code>。</p>
+<p>然后通过实际的 fetcher 进行抓取 <code>--fetcher-rpc &quot;http://fetcher/&quot;</code> 而不是 webui 自己发起请求，最大程度模拟环境（IP，库版本），因为以前遇到过调试的时候没问题，跑起来失败，然后在调试器复现又没法复现的问题。fetcher-rpc 可以不用，这样的会 webui 会自己直接发起请求。</p>
+<p>因为 demo.pyspider.org 主要就是提供通过页面来尝试 pyspider, 这里的负载较大，而且实现上是同步的，任何脚本执行，抓取都是堵塞了，多一些 webui 会比较好。</p>
+<h4 id="webui-lb"><a href="#webui-lb" class="headerlink" title="webui-lb"></a>webui-lb</h4><p>同 phantpmjs-lb</p>
+<h4 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h4><p>这里做了一些前端缓存</p>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>因为懒得管，每小时我会重启除了 scheduler 以外的其他组件（反正会重试）。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-12-31T00:00:00.000Z"><a href="/2015/12/uk2/">2015-12-31</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/12/uk2/">足兆叉虫的2015</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>我是从来不记日子的，这导致我也不知道有些事情是2015年发生的，还是2014年发生的，亦或只是我的臆想。即便如此，2015年也是变化的一年。</p>
+<p>跳槽，工资没涨…… 到这里居然和2013年是一样的，但是当我在2015写下这篇日志的时候，国内已经2016。</p>
+<p>说来惭愧，这一年除了一月写了几篇教程之后，不但 blog 落下了，开源也没有做多少。看着 pyspider 的 star 数蹭蹭涨到 5813，但是并没有太多精力去更新。希望在 2016 年能有时间把 slime 模式的坑填了吧。</p>
+<p>其他的项目也就在年末的时候又重新玩了一把 WebRTC，基于的 <a href="https://webtorrent.io" target="_blank" rel="external">WebTorrent</a> 经过一年的开发，已经成熟了很多，feross 在 javascript 上从 tracker 到 BT 协议都实现了一遍，比起我那时山寨的好了非常多，虽然 hybrid 模式还有很多问题。。。对了 2015 年参与过 technical review 的 <a href="https://www.packtpub.com/web-development/learning-webrtc" target="_blank" rel="external">Learning WebRTC</a> 也出版了，算是一次挺有趣的经历吧。</p>
+<p>8月到英国之后，就是各种适应，加上新公司的蜜月期，一门心思放在了公司的项目上。在新公司才算是第一次接触到了机器学习，给我带来了很多新的思路，有种能成的感觉吧。</p>
+<p>希望2016年能更有趣吧。</p>
+<h2 id="英国（二）"><a href="#英国（二）" class="headerlink" title="英国（二）"></a>英国（二）</h2><p>然后说一些「关于英国生活」类似的东西吧，想到什么写什么</p>
+<h3 id="衣食住行"><a href="#衣食住行" class="headerlink" title="衣食住行"></a>衣食住行</h3><ul>
+<li>夏天不热，这个冬天不冷</li>
+<li>冬天是雨季，几乎一半时间在下雨，但是从来没有在上下班的时候下</li>
+<li>英国不负「难吃国」之名，只要是英文店名的地方，那真是难吃 + 贵</li>
+<li>中午的饭点是1-2点，晚餐饭点是8-9点</li>
+<li>一个很大问题是，看菜单很多时候不知道是什么东西，查字典也没用</li>
+<li>一盒 200g 的毛豆都要卖20-30RMB，而且还被他们视为高贵的健康食品</li>
+<li>有很多中国人开的中餐馆和日式便当，这是唯一能吃的东西（除了 KFC）</li>
+<li>超市的肉类品种和部位很不同，炒出来很老，我用了3个月才想出来怎么吃</li>
+<li>鸡翅鸡腿比鸡胸便宜，只要10RMB/斤</li>
+<li>肉比蔬菜便宜</li>
+<li>住非常贵，北京的7-8倍</li>
+<li>行非常贵，北京的5-10倍</li>
+<li>伦敦很小，和北京比起来</li>
+</ul>
+<h3 id="公司"><a href="#公司" class="headerlink" title="公司"></a>公司</h3><ul>
+<li>公司现在有40+个人，但是有15种国籍，22+种语言</li>
+<li>有4个华裔同事，但是任意两者之间只能用英语交流（除英语外会的语言分别是普通话，粤语，日语，马来语，德语）</li>
+<li>没有印度人</li>
+<li>一年25天年假，8天法定假日，没有年终奖</li>
+<li>不加班的主要原因是没有晚餐，肚子饿</li>
+<li>公司以外听不懂别人说什么 =_=</li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-07-20T23:00:00.000Z"><a href="/2015/07/uk/">2015-07-21</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/07/uk/">英国</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>半年没有更新 blog 了，<del>其实我在憋(wan)个(W)大(O)招(W)</del>。一年半以前，我说过<a href="http://blog.binux.me/2013/12/2013/">「想学日语，想出国」</a>，虽然这一年半也是没有干劲地随随便便过的，但是至少出国了。</p>
+<p>目的地英国，工作，8月初。</p>
+<p>要说经历，其实简单到爆。</p>
+<ol>
+<li>投简历（依旧是只投一家）</li>
+<li>视频面试（用我8年没用过的蹩脚英语）</li>
+<li>考雅思（而且只要4分，我只做了套剑9就去了）</li>
+<li>对方办 <a href="https://www.gov.uk/tier-2-general/eligibility" target="_blank" rel="external">certificates of sponsorship</a>（虽然每月有名额限制，按照打分排，但是以往的数据，只要满足条件，名额都够。）</li>
+<li>办签证（不像旅游签证，不用行程单，不用资产证明，有 COS 就 ok）</li>
+<li>买机票</li>
+<li>over</li>
+</ol>
+<p>工资没涨，物价大涨，难吃，加上烂英语，瞬间感觉生活甚是艰辛。。。不过， there is always a way，就当作一次挑战吧。</p>
+<p>就酱</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-01-10T00:00:00.000Z"><a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">2015-01-10</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>英文原文：<a href="http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/" target="_blank" rel="external">http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/</a></p>
+<p>在上两篇教程中，我们学习了怎么从 HTML 中提取信息，也学习了怎么处理一些请求复杂的页面。但是有一些页面，它实在太复杂了，无论是分析 API 请求的地址，还是渲染时进行了加密，让直接抓取请求非常麻烦。这时候就是 <a href="http://phantomjs.org/" target="_blank" rel="external">PhantomJS</a> 大显身手的时候了。</p>
+<p>在使用 <a href="http://phantomjs.org/" target="_blank" rel="external">PhantomJS</a> 之前，你需要安装它（<a href="http://phantomjs.org/download.html" target="_blank" rel="external">安装文档</a>）。当你安装了之后，在运行 <code>all</code> 模式的 pyspider 时就会自动启用了。当然，你也可以在 <a href="http://demo.pyspider.org/" target="_blank" rel="external">demo.pyspider.org</a> 上尝试。</p>
+<h2 id="使用-PhantomJS"><a href="#使用-PhantomJS" class="headerlink" title="使用 PhantomJS"></a>使用 PhantomJS</h2><p>当 pyspider 连上 PhantomJS 代理后，你就能通过在 <code>self.crawl</code> 中添加 <code>fetch_type=&#39;js&#39;</code> 的参数，开启使用 PhantomJS 抓取。例如，在教程二中，我们尝试抓取的 <a href="http://movie.douban.com/explore" target="_blank" rel="external">http://movie.douban.com/explore</a> 就可以通过 PhantomJS 直接抓取：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handler</span><span class="params">(BaseHandler)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_start</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.crawl(<span class="string">'http://movie.douban.com/explore'</span>,</span><br><span class="line">                   fetch_type=<span class="string">'js'</span>, callback=self.phantomjs_parser)</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">phantomjs_parser</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> [&#123;</span><br><span class="line">            <span class="string">"title"</span>: <span class="string">""</span>.join(</span><br><span class="line">                s <span class="keyword">for</span> s <span class="keyword">in</span> x(<span class="string">'p'</span>).contents() <span class="keyword">if</span> isinstance(s, basestring)</span><br><span class="line">            ).strip(),</span><br><span class="line">            <span class="string">"rate"</span>: x(<span class="string">'p strong'</span>).text(),</span><br><span class="line">            <span class="string">"url"</span>: x.attr.href,</span><br><span class="line">        &#125; <span class="keyword">for</span> x <span class="keyword">in</span> response.doc(<span class="string">'a.item'</span>).items()]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>我在这里使用了一些 PyQuery 的 API，你可以在 <a href="https://pythonhosted.org/pyquery/api.html" target="_blank" rel="external">PyQuery complete API</a> 获得完整的 API 手册。</li>
+</ul>
+</blockquote>
+<h2 id="在页面上执行自定义脚本"><a href="#在页面上执行自定义脚本" class="headerlink" title="在页面上执行自定义脚本"></a>在页面上执行自定义脚本</h2><p>你会发现，在上面我们使用 <a href="http://phantomjs.org/" target="_blank" rel="external">PhantomJS</a> 抓取的豆瓣热门电影只有 20 条。当你点击『加载更多』时，能获得更多的热门电影。为了获得更多的电影，我们可以使用 <code>self.crawl</code> 的 <code>js_script</code> 参数，在页面上执行一段脚本，点击加载更多：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">on_start</span><span class="params">(self)</span>:</span></span><br><span class="line">    self.crawl(<span class="string">'http://movie.douban.com/explore#more'</span>,</span><br><span class="line">               fetch_type=<span class="string">'js'</span>, js_script=<span class="string">"""</span><br><span class="line">               function() &#123;</span><br><span class="line">                 setTimeout("$('.more').click()", 1000);</span><br><span class="line">               &#125;"""</span>, callback=self.phantomjs_parser)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>这个脚本默认在页面加载结束后执行，你可以通过 <code>js_run_at</code> <a href="http://docs.pyspider.org/en/latest//apis/self.crawl/#enable-javascript-fetcher-need-support-by-fetcher" target="_blank" rel="external">参数</a> 修改这个行为</li>
+<li>由于是 AJAX 异步加载的，在页面加载完成时，第一页的电影可能还没有加载完，所以我们用 <code>setTimeout</code> 延迟 1 秒执行。</li>
+<li>你可以间隔一定时间，多次点击，这样可以加载更多页。</li>
+<li>由于相同 URL （实际是相同 taskid） 的任务会被去重，所以这里为 URL 加了一个 <code>#more</code></li>
+</ul>
+</blockquote>
+<p>上面两个例子，都可以在 <a href="http://demo.pyspider.org/debug/tutorial_douban_explore" target="_blank" rel="external">http://demo.pyspider.org/debug/tutorial_douban_explore</a> 中找到。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-01-09T00:00:00.000Z"><a href="/2015/01/pyspider-tutorial-level-2-ajax-and-more-http/">2015-01-09</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/01/pyspider-tutorial-level-2-ajax-and-more-http/">pyspider 爬虫教程（二）：AJAX 和 HTTP</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>在上一篇教程中，我们使用 <code>self.crawl</code> API 抓取豆瓣电影的 HTML 内容，并使用 CSS 选择器解析了一些内容。不过，现在的网站通过使用 <a href="http://www.w3school.com.cn/ajax/ajax_intro.asp" target="_blank" rel="external">AJAX</a> 等技术，在你与服务器交互的同时，不用重新加载整个页面。但是，这些交互手段，让抓取变得稍微难了一些：你会发现，这些网页在抓回来后，和浏览器中的并不相同。你需要的信息并不在返回 HTML 代码中。</p>
+<p>在这一篇教程中，我们会讨论这些技术 和 抓取他们的方法。（英文版：<a href="http://docs.pyspider.org/en/latest/tutorial/AJAX-and-more-HTTP/" target="_blank" rel="external">AJAX-and-more-HTTP</a>）</p>
+<h2 id="AJAX"><a href="#AJAX" class="headerlink" title="AJAX"></a>AJAX</h2><p><a href="http://www.w3school.com.cn/ajax/ajax_intro.asp" target="_blank" rel="external">AJAX</a> 是 Asynchronous JavaScript and XML（异步的 JavaScript 和 XML）的缩写。AJAX 通过使用原有的 web 标准组件，实现了在不重新加载整个页面的情况下，与服务器进行数据交互。例如在新浪微博中，你可以展开一条微博的评论，而不需要重新加载，或者打开一个新的页面。但是这些内容并不是一开始就在页面中的（这样页面就太大了），而是在你点击的时候被加载进来的。这就导致了你抓取这个页面的时候，并不能获得这些评论信息（因为你没有『展开』）。</p>
+<p><a href="http://www.w3school.com.cn/ajax/ajax_intro.asp" target="_blank" rel="external">AJAX</a> 的一种常见用法是使用 <a href="http://www.w3school.com.cn/ajax/ajax_intro.asp" target="_blank" rel="external">AJAX</a> 加载 <a href="http://www.w3school.com.cn/json/" target="_blank" rel="external">JSON</a> 数据，然后在浏览器端渲染。如果能直接抓取到 <a href="http://www.w3school.com.cn/json/" target="_blank" rel="external">JSON</a> 数据，会比 HTML 更容易解析。</p>
+<p>当一个网站使用了 AJAX 的时候，除了用 pyspider 抓取到的页面和浏览器看到的不同以外。你在浏览器中打开这样的页面，或者点击『展开』的时候，常常会看到『加载中』或者类似的图标/动画。例如，当你尝试抓取：<a href="http://movie.douban.com/explore" target="_blank" rel="external">http://movie.douban.com/explore</a></p>
+<p><img src="/assets/image/douban_explore.png" alt="douban explore"></p>
+<p>你会发现电影是『载入中…』</p>
+<h3 id="找到真实的请求"><a href="#找到真实的请求" class="headerlink" title="找到真实的请求"></a>找到真实的请求</h3><p>由于 AJAX 实际上也是通过 HTTP 传输数据的，所以我们可以通过 <a href="https://developer.chrome.com/devtools" target="_blank" rel="external">Chrome Developer Tools</a> 找到真实的请求，直接发起真实请求的抓取就可以获得数据了。</p>
+<ol>
+<li>打开一个新窗口</li>
+<li>按 <code>Ctrl</code>+<code>Shift</code>+<code>I</code> (在 Mac 上请按 <code>Cmd</code>+<code>Opt</code>+<code>I</code>) 打开开发者工具。</li>
+<li>切换到网络（ Netwotk 面板）</li>
+<li>在窗口中打开 <a href="http://movie.douban.com/explore" target="_blank" rel="external">http://movie.douban.com/explore</a></li>
+</ol>
+<p>在页面加载的过程中，你会在面板中看到所有的资源请求。</p>
+<p><img src="/assets/image/douban_explore_network_panel.png" alt="douban explore network panel"></p>
+<p>AJAX 一般是通过 <a href="http://www.w3school.com.cn/ajax/ajax_xmlhttprequest_create.asp" target="_blank" rel="external">XMLHttpRequest</a> 对象接口发送请求的，XMLHttpRequest 一般被缩写为 XHR。点击网络面板上漏斗形的过滤按钮，过滤出 XHR 请求。挨个查看每个请求，通过访问路径和预览，找到包含信息的请求：<a href="http://movie.douban.com/j/search_subjects?type=movie&amp;tag=%E7%83%AD%E9%97%A8&amp;sort=recommend&amp;page_limit=20&amp;page_start=0" target="_blank" rel="external">http://movie.douban.com/j/search_subjects?type=movie&amp;tag=%E7%83%AD%E9%97%A8&amp;sort=recommend&amp;page_limit=20&amp;page_start=0</a></p>
+<p><img src="/assets/image/douban_explore_xhr_preview.png" alt="douban explore xhr preview"></p>
+<p>在豆瓣这个例子中，XHR 请求并不多，可以挨个查看来确认。但在 XHR 请求较多的时候，可能需要结合触发动作的时间，请求的路径等信息帮助在大量的请求中找到包含信息的关键请求。这需要抓取或者前端的相关经验。所以，有一个我一直在提的观点，学习抓取的最好方法是：学会写网站。</p>
+<p>现在可以在新窗口中打开 <a href="http://movie.douban.com/j/search_subjects?type=movie&amp;tag=%E7%83%AD%E9%97%A8&amp;sort=recommend&amp;page_limit=20&amp;page_start=0" target="_blank" rel="external">http://movie.douban.com/j/search_subjects?type=movie&amp;tag=%E7%83%AD%E9%97%A8&amp;sort=recommend&amp;page_limit=20&amp;page_start=0</a>，你会看到包含电影数据的 <a href="http://www.w3school.com.cn/json/" target="_blank" rel="external">JSON</a> 原始数据。推荐安装 <a href="https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc" target="_blank" rel="external">JSONView</a>（<a href="http://jsonview.com/" target="_blank" rel="external">Firfox版</a>）插件，这样可以看到更好看的 JSON 格式，展开折叠列等功能。然后，我们根据 <a href="http://www.w3school.com.cn/json/" target="_blank" rel="external">JSON</a> 数据，编写一个提取电影名和评分的脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handler</span><span class="params">(BaseHandler)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_start</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.crawl(<span class="string">'http://movie.douban.com/j/search_subjects?type=movie&amp;tag=%E7%83%AD%E9%97%A8&amp;sort=recommend&amp;page_limit=20&amp;page_start=0'</span>,</span><br><span class="line">                   callback=self.json_parser)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">json_parser</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> [&#123;</span><br><span class="line">            <span class="string">"title"</span>: x[<span class="string">'title'</span>],</span><br><span class="line">            <span class="string">"rate"</span>: x[<span class="string">'rate'</span>],</span><br><span class="line">            <span class="string">"url"</span>: x[<span class="string">'url'</span>]</span><br><span class="line">        &#125; <span class="keyword">for</span> x <span class="keyword">in</span> response.json[<span class="string">'subjects'</span>]]</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>你可以使用 <code>response.json</code> 将结果转为一个 python 的 <code>dict</code> 对象</li>
+</ul>
+</blockquote>
+<p>你可以在 <a href="http://demo.pyspider.org/debug/tutorial_douban_explore" target="_blank" rel="external">http://demo.pyspider.org/debug/tutorial_douban_explore</a> 获得完整的代码，并进行调试。脚本中还有一个使用 <a href="http://phantomjs.org/" target="_blank" rel="external">PhantomJS</a> 渲染的提取版本，将会在下一篇教程中介绍。</p>
+<h2 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h2><p><a href="http://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE" target="_blank" rel="external">HTTP</a> 是用来传输网页内容的协议。在前面的教程中，我们已经通过 <code>self.crawl</code> 接口提交了 URL 进行了抓取。这些抓取就是通过 HTTP 协议传输的。</p>
+<p>在抓取过程中，你可能会遇到类似 <code>403 Forbidden</code>，或者需要登录的情况，这时候你就需要正确的 HTTP 参数进行抓取了。</p>
+<p>一个典型的 HTTP 请求包如下，这个请求是发往 <a href="http://example.com/" target="_blank" rel="external">http://example.com/</a> 的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET / HTTP/1.1</span><br><span class="line">Host: example.com</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.45 Safari/537.36</span><br><span class="line">Referer: http://en.wikipedia.org/wiki/Example.com</span><br><span class="line">Accept-Encoding: gzip, deflate, sdch</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8</span><br><span class="line">If-None-Match: <span class="string">"359670651"</span></span><br><span class="line">If-Modified-Since: Fri, 09 Aug 2013 23:54:35 GMT</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>请求的第一行包含 <code>method</code>, <code>path</code> 和 HTTP 协议的版本信息</li>
+<li>余下的行被称为 header，是以 <code>key: value</code> 的形式呈现的</li>
+<li>如果是 POST 请求，在请求结尾可能还会有 <code>body</code> 内容</li>
+</ul>
+</blockquote>
+<p>你可以通过前面用过的 <a href="https://developer.chrome.com/devtools" target="_blank" rel="external">Chrome Developer Tools</a> 工具查看到这些信息：</p>
+<p><img src="/assets/image/request-headers.png" alt="request headers"></p>
+<p>在大多数时候，使用正确的 <code>method</code>, <code>path</code>, <code>headers</code> 和 <code>body</code> 总是能抓取到你需要的信息的。</p>
+<h3 id="HTTP-Method"><a href="#HTTP-Method" class="headerlink" title="HTTP Method"></a>HTTP Method</h3><p><a href="http://www.w3school.com.cn/tags/html_ref_httpmethods.asp" target="_blank" rel="external">HTTP Method</a> 告诉服务器对 URL 资源期望进行的操作。例如在打开一个 URL 的时候使用的是 GET 方式，而在提交数据的时候一般使用 POST。</p>
+<p>TODO： need example here</p>
+<h3 id="HTTP-Headers"><a href="#HTTP-Headers" class="headerlink" title="HTTP Headers"></a>HTTP Headers</h3><p>HTTP Headers 是请求所带的一个参数列表，你可以在 <a href="http://en.wikipedia.org/wiki/List_of_HTTP_header_fields" target="_blank" rel="external">这里</a> 找到完整的常用 Headers 列表。一些常用的需要注意的有：</p>
+<h4 id="User-Agent"><a href="#User-Agent" class="headerlink" title="User-Agent"></a>User-Agent</h4><p>UA 是标识你使用的浏览器，或抓取程序的一段字符串。pyspider 使用的默认 UA 是 <code>pyspider/VERSION (+http://pyspider.org/)</code>。网站常用这个字符串来区分用户的操作系统和浏览器，以及判断对方是否是爬虫。所以在抓取的时候，常常会对 UA 进行伪装。</p>
+<p>在 pyspider 中，你可以通过 <code>self.crawl(URL, headers={&#39;User-Agent&#39;: &#39;pyspider&#39;})</code>，或者是 <code>crawl_config = {&#39;headers&#39;: {&#39;User-Agent&#39;: &#39;xxxx&#39;}}</code> 来指定脚本级别的 UA。详细请查看 <a href="http://docs.pyspider.org/en/latest/apis/self.crawl/#fetch" target="_blank" rel="external">API 文档</a>。</p>
+<h4 id="Referer"><a href="#Referer" class="headerlink" title="Referer"></a>Referer</h4><p>Referer 用于告诉服务器，你访问的上一个网页是什么。常常被用于防盗链，在抓取图片的时候可能会用到。</p>
+<h4 id="X-Requested-With"><a href="#X-Requested-With" class="headerlink" title="X-Requested-With"></a>X-Requested-With</h4><p>当使用 XHR 发送 AJAX 请求时会带上的 Header，常被用于判断是不是 AJAX 请求。例如在 <a href="http://bbs.byr.cn/" target="_blank" rel="external">北邮人论坛</a> 中，你需要：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">on_start</span><span class="params">(self)</span>:</span></span><br><span class="line">    self.crawl(<span class="string">'http://bbs.byr.cn/board/Python'</span>,</span><br><span class="line">               headers=&#123;<span class="string">'X-Requested-With'</span>: <span class="string">'XMLHttpRequest'</span>&#125;,</span><br><span class="line">               callback=self.index_page)</span><br></pre></td></tr></table></figure>
+<p>带有 <code>headers={&#39;X-Requested-With&#39;: &#39;XMLHttpRequest&#39;}</code> 才能抓取到内容。</p>
+<h3 id="HTTP-Cookie"><a href="#HTTP-Cookie" class="headerlink" title="HTTP Cookie"></a>HTTP Cookie</h3><p>虽然 <code>Cookie</code> 只是 HTTP Header 中的一个，但是因为非常重要，但是拿出来说一下。<code>Cookie</code> 被 HTTP 请求用来区分、追踪用户的身份，当你在一个网站登录的时候，就是通过写入 <code>Cookie</code> 字段来记录登录状态的。</p>
+<p>当遇到需要登录的网站，你需要通过设置 Cookie 参数，来请求需要登录的内容。Cookie 可以通过开发者工具的请求面板，或者是资源面板中获得。在 pyspider 中，你也可以使用 <code>response.cookies</code> 获得返回的 cookie，并使用 <code>self.crawl(URL, cookie={&#39;key&#39;: &#39;value&#39;})</code> 来设置请求的 Cookie 参数。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-01-04T00:00:00.000Z"><a href="/2015/01/pyspider-tutorial-level-1-html-and-css-selector/">2015-01-04</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/01/pyspider-tutorial-level-1-html-and-css-selector/">pyspider 爬虫教程（一）：HTML 和 CSS 选择器</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>虽然以前写过 <a href="http://blog.binux.me/2013/09/howto-crawl-web/">如何抓取WEB页面</a> 和 <a href="http://blog.binux.me/2014/07/how-to-extract-data-from-web/">如何从 WEB 页面中提取信息</a>。但是感觉还是需要一篇 step by step 的教程，不然没有一个总体的认识。不过，没想到这个教程居然会变成一篇<a href="http://docs.pyspider.org/en/latest/tutorial/HTML-and-CSS-Selector/" target="_blank" rel="external">译文</a>，在这个爬虫教程系列文章中，会以实际的例子，由浅入深讨论爬取（抓取和解析）的一些关键问题。</p>
+<p>在 教程一 中，我们将要爬取的网站是豆瓣电影：<a href="http://movie.douban.com/" target="_blank" rel="external">http://movie.douban.com/</a></p>
+<p>你可以在: <a href="http://demo.pyspider.org/debug/tutorial_douban_movie" target="_blank" rel="external">http://demo.pyspider.org/debug/tutorial_douban_movie</a> 获得完整的代码，和进行测试。</p>
+<h2 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h2><p>由于教程是基于 pyspider 的，你可以安装一个 pyspider（<a href="http://docs.pyspider.org/en/latest/Quickstart/" target="_blank" rel="external">Quickstart</a>，也可以直接使用 pyspider 的 demo 环境： <a href="http://demo.pyspider.org/" target="_blank" rel="external">http://demo.pyspider.org/</a>。</p>
+<p>你还应该至少对万维网是什么有一个简单的认识：</p>
+<ul>
+<li><a href="http://zh.wikipedia.org/wiki/%E4%B8%87%E7%BB%B4%E7%BD%91" target="_blank" rel="external">万维网</a>是一个由许多互相链接的超文本页面（以下简称网页）组成的系统。</li>
+<li>网页使用网址（<a href="http://zh.wikipedia.org/wiki/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6" target="_blank" rel="external">URL</a>）定位，并链接彼此</li>
+<li>网页使用 <a href="http://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE" target="_blank" rel="external">HTTP</a> 协议传输</li>
+<li>网页使用 <a href="http://zh.wikipedia.org/wiki/HTML" target="_blank" rel="external">HTML</a> 描述外观和语义</li>
+</ul>
+<p>所以，爬网页实际上就是：</p>
+<ol>
+<li>找到包含我们需要的信息的网址（URL）列表</li>
+<li>通过 HTTP 协议把页面下载回来</li>
+<li>从页面的 HTML 中解析出需要的信息</li>
+<li>找到更多这个的 URL，回到 2 继续</li>
+</ol>
+<h2 id="选取一个开始网址"><a href="#选取一个开始网址" class="headerlink" title="选取一个开始网址"></a>选取一个开始网址</h2><p>既然我们要爬所有的电影，首先我们需要抓一个电影列表，一个好的列表应该：</p>
+<ul>
+<li>包含足够多的电影的 URL</li>
+<li>通过翻页，可以遍历到所有的电影</li>
+<li>一个按照更新时间排序的列表，可以更快抓到最新更新的电影</li>
+</ul>
+<p>我们在 <a href="http://movie.douban.com/" target="_blank" rel="external">http://movie.douban.com/</a> 扫了一遍，发现并没有一个列表能包含所有电影，只能退而求其次，通过抓取分类下的所有的标签列表页，来遍历所有的电影： <a href="http://movie.douban.com/tag/" target="_blank" rel="external">http://movie.douban.com/tag/</a> </p>
+<h3 id="创建一个项目"><a href="#创建一个项目" class="headerlink" title="创建一个项目"></a>创建一个项目</h3><p>在 pyspider 的 dashboard 的右下角，点击 “Create” 按钮</p>
+<p><img src="/assets/image/creating_project.png" alt="Creating a project"></p>
+<p>替换 <code>on_start</code> 函数的 <code>self.crawl</code> 的 URL：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@every(minutes=24 * 60)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">on_start</span><span class="params">(self)</span>:</span></span><br><span class="line">    self.crawl(<span class="string">'http://movie.douban.com/tag/'</span>, callback=self.index_page)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li><code>self.crawl</code> 告诉 pyspider 抓取指定页面，然后使用 <code>callback</code> 函数对结果进行解析。</li>
+<li><a href="(http://docs.pyspider.org/en/latest/apis/@every/"><code>@every</code></a>) 修饰器，表示 <code>on_start</code> 每天会执行一次，这样就能抓到最新的电影了。</li>
+</ul>
+</blockquote>
+<p>点击绿色的 <code>run</code> 执行，你会看到 <code>follows</code> 上面有一个红色的 1，切换到 <code>follows</code> 面板，点击绿色的播放按钮：</p>
+<p><img src="/assets/image/run_one_step.png" alt="Run ont step"></p>
+<h2 id="Tag-列表页"><a href="#Tag-列表页" class="headerlink" title="Tag 列表页"></a>Tag 列表页</h2><p>在 <a href="http://movie.douban.com/tag/" target="_blank" rel="external">tag 列表页</a> 中，我们需要提取出所有的 电影列表页 的 URL。你可能已经发现了，sample handler 已经提取了非常多大的 URL，所有，一种可行的提取列表页 URL 的方法就是用正则从中过滤出来：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="meta">    @config(age=10 * 24 * 60 * 60)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">index_page</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> each <span class="keyword">in</span> response.doc(<span class="string">'a[href^="http"]'</span>).items():</span><br><span class="line">            <span class="keyword">if</span> re.match(<span class="string">"http://movie.douban.com/tag/\w+"</span>, each.attr.href, re.U):</span><br><span class="line">                self.crawl(each.attr.href, callback=self.list_page)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>由于 电影列表页和 tag列表页长的并不一样，在这里新建了一个 <code>callback</code> 为 <code>self.list_page</code></li>
+<li><code>@config(age=10 * 24 * 60 * 60)</code> 在这表示我们认为 10 天内页面有效，不会再次进行更新抓取</li>
+</ul>
+</blockquote>
+<p>由于 pyspider 是纯 Python 环境，你可以使用 Python 强大的内置库，或者你熟悉的第三方库对页面进行解析。不过更推荐使用 CSS选择器。</p>
+<h2 id="电影列表页"><a href="#电影列表页" class="headerlink" title="电影列表页"></a>电影列表页</h2><p>再次点击 <code>run</code> 让我们进入一个电影列表页(<code>list_page</code>)。在这个页面中我们需要提取：</p>
+<ul>
+<li>电影的链接，例如，<a href="http://movie.douban.com/subject/1292052/" target="_blank" rel="external">http://movie.douban.com/subject/1292052/</a></li>
+<li>下一页的链接，用来翻页</li>
+</ul>
+<h3 id="CSS选择器"><a href="#CSS选择器" class="headerlink" title="CSS选择器"></a>CSS选择器</h3><p>CSS选择器，顾名思义，是 <a href="http://www.w3school.com.cn/css/css_intro.asp" target="_blank" rel="external">CSS</a> 用来定位需要设置样式的元素 所使用的表达式。既然前端程序员都使用 CSS选择器 为页面上的不同元素设置样式，我们也可以通过它定位需要的元素。你可以在 <a href="http://www.w3school.com.cn/cssref/css_selectors.asp" target="_blank" rel="external">CSS 选择器参考手册</a> 这里学习更多的 CSS选择器 语法。</p>
+<p>在 pyspider 中，内置了 <code>response.doc</code> 的 <a href="https://pythonhosted.org/pyquery/" target="_blank" rel="external">PyQuery</a> 对象，让你可以使用类似 jQuery 的语法操作 DOM 元素。你可以在 <a href="https://pythonhosted.org/pyquery/" target="_blank" rel="external">PyQuery</a> 的页面上找到完整的文档。</p>
+<h3 id="CSS-Selector-Helper"><a href="#CSS-Selector-Helper" class="headerlink" title="CSS Selector Helper"></a>CSS Selector Helper</h3><p>在 pyspider 中，还内置了一个 <code>CSS Selector Helper</code>，当你点击页面上的元素的时候，可以帮你生成它的 CSS选择器 表达式。你可以点击 <code>Enable CSS selector helper</code> 按钮，然后切换到 <code>web</code> 页面：</p>
+<p><img src="/assets/image/css_selector_helper.png" alt="css selector helper"></p>
+<p>开启后，鼠标放在元素上，会被黄色高亮，点击后，所有拥有相同 CSS选择器 表达式的元素会被高亮。表达式会被插入到 python 代码当前光标位置。创建下面的代码，将光标停留在单引号中间：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">list_page</span><span class="params">(self, response)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> each <span class="keyword">in</span> response.doc(<span class="string">''</span>).items():</span><br></pre></td></tr></table></figure>
+<p>点击一个电影的链接，CSS选择器 表达式将会插入到你的代码中，如此重复，插入翻页的链接：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">list_page</span><span class="params">(self, response)</span>:</span></span><br><span class="line">    <span class="keyword">for</span> each <span class="keyword">in</span> response.doc(<span class="string">'HTML&gt;BODY&gt;DIV#wrapper&gt;DIV#content&gt;DIV.grid-16-8.clearfix&gt;DIV.article&gt;DIV&gt;TABLE TR.item&gt;TD&gt;DIV.pl2&gt;A'</span>).items():</span><br><span class="line">        self.crawl(each.attr.href, callback=self.detail_page)</span><br><span class="line">    <span class="comment"># 翻页</span></span><br><span class="line">    <span class="keyword">for</span> each <span class="keyword">in</span> response.doc(<span class="string">'HTML&gt;BODY&gt;DIV#wrapper&gt;DIV#content&gt;DIV.grid-16-8.clearfix&gt;DIV.article&gt;DIV.paginator&gt;A'</span>).items():</span><br><span class="line">        self.crawl(each.attr.href, callback=self.list_page)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<ul>
+<li>翻页是一个到自己的 <code>callback</code> 回调</li>
+</ul>
+</blockquote>
+<h2 id="电影详情页"><a href="#电影详情页" class="headerlink" title="电影详情页"></a>电影详情页</h2><p>再次点击 <code>run</code>，follow 到详情页。使用 <code>css selector helper</code> 分别添加电影标题，打分和导演：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">detail_page</span><span class="params">(self, response)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">"url"</span>: response.url,</span><br><span class="line">        <span class="string">"title"</span>: response.doc(<span class="string">'HTML&gt;BODY&gt;DIV#wrapper&gt;DIV#content&gt;H1&gt;SPAN'</span>).text(),</span><br><span class="line">        <span class="string">"rating"</span>: response.doc(<span class="string">'HTML&gt;BODY&gt;DIV#wrapper&gt;DIV#content&gt;DIV.grid-16-8.clearfix&gt;DIV.article&gt;DIV.indent.clearfix&gt;DIV.subjectwrap.clearfix&gt;DIV#interest_sectl&gt;DIV.rating_wrap.clearbox&gt;P.rating_self.clearfix&gt;STRONG.ll.rating_num'</span>).text(),</span><br><span class="line">        <span class="string">"导演"</span>: [x.text() <span class="keyword">for</span> x <span class="keyword">in</span> response.doc(<span class="string">'a[rel="v:directedBy"]'</span>).items()],</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>注意，你会发现 <code>css selector helper</code> 并不是总是能提取到合适的 CSS选择器 表达式。你可以在 <a href="https://developer.chrome.com/devtools" target="_blank" rel="external">Chrome Dev Tools</a> 的帮助下，写一个合适的表达式：</p>
+<p><img src="/assets/image/chrome_dev_tools.png" alt="Chrome Dev Tools"></p>
+<p>右键点击需要提取的元素，点击审查元素。你并不需要像自动生成的表达式那样写出所有的祖先节点，只要写出那些能区分你不需要的元素的关键节点的属性就可以了。不过这需要抓取和网页前端的经验。所以，学习抓取的最好方法就是学会这个页面/网站是怎么写的。</p>
+<p>你也可以在 Chrome Dev Tools 的 Javascript Console 中，使用 <code>$$(a[rel=&quot;v:directedBy&quot;])</code> 测试 CSS Selector。</p>
+<h2 id="开始抓取"><a href="#开始抓取" class="headerlink" title="开始抓取"></a>开始抓取</h2><ol>
+<li>使用 <code>run</code> 单步调试你的代码，对于用一个 <code>callback</code> 最好使用多个页面类型进行测试。<strong>然后保存。</strong></li>
+<li>回到 Dashboard，找到你的项目</li>
+<li>将 <code>status</code> 修改为 <code>DEBUG</code> 或 <code>RUNNING</code></li>
+<li>按 <code>run</code> 按钮</li>
+</ol>
+<p><img src="/assets/image/pyspider_index_page.png" alt="pyspider index page"></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-12-21T00:00:00.000Z"><a href="/2014/12/porting-to-python-3/">2014-12-21</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/12/porting-to-python-3/">迁移 Python 3</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>使用 Python 3 的呼声一直很高，Python 3 解决了很多 2 中的坑，比如 unicode，在向他们解释为什么 <code>print str</code> 乱码，<code>fp.write(str)</code> 时报错，在什么时候需要 <code>encode</code>，更容易了。</p>
+<p>但是由于一开始接触的就是 Python 2，熟悉的包都是 Python 2（我也不确定他们是否支持 Python 3）。公司机器上的 Python 2.7 就算是“最新”版本。于是一直没有升级。不过有一种说法，切换到 Python 3 的最好时机就是现在。-为了庆祝 star 过 3000-，由于见到两次要求支持 Python 3，用一个周末为 pyspider 加入了 Python 3 支持（怎么样，不难吧）。</p>
+<p>主要参考：</p>
+<ul>
+<li><a href="https://docs.python.org/3/howto/pyporting.html" target="_blank" rel="external">Porting Python 2 Code to Python 3</a></li>
+<li><a href="http://python-future.org/compatible_idioms.html" target="_blank" rel="external">Cheat Sheet: Writing Python 2-3 compatible code</a></li>
+<li><a href="https://pythonhosted.org/six/" target="_blank" rel="external">Six: Python 2 and 3 Compatibility Library</a></li>
+</ul>
+<h2 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h2><p>其实 <a href="https://docs.python.org/3/howto/pyporting.html" target="_blank" rel="external">Porting Python 2 Code to Python 3</a> 这篇文章是一个非常好的索引，能让你对将要进行的工作有一个整体的把握，同时能提供细节的链接，能让你立即开始工作。而且这一节内容就来自此文的 <a href="https://docs.python.org/3/howto/pyporting.html#the-short-explanation" target="_blank" rel="external">The Short Explanation</a> 一节。因为总结得很好，所以就不重复造轮子了。</p>
+<p>首先，低版本的 Python 2 与 Python 3 之间的鸿沟太大了，特别是 Python 2.5(含) 以前的版本。要同时兼容他们的代价太大。而 Python 2.6 和 Python 2.7 已经带有部分 Python 3 的特性，这让迁移的代价大大降低了。同时，不建议支持 Python 3.3 以下的 3 字头版本，由于 Python 3 实际上已经 release 6 年了，这些 Python 3.x 版本也比较老了，很多特性还没有，或者包不支持。所以建议跳过他们。</p>
+<p>其次，一定要有测试，保证测试足够的代码覆盖。Python 2 到 Python 3 从包改名到语法都有变化，几乎所有的代码都需要有修改。足够的代码覆盖，才能在这样大规模修改中，保证所有功能可用。而 pyspider 正是因为有 86% 的代码覆盖，我能这么快地完成代码迁移。</p>
+<p>读一读 Python 2 和 Python 3 有什么不同。这个可以看看 <a href="https://docs.python.org/3/whatsnew/index.html" target="_blank" rel="external">What’s New in Python</a>，特别是 <a href="https://docs.python.org/3/whatsnew/3.0.html" target="_blank" rel="external">What’s New In Python 3.0</a>。当然也可以找一些中文的文章，这个方面应该还蛮多的。反正最主要的就是大量的包改名，以及 <code>bytes</code>, <code>str</code>, <code>unicode</code> 三者的变化。或者你可以先读一读 <a href="http://python-future.org/compatible_idioms.html" target="_blank" rel="external">Cheat Sheet</a>，虽然等下我们还需要它。</p>
+<p>好，现在可以来看看你的包依赖是否支持 Python 3 了。并不是 pip 能安装的包就是支持 Python 3 的，可能装上了依旧不能工作。你可以用 <a href="https://caniusepython3.com/" target="_blank" rel="external">Can I Use Python 3</a> 检测包是否支持。不过我更推荐 <a href="https://python3wos.appspot.com/" target="_blank" rel="external">PYTHON 3 WALL OF SUPERPOWERS</a> （需要翻墙）。不过也不用担心，大部分包都是支持 Python 3 的，如果不支持，一般都会有替代，例如 pika 就可以被 ampq 替换，而 MySQL-python 能被 mysql-connector-python 替代。</p>
+<h2 id="第一步——查找替换"><a href="#第一步——查找替换" class="headerlink" title="第一步——查找替换"></a>第一步——查找替换</h2><p>首先我们从大的方向入手，把一些改名了的包和函数处理一下。请打开 <a href="http://python-future.org/compatible_idioms.html" target="_blank" rel="external">Cheat Sheet: Writing Python 2-3 compatible code</a> 参照它们一条条进行。在能搜索的地方，使用搜索统一修改，不然挨个文件太慢，而且会忘记的。因为我用的是 six 作为多环境间的桥梁。所以需要同时参考 <a href="https://pythonhosted.org/six/" target="_blank" rel="external">six的文档</a>。你可能需要打开两个窗口，同时运行 Python 2 和 Python 3，确认语句在两个环境下都能执行。</p>
+<p>在这一步，我做了以下处理：</p>
+<ul>
+<li>相对导入 - <a href="http://python-future.org/compatible_idioms.html#imports-relative-to-a-package" target="_blank" rel="external">Imports relative to a package</a></li>
+<li>urlparse / urllib 库改名 - <a href="https://pythonhosted.org/six/#module-six.moves.urllib.parse" target="_blank" rel="external">six</a></li>
+<li>thread 包改名，而且 <code>get_ident</code> 函数不再存在了。将 <code>thread.get_ident()</code> 改为 <code>threading.current_thread().ident</code> <a href="https://pythonhosted.org/six/#module-six.moves" target="_blank" rel="external">six</a></li>
+<li><code>basestring</code> 类型不再存在，用 <code>six.string_types</code> 代替 <a href="http://python-future.org/compatible_idioms.html#basestring" target="_blank" rel="external">sheet</a></li>
+<li><code>__metaclass__</code> 不再存在，用 <code>six.add_metaclass</code> 代替 <a href="http://python-future.org/compatible_idioms.html#metaclasses" target="_blank" rel="external">sheet</a></li>
+<li><code>UserDict.DictMixin</code> 不再存在，用 <code>collections.Mapping</code> 或者 <code>collections.MutableMapping</code> 代替</li>
+<li><code>/</code> 现在是真的除法了，也就是说 int / int 会得到一个 float，使用 <code>//</code> 获得地板除效果（由于在 python 中，地板除用得少，实际上不改关系不大） <a href="http://python-future.org/compatible_idioms.html#division" target="_blank" rel="external">sheet</a></li>
+<li><code>StringIO</code> 现在分为 <code>io.BytesIO</code> 和 <code>io.StringIO</code> 视情况使用</li>
+<li>print 现在是一个 function 了 <a href="http://python-future.org/compatible_idioms.html#stringio" target="_blank" rel="external">sheet</a></li>
+<li><code>unicode</code> 关键字不再存在 使用 <code>six.text_type</code> 代替</li>
+<li><code>__builtins__</code> 不存在了，<a href="https://pythonhosted.org/six/#module-six.moves" target="_blank" rel="external"><code>six.moves.builtins</code></a> <a href="http://python-future.org/compatible_idioms.html#unicode-text-string-literals" target="_blank" rel="external">sheet</a></li>
+<li><code>reload</code> 改为 <a href="https://pythonhosted.org/six/#module-six.moves" target="_blank" rel="external"><code>six.reload_module</code></a></li>
+<li>dict 的 <code>keys</code>， <code>items</code>， <code>values</code> 现在都是迭代器了，不返回列表，原来的 <code>iteritems</code>, <code>itervalues</code> 不再存在，使用 <a href="https://pythonhosted.org/six/#six.iterkeys" target="_blank" rel="external">six.iterkeys</a> 等函数代替。</li>
+<li><code>raise exc_type, exc_value, tb</code> 的形式不再支持，使用 <code>six.reraise(exc_type, exc_value, tb)</code> 代替。</li>
+</ul>
+<p>其他的例如 try…catch，如果你在 Python 2 中就比较标准地使用 <code>as</code>，那么这时就不用修改了。</p>
+<p>另外，如果你和我一样有 str(object) 来获得 object 的文字结果的习惯话，每次写 <code>six.text_type(object)</code> 太长了。可以写一些兼容性函数，然后在整个项目中使用。</p>
+<p>注意到这里，我们并没有处理 <code>bytes</code>, <code>string</code>, <code>unicode</code>，请放下他们，我们在下一节处理这些问题。</p>
+<h2 id="第二步——处理-unicode"><a href="#第二步——处理-unicode" class="headerlink" title="第二步——处理 unicode"></a>第二步——处理 unicode</h2><p>由于在 Python 3 中，所有的 <code>&#39;text&#39;</code> 都变成 unicode 了，所以你会觉得它会是一个大问题，是否需要给所有的 <code>&#39;text&#39;</code> 加上 <code>u</code> ，或者干脆所有文件都加上 <code>from __future__ import unicode_literals</code>？</p>
+<p>实际上，大部分时候不需要。</p>
+<p>在 Python 2 中，我们很少有意识地区分 <code>str</code> 和 <code>unicode</code>，对于大部分函数调用来说，给它 <code>str</code> 或者 <code>unicode</code> 都是一样的，因为他们共享大部分行为。但是在 Python 3 中，<code>bytes</code> 和 <code>str</code>(<code>unicode</code>) 却大不一样。例如当你 <code>for c in bytes</code> 时，得到的是一个 <code>int</code> 而不是一个 <code>str</code>。</p>
+<p>虽然不做任何修改，<code>&#39;text&#39;</code> 在 Python 2 中，是 <code>str</code>(<code>bytes</code>)，而在 Python 3 中是 <code>str</code>(<code>unicode</code>)。但是提交给函数时，既然 Python 2 的函数同时支持 <code>str</code> 和 <code>unicode</code>，所以没有任何问题。而且，在 Python 2 中，<code>&#39;text&#39;+u&#39;中文&#39;</code> 会自动升级为 <code>unicode</code>，所以，只需要注意在出现中文的地方使用 <code>u&#39;中文&#39;</code> 就好了（即使在 Python 2 中，这也是一个好的习惯）。而 <code>b&#39;bytes&#39;</code> 的场合非常少，更多的是使用 <code>text.encode</code> 进行转换。所以，对于习惯良好的 Python 2 代码来说，是几乎不需要修改的。</p>
+<p>除了源代码之中的 unicode 问题，其他主要问题出现在输入输出上。但是，只要遵循：程序中流通的数据，只能是 unicode。数据进来之后必须转换成 unicode 即可。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>运行测试，哪报错改哪就好了。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-11-16T00:00:00.000Z"><a href="/2014/11/introduction-to-pyspider/">2014-11-16</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/11/introduction-to-pyspider/">pyspider介绍</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>虽然已经发过一篇<a href="http://blog.binux.me/2014/02/pyspider-architecture/">架构设计</a>，但是觉得还是有必要发一篇介绍。而且拖了那么久的第二里程碑的commit数已经超过第一个版本了。。</p>
+<p>那么由我再次介绍一下 pyspider。</p>
+<h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>pyspider 来源于以前做的一个垂直搜索引擎使用的爬虫后端。我们需要从200个站点（由于站点失效，不是都同时啦，同时有100+在跑吧）采集数据，并要求在5分钟内将对方网站的更新更新到库中。</p>
+<p>所以，灵活的抓取控制是必须的。同时，由于100个站点，每天都可能会有站点失效或者改版，所以需要能够监控模板失效，以及查看抓取状态。</p>
+<p>为了达到5分钟更新，我们使用抓取最近更新页上面的最后更新时间，以此来判断页面是否需要再次抓取。</p>
+<p>可见，这个项目对于爬虫的监控和调度要求是非常高的。</p>
+<h1 id="pyspider-的主要特性"><a href="#pyspider-的主要特性" class="headerlink" title="pyspider 的主要特性"></a>pyspider 的主要特性</h1><ul>
+<li>python 脚本控制，可以用任何你喜欢的html解析包（内置 pyquery）</li>
+<li>WEB 界面编写调试脚本，起停脚本，监控执行状态，查看活动历史，获取结果产出</li>
+<li>支持 MySQL, MongoDB, SQLite</li>
+<li>支持抓取 JavaScript 的页面</li>
+<li>组件可替换，支持单机/分布式部署，支持 Docker 部署</li>
+<li>强大的调度控制</li>
+</ul>
+<p>由于功能太多，更多请参考<a href="https://github.com/binux/pyspider/wiki/%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97" target="_blank" rel="external">脚本编写指南</a></p>
+<p>感谢 <a href="https://plus.google.com/u/0/+PhoenixNemo/" target="_blank" rel="external">+PhoenixNemo</a> 提供的VPS，提供了一个 demo： <a href="http://demo.pyspider.org/" target="_blank" rel="external">demo.pyspider.org</a>。无需安装即可体验。</p>
+<p><a href="http://demo.pyspider.org/" target="_blank" rel="external"><img src="http://ww1.sinaimg.cn/large/7d46d69fjw1emavy6e9gij21kw0uldvy.jpg" alt="demo"></a></p>
+<h1 id="脚本样例"><a href="#脚本样例" class="headerlink" title="脚本样例"></a>脚本样例</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> libs.base_handler <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handler</span><span class="params">(BaseHandler)</span>:</span></span><br><span class="line">    <span class="string">'''</span><br><span class="line">    this is a sample handler</span><br><span class="line">    '''</span></span><br><span class="line"><span class="meta">    @every(minutes=24*60, seconds=0)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_start</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.crawl(<span class="string">'http://scrapy.org/'</span>, callback=self.index_page)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @config(age=10*24*60*60)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">index_page</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> each <span class="keyword">in</span> response.doc(<span class="string">'a[href^="http://"]'</span>).items():</span><br><span class="line">            self.crawl(each.attr.href, callback=self.detail_page)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">detail_page</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">                <span class="string">"url"</span>: response.url,</span><br><span class="line">                <span class="string">"title"</span>: response.doc(<span class="string">'title'</span>).text(),</span><br><span class="line">                &#125;</span><br></pre></td></tr></table></figure>
+<p>例如这就是创建任务后默认生成的一个脚本示例。</p>
+<ul>
+<li>通过 <code>on_start</code> 回调函数，作为爬取的入口点，当点击主面板上的 <code>run</code> 的时候，就是调用这个函数，启动抓取。</li>
+<li><code>self.crawl</code> 告诉调度器，我们需要抓取 <code>&#39;http://scrapy.org/&#39;</code> 这个页面，然后使用 <code>callback=self.index_page</code> 这个回调函数进行解析。</li>
+<li>所有 <code>return</code> 的内容默认会被捕获到 <code>resultdb</code> 中，可以直接在 WEBUI 上看到。</li>
+</ul>
+<h1 id="更多特性和文档"><a href="#更多特性和文档" class="headerlink" title="更多特性和文档"></a>更多特性和文档</h1><ul>
+<li><a href="https://github.com/binux/pyspider/wiki" target="_blank" rel="external">Wiki</a></li>
+<li><a href="https://github.com/binux/pyspider/wiki/%E5%BF%AB%E9%80%9F%E6%8C%87%E5%8D%97" target="_blank" rel="external">快速指南</a></li>
+<li><a href="https://github.com/binux/pyspider/wiki/%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97" target="_blank" rel="external">脚本编写指南</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-09-28T23:00:00.000Z"><a href="/2014/09/introduction-to-qiandao-today/">2014-09-29</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/09/introduction-to-qiandao-today/">签到 —— qiandao.today 介绍</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://qiandao.today/" target="_blank" rel="external">qiandao.today</a> 已经上线了一个半月，这篇blog一个半月以前就应该写了。直到我刷了14遍水晶塔没有ROLL到任何装备（不对，我最后通过贪婪ROLL到了！），打了两晚麻将，把把最小胡牌距离大于5（任意更换手牌达到胡牌的最小张数），房子里刷JJ怪之后。我觉得我必须做点什么。。。</p>
+<p>好了，不扯蛋了。自动签到是我对于 “如何请求到数据” ，进行请求自动分析的一个尝试（实际是我 <a href="http://u2.dmhy.org/" target="_blank" rel="external">U2</a> 因为45天没登录被封了）。通过<strong>浏览器捕获页面请求瀑布流，进行内容/请求分析，找出关键请求</strong>。所以，签到这个项目，我就是先从 <a href="https://qiandao.today/har/edit" target="_blank" rel="external">HAR编辑器</a> 开始做的。做的时候还玩了一下 <a href="http://angularjs.org/" target="_blank" rel="external">angularjs</a>。<del>然后其他部分都是随便写的</del></p>
+<p>但是，对于签到来说，哪些请求是必要的，这个请求是怎么组装的（例如 token 参数怎么来），特征不明显。自动分析出来就能直接用的概率太低了，即使是人还得单步测试呢。于是 HAR编辑器 成为编辑和单步调试的辅助。自动分析变成了 “推荐相关请求”。</p>
+<ul>
+<li>用户部分系统尝试了一下 <a href="http://en.wikipedia.org/wiki/PBKDF2" target="_blank" rel="external">PBKDF2</a> 进行密码加密。PBKDF2 的优势在于通过随机盐 加 可配置的多轮加密，加大了单个key的运算代价。</li>
+<li>模板执行部分通过提取页面信息，和 jinja2 引擎渲染，可以动态地改变请求的 url、header、data 各个部分。</li>
+<li>执行断言加上邮件系统，可以检测签到是否成功，在失败的时候给用户发送邮件提醒。</li>
+</ul>
+<p>本来还想要做互助打码的验证码系统的，但是通过 <a href="https://plus.google.com/u/0/+%E9%9B%AA%E6%9C%88%E7%A7%8B%E6%B0%B4%E9%85%B1" target="_blank" rel="external">雪月秋水</a> 的 <a href="https://github.com/acgotaku/GetCookies" target="_blank" rel="external">cookie插件</a>，其实大部分只有登录需要验证码，签到并不需要。<del>关键是做这个东西不好玩</del>，于是就算了。</p>
+<p>运行了一个半月，目前有11个公开签到模板，400+个签到任务，每天进行300次签到。不过由于担心单IP登录帐号过多被封，只在v2ex做了一次广告，不敢大范围推广。。。</p>
+<hr>
+
+<p>以下是面向普通用户的简介：</p>
+<ul>
+<li>云代签</li>
+<li>支持多个网站</li>
+<li>失败邮件提醒</li>
+<li>自制模板并分享（<a href="https://github.com/binux/qiandao/blob/master/docs/har-howto.md" target="_blank" rel="external">文档</a>）</li>
+<li>https 传输安全保证</li>
+<li>一号一密用户数据加密</li>
+<li>开放源码，支持本地执行（提供本地lite版）</li>
+</ul>
+<p>github: <a href="https://github.com/binux/qiandao" target="_blank" rel="external">binux/qiandao</a><br>网站: <a href="https://qiandao.today/" target="_blank" rel="external">https://qiandao.today</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+
+<nav id="pagination">
+  
+  
+    <a href="/page/2/" class="alignright next">下一页</a>
+  
+  <div class="clearfix"></div>
+</nav></div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:blog.binux.me">
+  </form>
+</div>
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
+      </li>
+    
+      <li>
+        <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
+      </li>
+    
+      <li>
+        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
+      </li>
+    
+      <li>
+        <a href="/2015/07/uk/">英国</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="http://binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'binux';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

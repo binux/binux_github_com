@@ -1,0 +1,231 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>用FTP的方式访问迅雷离线 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="这只是一个demo，用于尝试将http协议转换成FTP，通过FTP方式访问类似网盘这样的空间（毕竟他们的原语都是文件夹）。使用 tornado ioloop 实现完全异步，在 tornado 的 iostream 之上手写了一个ftp服务器。
+如果你想要快速使用：
+ftp方式访问迅雷：python ">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="用FTP的方式访问迅雷离线"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="true" title="Binuxの杂货铺" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-11-17T00:00:00.000Z"><a href="/2013/11/xunlei-lixian-ftp-proxy/">2013-11-17</a></time>
+      
+      
+  
+    <h1 class="title">用FTP的方式访问迅雷离线</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>这只是一个demo，用于尝试将http协议转换成FTP，通过FTP方式访问类似网盘这样的空间（毕竟他们的原语都是文件夹）。使用 tornado ioloop 实现完全异步，在 tornado 的 iostream 之上手写了一个ftp服务器。</p>
+<p><strong>如果你想要快速使用：</strong></p>
+<p>ftp方式访问迅雷：<br><code>python -c &quot;u=&#39;http://f.binux.me/pyproxy.zip&#39;;import urllib2,sys,tempfile;f=tempfile.NamedTemporaryFile(suffix=&#39;.zip&#39;);urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler()));f.write(urllib2.urlopen(u).read());sys.path.insert(0,f.name);f.flush();from xunlei_ftpserver import run;run();&quot;</code></p>
+<p>http串流离线内容<br><code>python -c &quot;u=&#39;http://f.binux.me/pyproxy.zip&#39;;import urllib2,sys,tempfile;f=tempfile.NamedTemporaryFile(suffix=&#39;.zip&#39;);urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler()));f.write(urllib2.urlopen(u).read());sys.path.insert(0,f.name);f.flush();from xunlei_webserver import run;run();&quot;</code></p>
+<p>另外还有一个使用代理api方式直接共享离线空间的例子：<br><a href="http://jsbin.com/uQinidA/2/quiet" target="_blank" rel="external">http://jsbin.com/uQinidA/2/quiet</a></p>
+<p>github地址：<a href="https://github.com/binux/xunlei-lixian-proxy" target="_blank" rel="external">https://github.com/binux/xunlei-lixian-proxy</a></p>
+<p>中文简介</p>
+<ul>
+<li>通过ftp的方式访问你的迅雷离线空间</li>
+<li>在线串流离线空间中的视频到任何播放器</li>
+<li>完全异步化(使用tornado ioloop)</li>
+<li>这只是一个多协议转换的原理验证演示，不保证可以用于生产环境</li>
+</ul>
+<hr>
+
+<p>用了几天，发现tornado的iostream其实问题还是蛮多的，比如当上下游速度不一致的时候，会有大量的数据堵在上游的 read buffer 或者 下游的 write buffer 上。因为tornado是定位于web服务器的，单个请求大都不大，但是在代理文件的时候 buffer 就会占用大量的内存。代码里面有尝试修复，但是效果不理想，在小内存的 Linux 盒子上经常因为爆内存被 kill。</p>
+<p>写了这个东西，感觉完全异步不总是好的，ftp作为有状态的协议，请求以及返回的顺序很重要，异步了之后这样的顺序就很难控制（比如客户端紧接着RETR发送了一个PWD，必须先响应完RETR才能响应PWD，但是由于是异步的，实际有可能PWD先返回了，这需要双方至少有一方严格按照顺序处理）</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/lixian/">lixian</a>, <a href="/tags/xunlei/">xunlei</a>, <a href="/tags/ftpserver/">ftpserver</a>, <a href="/tags/webserver/">webserver</a>, <a href="/tags/tornado/">tornado</a>, <a href="/tags/async/">async</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:blog.binux.me">
+  </form>
+</div>
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
+      </li>
+    
+      <li>
+        <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
+      </li>
+    
+      <li>
+        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
+      </li>
+    
+      <li>
+        <a href="/2015/07/uk/">英国</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="http://binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'binux';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

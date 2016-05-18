@@ -1,0 +1,224 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>python工具脚本： 获取中文汉字拼音声母 getPY.py | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="一般来说要获取中文汉字全拼是需要查表的，不过只需要声母的话还是很简单就能实现的。
+方法是利用GBK编码是按照拼音的顺序编排汉字的，所以，只需要将文字转化成GBK编码，通过匹配范围即可获得声母了（当然理论上也应该能获取全拼，我猜的-。-）。
+这样的代码网上有很多，这里也是抄袭而来，抄自何处也忘记了。。">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="python工具脚本： 获取中文汉字拼音声母 getPY.py"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="true" title="Binuxの杂货铺" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2011-03-17T14:57:26.000Z"><a href="/2011/03/python-tools-getpy/">2011-03-17</a></time>
+      
+      
+  
+    <h1 class="title">python工具脚本： 获取中文汉字拼音声母 getPY.py</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>一般来说要获取中文汉字全拼是需要查表的，不过只需要声母的话还是很简单就能实现的。</p>
+<p>方法是利用GBK编码是按照拼音的顺序编排汉字的，所以，只需要将文字转化成GBK编码，通过匹配范围即可获得声母了（当然理论上也应该能获取全拼，我猜的-。-）。</p>
+<p>这样的代码网上有很多，这里也是抄袭而来，抄自何处也忘记了。。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding : utf-8</span></span><br><span class="line"><span class="comment"># author : binux(17175297.hk@gmail.com)</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getFirstPY</span><span class="params">(word, encoding=<span class="string">'utf-8'</span>)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(word, unicode):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            word = word[<span class="number">0</span>].encode(<span class="string">'gbk'</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'?'</span></span><br><span class="line">    <span class="keyword">elif</span> isinstance(word, str):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            word = word.decode(encoding)[<span class="number">0</span>].encode(<span class="string">'gbk'</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'?'</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> len(word) == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> word</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        asc = ord(word[<span class="number">0</span>])*<span class="number">256</span> + ord(word[<span class="number">1</span>]) - <span class="number">65536</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-20319</span> <span class="keyword">and</span> asc &lt;= <span class="number">-20284</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'a'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-20283</span> <span class="keyword">and</span> asc &lt;= <span class="number">-19776</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'b'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-19775</span> <span class="keyword">and</span> asc &lt;= <span class="number">-19219</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'c'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-19218</span> <span class="keyword">and</span> asc &lt;= <span class="number">-18711</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'d'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-18710</span> <span class="keyword">and</span> asc &lt;= <span class="number">-18527</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'e'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-18526</span> <span class="keyword">and</span> asc &lt;= <span class="number">-18240</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'f'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-18239</span> <span class="keyword">and</span> asc &lt;= <span class="number">-17923</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'g'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-17922</span> <span class="keyword">and</span> asc &lt;= <span class="number">-17418</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'h'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-17417</span> <span class="keyword">and</span> asc &lt;= <span class="number">-16475</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'j'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-16474</span> <span class="keyword">and</span> asc &lt;= <span class="number">-16213</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'k'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-16212</span> <span class="keyword">and</span> asc &lt;= <span class="number">-15641</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'l'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-15640</span> <span class="keyword">and</span> asc &lt;= <span class="number">-15166</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'m'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-15165</span> <span class="keyword">and</span> asc &lt;= <span class="number">-14923</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'n'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-14922</span> <span class="keyword">and</span> asc &lt;= <span class="number">-14915</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'o'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-14914</span> <span class="keyword">and</span> asc &lt;= <span class="number">-14631</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'p'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-14630</span> <span class="keyword">and</span> asc &lt;= <span class="number">-14150</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'q'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-14149</span> <span class="keyword">and</span> asc &lt;= <span class="number">-14091</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'r'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-14090</span> <span class="keyword">and</span> asc &lt;= <span class="number">-13119</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'s'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-13118</span> <span class="keyword">and</span> asc &lt;= <span class="number">-12839</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'t'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-12838</span> <span class="keyword">and</span> asc &lt;= <span class="number">-12557</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'w'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-12556</span> <span class="keyword">and</span> asc &lt;= <span class="number">-11848</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'x'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-11847</span> <span class="keyword">and</span> asc &lt;= <span class="number">-11056</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'y'</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= <span class="number">-11055</span> <span class="keyword">and</span> asc &lt;= <span class="number">-10247</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">'z'</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">'?'</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">getPY</span><span class="params">(string, encoding=<span class="string">"utf-8"</span>)</span>:</span></span><br><span class="line">    <span class="keyword">if</span> isinstance(string, str):</span><br><span class="line">        string = string.decode(encoding)</span><br><span class="line"></span><br><span class="line">    result = []</span><br><span class="line">    <span class="keyword">for</span> each <span class="keyword">in</span> string:</span><br><span class="line">        result.append(getFirstPY(each))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">""</span>.join(result)</span><br></pre></td></tr></table></figure>
+<p>最新的代码可以在<a href="https://github.com/binux/binux-tools/blob/master/python/getPY.py" target="_blank" rel="external">https://github.com/binux/binux-tools/blob/master/python/getPY.py</a>这里找到。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/未分类/">未分类</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/python/">python</a>, <a href="/tags/tools/">tools</a>, <a href="/tags/getpy/">getpy</a>, <a href="/tags/汉语拼音/">汉语拼音</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:blog.binux.me">
+  </form>
+</div>
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
+      </li>
+    
+      <li>
+        <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
+      </li>
+    
+      <li>
+        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
+      </li>
+    
+      <li>
+        <a href="/2015/07/uk/">英国</a>
+      </li>
+    
+      <li>
+        <a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="http://binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2016 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'binux';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
