@@ -76,9 +76,6 @@ deploy:
     delete: true
     verbose: true
     ignore_errors: true
-  - type: git
-    repo: git@github.com:binux/binux_github_com.git
-    branch: gh-pages
 
 disqus_shortname: binux
 feed:
