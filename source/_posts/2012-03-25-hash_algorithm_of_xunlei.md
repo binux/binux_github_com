@@ -83,7 +83,7 @@ tags:
         h = hashlib.sha1()
         size = os.path.getsize(path)
         psize = 0x40000
-        while size / psize > 0x200:
+        while size / psize > 0x200 and psize < 0x200000:
             psize = psize << 1
         with open(path, 'rb') as stream:
             data = stream.read(psize)
