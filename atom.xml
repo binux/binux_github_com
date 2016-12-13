@@ -4,9 +4,9 @@
   
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://blog.binux.me/"/>
+  <link href="http://binux.blog/"/>
   <updated>2016-05-17T22:22:05.000Z</updated>
-  <id>http://blog.binux.me/</id>
+  <id>http://binux.blog/</id>
   
   <author>
     <name>Roy Binux</name>
@@ -17,8 +17,8 @@
   
   <entry>
     <title>bilibili 新番承包付费意愿调查</title>
-    <link href="http://blog.binux.me/2016/05/bilibili-pay-user-analysis/"/>
-    <id>http://blog.binux.me/2016/05/bilibili-pay-user-analysis/</id>
+    <link href="http://binux.blog/2016/05/bilibili-pay-user-analysis/"/>
+    <id>http://binux.blog/2016/05/bilibili-pay-user-analysis/</id>
     <published>2016-05-14T23:00:00.000Z</published>
     <updated>2016-05-17T22:22:05.000Z</updated>
     
@@ -86,16 +86,16 @@
     </summary>
     
     
-      <category term="bilibili" scheme="http://blog.binux.me/tags/bilibili/"/>
+      <category term="bilibili" scheme="http://binux.blog/tags/bilibili/"/>
     
-      <category term="ACG" scheme="http://blog.binux.me/tags/ACG/"/>
+      <category term="ACG" scheme="http://binux.blog/tags/ACG/"/>
     
   </entry>
   
   <entry>
     <title>demo.pyspider.org 部署经验</title>
-    <link href="http://blog.binux.me/2016/05/deployment-of-demopyspiderorg/"/>
-    <id>http://blog.binux.me/2016/05/deployment-of-demopyspiderorg/</id>
+    <link href="http://binux.blog/2016/05/deployment-of-demopyspiderorg/"/>
+    <id>http://binux.blog/2016/05/deployment-of-demopyspiderorg/</id>
     <published>2016-05-13T23:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -133,16 +133,16 @@
     </summary>
     
     
-      <category term="pyspider" scheme="http://blog.binux.me/tags/pyspider/"/>
+      <category term="pyspider" scheme="http://binux.blog/tags/pyspider/"/>
     
-      <category term="deployment" scheme="http://blog.binux.me/tags/deployment/"/>
+      <category term="deployment" scheme="http://binux.blog/tags/deployment/"/>
     
   </entry>
   
   <entry>
     <title>足兆叉虫的2015</title>
-    <link href="http://blog.binux.me/2015/12/uk2/"/>
-    <id>http://blog.binux.me/2015/12/uk2/</id>
+    <link href="http://binux.blog/2015/12/uk2/"/>
+    <id>http://binux.blog/2015/12/uk2/</id>
     <published>2015-12-31T00:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -191,12 +191,12 @@
   
   <entry>
     <title>英国</title>
-    <link href="http://blog.binux.me/2015/07/uk/"/>
-    <id>http://blog.binux.me/2015/07/uk/</id>
+    <link href="http://binux.blog/2015/07/uk/"/>
+    <id>http://binux.blog/2015/07/uk/</id>
     <published>2015-07-20T23:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
-    <content type="html"><![CDATA[<p>半年没有更新 blog 了，<del>其实我在憋(wan)个(W)大(O)招(W)</del>。一年半以前，我说过<a href="http://blog.binux.me/2013/12/2013/">「想学日语，想出国」</a>，虽然这一年半也是没有干劲地随随便便过的，但是至少出国了。</p>
+    <content type="html"><![CDATA[<p>半年没有更新 blog 了，<del>其实我在憋(wan)个(W)大(O)招(W)</del>。一年半以前，我说过<a href="http://blog.binux.me/2013/12/2013/" target="_blank" rel="external">「想学日语，想出国」</a>，虽然这一年半也是没有干劲地随随便便过的，但是至少出国了。</p>
 <p>目的地英国，工作，8月初。</p>
 <p>要说经历，其实简单到爆。</p>
 <ol>
@@ -214,7 +214,7 @@
     
     <summary type="html">
     
-      &lt;p&gt;半年没有更新 blog 了，&lt;del&gt;其实我在憋(wan)个(W)大(O)招(W)&lt;/del&gt;。一年半以前，我说过&lt;a href=&quot;http://blog.binux.me/2013/12/2013/&quot;&gt;「想学日语，想出国」&lt;/a&gt;，虽然这一年半也是没有干劲地随随便便过的，
+      &lt;p&gt;半年没有更新 blog 了，&lt;del&gt;其实我在憋(wan)个(W)大(O)招(W)&lt;/del&gt;。一年半以前，我说过&lt;a href=&quot;http://blog.binux.me/2013/12/2013/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;「想学日
     
     </summary>
     
@@ -223,8 +223,8 @@
   
   <entry>
     <title>pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</title>
-    <link href="http://blog.binux.me/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/"/>
-    <id>http://blog.binux.me/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/</id>
+    <link href="http://binux.blog/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/"/>
+    <id>http://binux.blog/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/</id>
     <published>2015-01-10T00:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -258,16 +258,16 @@
     </summary>
     
     
-      <category term="python" scheme="http://blog.binux.me/tags/python/"/>
+      <category term="python" scheme="http://binux.blog/tags/python/"/>
     
-      <category term="pyspider" scheme="http://blog.binux.me/tags/pyspider/"/>
+      <category term="pyspider" scheme="http://binux.blog/tags/pyspider/"/>
     
   </entry>
   
   <entry>
     <title>pyspider 爬虫教程（二）：AJAX 和 HTTP</title>
-    <link href="http://blog.binux.me/2015/01/pyspider-tutorial-level-2-ajax-and-more-http/"/>
-    <id>http://blog.binux.me/2015/01/pyspider-tutorial-level-2-ajax-and-more-http/</id>
+    <link href="http://binux.blog/2015/01/pyspider-tutorial-level-2-ajax-and-more-http/"/>
+    <id>http://binux.blog/2015/01/pyspider-tutorial-level-2-ajax-and-more-http/</id>
     <published>2015-01-09T00:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -332,26 +332,26 @@
     </summary>
     
     
-      <category term="pyspider" scheme="http://blog.binux.me/tags/pyspider/"/>
+      <category term="pyspider" scheme="http://binux.blog/tags/pyspider/"/>
     
-      <category term="scrape" scheme="http://blog.binux.me/tags/scrape/"/>
+      <category term="scrape" scheme="http://binux.blog/tags/scrape/"/>
     
-      <category term="crawl" scheme="http://blog.binux.me/tags/crawl/"/>
+      <category term="crawl" scheme="http://binux.blog/tags/crawl/"/>
     
-      <category term="AJAX" scheme="http://blog.binux.me/tags/AJAX/"/>
+      <category term="AJAX" scheme="http://binux.blog/tags/AJAX/"/>
     
-      <category term="HTTP" scheme="http://blog.binux.me/tags/HTTP/"/>
+      <category term="HTTP" scheme="http://binux.blog/tags/HTTP/"/>
     
   </entry>
   
   <entry>
     <title>pyspider 爬虫教程（一）：HTML 和 CSS 选择器</title>
-    <link href="http://blog.binux.me/2015/01/pyspider-tutorial-level-1-html-and-css-selector/"/>
-    <id>http://blog.binux.me/2015/01/pyspider-tutorial-level-1-html-and-css-selector/</id>
+    <link href="http://binux.blog/2015/01/pyspider-tutorial-level-1-html-and-css-selector/"/>
+    <id>http://binux.blog/2015/01/pyspider-tutorial-level-1-html-and-css-selector/</id>
     <published>2015-01-04T00:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
-    <content type="html"><![CDATA[<p>虽然以前写过 <a href="http://blog.binux.me/2013/09/howto-crawl-web/">如何抓取WEB页面</a> 和 <a href="http://blog.binux.me/2014/07/how-to-extract-data-from-web/">如何从 WEB 页面中提取信息</a>。但是感觉还是需要一篇 step by step 的教程，不然没有一个总体的认识。不过，没想到这个教程居然会变成一篇<a href="http://docs.pyspider.org/en/latest/tutorial/HTML-and-CSS-Selector/" target="_blank" rel="external">译文</a>，在这个爬虫教程系列文章中，会以实际的例子，由浅入深讨论爬取（抓取和解析）的一些关键问题。</p>
+    <content type="html"><![CDATA[<p>虽然以前写过 <a href="http://blog.binux.me/2013/09/howto-crawl-web/" target="_blank" rel="external">如何抓取WEB页面</a> 和 <a href="http://blog.binux.me/2014/07/how-to-extract-data-from-web/" target="_blank" rel="external">如何从 WEB 页面中提取信息</a>。但是感觉还是需要一篇 step by step 的教程，不然没有一个总体的认识。不过，没想到这个教程居然会变成一篇<a href="http://docs.pyspider.org/en/latest/tutorial/HTML-and-CSS-Selector/" target="_blank" rel="external">译文</a>，在这个爬虫教程系列文章中，会以实际的例子，由浅入深讨论爬取（抓取和解析）的一些关键问题。</p>
 <p>在 教程一 中，我们将要爬取的网站是豆瓣电影：<a href="http://movie.douban.com/" target="_blank" rel="external">http://movie.douban.com/</a></p>
 <p>你可以在: <a href="http://demo.pyspider.org/debug/tutorial_douban_movie" target="_blank" rel="external">http://demo.pyspider.org/debug/tutorial_douban_movie</a> 获得完整的代码，和进行测试。</p>
 <h2 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h2><p>由于教程是基于 pyspider 的，你可以安装一个 pyspider（<a href="http://docs.pyspider.org/en/latest/Quickstart/" target="_blank" rel="external">Quickstart</a>，也可以直接使用 pyspider 的 demo 环境： <a href="http://demo.pyspider.org/" target="_blank" rel="external">http://demo.pyspider.org/</a>。</p>
@@ -432,25 +432,25 @@
     
     <summary type="html">
     
-      &lt;p&gt;虽然以前写过 &lt;a href=&quot;http://blog.binux.me/2013/09/howto-crawl-web/&quot;&gt;如何抓取WEB页面&lt;/a&gt; 和 &lt;a href=&quot;http://blog.binux.me/2014/07/how-to-extract-data-
+      &lt;p&gt;虽然以前写过 &lt;a href=&quot;http://blog.binux.me/2013/09/howto-crawl-web/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;如何抓取WEB页面&lt;/a&gt; 和 &lt;a href=&quot;http://blog.binux.
     
     </summary>
     
     
-      <category term="css selector" scheme="http://blog.binux.me/tags/css-selector/"/>
+      <category term="css selector" scheme="http://binux.blog/tags/css-selector/"/>
     
-      <category term="pyspider" scheme="http://blog.binux.me/tags/pyspider/"/>
+      <category term="pyspider" scheme="http://binux.blog/tags/pyspider/"/>
     
-      <category term="scrape" scheme="http://blog.binux.me/tags/scrape/"/>
+      <category term="scrape" scheme="http://binux.blog/tags/scrape/"/>
     
-      <category term="crawl" scheme="http://blog.binux.me/tags/crawl/"/>
+      <category term="crawl" scheme="http://binux.blog/tags/crawl/"/>
     
   </entry>
   
   <entry>
     <title>迁移 Python 3</title>
-    <link href="http://blog.binux.me/2014/12/porting-to-python-3/"/>
-    <id>http://blog.binux.me/2014/12/porting-to-python-3/</id>
+    <link href="http://binux.blog/2014/12/porting-to-python-3/"/>
+    <id>http://binux.blog/2014/12/porting-to-python-3/</id>
     <published>2014-12-21T00:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -503,20 +503,20 @@
     </summary>
     
     
-      <category term="python" scheme="http://blog.binux.me/tags/python/"/>
+      <category term="python" scheme="http://binux.blog/tags/python/"/>
     
-      <category term="porting" scheme="http://blog.binux.me/tags/porting/"/>
+      <category term="porting" scheme="http://binux.blog/tags/porting/"/>
     
   </entry>
   
   <entry>
     <title>pyspider介绍</title>
-    <link href="http://blog.binux.me/2014/11/introduction-to-pyspider/"/>
-    <id>http://blog.binux.me/2014/11/introduction-to-pyspider/</id>
+    <link href="http://binux.blog/2014/11/introduction-to-pyspider/"/>
+    <id>http://binux.blog/2014/11/introduction-to-pyspider/</id>
     <published>2014-11-16T00:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
-    <content type="html"><![CDATA[<p>虽然已经发过一篇<a href="http://blog.binux.me/2014/02/pyspider-architecture/">架构设计</a>，但是觉得还是有必要发一篇介绍。而且拖了那么久的第二里程碑的commit数已经超过第一个版本了。。</p>
+    <content type="html"><![CDATA[<p>虽然已经发过一篇<a href="http://blog.binux.me/2014/02/pyspider-architecture/" target="_blank" rel="external">架构设计</a>，但是觉得还是有必要发一篇介绍。而且拖了那么久的第二里程碑的commit数已经超过第一个版本了。。</p>
 <p>那么由我再次介绍一下 pyspider。</p>
 <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>pyspider 来源于以前做的一个垂直搜索引擎使用的爬虫后端。我们需要从200个站点（由于站点失效，不是都同时啦，同时有100+在跑吧）采集数据，并要求在5分钟内将对方网站的更新更新到库中。</p>
 <p>所以，灵活的抓取控制是必须的。同时，由于100个站点，每天都可能会有站点失效或者改版，所以需要能够监控模板失效，以及查看抓取状态。</p>
@@ -549,26 +549,25 @@
     
     <summary type="html">
     
-      &lt;p&gt;虽然已经发过一篇&lt;a href=&quot;http://blog.binux.me/2014/02/pyspider-architecture/&quot;&gt;架构设计&lt;/a&gt;，但是觉得还是有必要发一篇介绍。而且拖了那么久的第二里程碑的commit数已经超过第一个版本了。。&lt;/p&gt;
-&lt;p&gt;那么
+      &lt;p&gt;虽然已经发过一篇&lt;a href=&quot;http://blog.binux.me/2014/02/pyspider-architecture/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;架构设计&lt;/a&gt;，但是觉得还是有必要发一篇介绍。而且拖了那么久的第二里程
     
     </summary>
     
     
-      <category term="python" scheme="http://blog.binux.me/tags/python/"/>
+      <category term="python" scheme="http://binux.blog/tags/python/"/>
     
-      <category term="javascript" scheme="http://blog.binux.me/tags/javascript/"/>
+      <category term="javascript" scheme="http://binux.blog/tags/javascript/"/>
     
-      <category term="crawler" scheme="http://blog.binux.me/tags/crawler/"/>
+      <category term="crawler" scheme="http://binux.blog/tags/crawler/"/>
     
-      <category term="opensource" scheme="http://blog.binux.me/tags/opensource/"/>
+      <category term="opensource" scheme="http://binux.blog/tags/opensource/"/>
     
   </entry>
   
   <entry>
     <title>签到 —— qiandao.today 介绍</title>
-    <link href="http://blog.binux.me/2014/09/introduction-to-qiandao-today/"/>
-    <id>http://blog.binux.me/2014/09/introduction-to-qiandao-today/</id>
+    <link href="http://binux.blog/2014/09/introduction-to-qiandao-today/"/>
+    <id>http://binux.blog/2014/09/introduction-to-qiandao-today/</id>
     <published>2014-09-28T23:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -604,14 +603,14 @@
     </summary>
     
     
-      <category term="qiandao.today" scheme="http://blog.binux.me/tags/qiandao-today/"/>
+      <category term="qiandao.today" scheme="http://binux.blog/tags/qiandao-today/"/>
     
   </entry>
   
   <entry>
     <title>如何从 WEB 页面中提取信息</title>
-    <link href="http://blog.binux.me/2014/07/how-to-extract-data-from-web/"/>
-    <id>http://blog.binux.me/2014/07/how-to-extract-data-from-web/</id>
+    <link href="http://binux.blog/2014/07/how-to-extract-data-from-web/"/>
+    <id>http://binux.blog/2014/07/how-to-extract-data-from-web/</id>
     <published>2014-07-18T23:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -659,22 +658,22 @@
     </summary>
     
     
-      <category term="html" scheme="http://blog.binux.me/tags/html/"/>
+      <category term="html" scheme="http://binux.blog/tags/html/"/>
     
-      <category term="infomation-extraction" scheme="http://blog.binux.me/tags/infomation-extraction/"/>
+      <category term="infomation-extraction" scheme="http://binux.blog/tags/infomation-extraction/"/>
     
-      <category term="wrapper-genaration" scheme="http://blog.binux.me/tags/wrapper-genaration/"/>
+      <category term="wrapper-genaration" scheme="http://binux.blog/tags/wrapper-genaration/"/>
     
-      <category term="xpath" scheme="http://blog.binux.me/tags/xpath/"/>
+      <category term="xpath" scheme="http://binux.blog/tags/xpath/"/>
     
-      <category term="css-selector" scheme="http://blog.binux.me/tags/css-selector/"/>
+      <category term="css-selector" scheme="http://binux.blog/tags/css-selector/"/>
     
   </entry>
   
   <entry>
     <title>pyspider架构设计</title>
-    <link href="http://blog.binux.me/2014/02/pyspider-architecture/"/>
-    <id>http://blog.binux.me/2014/02/pyspider-architecture/</id>
+    <link href="http://binux.blog/2014/02/pyspider-architecture/"/>
+    <id>http://binux.blog/2014/02/pyspider-architecture/</id>
     <published>2014-02-28T00:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -739,18 +738,18 @@
     </summary>
     
     
-      <category term="python" scheme="http://blog.binux.me/tags/python/"/>
+      <category term="python" scheme="http://binux.blog/tags/python/"/>
     
-      <category term="spider" scheme="http://blog.binux.me/tags/spider/"/>
+      <category term="spider" scheme="http://binux.blog/tags/spider/"/>
     
-      <category term="opensource" scheme="http://blog.binux.me/tags/opensource/"/>
+      <category term="opensource" scheme="http://binux.blog/tags/opensource/"/>
     
   </entry>
   
   <entry>
     <title>基于封禁IP名单的自动路由</title>
-    <link href="http://blog.binux.me/2014/01/add-blocked-ip-to-route/"/>
-    <id>http://blog.binux.me/2014/01/add-blocked-ip-to-route/</id>
+    <link href="http://binux.blog/2014/01/add-blocked-ip-to-route/"/>
+    <id>http://binux.blog/2014/01/add-blocked-ip-to-route/</id>
     <published>2014-01-27T00:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -779,16 +778,16 @@
     </summary>
     
     
-      <category term="vpn" scheme="http://blog.binux.me/tags/vpn/"/>
+      <category term="vpn" scheme="http://binux.blog/tags/vpn/"/>
     
-      <category term="route" scheme="http://blog.binux.me/tags/route/"/>
+      <category term="route" scheme="http://binux.blog/tags/route/"/>
     
   </entry>
   
   <entry>
     <title>足兆叉虫的2013</title>
-    <link href="http://blog.binux.me/2013/12/2013/"/>
-    <id>http://blog.binux.me/2013/12/2013/</id>
+    <link href="http://binux.blog/2013/12/2013/"/>
+    <id>http://binux.blog/2013/12/2013/</id>
     <published>2013-12-29T00:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -806,14 +805,14 @@
     </summary>
     
     
-      <category term="2013" scheme="http://blog.binux.me/tags/2013/"/>
+      <category term="2013" scheme="http://binux.blog/tags/2013/"/>
     
   </entry>
   
   <entry>
     <title>用FTP的方式访问迅雷离线</title>
-    <link href="http://blog.binux.me/2013/11/xunlei-lixian-ftp-proxy/"/>
-    <id>http://blog.binux.me/2013/11/xunlei-lixian-ftp-proxy/</id>
+    <link href="http://binux.blog/2013/11/xunlei-lixian-ftp-proxy/"/>
+    <id>http://binux.blog/2013/11/xunlei-lixian-ftp-proxy/</id>
     <published>2013-11-17T00:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -844,29 +843,29 @@
     </summary>
     
     
-      <category term="lixian" scheme="http://blog.binux.me/tags/lixian/"/>
+      <category term="lixian" scheme="http://binux.blog/tags/lixian/"/>
     
-      <category term="xunlei" scheme="http://blog.binux.me/tags/xunlei/"/>
+      <category term="xunlei" scheme="http://binux.blog/tags/xunlei/"/>
     
-      <category term="ftpserver" scheme="http://blog.binux.me/tags/ftpserver/"/>
+      <category term="ftpserver" scheme="http://binux.blog/tags/ftpserver/"/>
     
-      <category term="webserver" scheme="http://blog.binux.me/tags/webserver/"/>
+      <category term="webserver" scheme="http://binux.blog/tags/webserver/"/>
     
-      <category term="tornado" scheme="http://blog.binux.me/tags/tornado/"/>
+      <category term="tornado" scheme="http://binux.blog/tags/tornado/"/>
     
-      <category term="async" scheme="http://blog.binux.me/tags/async/"/>
+      <category term="async" scheme="http://binux.blog/tags/async/"/>
     
   </entry>
   
   <entry>
     <title>动画新番订阅-从ktxp到迅雷离线</title>
-    <link href="http://blog.binux.me/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/"/>
-    <id>http://blog.binux.me/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/</id>
+    <link href="http://binux.blog/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/"/>
+    <id>http://binux.blog/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/</id>
     <published>2013-10-19T23:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
     <content type="html"><![CDATA[<p><span style="font-size: 2em">需要解决方案请直接跳到 <strong>解决方案</strong> 一节</span></p>
-<p>曾经折腾过<a href="http://blog.binux.me/2011/12/from_xunlei_lixian_for_flexget/">flexget+迅雷离线</a>的新番订阅方案，但是因为越来越忙+越来越懒，这种挨个写配置文件的方式太麻烦了，之后就再也没用过。<br>于是我在想，用RSS追番的痛点在哪？</p>
+<p>曾经折腾过<a href="http://blog.binux.me/2011/12/from_xunlei_lixian_for_flexget/" target="_blank" rel="external">flexget+迅雷离线</a>的新番订阅方案，但是因为越来越忙+越来越懒，这种挨个写配置文件的方式太麻烦了，之后就再也没用过。<br>于是我在想，用RSS追番的痛点在哪？</p>
 <ul>
 <li>需要挨个构造过滤条件？</li>
 <li>flexget配置文件太难写，不方便下载到本地？</li>
@@ -899,16 +898,16 @@
     </summary>
     
     
-      <category term="GAS" scheme="http://blog.binux.me/tags/GAS/"/>
+      <category term="GAS" scheme="http://binux.blog/tags/GAS/"/>
     
-      <category term="动画" scheme="http://blog.binux.me/tags/%E5%8A%A8%E7%94%BB/"/>
+      <category term="动画" scheme="http://binux.blog/tags/%E5%8A%A8%E7%94%BB/"/>
     
   </entry>
   
   <entry>
     <title>如何抓取WEB页面</title>
-    <link href="http://blog.binux.me/2013/09/howto-crawl-web/"/>
-    <id>http://blog.binux.me/2013/09/howto-crawl-web/</id>
+    <link href="http://binux.blog/2013/09/howto-crawl-web/"/>
+    <id>http://binux.blog/2013/09/howto-crawl-web/</id>
     <published>2013-09-29T23:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -1016,18 +1015,18 @@ Connection: Keep-Alive
     </summary>
     
     
-      <category term="crawler" scheme="http://blog.binux.me/tags/crawler/"/>
+      <category term="crawler" scheme="http://binux.blog/tags/crawler/"/>
     
-      <category term="howto" scheme="http://blog.binux.me/tags/howto/"/>
+      <category term="howto" scheme="http://binux.blog/tags/howto/"/>
     
-      <category term="爬虫" scheme="http://blog.binux.me/tags/%E7%88%AC%E8%99%AB/"/>
+      <category term="爬虫" scheme="http://binux.blog/tags/%E7%88%AC%E8%99%AB/"/>
     
   </entry>
   
   <entry>
     <title>基于WEBRTC的免插件点到点视频分享</title>
-    <link href="http://blog.binux.me/2013/05/webrtc-video/"/>
-    <id>http://blog.binux.me/2013/05/webrtc-video/</id>
+    <link href="http://binux.blog/2013/05/webrtc-video/"/>
+    <id>http://binux.blog/2013/05/webrtc-video/</id>
     <published>2013-05-04T23:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -1067,16 +1066,16 @@ Connection: Keep-Alive
     </summary>
     
     
-      <category term="javascript" scheme="http://blog.binux.me/tags/javascript/"/>
+      <category term="javascript" scheme="http://binux.blog/tags/javascript/"/>
     
-      <category term="webrtc" scheme="http://blog.binux.me/tags/webrtc/"/>
+      <category term="webrtc" scheme="http://binux.blog/tags/webrtc/"/>
     
   </entry>
   
   <entry>
     <title>Google+评论组件测试</title>
-    <link href="http://blog.binux.me/2013/04/googleplus-comments-test/"/>
-    <id>http://blog.binux.me/2013/04/googleplus-comments-test/</id>
+    <link href="http://binux.blog/2013/04/googleplus-comments-test/"/>
+    <id>http://binux.blog/2013/04/googleplus-comments-test/</id>
     <published>2013-04-18T23:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -1116,18 +1115,18 @@ Google+给Blogger添加了Google+的评论组件，看起来可以移植到别�
     </summary>
     
     
-      <category term="javascript" scheme="http://blog.binux.me/tags/javascript/"/>
+      <category term="javascript" scheme="http://binux.blog/tags/javascript/"/>
     
-      <category term="google+" scheme="http://blog.binux.me/tags/google/"/>
+      <category term="google+" scheme="http://binux.blog/tags/google/"/>
     
-      <category term="comments" scheme="http://blog.binux.me/tags/comments/"/>
+      <category term="comments" scheme="http://binux.blog/tags/comments/"/>
     
   </entry>
   
   <entry>
     <title>Google Apps Script</title>
-    <link href="http://blog.binux.me/2013/03/google-apps-script/"/>
-    <id>http://blog.binux.me/2013/03/google-apps-script/</id>
+    <link href="http://binux.blog/2013/03/google-apps-script/"/>
+    <id>http://binux.blog/2013/03/google-apps-script/</id>
     <published>2013-03-18T00:00:00.000Z</published>
     <updated>2016-05-17T22:01:38.000Z</updated>
     
@@ -1194,11 +1193,11 @@ Google+给Blogger添加了Google+的评论组件，看起来可以移植到别�
     </summary>
     
     
-      <category term="javascript" scheme="http://blog.binux.me/tags/javascript/"/>
+      <category term="javascript" scheme="http://binux.blog/tags/javascript/"/>
     
-      <category term="GAS" scheme="http://blog.binux.me/tags/GAS/"/>
+      <category term="GAS" scheme="http://binux.blog/tags/GAS/"/>
     
-      <category term="google_apps_script" scheme="http://blog.binux.me/tags/google-apps-script/"/>
+      <category term="google_apps_script" scheme="http://binux.blog/tags/google-apps-script/"/>
     
   </entry>
   
