@@ -63,6 +63,43 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2012-01-04T22:19:06.000Z"><a href="/2012/01/bypassing-chrome-anti-xss-filter-with-specific-version-of-php/">2012-01-04</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2012/01/bypassing-chrome-anti-xss-filter-with-specific-version-of-php/">利用特定版本PHP对query处理不一致，实现Chrome’s Anti-XSS绕过</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>完全是为了需要发现的，以至于bypass这个词也是第一次见到。。这个漏洞利用了Chrome和PHP对于请求URL处理上的不一致，对于Chrome不认为是query请求的连接，被PHP当作query部分正常处理了，以此来绕过Chrome的XSS过滤。</p>
+<p>受影响的浏览器和版本：<br>Google Chrome - 16.0.912.63 beta<br>Firefox - 9.0.1<br>Safari - 未亲自测试<br>Opera - 未亲自测试</p>
+<p>不受影响的浏览器：<br>IE10 - 未亲自测试，有截图</p>
+<p>漏洞尚在使用中…<br>绝对不是什么不好的用途啦..</p>
+<p>826b1112bf8521831b04b2e2985f81ab</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2011-12-24T11:33:03.000Z"><a href="/2011/12/vps-setup-log-1/">2011-12-24</a></time>
       
       
@@ -838,48 +875,6 @@ or &gt; &gt;*) (js_interpreter.cc:361)
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2011-08-12T10:37:18.000Z"><a href="/2011/08/python-tools-pool/">2011-08-12</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2011/08/python-tools-pool/">python 工具脚本： 线程池pool.py</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>这个脚本是仿照multiprocessing中的pool编写的（<a href="http://docs.python.org/library/multiprocessing.html#module-multiprocessing.pool" target="_blank" rel="external">http://docs.python.org/library/multiprocessing.html#module-multiprocessing.pool</a>）。</p>
-<p>但是，python自带的multiprocessing的Pool是基于函数的，无法在线程内部保存各个线程的独立资源。例如在操作数据库时，数据库操作大都不是线程安全的，这时就需要每个线程有自己的连接。<br>其次，python自带的线程池在join之后会陷入内核态，无法接受CTRL+C，从而无法中断自行，这一点让我很是不爽。于是实现了这个线程池。</p>
-<p><strong>特性：</strong><br>1、仿照multiprocessing的Pool，提供apply,apply_async,map,map_async这几个类似的接口，和wait函数进行等待执行结束</p>
-<p>2、worker线程为一个类：</p>
-<p>[crayon lang=”python]<br>class Work(threading.Thread):<br>  def init(self):<br>    pass<br>  def do(self, args):<br>    pass<br>[/crayon]</p>
-<p>可以通过重载init来初始化一些线程自己的资源。重载do来自行需要的操作，参数会通过args传入。</p>
-<p>3、wait时可以使用KeyboardInterrupt（CTRL+C）中断进程执行。</p>
-<p><strong>缺陷：</strong>线程没有返回值。。。</p>
-<p>另：发现对于这种小东西gist真是方便。</p>
-<p>源码：<a href="https://gist.github.com/992657" target="_blank" rel="external">https://gist.github.com/992657</a></p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -938,6 +933,10 @@ or &gt; &gt;*) (js_interpreter.cc:361)
   <ul class="entry">
     
       <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+      <li>
         <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
       </li>
     
@@ -951,10 +950,6 @@ or &gt; &gt;*) (js_interpreter.cc:361)
     
       <li>
         <a href="/2015/07/uk/">英国</a>
-      </li>
-    
-      <li>
-        <a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a>
       </li>
     
   </ul>

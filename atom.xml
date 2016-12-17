@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://binux.blog/"/>
-  <updated>2016-05-17T22:22:05.000Z</updated>
+  <updated>2016-12-17T22:49:57.000Z</updated>
   <id>http://binux.blog/</id>
   
   <author>
@@ -14,6 +14,94 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Data Highlighter</title>
+    <link href="http://binux.blog/2016/12/data-highlighter/"/>
+    <id>http://binux.blog/2016/12/data-highlighter/</id>
+    <published>2016-12-04T13:19:10.000Z</published>
+    <updated>2016-12-17T22:49:57.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>又是好久没有写 blog 了。现在确实没有上学的时候愿意折腾了，能用钱解决的问题，就不自己动手了。但是，很久不写 blog 这事呢，其实就是因为懒 _ (:3」∠) _。</p>
+<p>这里带来的是 <a href="/2014/07/how-to-extract-data-from-web/"><br>如何从 WEB 页面中提取信息</a> 一文中提到的 data highlighter。但是由于开源需要重写代码，而我并不打算使用它，这里只给出 <a href="https://demo.binux.me/data_highlighter.html" target="_blank" rel="external">demo</a> 和算法思路。</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Data Highlighter 其实是一种生成提取规则的方式：</p>
+<blockquote>
+<p>Data Highlighter 的标注方式是：给一系列相似的页面，让用户标出（高亮）每个属性在页面中的位置。通过多个页面的标注信息，寻找每个属性的特征。当然了，这个特征可以是 xpath，也可以是上下文，也有可能是机器学习的特征向量。<br>Data Hightlighter 通过高亮 多个页面中相同属性 进行规则学习，省去了人为设置规则时的学习成本。实践表明，在单一页面模板下，标记2个页面就足以生成规则了。效率远大于手工设置规则。Google Data Highlighter 甚至对文字进行了切分，能在 英语 / 汉语普通话 / 粤语 xpath 相同的情况下，分别选出三种语言。是我目前见过的成熟度最高、通用性最好、最简便的数据抽取方式。</p>
+</blockquote>
+<p>那我们通过例子介绍一下使用方式。首先打开 <a href="https://demo.binux.me/data_highlighter.html" target="_blank" rel="external">demo</a>。这里列出了5个豆瓣电影的 sample 页面，点击 go 加载页面。将鼠标放在页面中，就会发现文字被高亮了，点击拖拽鼠标选择需要提取的文字，在弹出的菜单中选择属性名。</p>
+<p><br></p>
+<video controls autoplay loop src="/assets/image/screen-data-highlighter-select.mp4"></video>
+
+<p>然后分别点击 <code>gen_tpl</code> 和 <code>test_all</code> 就能看到生成的模板，以及提取效果了。</p>
+<p><img src="/assets/image/Screenshot 2016-12-04 14.44.18.png" alt="extraction sample"></p>
+<h2 id="算法解析"><a href="#算法解析" class="headerlink" title="算法解析"></a>算法解析</h2><p>点击 <code>gen_tpl</code> 就可以看到生成的模板了，<code>tpl</code> 字段的 key 为抽取的变量的名字，value 描述了一个 <a href="https://zh.wikipedia.org/wiki/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA" target="_blank" rel="external">状态机</a>。</p>
+<p>先看一个简单的例子，以下就是对 <code>name</code> 字段的模板，它描述了一个 <code>s0 -&gt; e0</code> 的状态机。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">  &quot;need_more_sample&quot;: true,</div><div class="line">  &quot;tips&quot;: &#123;&#125;,</div><div class="line">  &quot;tpl&quot;: &#123;</div><div class="line">    &quot;name&quot;: &#123;</div><div class="line">      &quot;states&quot;: &#123;</div><div class="line">        &quot;s0&quot;: &#123;</div><div class="line">          &quot;tag&quot;: &quot;start&quot;,</div><div class="line">          &quot;transitions&quot;: [</div><div class="line">            &quot;e0&quot;</div><div class="line">          ],</div><div class="line">          &quot;condition&quot;: &#123;</div><div class="line">            &quot;xpath&quot;: &quot;/html/body/div/div/h1/span/textnode&quot;,</div><div class="line">            &quot;features&quot;: &#123;</div><div class="line">              &quot;exclude&quot;: [],</div><div class="line">              &quot;include&quot;: [</div><div class="line">                &quot;ancestor::*[1][name()=\&quot;span\&quot; and @property=&apos;v:itemreviewed&apos;]&quot;</div><div class="line">              ]</div><div class="line">            &#125;</div><div class="line">          &#125;</div><div class="line">        &#125;,</div><div class="line">        &quot;e0&quot;: &#123;</div><div class="line">          &quot;tag&quot;: &quot;end&quot;,</div><div class="line">          &quot;transitions&quot;: [],</div><div class="line">          &quot;condition&quot;: &#123;</div><div class="line">            &quot;xpath&quot;: &quot;/html/body/div/div/h1/span/textnode&quot;,</div><div class="line">            &quot;features&quot;: &#123;</div><div class="line">              &quot;exclude&quot;: [</div><div class="line">                &quot;following::*[position()=1 and name()=\&quot;textnode\&quot;]&quot;</div><div class="line">              ],</div><div class="line">              &quot;include&quot;: [</div><div class="line">                &quot;ancestor::*[1]/*[last()-0] = ancestor-or-self::*[1]&quot;</div><div class="line">              ]</div><div class="line">            &#125;</div><div class="line">          &#125;</div><div class="line">        &#125;</div><div class="line">      &#125;,</div><div class="line">      &quot;entrance_state&quot;: [</div><div class="line">        &quot;s0&quot;</div><div class="line">      ],</div><div class="line">      &quot;is_list&quot;: false,</div><div class="line">      &quot;data_type&quot;: &quot;TEXT&quot;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<blockquote>
+<p>直接跳到 <code>tpl.name</code> 部分，它有4个字段，<code>is_list</code> 和 <code>data_type</code> 描述了字段的类型，它们在字段定义的时候就已经指定了，没什么好说的。<code>states</code> 和 <code>entrance_state</code> 为状态机的描述部分。</p>
+<p><code>entrance_state</code> 表示状态机的入口为 <code>s0</code>。</p>
+<p><code>states</code> 中描述了两个状态 <code>s0</code> 和 <code>e0</code>。 <code>s0.tag == start</code> 表示这是一个开始状态，即标示字段提取的开头，<code>e0.tag == end</code> 为结束状态，即字段的结尾。<code>s0.transitions == [e0]</code> 表示从 <code>s0</code> 能够转移到 <code>e0</code>，而由于 <code>e0.tag == end</code> 已经结束了，所以就没有转移状态了。<br><br><br>在执行时，<a href="https://zh.wikipedia.org/wiki/%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86#.E5.85.88.E5.BA.8F.E9.81.8D.E5.8E.86.28Pre-Order_Traversal.29" target="_blank" rel="external">先序遍历</a> DOM 树，根据 <code>condition</code> 的条件进行状态转移。</p>
+<p><code>s0.condition</code> 表示进入开始条件为：xpath <code>/html/body/div/div/h1/span/textnode</code> 并且满足 <code>ancestor::*[1][name()=\&quot;span\&quot; and @property=&#39;v:itemreviewed&#39;]</code>（父元素的 name 为 span，property 属性为 “v:itemreviewed”) 这个特征。  </p>
+<p>而进入结束条件为 <code>e0.condition</code>： xpath <code>/html/body/div/div/h1/span/textnode</code> 并且满足 <code>ancestor::*[1]/*[last()-0] = ancestor-or-self::*[1]</code>（最后一个元素），并排除满足 <code>following::*[position()=1 and name()=\&quot;textnode\&quot;]</code>（右兄弟为 textnode，实际与 include 互斥）的元素。</p>
+<p><strong>简单地说，这个状态机描述了 <code>属性 property=&#39;v:itemviewed&#39; 的 span 的所有 textnode 孩子</code> 这样一条规则。</strong></p>
+<p>而多状态的执行也是类似的，只不过它可能存在状态分支，或者在多个状态间循环。不过只要根据状态转移条件状态进行转移，再根据 <code>tag</code> 所标识的开始结束进行提取即可。</p>
+</blockquote>
+<p>为什么要使用状态机在后面的小结讲解，我们暂且将整个状态机理解为「描述字段提取的开头和结尾」，每个状态就描述了开头结尾的特征。先来看看状态是如何描述「字段提取的开头和结尾」的。</p>
+<h3 id="状态条件的生成"><a href="#状态条件的生成" class="headerlink" title="状态条件的生成"></a>状态条件的生成</h3><p>算法的基本思路是<strong>寻找多个样本间相同的特征，并使得特征排除其他相似元素</strong>。</p>
+<p>每一个元素可以根据 id, class 属性，文字内容，位置，前 n 个元素的特征，祖先元素特征生成一组特征集合。对多个样本的特征取交，对需要排除的元素取差。</p>
+<p>例如如果每次都选择第二个「豆瓣成员常用的标签」，就会生成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&quot;features&quot;: &#123;</div><div class="line">  &quot;exclude&quot;: [</div><div class="line">    &quot;preceding::*[position()=2 and name()=\&quot;textnode\&quot;]&quot;</div><div class="line">  ],</div><div class="line">  &quot;include&quot;: [</div><div class="line">    &quot;preceding::*[position()=2 and name()=\&quot;a\&quot;]&quot;</div><div class="line">  ]</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果每次都选择 2016 的标签，就会生成</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&quot;features&quot;: &#123;</div><div class="line">  &quot;exclude&quot;: [],</div><div class="line">  &quot;include&quot;: [</div><div class="line">    &quot;ancestor::*[1][contains(., &apos;2016&apos;)]&quot;,</div><div class="line">    &quot;contains(., &apos;2016&apos;)&quot;</div><div class="line">  ]</div></pre></td></tr></table></figure>
+<p>通过特征集合的运算，算法能够通过样本，猜测出用户选择的意图。而这样的特征集合，可以不断地添加，以满足不同页面的需要。</p>
+<p>需要特别说明的是，特征并不需要像 demo 中使用某种特定的选择器(xpath)，由于模板执行时，可以再次为候选元素生成特征集合，对特征集合进行比较。实际上，你可以在特征集合中放入任何字符串，例如「第5元素」，「前一个字符为 answer，且值为 42」都是可以的。</p>
+<h3 id="状态机"><a href="#状态机" class="headerlink" title="状态机"></a>状态机</h3><p>不同于往常的选取一个元素（例如 pyspider 中的选择器），data highlighter 提供了</p>
+<ol>
+<li>元素内文字选取</li>
+<li>跨元素选取</li>
+</ol>
+<p>的功能，这使得正常的「元素选择器」不再好使，取而代之的是一种定位开始和结束的规则。描述为状态机即：<code>s0 -&gt; e0</code>。</p>
+<p>而 data highlighter 另一种需要支持的功能为列表选取：</p>
+<video controls autoplay loop src="/assets/image/screen-multi-select.mp4"></video>
+
+<p>就不能仅仅通过 <code>s0 -&gt; e0</code> 这样开头结尾的模式进行描述了。它需要准确描述出整个列表的开头，结尾，分隔符等信息，需要通过一个类似</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">s0 -&gt; e0 -&gt; s1 -&gt; e1 -&gt; s2 -&gt; e2</div><div class="line">            |------|</div></pre></td></tr></table></figure>
+<p>的状态机，<code>s0</code> 为整个列表的开头，<code>s1 -&gt; e1</code> 为中间循环的组，<code>e2</code> 为 整个列表的结束。</p>
+<p>而实际中，由于某些状态可以被合并，你可能会看到类似</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">s0 -&gt; e0 -&gt; s2 -&gt; e1</div><div class="line">       |</div><div class="line">       s1</div></pre></td></tr></table></figure>
+<blockquote>
+<p>e0 和 e1 被合并了，即第一个元素的结束条件和中间元素的结束没有不同</p>
+</blockquote>
+<p>的状态机</p>
+<h3 id="状态机的生成"><a href="#状态机的生成" class="headerlink" title="状态机的生成"></a>状态机的生成</h3><p>虽然状态机看起来非常复杂，但是用程序处理起来却不难。首先为每一个样本（包括列表选取）生成一条 <code>s0 -&gt; e0 -&gt; s1 -&gt; e1 -&gt; s2 -&gt; e2 -&gt; s3 -&gt; e3 ...</code> 的长链，然后尝试合并状态，然后将多个样本的链用同一规则合并。而不能合并的状态，就做个分支转移即可。</p>
+<p>而状态能否合并，取决于它们有没有共同特征，就是这么简单。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Data Highlighter 的算法设计，实际上是对元素特征选取的一种建模。通过设计合适的数据结构，使得多样本能够反映到模板中去。</p>
+<p>这个算法是两年前设计的，现在看起来实际上问题蛮多的，例如：</p>
+<ul>
+<li>无法使用组合特征，即要求元素同时满足满足多个条件</li>
+<li>没有设计合理的泛化机制</li>
+<li>模板不可读</li>
+</ul>
+<p>等，所以，我并不打算使用这个算法。</p>
+<p>只不过，最近些年，看到很多数据提取的公司，特别是国内的数据提取平台，还在停留在非常初级的 css selector 或者 xpath 点选生成。希望这篇文章能抛砖引玉，提供一些新的思路，为数据抽取提供更易用有效的工具。</p>
+<p>完。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;又是好久没有写 blog 了。现在确实没有上学的时候愿意折腾了，能用钱解决的问题，就不自己动手了。但是，很久不写 blog 这事呢，其实就是因为懒 _ (:3」∠) _。&lt;/p&gt;
+&lt;p&gt;这里带来的是 &lt;a href=&quot;/2014/07/how-to-extract-data
+    
+    </summary>
+    
+    
+      <category term="html" scheme="http://binux.blog/tags/html/"/>
+    
+      <category term="infomation-extraction" scheme="http://binux.blog/tags/infomation-extraction/"/>
+    
+      <category term="wrapper-genaration" scheme="http://binux.blog/tags/wrapper-genaration/"/>
+    
+  </entry>
   
   <entry>
     <title>bilibili 新番承包付费意愿调查</title>
@@ -1120,84 +1208,6 @@ Google+给Blogger添加了Google+的评论组件，看起来可以移植到别�
       <category term="google+" scheme="http://binux.blog/tags/google/"/>
     
       <category term="comments" scheme="http://binux.blog/tags/comments/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Google Apps Script</title>
-    <link href="http://binux.blog/2013/03/google-apps-script/"/>
-    <id>http://binux.blog/2013/03/google-apps-script/</id>
-    <published>2013-03-18T00:00:00.000Z</published>
-    <updated>2016-05-17T22:01:38.000Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="/2012/11/google-sb/">#google你个sb</a> 把Google Reader关闭了，就像 <a href="/2012/11/google-sb/">#google你个sb</a> 里说的，<strong>永远不要相信有什么免费的东西，即使他是google提供的</strong>。比如今天介绍的这个 <a href="https://developers.google.com/apps-script/" target="_blank" rel="external">Google Apps Script</a>，请不要相信它能长久运行下去，请准备好迁移的方案。</p>
-<h2 id="Google-Apps-Script"><a href="#Google-Apps-Script" class="headerlink" title="Google Apps Script"></a>Google Apps Script</h2><p>简称GAS，是一个JavaScript脚本驱动的云平台，通过GAS可以方便的连接Google和其他各种服务，执行各种自动化的任务。</p>
-<p>平台API提供了：  </p>
-<ul>
-<li>Google服务访问（mail, docs, charts, maps, calendar甚至还有翻译）</li>
-<li>界面</li>
-<li>数据库</li>
-<li><a href="https://developers.google.com/apps-script/service_urlfetch" target="_blank" rel="external"><strong>urlfetch</strong></a>！（可以post、可以修改header、可以修改body、甚至有一个帮助使用OAuth的类）</li>
-<li><a href="https://developers.google.com/apps-script/execution_time_triggers" target="_blank" rel="external">定时任务</a>、<a href="https://developers.google.com/apps-script/execution_container_triggers" target="_blank" rel="external">触发器</a></li>
-<li>可以发布为<a href="https://developers.google.com/apps-script/execution_web_apps" target="_blank" rel="external">web apps</a>，可以获得get、post参数等</li>
-</ul>
-<p>甚至还有cache、lock，俨然要什么有什么啊！虽然有<a href="http://docs.google.com/macros/dashboard" target="_blank" rel="external">配额</a>限制，虽然HTML会被 <a href="https://developers.google.com/apps-script/html_service#Caja" target="_blank" rel="external">重新渲染</a>，无法在页面中完整使用JavaScript，但是，冲着免费的 <a href="https://developers.google.com/apps-script/service_urlfetch" target="_blank" rel="external">urlfetch</a> 和 <a href="https://developers.google.com/apps-script/execution_time_triggers" target="_blank" rel="external">定时任务</a> 就大有可为啊！我能想到的各种应用可以有：</p>
-<ul>
-<li>RSS转烧</li>
-<li>各种HTTP代理，转换，绕过</li>
-<li>数据统计、采集</li>
-<li>各种WebHook的定时触发、检测HTTP服务是不是挂了</li>
-<li>各种ifttt功能（特别是google自己的服务之间的）</li>
-<li>建一个简单的动态网站，或者给自己的静态网站提供直接API</li>
-</ul>
-<p>只要你想，大有可为。<br>API请参考 <a href="https://developers.google.com/apps-script/defaultservices" target="_blank" rel="external">Default Services</a>，上方的 <a href="https://developers.google.com/apps-script/execution_methods" target="_blank" rel="external">Execution Methods for Scripts</a> 等文章对环境以及常见的需求有一些介绍，建议阅读。</p>
-<h2 id="应用示例"><a href="#应用示例" class="headerlink" title="应用示例"></a>应用示例</h2><h3 id="RSS转烧"><a href="#RSS转烧" class="headerlink" title="RSS转烧"></a>RSS转烧</h3><p>虽然HTML输出有限制，但 <a href="https://developers.google.com/apps-script/content_service" target="_blank" rel="external">XML、JSON、JSONP</a> 却没有限制的，配合 <a href="https://developers.google.com/apps-script/service_urlfetch" target="_blank" rel="external">urlfetch</a>，非常适合用来做RSS转烧，全文输出（这里建议用上缓存或者数据存储）等功能。</p>
-<p><strong>示例：</strong><br><a href="https://script.google.com/macros/s/AKfycbys9aUHz-WVB2j6qIKOE4-ZVtEjRrLz8VeSph26WrivKFIlH0U/exec" target="_blank" rel="external">yande.re高画质转烧</a> / <a href="https://script.google.com/d/1A-j39cTR8lnmJMaAodHHcjpyRyEoeTtZB4AE8RR4klKYxdZtbEklGHYb/edit?usp=sharing" target="_blank" rel="external">源码</a><br><strong>发布指南：</strong></p>
-<ol>
-<li>阅读<a href="https://developers.google.com/apps-script/execution_web_apps#deploying" target="_blank" rel="external">Deploying Your Script as a Web App</a></li>
-<li>以自己的身份执行、访问权限为允许匿名</li>
-</ol>
-<p><strong>说明：</strong>这里展示的是图站 <a href="https://yande.re/" target="_blank" rel="external">yande.re</a> 的sample画质输出以及title修改，这是我的第一个脚本，这里稍微尝试了一下环境以及urlfetch的功能，应该还是蛮简单的。更多转烧：</p>
-<p><a href="https://script.google.com/macros/s/AKfycbw4yYvSaKebIaHrlzM0BRJcb8DraGST_3EFHlIBX7ZRZ4JKlGk/exec" target="_blank" rel="external">danbooru</a> <a href="https://script.google.com/d/1HT85VFrLj_5kHH2ek3ONGgnHGhSSnYooZT_6ywCe-EOHIbvDvVrv1CX_/edit?usp=sharing" target="_blank" rel="external">源码</a><br><a href="https://script.google.com/macros/s/AKfycby56iyEAOfVKpjspuV7e_vzfSLBOel4x02AXzFW1UoEfMJSwGnj/exec" target="_blank" rel="external">konachan</a> <a href="https://script.google.com/d/1PZBEnh63gfP9N6RpkgFlyoim_IpSrke5KxMjGUC_ApgGNoNnodfil3v1/edit?usp=sharing" target="_blank" rel="external">源码</a></p>
-<h3 id="reader2gplus"><a href="#reader2gplus" class="headerlink" title="reader2gplus"></a>reader2gplus</h3><p>自动将Google Reader中加星的条目同步到Google+上（反正Google Reader也快死了。。这个也用不了多久了吧。。）</p>
-<p><strong>示例：</strong><a href="https://script.google.com/macros/s/AKfycbxWjsB7_8CHlgnyKo_AVFlgf8VPm5ZQ4OuNG1xL_7NKXG6prVw/exec" target="_blank" rel="external">reader2gplus</a> / <a href="https://script.google.com/d/1FZad9bf60QJPRs-CcX9q8Q3qFS6-oMBYi5n3DNVoqZC2Wac0YFLXrJkW/edit?usp=sharing" target="_blank" rel="external">源码</a><br><strong>发布指南：</strong></p>
-<ol>
-<li>阅读<a href="https://developers.google.com/apps-script/execution_web_apps#deploying" target="_blank" rel="external">Deploying Your Script as a Web App</a></li>
-<li>首先前往 <a href="https://code.google.com/apis/console/" target="_blank" rel="external">Google API Console</a> 生成一个API，启用Google+ API，并为其生成一个Web Apps的key</li>
-<li>在script脚本编辑页面中，Project Properties新建两个key：client_id, client_secret，填写上一步生成的key和secret</li>
-<li>发布为以访问者身份执行，分享您fork的脚本与访问权限相一致</li>
-</ol>
-<p><strong>说明：</strong>这里使用了 <a href="https://developers.google.com/apps-script/service_urlfetch" target="_blank" rel="external">urlfetch</a> 更多的参数，实现了OAuth2.0认证，尝试了一下 <a href="https://developers.google.com/+/api/latest/moments" target="_blank" rel="external">Google+的新API</a>，使用了 <a href="https://developers.google.com/apps-script/execution_time_triggers" target="_blank" rel="external">定时任务</a> 、GET参数、<a href="https://developers.google.com/apps-script/html_service" target="_blank" rel="external">界面</a> 以及 <a href="https://developers.google.com/apps-script/script_user_properties#userProperties" target="_blank" rel="external">用户数据存储</a> 。</p>
-<h3 id="迅雷离线预约下载"><a href="#迅雷离线预约下载" class="headerlink" title="迅雷离线预约下载"></a>迅雷离线预约下载</h3><p>自动将迅雷离线中完成的任务添加到Aria2上</p>
-<p><strong>示例：</strong><a href="https://script.google.com/macros/s/AKfycbxqWzZ6CSVaXtUBO313S8bFhleYXzv5CbfeLpEs4_WVfnTYeco/exec" target="_blank" rel="external">xunlei2aria2</a> / <a href="https://script.google.com/d/18pQAmp0THrjN148xoBFCgsUWJ__Xgi1nsih8WrOEM6eWVDziDPVDXc42/edit?usp=sharing" target="_blank" rel="external">源码</a>  </p>
-<p><strong>使用说明：</strong></p>
-<ol>
-<li>访问示例页面，将【】中的脚本拖拽到书签栏中保存</li>
-<li>访问迅雷离线页面（建议先新建一个文件夹），登陆，点击书签</li>
-<li>选择要预约的文件夹，填写<a href="http://binux.github.com/yaaw/" target="_blank" rel="external">JSON-RPC地址</a>（<strong>需要能被外网访问</strong>）</li>
-<li>将需要下载到aria2中的任务添加或移动到预约的文件夹中，当文件从文件夹消失，文件已经被添加到aria2中了</li>
-</ol>
-<p><strong>发布指南：</strong></p>
-<ol>
-<li>阅读<a href="https://developers.google.com/apps-script/execution_web_apps#deploying" target="_blank" rel="external">Deploying Your Script as a Web App</a></li>
-<li>发布为以访问者身份执行，分享您fork的脚本与访问权限相一致</li>
-</ol>
-<p><strong>说明：</strong>终于到了一个比较实用的脚本了，这里演示的是urlfetch真正有用的地方——跨API操作。所有的东西在reader2gplus中都已经用过了，但是结构要比reader2gplus好不少。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>GAS比起 <a href="http://appengine.google.com" target="_blank" rel="external">GAE</a> 更加简单，但是功能足够强大，通过在线的调试器，写一两行代码比GAE要轻松不少。我JavaScript是在 <a href="http://www.w3school.com.cn/index.html" target="_blank" rel="external">w3school</a> 学的，完全野生程序猿，在这里只是为了抛砖引玉，希望您能通过 GAS 能玩出更多有意思的东西。</p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;&lt;a href=&quot;/2012/11/google-sb/&quot;&gt;#google你个sb&lt;/a&gt; 把Google Reader关闭了，就像 &lt;a href=&quot;/2012/11/google-sb/&quot;&gt;#google你个sb&lt;/a&gt; 里说的，&lt;strong&gt;永远不要相信有什么免费的
-    
-    </summary>
-    
-    
-      <category term="javascript" scheme="http://binux.blog/tags/javascript/"/>
-    
-      <category term="GAS" scheme="http://binux.blog/tags/GAS/"/>
-    
-      <category term="google_apps_script" scheme="http://binux.blog/tags/google-apps-script/"/>
     
   </entry>
   

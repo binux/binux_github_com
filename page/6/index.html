@@ -63,6 +63,48 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2011-08-12T10:37:18.000Z"><a href="/2011/08/python-tools-pool/">2011-08-12</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/08/python-tools-pool/">python 工具脚本： 线程池pool.py</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>这个脚本是仿照multiprocessing中的pool编写的（<a href="http://docs.python.org/library/multiprocessing.html#module-multiprocessing.pool" target="_blank" rel="external">http://docs.python.org/library/multiprocessing.html#module-multiprocessing.pool</a>）。</p>
+<p>但是，python自带的multiprocessing的Pool是基于函数的，无法在线程内部保存各个线程的独立资源。例如在操作数据库时，数据库操作大都不是线程安全的，这时就需要每个线程有自己的连接。<br>其次，python自带的线程池在join之后会陷入内核态，无法接受CTRL+C，从而无法中断自行，这一点让我很是不爽。于是实现了这个线程池。</p>
+<p><strong>特性：</strong><br>1、仿照multiprocessing的Pool，提供apply,apply_async,map,map_async这几个类似的接口，和wait函数进行等待执行结束</p>
+<p>2、worker线程为一个类：</p>
+<p>[crayon lang=”python]<br>class Work(threading.Thread):<br>  def init(self):<br>    pass<br>  def do(self, args):<br>    pass<br>[/crayon]</p>
+<p>可以通过重载init来初始化一些线程自己的资源。重载do来自行需要的操作，参数会通过args传入。</p>
+<p>3、wait时可以使用KeyboardInterrupt（CTRL+C）中断进程执行。</p>
+<p><strong>缺陷：</strong>线程没有返回值。。。</p>
+<p>另：发现对于这种小东西gist真是方便。</p>
+<p>源码：<a href="https://gist.github.com/992657" target="_blank" rel="external">https://gist.github.com/992657</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2011-03-28T10:42:21.000Z"><a href="/2011/03/baidu_404/">2011-03-28</a></time>
       
       
@@ -528,53 +570,6 @@ ebuild rtorrent-0.8.6.ebuild merge
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2011-01-22T03:49:03.000Z"><a href="/2011/01/gentoo_tips/">2011-01-22</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2011/01/gentoo_tips/">机器不好还是别玩gentoo了。。</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>受不了啊！！xserver编译4小时，装个chromium编译3小时，mplayer3小时。。。这也太费劲了。。</p>
-<p>弄了几天，中文化，xserver，各种常用应用都弄好了，本来还打算弄点安装过程什么的 ，但是根据”you are not alone”原则，手册（<a href="http://www.gentoo.org/doc/zh_cn/index.xml" target="_blank" rel="external">http://www.gentoo.org/doc/zh_cn/index.xml</a>）+google任何事情都能够解决了。<br>而且gentoo更多的是探索发现，不自己解决就没意义了。</p>
-<p>嗯，不过还是有一些TIP的。。。</p>
-<ol>
-<li>emerge很强大，经常–search装软件很轻松</li>
-</ol>
-<ol>
-<li>emerge -pv 很好用，能看到将要执行的动作，方便查看版本、关联软件等信息</li>
-</ol>
-<ol>
-<li>软件库其实很新，不过很多都被mask了，查看 <a href="http://www.gentoo.org/doc/zh_cn/handbook/handbook-x86.xml?part=3&amp;chap=3" target="_blank" rel="external">文档</a> 或者使用autounmask</li>
-</ol>
-<ol>
-<li>编译的时候干点别的吧。。。</li>
-</ol>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -633,6 +628,10 @@ ebuild rtorrent-0.8.6.ebuild merge
   <ul class="entry">
     
       <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+      <li>
         <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
       </li>
     
@@ -646,10 +645,6 @@ ebuild rtorrent-0.8.6.ebuild merge
     
       <li>
         <a href="/2015/07/uk/">英国</a>
-      </li>
-    
-      <li>
-        <a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a>
       </li>
     
   </ul>
