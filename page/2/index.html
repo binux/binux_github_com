@@ -63,7 +63,68 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2014-09-28T23:00:00.000Z"><a href="/2014/09/introduction-to-qiandao-today/">2014-09-29</a></time>
+        <time datetime="2014-11-16T08:00:00.000Z"><a href="/2014/11/introduction-to-pyspider/">2014-11-16</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/11/introduction-to-pyspider/">pyspider介绍</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>虽然已经发过一篇<a href="http://blog.binux.me/2014/02/pyspider-architecture/" target="_blank" rel="external">架构设计</a>，但是觉得还是有必要发一篇介绍。而且拖了那么久的第二里程碑的commit数已经超过第一个版本了。。</p>
+<p>那么由我再次介绍一下 pyspider。</p>
+<h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>pyspider 来源于以前做的一个垂直搜索引擎使用的爬虫后端。我们需要从200个站点（由于站点失效，不是都同时啦，同时有100+在跑吧）采集数据，并要求在5分钟内将对方网站的更新更新到库中。</p>
+<p>所以，灵活的抓取控制是必须的。同时，由于100个站点，每天都可能会有站点失效或者改版，所以需要能够监控模板失效，以及查看抓取状态。</p>
+<p>为了达到5分钟更新，我们使用抓取最近更新页上面的最后更新时间，以此来判断页面是否需要再次抓取。</p>
+<p>可见，这个项目对于爬虫的监控和调度要求是非常高的。</p>
+<h1 id="pyspider-的主要特性"><a href="#pyspider-的主要特性" class="headerlink" title="pyspider 的主要特性"></a>pyspider 的主要特性</h1><ul>
+<li>python 脚本控制，可以用任何你喜欢的html解析包（内置 pyquery）</li>
+<li>WEB 界面编写调试脚本，起停脚本，监控执行状态，查看活动历史，获取结果产出</li>
+<li>支持 MySQL, MongoDB, SQLite</li>
+<li>支持抓取 JavaScript 的页面</li>
+<li>组件可替换，支持单机/分布式部署，支持 Docker 部署</li>
+<li>强大的调度控制</li>
+</ul>
+<p>由于功能太多，更多请参考<a href="https://github.com/binux/pyspider/wiki/%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97" target="_blank" rel="external">脚本编写指南</a></p>
+<p>感谢 <a href="https://plus.google.com/u/0/+PhoenixNemo/" target="_blank" rel="external">+PhoenixNemo</a> 提供的VPS，提供了一个 demo： <a href="http://demo.pyspider.org/" target="_blank" rel="external">demo.pyspider.org</a>。无需安装即可体验。</p>
+<p><a href="http://demo.pyspider.org/" target="_blank" rel="external"><img src="http://ww1.sinaimg.cn/large/7d46d69fjw1emavy6e9gij21kw0uldvy.jpg" alt="demo"></a></p>
+<h1 id="脚本样例"><a href="#脚本样例" class="headerlink" title="脚本样例"></a>脚本样例</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> libs.base_handler <span class="keyword">import</span> *</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handler</span><span class="params">(BaseHandler)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    this is a sample handler</div><div class="line">    '''</div><div class="line"><span class="meta">    @every(minutes=24*60, seconds=0)</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_start</span><span class="params">(self)</span>:</span></div><div class="line">        self.crawl(<span class="string">'http://scrapy.org/'</span>, callback=self.index_page)</div><div class="line"></div><div class="line"><span class="meta">    @config(age=10*24*60*60)</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">index_page</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">for</span> each <span class="keyword">in</span> response.doc(<span class="string">'a[href^="http://"]'</span>).items():</div><div class="line">            self.crawl(each.attr.href, callback=self.detail_page)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">detail_page</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">                <span class="string">"url"</span>: response.url,</div><div class="line">                <span class="string">"title"</span>: response.doc(<span class="string">'title'</span>).text(),</div><div class="line">                &#125;</div></pre></td></tr></table></figure>
+<p>例如这就是创建任务后默认生成的一个脚本示例。</p>
+<ul>
+<li>通过 <code>on_start</code> 回调函数，作为爬取的入口点，当点击主面板上的 <code>run</code> 的时候，就是调用这个函数，启动抓取。</li>
+<li><code>self.crawl</code> 告诉调度器，我们需要抓取 <code>&#39;http://scrapy.org/&#39;</code> 这个页面，然后使用 <code>callback=self.index_page</code> 这个回调函数进行解析。</li>
+<li>所有 <code>return</code> 的内容默认会被捕获到 <code>resultdb</code> 中，可以直接在 WEBUI 上看到。</li>
+</ul>
+<h1 id="更多特性和文档"><a href="#更多特性和文档" class="headerlink" title="更多特性和文档"></a>更多特性和文档</h1><ul>
+<li><a href="https://github.com/binux/pyspider/wiki" target="_blank" rel="external">Wiki</a></li>
+<li><a href="https://github.com/binux/pyspider/wiki/%E5%BF%AB%E9%80%9F%E6%8C%87%E5%8D%97" target="_blank" rel="external">快速指南</a></li>
+<li><a href="https://github.com/binux/pyspider/wiki/%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97" target="_blank" rel="external">脚本编写指南</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-09-29T07:00:00.000Z"><a href="/2014/09/introduction-to-qiandao-today/">2014-09-29</a></time>
       
       
   
@@ -118,7 +179,7 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2014-07-18T23:00:00.000Z"><a href="/2014/07/how-to-extract-data-from-web/">2014-07-19</a></time>
+        <time datetime="2014-07-19T07:00:00.000Z"><a href="/2014/07/how-to-extract-data-from-web/">2014-07-19</a></time>
       
       
   
@@ -184,7 +245,7 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2014-02-28T00:00:00.000Z"><a href="/2014/02/pyspider-architecture/">2014-02-28</a></time>
+        <time datetime="2014-02-28T08:00:00.000Z"><a href="/2014/02/pyspider-architecture/">2014-02-28</a></time>
       
       
   
@@ -268,7 +329,7 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2014-01-27T00:00:00.000Z"><a href="/2014/01/add-blocked-ip-to-route/">2014-01-27</a></time>
+        <time datetime="2014-01-27T08:00:00.000Z"><a href="/2014/01/add-blocked-ip-to-route/">2014-01-27</a></time>
       
       
   
@@ -315,7 +376,7 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2013-12-29T00:00:00.000Z"><a href="/2013/12/2013/">2013-12-29</a></time>
+        <time datetime="2013-12-29T08:00:00.000Z"><a href="/2013/12/2013/">2013-12-29</a></time>
       
       
   
@@ -351,7 +412,7 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2013-11-17T00:00:00.000Z"><a href="/2013/11/xunlei-lixian-ftp-proxy/">2013-11-17</a></time>
+        <time datetime="2013-11-17T08:00:00.000Z"><a href="/2013/11/xunlei-lixian-ftp-proxy/">2013-11-17</a></time>
       
       
   
@@ -400,7 +461,7 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2013-10-19T23:00:00.000Z"><a href="/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/">2013-10-20</a></time>
+        <time datetime="2013-10-20T07:00:00.000Z"><a href="/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/">2013-10-20</a></time>
       
       
   
@@ -456,7 +517,7 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2013-09-29T23:00:00.000Z"><a href="/2013/09/howto-crawl-web/">2013-09-30</a></time>
+        <time datetime="2013-09-30T07:00:00.000Z"><a href="/2013/09/howto-crawl-web/">2013-09-30</a></time>
       
       
   
@@ -583,7 +644,7 @@ Connection: Keep-Alive
     <header>
       
         <div class="icon"></div>
-        <time datetime="2013-05-04T23:00:00.000Z"><a href="/2013/05/webrtc-video/">2013-05-05</a></time>
+        <time datetime="2013-05-05T07:00:00.000Z"><a href="/2013/05/webrtc-video/">2013-05-05</a></time>
       
       
   
@@ -620,59 +681,6 @@ Connection: Keep-Alive
 <li>WebSocket节点，文件置于 <code>project_path/data/</code> 下，文件名只能包含英文和数字，通过 <code>ws://host:port/file/filename</code> 添加</li>
 </ul>
 <p>因为WebRTC协议还非常不完善，这个项目更多的是demo性质的，但是这个demo展现了WEB+P2P的更多可能。</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-04-18T23:00:00.000Z"><a href="/2013/04/googleplus-comments-test/">2013-04-19</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/04/googleplus-comments-test/">Google+评论组件测试</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        
-Google+给Blogger添加了Google+的评论组件，看起来可以移植到别的地方，于是:
-
-<pre>
-
-  &lt;div id='gpluscomments'&gt;&lt;/div&gt;
-  &lt;script src='https://apis.google.com/js/plusone.js' type='text/javascript'&gt;&lt;/script&gt;
-  &lt;script&gt;
-    gapi.comments.render('gpluscomments', {href: '{{ site.production_url }}{{ page.url }}', first_party_property: 'BLOGGER', view_type: 'FILTERED_POSTMOD'})
-  &lt;/script&gt;
-
-</pre>
-
-<br>
-<br>
-<hr>
-<div id="gpluscomments"></div>
-<script src="https://apis.google.com/js/plusone.js" type="text/javascript"></script>
-<script>
-  gapi.comments.render('gpluscomments', {href: '', first_party_property: 'BLOGGER', view_type: 'FILTERED_POSTMOD'})
-</script>
 
       
     </div>
@@ -747,6 +755,10 @@ Google+给Blogger添加了Google+的评论组件，看起来可以移植到别�
   <ul class="entry">
     
       <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
         <a href="/2016/12/data-highlighter/">Data Highlighter</a>
       </li>
     
@@ -760,10 +772,6 @@ Google+给Blogger添加了Google+的评论组件，看起来可以移植到别�
     
       <li>
         <a href="/2015/12/uk2/">足兆叉虫的2015</a>
-      </li>
-    
-      <li>
-        <a href="/2015/07/uk/">英国</a>
       </li>
     
   </ul>
@@ -782,7 +790,7 @@ Google+给Blogger添加了Google+的评论组件，看起来可以移植到别�
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2016 Roy Binux
+  &copy; 2018 Roy Binux
   
 </div>
 <div class="clearfix"></div></footer>
