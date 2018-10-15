@@ -78,14 +78,14 @@
         <p>虽然Windows的编程非常不爽，无论是编译环境还是编辑环境什么的，搭起来累的一比。不过，既然毕设题目是QQ协议分析，我总不能去分析Linux下那个阉割的QQ吧。<br>当然了，抓包之后扔到Linux下分析也是一个解决方案，不过实时的协议解析还是挺有吸引力的。</p>
 <p>同时楼主一年来python上瘾，看着C++那几行开头include就头大，一直不想起手写C++，更何况Wireshark的API是C的。更可怕的是README.developer还没开始告诉你怎么写dissector呢，编程规范就一大堆，而且各种数据类型不建议使用，strlen不建议使用，strcp不建议使用。这不是从头又学一遍了嘛！  </p>
 <p>如果是这样还不如直接Lua搞起了， 最后顶着windows恶劣的编程环境尝试编译带python-dissector支持的wireshark。</p>
-<p>step 1:<br>首先需要有一份源码。。建议直接到<a href="http://www.wireshark.org/下载最新稳定版的源码即可" target="_blank" rel="external">http://www.wireshark.org/下载最新稳定版的源码即可</a></p>
-<p>step 2:<br>参照[Win32: Step-by-Step Guide]  <a href="http://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html" target="_blank" rel="external">http://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html</a>  的过程编译即可。。完全没有压力</p>
+<p>step 1:<br>首先需要有一份源码。。建议直接到<a href="http://www.wireshark.org/下载最新稳定版的源码即可" target="_blank" rel="noopener">http://www.wireshark.org/下载最新稳定版的源码即可</a></p>
+<p>step 2:<br>参照[Win32: Step-by-Step Guide]  <a href="http://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html" target="_blank" rel="noopener">http://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html</a>  的过程编译即可。。完全没有压力</p>
 <p><strong>python-dissector:</strong></p>
 <p>在下不才，无法在windows平台下开启python-dissector支持。。</p>
 <p>看了下代码，这部分代码还是相当的简单，基本上是处于测试，初步的阶段。<br>编译后执行若出现xxx地址不能为read之类的报错，将epan/wspython/wspy_register.c +128行</p>
 <p><code>void register_all_py_protocols_func(register_cb cb _U_, gpointer client_data _U_)</code></p>
 <p>函数修改为：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">PyObject * py_reg;</div><div class="line"><span class="comment">// .....</span></div><div class="line"><span class="comment">/* load the python register module */</span></div><div class="line">py_reg = PyFile_FromString(get_py_register_file(), <span class="string">"r"</span>);</div><div class="line">  <span class="keyword">if</span> (py_reg == <span class="literal">NULL</span>) &#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"no register file %sn"</span>, get_py_register_file());</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">  &#125;</div><div class="line">PyRun_SimpleFile(PyFile_AsFile(py_reg), get_py_register_file());</div></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PyObject * py_reg;</span><br><span class="line"><span class="comment">// .....</span></span><br><span class="line"><span class="comment">/* load the python register module */</span></span><br><span class="line">py_reg = PyFile_FromString(get_py_register_file(), <span class="string">"r"</span>);</span><br><span class="line">  <span class="keyword">if</span> (py_reg == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"no register file %sn"</span>, get_py_register_file());</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">PyRun_SimpleFile(PyFile_AsFile(py_reg), get_py_register_file());</span><br></pre></td></tr></table></figure>
 <p>但是，一旦开启PYTHON_EMBED=1参数之后，会导致所有的plugin无法加载。。。</p>
 <p>加上开发程度不高，文档几乎没有，暂时还是放弃了。。改用直接编写c plugin的方式吧</p>
 <p>========================<br>PS:1.4.4中有函数原型变化，文档并没有更新：<br>如：<br>dissector_add_uint已经变为dissector_add</p>
@@ -173,6 +173,10 @@
   <ul class="entry">
     
       <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
@@ -186,10 +190,6 @@
     
       <li>
         <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
-      </li>
-    
-      <li>
-        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
       </li>
     
   </ul>

@@ -87,14 +87,14 @@
 <li>公司要搬家了</li>
 </ul>
 <p>不过因为沉迷了半个月的D3，一个月的WOW，人变懒了。再加上wordpress的html写作方式搞得我非常没有写blog的欲望，一直想迁移到jekyll用markdown来写。为了每个月写一篇blog的目标，于是下决心迁移。。</p>
-<p>由于jekyll太简单了，工具又少，不能立即使用，于是用<a href="http://jekyllbootstrap.com/" target="_blank" rel="external">jekyllbootstrap</a>作为基础。另一个热门的选择是<a href="http://octopress.org/" target="_blank" rel="external">Octopress</a>。</p>
+<p>由于jekyll太简单了，工具又少，不能立即使用，于是用<a href="http://jekyllbootstrap.com/" target="_blank" rel="noopener">jekyllbootstrap</a>作为基础。另一个热门的选择是<a href="http://octopress.org/" target="_blank" rel="noopener">Octopress</a>。</p>
 <p>不过这两都太jekyll了，于是把原来wordpress的主题以前迁移了过来。</p>
 <h2 id="迁移准备"><a href="#迁移准备" class="headerlink" title="迁移准备"></a>迁移准备</h2><p>首先，<strong>迁移评论</strong>，在使用wordpress时就开始准备，把评论导入disqus，然后用disqus替换wordpress的评论系统，工作了一周没有问题之后开始迁移。</p>
-<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><strong>安装jekyll本地环境</strong>，参照<a href="https://github.com/mojombo/jekyll/wiki/install" target="_blank" rel="external">https://github.com/mojombo/jekyll/wiki/install</a>即可。<strong>为了语法高亮，把Pygments也装上</strong></p>
-<p><strong>安装JB</strong>，跟着jekyllbootstrap首页上的<a href="http://jekyllbootstrap.com/" target="_blank" rel="external">Zero to Hosted Jekyll Blog in 3 Minutes</a>做就好了</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><strong>安装jekyll本地环境</strong>，参照<a href="https://github.com/mojombo/jekyll/wiki/install" target="_blank" rel="noopener">https://github.com/mojombo/jekyll/wiki/install</a>即可。<strong>为了语法高亮，把Pygments也装上</strong></p>
+<p><strong>安装JB</strong>，跟着jekyllbootstrap首页上的<a href="http://jekyllbootstrap.com/" target="_blank" rel="noopener">Zero to Hosted Jekyll Blog in 3 Minutes</a>做就好了</p>
 <h2 id="迁移"><a href="#迁移" class="headerlink" title="迁移"></a>迁移</h2><p><strong>将wordpress内容导出成xml文件</strong></p>
-<p><strong>将xml变成markdown</strong>:<a href="https://github.com/thomasf/exitwp" target="_blank" rel="external">https://github.com/thomasf/exitwp</a></p>
-<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p><code>jekyll --server</code> 然后访问本地 <code>http://localhost:4000/</code> 看看效果。<br>因为用了jekyllbootstrap，可以去 <a href="http://themes.jekyllbootstrap.com/" target="_blank" rel="external">http://themes.jekyllbootstrap.com/</a> 选择主题安装</p>
+<p><strong>将xml变成markdown</strong>:<a href="https://github.com/thomasf/exitwp" target="_blank" rel="noopener">https://github.com/thomasf/exitwp</a></p>
+<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p><code>jekyll --server</code> 然后访问本地 <code>http://localhost:4000/</code> 看看效果。<br>因为用了jekyllbootstrap，可以去 <a href="http://themes.jekyllbootstrap.com/" target="_blank" rel="noopener">http://themes.jekyllbootstrap.com/</a> 选择主题安装</p>
 <p><code>rake post title=&quot;asdfasdf&quot;</code> 新建文章<br><br><code>rake page name=&quot;adsfasdf/asdf&quot;</code> 新建页面<br><br>然后就是用任何编辑器开始编写了</p>
 <p>对了，发现maruku对于解析有中文的list，比如开头的那个，有bug，而且github的效果和本地是不完全一样的。。即使是markdown也问题多多啊。。</p>
 <h2 id="上传github"><a href="#上传github" class="headerlink" title="上传github"></a>上传github</h2><p>把整个git项目push上去就好，不过后来发现_site文件夹是不需要的，github会自己重新生成一遍。这样就不需要每次都几千行改动了。</p>
@@ -177,6 +177,10 @@
   <ul class="entry">
     
       <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
@@ -190,10 +194,6 @@
     
       <li>
         <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
-      </li>
-    
-      <li>
-        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
       </li>
     
   </ul>

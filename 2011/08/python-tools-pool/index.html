@@ -75,7 +75,7 @@
     </header>
     <div class="entry">
       
-        <p>这个脚本是仿照multiprocessing中的pool编写的（<a href="http://docs.python.org/library/multiprocessing.html#module-multiprocessing.pool" target="_blank" rel="external">http://docs.python.org/library/multiprocessing.html#module-multiprocessing.pool</a>）。</p>
+        <p>这个脚本是仿照multiprocessing中的pool编写的（<a href="http://docs.python.org/library/multiprocessing.html#module-multiprocessing.pool" target="_blank" rel="noopener">http://docs.python.org/library/multiprocessing.html#module-multiprocessing.pool</a>）。</p>
 <p>但是，python自带的multiprocessing的Pool是基于函数的，无法在线程内部保存各个线程的独立资源。例如在操作数据库时，数据库操作大都不是线程安全的，这时就需要每个线程有自己的连接。<br>其次，python自带的线程池在join之后会陷入内核态，无法接受CTRL+C，从而无法中断自行，这一点让我很是不爽。于是实现了这个线程池。</p>
 <p><strong>特性：</strong><br>1、仿照multiprocessing的Pool，提供apply,apply_async,map,map_async这几个类似的接口，和wait函数进行等待执行结束</p>
 <p>2、worker线程为一个类：</p>
@@ -84,7 +84,7 @@
 <p>3、wait时可以使用KeyboardInterrupt（CTRL+C）中断进程执行。</p>
 <p><strong>缺陷：</strong>线程没有返回值。。。</p>
 <p>另：发现对于这种小东西gist真是方便。</p>
-<p>源码：<a href="https://gist.github.com/992657" target="_blank" rel="external">https://gist.github.com/992657</a></p>
+<p>源码：<a href="https://gist.github.com/992657" target="_blank" rel="noopener">https://gist.github.com/992657</a></p>
 
       
     </div>
@@ -169,6 +169,10 @@
   <ul class="entry">
     
       <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
@@ -182,10 +186,6 @@
     
       <li>
         <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
-      </li>
-    
-      <li>
-        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
       </li>
     
   </ul>

@@ -86,9 +86,9 @@ bil">
 <h1 id="付费人数"><a href="#付费人数" class="headerlink" title="付费人数"></a>付费人数</h1><p>bilibili 新番承包人数可以非常方便的从番剧的介绍页面上获知：</p>
 <p><img src="/assets/image/Screenshot_2016-05-15_13_41_24.png" alt="sponsor count"></p>
 <p>但是由于动画的类型不同，热度不同，独播非独播用户（路人）成分不同，直接比较数字没有什么意义。需要首先找到一个基准来讨论播放和付费数之间的关系。</p>
-<p>我抓取了新番承包上线以来新开播的 142 部新番（<a href="http://demo.pyspider.org/results?project=bgm_bilibili" target="_blank" rel="external">http://demo.pyspider.org/results?project=bgm_bilibili</a>），去除话数小于10的 OAD，OVA 等，剩下 136 部。将总播放，追番人数，弹幕总数画为散点图：</p>
+<p>我抓取了新番承包上线以来新开播的 142 部新番（<a href="http://demo.pyspider.org/results?project=bgm_bilibili" target="_blank" rel="noopener">http://demo.pyspider.org/results?project=bgm_bilibili</a>），去除话数小于10的 OAD，OVA 等，剩下 136 部。将总播放，追番人数，弹幕总数画为散点图：</p>
 <p><img src="/assets/image/Screenshot 2016-05-15 15.29.25.png" alt="追番人数，弹幕总数 / 总播放"></p>
-<p>由图可知，弹幕总数和总播放数相关性比追番人数相关性更大（参照 <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination" target="_blank" rel="external">R^2</a>）。独家和非独家新番在弹幕参与度上相差不大，但是非独家的追番率比独家新番少了一半。难道非独家新番用户大多是非 bilibili 注册用户吗？这说不通啊，明明应该是反过来，非会员不得不到 bilibili 上看才对啊。。</p>
+<p>由图可知，弹幕总数和总播放数相关性比追番人数相关性更大（参照 <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination" target="_blank" rel="noopener">R^2</a>）。独家和非独家新番在弹幕参与度上相差不大，但是非独家的追番率比独家新番少了一半。难道非独家新番用户大多是非 bilibili 注册用户吗？这说不通啊，明明应该是反过来，非会员不得不到 bilibili 上看才对啊。。</p>
 <h3 id="付费比例"><a href="#付费比例" class="headerlink" title="付费比例"></a>付费比例</h3><p>在开始写这一节的时候，我本想应该挺简单的，承包人数要么和播放数正相关，要么和活跃（弹幕数）相关，要么就和追番人数相关。但是经过了3个小时，当我尝试了：</p>
 <ul>
 <li>总播放数</li>
@@ -110,10 +110,10 @@ bil">
 <h3 id="用户到底为了什么付费？"><a href="#用户到底为了什么付费？" class="headerlink" title="用户到底为了什么付费？"></a>用户到底为了什么付费？</h3><p>那么，具体到每一部番剧，用户到底因为什么因素愿意付费呢？</p>
 <p>当我将付费比例前10与付费比例后10的放在一起比较，试图找出答案的时候，我真的失败了：</p>
 <p><img src="/assets/image/Screenshot 2016-05-15 21.11.35.png" alt="承包比例"></p>
-<p>在前10中有在我看来「这什么鬼」的，在后10中也有追过的，完全搞不懂拥有更高收费比例的番剧是为什么。当然，通过加入声优，导演，制作，类型 tag 等因素，或许可能找到原因，但这样少的数据，又很容易陷入过拟合的境地（如果有兴趣，可以<a href="http://demo.pyspider.org/results?project=bgm_bilibili" target="_blank" rel="external">下载数据</a>分析看看）。</p>
+<p>在前10中有在我看来「这什么鬼」的，在后10中也有追过的，完全搞不懂拥有更高收费比例的番剧是为什么。当然，通过加入声优，导演，制作，类型 tag 等因素，或许可能找到原因，但这样少的数据，又很容易陷入过拟合的境地（如果有兴趣，可以<a href="http://demo.pyspider.org/results?project=bgm_bilibili" target="_blank" rel="noopener">下载数据</a>分析看看）。</p>
 <h1 id="付费金额"><a href="#付费金额" class="headerlink" title="付费金额"></a>付费金额</h1><h3 id="人均承包金额"><a href="#人均承包金额" class="headerlink" title="人均承包金额"></a>人均承包金额</h3><p>虽然在 bilibili 页面中有承包商排名，但是并不知道付费的金额，仅在你承包的时候，给出你当前的排名。为了了解承包商们在这样没有强制金额的「捐献」中愿意付多少钱，我从1元开始承包，然后查看我当前的排名来获得各个区段的人数：</p>
 <p><img src="/assets/image/Screenshot 2016-05-15 21.16.24.png" alt="承包总榜"></p>
-<p>为了消除连载中，独播，类型等影响，这里选择了连载中，非独播的的 <a href="http://bangumi.bilibili.com/anime/3461" target="_blank" rel="external">Re:Zero</a> 和已完结，独播，稍微腐女向的 <a href="http://bangumi.bilibili.com/anime/2725" target="_blank" rel="external">K RETURN</a>。</p>
+<p>为了消除连载中，独播，类型等影响，这里选择了连载中，非独播的的 <a href="http://bangumi.bilibili.com/anime/3461" target="_blank" rel="noopener">Re:Zero</a> 和已完结，独播，稍微腐女向的 <a href="http://bangumi.bilibili.com/anime/2725" target="_blank" rel="noopener">K RETURN</a>。</p>
 <p><img src="/assets/image/Screenshot 2016-05-15 18.32.14.png" alt="付费区间人数"></p>
 <p>从图中可以看出：</p>
 <ul>
@@ -210,6 +210,10 @@ bil">
   <ul class="entry">
     
       <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
@@ -223,10 +227,6 @@ bil">
     
       <li>
         <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
-      </li>
-    
-      <li>
-        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
       </li>
     
   </ul>

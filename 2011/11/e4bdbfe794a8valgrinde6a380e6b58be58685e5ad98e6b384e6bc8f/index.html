@@ -74,7 +74,7 @@
     </header>
     <div class="entry">
       
-        <h2 id="valgrind-介绍"><a href="#valgrind-介绍" class="headerlink" title="valgrind_介绍"></a>valgrind_介绍</h2><p><a href="http://valgrind.org/" target="_blank" rel="external">Valgrind</a>是一个GPL的软件，用于Linux（For x86, amd64 and ppc32）程序的内存调试和代码剖析。你可以在它的环境中运行你的程序来监视内存的使用情况，比如C 语言中的malloc和free或者 C++中的new和 delete。使用Valgrind的工具包，你可以自动的检测许多内存管理和线程的bug，避免花费太多的时间在bug寻找上，使得你的程序更加稳固。</p>
+        <h2 id="valgrind-介绍"><a href="#valgrind-介绍" class="headerlink" title="valgrind_介绍"></a>valgrind_介绍</h2><p><a href="http://valgrind.org/" target="_blank" rel="noopener">Valgrind</a>是一个GPL的软件，用于Linux（For x86, amd64 and ppc32）程序的内存调试和代码剖析。你可以在它的环境中运行你的程序来监视内存的使用情况，比如C 语言中的malloc和free或者 C++中的new和 delete。使用Valgrind的工具包，你可以自动的检测许多内存管理和线程的bug，避免花费太多的时间在bug寻找上，使得你的程序更加稳固。</p>
 <h2 id="valgrind的主要功能"><a href="#valgrind的主要功能" class="headerlink" title="valgrind的主要功能"></a>valgrind的主要功能</h2><p>Valgrind工具包包含多个工具，如Memcheck,Cachegrind,Helgrind, Callgrind，Massif。下面分别介绍个工具的作用：</p>
 <p>Memcheck 工具主要检查下面的程序错误：</p>
 <ul>
@@ -158,7 +158,7 @@ or &gt; &gt;*) (js_interpreter.cc:361)
 </code></pre><p><strong>definitely lost: 90,928 bytes in 8,466 blocks</strong></p>
 <p>这个就是表示存在内存泄漏，而因为是用的SpiderMonkey存在自己内存回收机制，并且是非正常退出，possibly lost暂时能够接受。</p>
 <p>可以看出Valgrind，<strong>7,592 bytes in 785 blocks are definitely lost in loss record 1,498 of 1,615</strong>这一段的执行路径上存在内存泄漏。  </p>
-<p>通过查阅文档<a href="https://developer.mozilla.org/en/SpiderMonkey/JSAPI_Reference/JS_Enumerate" target="_blank" rel="external">JS_Enumerate</a>、<a href="https://developer.mozilla.org/en/JS_GetStringBytes" target="_blank" rel="external">JS_EncodeString</a>这两个SpiderMonkey API函数是需要用户释放内存的。。而我确实没有释放。。</p>
+<p>通过查阅文档<a href="https://developer.mozilla.org/en/SpiderMonkey/JSAPI_Reference/JS_Enumerate" target="_blank" rel="noopener">JS_Enumerate</a>、<a href="https://developer.mozilla.org/en/JS_GetStringBytes" target="_blank" rel="noopener">JS_EncodeString</a>这两个SpiderMonkey API函数是需要用户释放内存的。。而我确实没有释放。。</p>
 <p>我不得不吐槽。。JS_EncodeString的文档里面<strong>The caller may modify it and is responsible for freeing it.</strong>，就这么一句话说到要用户负责释放。。就不能写大一点吗！  </p>
 <p>明明上面一段还是说”The array returned by JS_GetStringBytes or JS_GetStringBytesZ is automatically freed when str is finalized by the JavaScript garbage collection mechanism.”来着。。</p>
 <p>于是，正常释放之后，再次执行Valgrind检查没问题，OK，问题解决。</p>
@@ -246,6 +246,10 @@ or &gt; &gt;*) (js_interpreter.cc:361)
   <ul class="entry">
     
       <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
@@ -259,10 +263,6 @@ or &gt; &gt;*) (js_interpreter.cc:361)
     
       <li>
         <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
-      </li>
-    
-      <li>
-        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
       </li>
     
   </ul>

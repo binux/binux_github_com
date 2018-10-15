@@ -75,15 +75,15 @@
     </header>
     <div class="entry">
       
-        <p><a href="https://qiandao.today/" target="_blank" rel="external">qiandao.today</a> 已经上线了一个半月，这篇blog一个半月以前就应该写了。直到我刷了14遍水晶塔没有ROLL到任何装备（不对，我最后通过贪婪ROLL到了！），打了两晚麻将，把把最小胡牌距离大于5（任意更换手牌达到胡牌的最小张数），房子里刷JJ怪之后。我觉得我必须做点什么。。。</p>
-<p>好了，不扯蛋了。自动签到是我对于 “如何请求到数据” ，进行请求自动分析的一个尝试（实际是我 <a href="http://u2.dmhy.org/" target="_blank" rel="external">U2</a> 因为45天没登录被封了）。通过<strong>浏览器捕获页面请求瀑布流，进行内容/请求分析，找出关键请求</strong>。所以，签到这个项目，我就是先从 <a href="https://qiandao.today/har/edit" target="_blank" rel="external">HAR编辑器</a> 开始做的。做的时候还玩了一下 <a href="http://angularjs.org/" target="_blank" rel="external">angularjs</a>。<del>然后其他部分都是随便写的</del></p>
+        <p><a href="https://qiandao.today/" target="_blank" rel="noopener">qiandao.today</a> 已经上线了一个半月，这篇blog一个半月以前就应该写了。直到我刷了14遍水晶塔没有ROLL到任何装备（不对，我最后通过贪婪ROLL到了！），打了两晚麻将，把把最小胡牌距离大于5（任意更换手牌达到胡牌的最小张数），房子里刷JJ怪之后。我觉得我必须做点什么。。。</p>
+<p>好了，不扯蛋了。自动签到是我对于 “如何请求到数据” ，进行请求自动分析的一个尝试（实际是我 <a href="http://u2.dmhy.org/" target="_blank" rel="noopener">U2</a> 因为45天没登录被封了）。通过<strong>浏览器捕获页面请求瀑布流，进行内容/请求分析，找出关键请求</strong>。所以，签到这个项目，我就是先从 <a href="https://qiandao.today/har/edit" target="_blank" rel="noopener">HAR编辑器</a> 开始做的。做的时候还玩了一下 <a href="http://angularjs.org/" target="_blank" rel="noopener">angularjs</a>。<del>然后其他部分都是随便写的</del></p>
 <p>但是，对于签到来说，哪些请求是必要的，这个请求是怎么组装的（例如 token 参数怎么来），特征不明显。自动分析出来就能直接用的概率太低了，即使是人还得单步测试呢。于是 HAR编辑器 成为编辑和单步调试的辅助。自动分析变成了 “推荐相关请求”。</p>
 <ul>
-<li>用户部分系统尝试了一下 <a href="http://en.wikipedia.org/wiki/PBKDF2" target="_blank" rel="external">PBKDF2</a> 进行密码加密。PBKDF2 的优势在于通过随机盐 加 可配置的多轮加密，加大了单个key的运算代价。</li>
+<li>用户部分系统尝试了一下 <a href="http://en.wikipedia.org/wiki/PBKDF2" target="_blank" rel="noopener">PBKDF2</a> 进行密码加密。PBKDF2 的优势在于通过随机盐 加 可配置的多轮加密，加大了单个key的运算代价。</li>
 <li>模板执行部分通过提取页面信息，和 jinja2 引擎渲染，可以动态地改变请求的 url、header、data 各个部分。</li>
 <li>执行断言加上邮件系统，可以检测签到是否成功，在失败的时候给用户发送邮件提醒。</li>
 </ul>
-<p>本来还想要做互助打码的验证码系统的，但是通过 <a href="https://plus.google.com/u/0/+%E9%9B%AA%E6%9C%88%E7%A7%8B%E6%B0%B4%E9%85%B1" target="_blank" rel="external">雪月秋水</a> 的 <a href="https://github.com/acgotaku/GetCookies" target="_blank" rel="external">cookie插件</a>，其实大部分只有登录需要验证码，签到并不需要。<del>关键是做这个东西不好玩</del>，于是就算了。</p>
+<p>本来还想要做互助打码的验证码系统的，但是通过 <a href="https://plus.google.com/u/0/+%E9%9B%AA%E6%9C%88%E7%A7%8B%E6%B0%B4%E9%85%B1" target="_blank" rel="noopener">雪月秋水</a> 的 <a href="https://github.com/acgotaku/GetCookies" target="_blank" rel="noopener">cookie插件</a>，其实大部分只有登录需要验证码，签到并不需要。<del>关键是做这个东西不好玩</del>，于是就算了。</p>
 <p>运行了一个半月，目前有11个公开签到模板，400+个签到任务，每天进行300次签到。不过由于担心单IP登录帐号过多被封，只在v2ex做了一次广告，不敢大范围推广。。。</p>
 <hr>
 
@@ -92,12 +92,12 @@
 <li>云代签</li>
 <li>支持多个网站</li>
 <li>失败邮件提醒</li>
-<li>自制模板并分享（<a href="https://github.com/binux/qiandao/blob/master/docs/har-howto.md" target="_blank" rel="external">文档</a>）</li>
+<li>自制模板并分享（<a href="https://github.com/binux/qiandao/blob/master/docs/har-howto.md" target="_blank" rel="noopener">文档</a>）</li>
 <li>https 传输安全保证</li>
 <li>一号一密用户数据加密</li>
 <li>开放源码，支持本地执行（提供本地lite版）</li>
 </ul>
-<p>github: <a href="https://github.com/binux/qiandao" target="_blank" rel="external">binux/qiandao</a><br>网站: <a href="https://qiandao.today/" target="_blank" rel="external">https://qiandao.today</a></p>
+<p>github: <a href="https://github.com/binux/qiandao" target="_blank" rel="noopener">binux/qiandao</a><br>网站: <a href="https://qiandao.today/" target="_blank" rel="noopener">https://qiandao.today</a></p>
 
       
     </div>
@@ -177,6 +177,10 @@
   <ul class="entry">
     
       <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
@@ -190,10 +194,6 @@
     
       <li>
         <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
-      </li>
-    
-      <li>
-        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
       </li>
     
   </ul>

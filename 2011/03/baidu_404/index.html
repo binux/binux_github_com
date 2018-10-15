@@ -79,7 +79,7 @@ assert(test_link(“http://baidu.com/xyz“) == False)
     <div class="entry">
       
         <p>写个test_link的脚本，想要只获取http头部来测试链接是否失效。想着国内百度连接速度快些吧，于是用百度测试。。</p>
-<p>assert(test_link(“<a href="http://baidu.com/xyz" target="_blank" rel="external">http://baidu.com/xyz</a>“) == False)</p>
+<p>assert(test_link(“<a href="http://baidu.com/xyz" target="_blank" rel="noopener">http://baidu.com/xyz</a>“) == False)</p>
 <p>结果。。百度返回的头居然是：</p>
 <pre>
  Request URL:http://www.baidu.com/xyz
@@ -97,7 +97,7 @@ assert(test_link(“http://baidu.com/xyz“) == False)
 </pre>
 
 
-<p>好吧。。。302就302吧，我们看看后面的这个<a href="http://www.baidu.com/search/error.html" target="_blank" rel="external">http://www.baidu.com/search/error.html</a>是什么</p>
+<p>好吧。。。302就302吧，我们看看后面的这个<a href="http://www.baidu.com/search/error.html" target="_blank" rel="noopener">http://www.baidu.com/search/error.html</a>是什么</p>
 <pre>
  Request URL:http://www.baidu.com/search/error.html
  Request Method:GET
@@ -119,7 +119,7 @@ assert(test_link(“http://baidu.com/xyz“) == False)
 
 
 <p>类似的页面还有：</p>
-<p><a href="http://www.baidu.com/forbiddenip/forbidden.html" target="_blank" rel="external">http://www.baidu.com/forbiddenip/forbidden.html</a></p>
+<p><a href="http://www.baidu.com/forbiddenip/forbidden.html" target="_blank" rel="noopener">http://www.baidu.com/forbiddenip/forbidden.html</a></p>
 <p>百度你还能再靠谱一点吗？</p>
 
       
@@ -205,6 +205,10 @@ assert(test_link(“http://baidu.com/xyz“) == False)
   <ul class="entry">
     
       <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
@@ -218,10 +222,6 @@ assert(test_link(“http://baidu.com/xyz“) == False)
     
       <li>
         <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
-      </li>
-    
-      <li>
-        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
       </li>
     
   </ul>

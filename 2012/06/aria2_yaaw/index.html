@@ -90,17 +90,17 @@
 <li>安装aria2</li>
 </ol>
 <ol>
-<li>打开<a href="http://binux.github.com/yaaw/" target="_blank" rel="external">YAAW</a></li>
+<li>打开<a href="http://binux.github.com/yaaw/" target="_blank" rel="noopener">YAAW</a></li>
 </ol>
 <p>非常简单没有压力。</p>
 <p>=============================================</p>
-<h3 id="第一步：挂载U盘"><a href="#第一步：挂载U盘" class="headerlink" title="第一步：挂载U盘"></a>第一步：挂载U盘</h3><p><strong>openwrt:</strong>  <a href="http://wiki.openwrt.org/zh-cn/doc/howto/usb.storage" target="_blank" rel="external">http://wiki.openwrt.org/zh-cn/doc/howto/usb.storage</a><br><br><strong>dd-wrt：</strong>  刷一个带USB的固件，固件中自动mount到/opt<br><br><strong>tomato：</strong>  刷一个带USB的固件，固件中自动mount到/opt<br></p>
-<h3 id="第二步：安装aria2"><a href="#第二步：安装aria2" class="headerlink" title="第二步：安装aria2"></a>第二步：安装aria2</h3><p><strong>openwrt:</strong> <code>opkg update &amp;&amp; opkg install aria2</code><br><br><strong>dd-wrt:</strong> <code>wget http://www.3iii.dk/linux/optware/optware-install-ddwrt.sh -O - | tr -d &#39;\r&#39; &gt; /tmp/optware-install.sh &amp;&amp; sh /tmp/optware-install.sh &amp;&amp; ipkg-opt update &amp;&amp; ipkg-opt install aria2</code><br><br><strong>tomato:</strong> <a href="http://tomatousb.org/tut:optware-installation" target="_blank" rel="external">http://tomatousb.org/tut:optware-installation</a><br></p>
+<h3 id="第一步：挂载U盘"><a href="#第一步：挂载U盘" class="headerlink" title="第一步：挂载U盘"></a>第一步：挂载U盘</h3><p><strong>openwrt:</strong>  <a href="http://wiki.openwrt.org/zh-cn/doc/howto/usb.storage" target="_blank" rel="noopener">http://wiki.openwrt.org/zh-cn/doc/howto/usb.storage</a><br><br><strong>dd-wrt：</strong>  刷一个带USB的固件，固件中自动mount到/opt<br><br><strong>tomato：</strong>  刷一个带USB的固件，固件中自动mount到/opt<br></p>
+<h3 id="第二步：安装aria2"><a href="#第二步：安装aria2" class="headerlink" title="第二步：安装aria2"></a>第二步：安装aria2</h3><p><strong>openwrt:</strong> <code>opkg update &amp;&amp; opkg install aria2</code><br><br><strong>dd-wrt:</strong> <code>wget http://www.3iii.dk/linux/optware/optware-install-ddwrt.sh -O - | tr -d &#39;\r&#39; &gt; /tmp/optware-install.sh &amp;&amp; sh /tmp/optware-install.sh &amp;&amp; ipkg-opt update &amp;&amp; ipkg-opt install aria2</code><br><br><strong>tomato:</strong> <a href="http://tomatousb.org/tut:optware-installation" target="_blank" rel="noopener">http://tomatousb.org/tut:optware-installation</a><br></p>
 <p>启动命令： <code>aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c</code><br><br>如果没有问题的话，可以将 <code>aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c -D</code> 加入开机启动<br><br>如果有问题的话，看输出的提示，有可能要加入<code>--event-poll=select</code>什么的参数<br></p>
-<h3 id="第三步：打开YAAW"><a href="#第三步：打开YAAW" class="headerlink" title="第三步：打开YAAW"></a>第三步：打开<a href="http://binux.github.com/yaaw/" target="_blank" rel="external">YAAW</a></h3><p>点击<a href="http://binux.github.com/yaaw/demo/" target="_blank" rel="external">demo</a>，在扳手处填入path： <code>http://&lt;ip_of_your_route&gt;:6800/jsonrpc</code>， 保存</p>
+<h3 id="第三步：打开YAAW"><a href="#第三步：打开YAAW" class="headerlink" title="第三步：打开YAAW"></a>第三步：打开<a href="http://binux.github.com/yaaw/" target="_blank" rel="noopener">YAAW</a></h3><p>点击<a href="http://binux.github.com/yaaw/demo/" target="_blank" rel="noopener">demo</a>，在扳手处填入path： <code>http://&lt;ip_of_your_route&gt;:6800/jsonrpc</code>， 保存</p>
 <p>=============================================<br>一些有用的aria2参数</p>
 <p>-i &lt;file&gt; 导入从loli.lu导出的aria2文件<br><br>-j &lt;num&gt; 同时下载数限制，由于路由和总带宽限制，建议设为3（默认5）<br><br>-x &lt;num&gt; 同一个服务器的同时链接数，建议为5-10（默认1）<br><br>-k &lt;size&gt; 文件最小分片，文件最多的线程数取决于能分出多少片，当文件小于最小分片大小时，只能开出一个线程，建议为2M（默认20M）<br><br>-s &lt;num&gt; 一个文件最多用几个线程下载，建议为8-10（默认5）<br><br>–file-allocation &lt;none,prealloc,falloc&gt; 文件预分配，如果USB设备是U盘，SD卡，预分配浪费时间，建议为none（默认prealloc)<br></p>
-<p>更多参数请访问 <a href="http://aria2.sourceforge.net/manual/en/html/" target="_blank" rel="external">Aria2 Manual</a></p>
+<p>更多参数请访问 <a href="http://aria2.sourceforge.net/manual/en/html/" target="_blank" rel="noopener">Aria2 Manual</a></p>
 
       
     </div>
@@ -185,6 +185,10 @@
   <ul class="entry">
     
       <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
@@ -198,10 +202,6 @@
     
       <li>
         <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
-      </li>
-    
-      <li>
-        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
       </li>
     
   </ul>

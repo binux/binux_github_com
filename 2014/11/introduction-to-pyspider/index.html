@@ -76,7 +76,7 @@
     </header>
     <div class="entry">
       
-        <p>虽然已经发过一篇<a href="http://blog.binux.me/2014/02/pyspider-architecture/" target="_blank" rel="external">架构设计</a>，但是觉得还是有必要发一篇介绍。而且拖了那么久的第二里程碑的commit数已经超过第一个版本了。。</p>
+        <p>虽然已经发过一篇<a href="http://blog.binux.me/2014/02/pyspider-architecture/" target="_blank" rel="noopener">架构设计</a>，但是觉得还是有必要发一篇介绍。而且拖了那么久的第二里程碑的commit数已经超过第一个版本了。。</p>
 <p>那么由我再次介绍一下 pyspider。</p>
 <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>pyspider 来源于以前做的一个垂直搜索引擎使用的爬虫后端。我们需要从200个站点（由于站点失效，不是都同时啦，同时有100+在跑吧）采集数据，并要求在5分钟内将对方网站的更新更新到库中。</p>
 <p>所以，灵活的抓取控制是必须的。同时，由于100个站点，每天都可能会有站点失效或者改版，所以需要能够监控模板失效，以及查看抓取状态。</p>
@@ -90,10 +90,10 @@
 <li>组件可替换，支持单机/分布式部署，支持 Docker 部署</li>
 <li>强大的调度控制</li>
 </ul>
-<p>由于功能太多，更多请参考<a href="https://github.com/binux/pyspider/wiki/%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97" target="_blank" rel="external">脚本编写指南</a></p>
-<p>感谢 <a href="https://plus.google.com/u/0/+PhoenixNemo/" target="_blank" rel="external">+PhoenixNemo</a> 提供的VPS，提供了一个 demo： <a href="http://demo.pyspider.org/" target="_blank" rel="external">demo.pyspider.org</a>。无需安装即可体验。</p>
-<p><a href="http://demo.pyspider.org/" target="_blank" rel="external"><img src="http://ww1.sinaimg.cn/large/7d46d69fjw1emavy6e9gij21kw0uldvy.jpg" alt="demo"></a></p>
-<h1 id="脚本样例"><a href="#脚本样例" class="headerlink" title="脚本样例"></a>脚本样例</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> libs.base_handler <span class="keyword">import</span> *</div><div class="line"></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handler</span><span class="params">(BaseHandler)</span>:</span></div><div class="line">    <span class="string">'''</span></div><div class="line">    this is a sample handler</div><div class="line">    '''</div><div class="line"><span class="meta">    @every(minutes=24*60, seconds=0)</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_start</span><span class="params">(self)</span>:</span></div><div class="line">        self.crawl(<span class="string">'http://scrapy.org/'</span>, callback=self.index_page)</div><div class="line"></div><div class="line"><span class="meta">    @config(age=10*24*60*60)</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">index_page</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">for</span> each <span class="keyword">in</span> response.doc(<span class="string">'a[href^="http://"]'</span>).items():</div><div class="line">            self.crawl(each.attr.href, callback=self.detail_page)</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">detail_page</span><span class="params">(self, response)</span>:</span></div><div class="line">        <span class="keyword">return</span> &#123;</div><div class="line">                <span class="string">"url"</span>: response.url,</div><div class="line">                <span class="string">"title"</span>: response.doc(<span class="string">'title'</span>).text(),</div><div class="line">                &#125;</div></pre></td></tr></table></figure>
+<p>由于功能太多，更多请参考<a href="https://github.com/binux/pyspider/wiki/%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97" target="_blank" rel="noopener">脚本编写指南</a></p>
+<p>感谢 <a href="https://plus.google.com/u/0/+PhoenixNemo/" target="_blank" rel="noopener">+PhoenixNemo</a> 提供的VPS，提供了一个 demo： <a href="http://demo.pyspider.org/" target="_blank" rel="noopener">demo.pyspider.org</a>。无需安装即可体验。</p>
+<p><a href="http://demo.pyspider.org/" target="_blank" rel="noopener"><img src="http://ww1.sinaimg.cn/large/7d46d69fjw1emavy6e9gij21kw0uldvy.jpg" alt="demo"></a></p>
+<h1 id="脚本样例"><a href="#脚本样例" class="headerlink" title="脚本样例"></a>脚本样例</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> libs.base_handler <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handler</span><span class="params">(BaseHandler)</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    this is a sample handler</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line"><span class="meta">    @every(minutes=24*60, seconds=0)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_start</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.crawl(<span class="string">'http://scrapy.org/'</span>, callback=self.index_page)</span><br><span class="line"></span><br><span class="line"><span class="meta">    @config(age=10*24*60*60)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">index_page</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        <span class="keyword">for</span> each <span class="keyword">in</span> response.doc(<span class="string">'a[href^="http://"]'</span>).items():</span><br><span class="line">            self.crawl(each.attr.href, callback=self.detail_page)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">detail_page</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">                <span class="string">"url"</span>: response.url,</span><br><span class="line">                <span class="string">"title"</span>: response.doc(<span class="string">'title'</span>).text(),</span><br><span class="line">                &#125;</span><br></pre></td></tr></table></figure>
 <p>例如这就是创建任务后默认生成的一个脚本示例。</p>
 <ul>
 <li>通过 <code>on_start</code> 回调函数，作为爬取的入口点，当点击主面板上的 <code>run</code> 的时候，就是调用这个函数，启动抓取。</li>
@@ -101,9 +101,9 @@
 <li>所有 <code>return</code> 的内容默认会被捕获到 <code>resultdb</code> 中，可以直接在 WEBUI 上看到。</li>
 </ul>
 <h1 id="更多特性和文档"><a href="#更多特性和文档" class="headerlink" title="更多特性和文档"></a>更多特性和文档</h1><ul>
-<li><a href="https://github.com/binux/pyspider/wiki" target="_blank" rel="external">Wiki</a></li>
-<li><a href="https://github.com/binux/pyspider/wiki/%E5%BF%AB%E9%80%9F%E6%8C%87%E5%8D%97" target="_blank" rel="external">快速指南</a></li>
-<li><a href="https://github.com/binux/pyspider/wiki/%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97" target="_blank" rel="external">脚本编写指南</a></li>
+<li><a href="https://github.com/binux/pyspider/wiki" target="_blank" rel="noopener">Wiki</a></li>
+<li><a href="https://github.com/binux/pyspider/wiki/%E5%BF%AB%E9%80%9F%E6%8C%87%E5%8D%97" target="_blank" rel="noopener">快速指南</a></li>
+<li><a href="https://github.com/binux/pyspider/wiki/%E8%84%9A%E6%9C%AC%E7%BC%96%E5%86%99%E6%8C%87%E5%8D%97" target="_blank" rel="noopener">脚本编写指南</a></li>
 </ul>
 
       
@@ -184,6 +184,10 @@
   <ul class="entry">
     
       <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
@@ -197,10 +201,6 @@
     
       <li>
         <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
-      </li>
-    
-      <li>
-        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
       </li>
     
   </ul>

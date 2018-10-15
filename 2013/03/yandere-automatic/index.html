@@ -81,14 +81,14 @@
 <p>主人早上好，北京的雾霾天气已被weather block plus拦截，室内健康指数98分，已打败73.5%的北京用户，赶快购买空气清新插件提升您的健康指数。室内壁纸5D（试用版）已根据您的喜好为您挑选了壁纸，10分钟广告后显示。冰箱余菜已更新，您是要先洗澡，先吃早餐还是打一炮？【选择】使用左手还是右手？（67.8%的用户推荐使用左手）【选择】今日热榜 / Kimer猜 。。。。。。</p>
 <p>##正文<br>咳咳，扯远了，虽然G+福利满地，但是有收不全、怕收重、格式命名不统一，还是喜欢自己收图。最常用的方案是用支持内容离线的RSS阅读器订阅图站的RSS。我订阅的有</p>
 <ul>
-<li><a href="https://yande.re/post/atom?tags=" target="_blank" rel="external">yande.re</a> 建议用atom的，输出带分辨率</li>
+<li><a href="https://yande.re/post/atom?tags=" target="_blank" rel="noopener">yande.re</a> 建议用atom的，输出带分辨率</li>
 <li><a href="konachan.com/post/atom?tags=">konachan.com</a> 壁纸向</li>
-<li><a href="http://pyproxy.duapp.com/s;ssd%2Fdata%2Fpreview;data/re;\(\(&lt;img%20src%3D&quot;http%3A%2F%2Fdanbooru.donmai.us%2Fdata%2F%5Cw%2B.\" target="_blank" rel="external">danbooru</a>jpg”%2F&gt;);%5C1%5C2png”%20%2F&gt;/<a href="http://danbooru.donmai.us/posts.atom" target="_blank" rel="external">http://danbooru.donmai.us/posts.atom</a>) 很杂，转烧输出大图</li>
+<li><a href="http://pyproxy.duapp.com/s;ssd%2Fdata%2Fpreview;data/re;\(\(&lt;img%20src%3D&quot;http%3A%2F%2Fdanbooru.donmai.us%2Fdata%2F%5Cw%2B.\" target="_blank" rel="noopener">danbooru</a>jpg”%2F&gt;);%5C1%5C2png”%20%2F&gt;/<a href="http://danbooru.donmai.us/posts.atom" target="_blank" rel="noopener">http://danbooru.donmai.us/posts.atom</a>) 很杂，转烧输出大图</li>
 </ul>
 <p>使用google reader订阅，看到好图就标星，月底统一收。但是每个月几百张收到手软。现在使用的方案是：</p>
 <ol>
 <li>google reader订阅，标星</li>
-<li><a href="https://ifttt.com/" target="_blank" rel="external">ifttt</a>将url追加到dropbox的文件里</li>
+<li><a href="https://ifttt.com/" target="_blank" rel="noopener">ifttt</a>将url追加到dropbox的文件里</li>
 <li>脚本收图<br><img src="/assets/image/ifttt.png" alt="ifttt"></li>
 </ol>
 <p>###脚本收图</p>
@@ -103,23 +103,23 @@
 <p>现在在reader中标星，过一会就会收到Dropbox的文件更新提示。</p>
 <p>第二步就是脚本<strong>（需要linux shell环境支持）</strong>，脚本支持yande.re，konachan.com，danbooru三个站的原图地址解析（当原图大于5M时下载jpg格式）</p>
 <ol>
-<li>下载 <a href="https://gist.github.com/binux/5071536/raw/imgurl.py" target="_blank" rel="external">imgurl.py</a></li>
+<li>下载 <a href="https://gist.github.com/binux/5071536/raw/imgurl.py" target="_blank" rel="noopener">imgurl.py</a></li>
 <li>在下载目录执行<code>python imgurl.py [刚才ifttt创建的文件] | xargs -n 1 wget</code></li>
 </ol>
 <p>###自动分享到pinterest</p>
 <p><strong>您需要一台VPS</strong><br>本来是打算自动分享到pinterest和G+的，但是G+没有publish的API，唯一的write API——moments还没上线。等有了再弄吧。  </p>
 <ol>
 <li>VPS环境需要python2.6+，<code>easy_install requests tornado</code></li>
-<li>VPS下载 <a href="https://gist.github.com/binux/5075775/raw/img_share.py" target="_blank" rel="external">img_share.py</a></li>
-<li>登陆<a href="http://pinterest.com/" target="_blank" rel="external">http://pinterest.com/</a>，提取cookie</li>
-<li>访问<a href="view-source:http://pinterest.com/me/" target="_blank" rel="external">http://pinterest.com/me/</a> &gt; 查看源码，查找<code>&lt;ul class=&quot;BoardListUl&quot;&gt;</code>，提取要发布到board的id，在对应的&lt;li data属性中，比如<code>215258125878507279</code>这样的串</li>
+<li>VPS下载 <a href="https://gist.github.com/binux/5075775/raw/img_share.py" target="_blank" rel="noopener">img_share.py</a></li>
+<li>登陆<a href="http://pinterest.com/" target="_blank" rel="noopener">http://pinterest.com/</a>，提取cookie</li>
+<li>访问<a href="view-source:http://pinterest.com/me/" target="_blank" rel="noopener">http://pinterest.com/me/</a> &gt; 查看源码，查找<code>&lt;ul class=&quot;BoardListUl&quot;&gt;</code>，提取要发布到board的id，在对应的&lt;li data属性中，比如<code>215258125878507279</code>这样的串</li>
 <li>用<code>python img_share.py  --pinterest_cookie=&#39;[第3步]&#39; --pinterest_board=[第4步]</code> 命令启动</li>
-<li>登陆<a href="https://ifttt.com/" target="_blank" rel="external">ifttt</a> &gt; <code>Create a Recipe</code></li>
+<li>登陆<a href="https://ifttt.com/" target="_blank" rel="noopener">ifttt</a> &gt; <code>Create a Recipe</code></li>
 <li>this选择 <code>Google Reader</code> Trigger选择 <code>New starred item</code></li>
 <li>then选择 <code>WordPress</code> Blog URL： <code>ifttt.captnemo.in</code>, Username,password任意填。Trigger选<code>Create a post</code></li>
 <li>Title: , Body: , Tags: <code>http://[VPS的hostname/ip]:8888/</code></li>
 </ol>
-<p>保存即可，比如<a href="http://pinterest.com/binux/auto/" target="_blank" rel="external">我的pinterest</a>。img_share.py可以设置<code>--username --password</code>验证（与第8步对应，不设置不验证），可以<code>--port</code>修改端口。具体<code>python img_share.py --help</code> 即可。</p>
+<p>保存即可，比如<a href="http://pinterest.com/binux/auto/" target="_blank" rel="noopener">我的pinterest</a>。img_share.py可以设置<code>--username --password</code>验证（与第8步对应，不设置不验证），可以<code>--port</code>修改端口。具体<code>python img_share.py --help</code> 即可。</p>
 <p><strong>本文写于2013年02月31日</strong></p>
 
       
@@ -200,6 +200,10 @@
   <ul class="entry">
     
       <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
@@ -213,10 +217,6 @@
     
       <li>
         <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
-      </li>
-    
-      <li>
-        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
       </li>
     
   </ul>

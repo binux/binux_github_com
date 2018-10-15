@@ -87,7 +87,7 @@ text-overflow: ellipsis;-o-text-overflow: ellipsis;white-space: nowrap;
 <p>1、按照字符个数在服务器端直接截断<br>这样做的缺陷是，文字并不是等宽的，很容易产生长短不一的情况。</p>
 <p>2、用js获取文本的长度，不断删除中间的文字<br>虽然说这种方式最为可行，但是总是感觉不优雅。。而且爬虫爬取的时候没办法获得完整的内容</p>
 <p>于是<strong>尝试用自己的办法来解决这个问题</strong>。</p>
-<p>首先这个是演示地址，和代码：<a href="http://jsbin.com/okopiz" target="_blank" rel="external">http://jsbin.com/okopiz</a></p>
+<p>首先这个是演示地址，和代码：<a href="http://jsbin.com/okopiz" target="_blank" rel="noopener">http://jsbin.com/okopiz</a></p>
 <p>考虑到浏览器默认支持的截断其实效果还不错，为了达到中部截断的效果，可以<strong>将文字分成前后两个部分</strong>。然后<strong>将前面部分的文字设置成溢出隐藏，而后面部分的文字接上</strong>即可。<br>在实际操作中，使用了padding这个属性，<strong>在div尾部推出200px的空间</strong>用于放置文字的结尾部分。</p>
 <p><img src="http://s0.binux.me/201112/2890/14044_o.png" alt=""></p>
 <p>只需要保证后面文字不超出200px的空间即可。</p>
@@ -177,6 +177,10 @@ text-overflow: ellipsis;-o-text-overflow: ellipsis;white-space: nowrap;
   <ul class="entry">
     
       <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
@@ -190,10 +194,6 @@ text-overflow: ellipsis;-o-text-overflow: ellipsis;white-space: nowrap;
     
       <li>
         <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
-      </li>
-    
-      <li>
-        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
       </li>
     
   </ul>

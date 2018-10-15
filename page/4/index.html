@@ -63,6 +63,56 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2012-10-25T07:00:00.000Z"><a href="/2012/10/migrate-from-wordpress-to-jekyll/">2012-10-25</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2012/10/migrate-from-wordpress-to-jekyll/">从wordpress迁移到jekyll</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>又到月末了，这一个月还没写blog呢。。虽然这段时间发生了很多事</p>
+<ul>
+<li>做了一个外包</li>
+<li>回了一趟家</li>
+<li>公司要搬家了</li>
+</ul>
+<p>不过因为沉迷了半个月的D3，一个月的WOW，人变懒了。再加上wordpress的html写作方式搞得我非常没有写blog的欲望，一直想迁移到jekyll用markdown来写。为了每个月写一篇blog的目标，于是下决心迁移。。</p>
+<p>由于jekyll太简单了，工具又少，不能立即使用，于是用<a href="http://jekyllbootstrap.com/" target="_blank" rel="noopener">jekyllbootstrap</a>作为基础。另一个热门的选择是<a href="http://octopress.org/" target="_blank" rel="noopener">Octopress</a>。</p>
+<p>不过这两都太jekyll了，于是把原来wordpress的主题以前迁移了过来。</p>
+<h2 id="迁移准备"><a href="#迁移准备" class="headerlink" title="迁移准备"></a>迁移准备</h2><p>首先，<strong>迁移评论</strong>，在使用wordpress时就开始准备，把评论导入disqus，然后用disqus替换wordpress的评论系统，工作了一周没有问题之后开始迁移。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><strong>安装jekyll本地环境</strong>，参照<a href="https://github.com/mojombo/jekyll/wiki/install" target="_blank" rel="noopener">https://github.com/mojombo/jekyll/wiki/install</a>即可。<strong>为了语法高亮，把Pygments也装上</strong></p>
+<p><strong>安装JB</strong>，跟着jekyllbootstrap首页上的<a href="http://jekyllbootstrap.com/" target="_blank" rel="noopener">Zero to Hosted Jekyll Blog in 3 Minutes</a>做就好了</p>
+<h2 id="迁移"><a href="#迁移" class="headerlink" title="迁移"></a>迁移</h2><p><strong>将wordpress内容导出成xml文件</strong></p>
+<p><strong>将xml变成markdown</strong>:<a href="https://github.com/thomasf/exitwp" target="_blank" rel="noopener">https://github.com/thomasf/exitwp</a></p>
+<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p><code>jekyll --server</code> 然后访问本地 <code>http://localhost:4000/</code> 看看效果。<br>因为用了jekyllbootstrap，可以去 <a href="http://themes.jekyllbootstrap.com/" target="_blank" rel="noopener">http://themes.jekyllbootstrap.com/</a> 选择主题安装</p>
+<p><code>rake post title=&quot;asdfasdf&quot;</code> 新建文章<br><br><code>rake page name=&quot;adsfasdf/asdf&quot;</code> 新建页面<br><br>然后就是用任何编辑器开始编写了</p>
+<p>对了，发现maruku对于解析有中文的list，比如开头的那个，有bug，而且github的效果和本地是不完全一样的。。即使是markdown也问题多多啊。。</p>
+<h2 id="上传github"><a href="#上传github" class="headerlink" title="上传github"></a>上传github</h2><p>把整个git项目push上去就好，不过后来发现_site文件夹是不需要的，github会自己重新生成一遍。这样就不需要每次都几千行改动了。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2012-09-07T19:28:37.000Z"><a href="/2012/09/python-web-proxy-on-ba/">2012-09-07</a></time>
       
       
@@ -76,10 +126,10 @@
         <p>最近看到好多求BAE邀请的帖子，至少现在免费，于是也去求了一个，然后顺带开了python权限。<br>随便看了下python环境，版本够新，该有的库和框架也比较齐全，fetchurl接口完全封装在内置库中，至少比起GAE来说，迁移成本低多了。沙盒也是恰到好处的感觉，初步感觉不错。<br>提供的服务也涉及各个方面，云存储，数据库，cache，队列该有的都有了。<br>fetch taskqueue能fetchurl和离线下载（支持最大4G，10小时下载）体现了百度的特色吧，感觉眼前一亮，虽然已经有百度网盘提供类似服务，但是作为开发平台，也能作出一些有意思的应用。<br>消息服务自带1000条短信1W封邮件每月。</p>
 <p>不过，百度依然体现了没有设计师的特色，界面和各个服务的开发包各不相同。。</p>
 <p>由于BAE政策和稳定性尚不明朗，不打算在上面做能够保存数据的应用。<br>于是，做一个网页代理吧</p>
-<p><a href="http://pyproxy.duapp.com/https://github.com/binux" target="_blank" rel="external">http://pyproxy.duapp.com/https://github.com/binux</a></p>
+<p><a href="http://pyproxy.duapp.com/https://github.com/binux" target="_blank" rel="noopener">http://pyproxy.duapp.com/https://github.com/binux</a></p>
 <p>其他API：  </p>
-<p><a href="http://pyproxy.duapp.com/rewrite/http://www.baidu.com/" target="_blank" rel="external">http://pyproxy.duapp.com/rewrite/http://www.baidu.com/</a><br>使用这个地址访问会将页面上的url都加上代理的前缀</p>
-<p><a href="http://pyproxy.duapp.com/allow_origin/http://httpbin.duapp.com/ip" target="_blank" rel="external">http://pyproxy.duapp.com/allow_origin/http://httpbin.duapp.com/ip</a><br>用于ajax跨域读取，比如这样：<br>您的IP是：<span id="origin_ip"></span> 请自行查看源码  </p>
+<p><a href="http://pyproxy.duapp.com/rewrite/http://www.baidu.com/" target="_blank" rel="noopener">http://pyproxy.duapp.com/rewrite/http://www.baidu.com/</a><br>使用这个地址访问会将页面上的url都加上代理的前缀</p>
+<p><a href="http://pyproxy.duapp.com/allow_origin/http://httpbin.duapp.com/ip" target="_blank" rel="noopener">http://pyproxy.duapp.com/allow_origin/http://httpbin.duapp.com/ip</a><br>用于ajax跨域读取，比如这样：<br>您的IP是：<span id="origin_ip"></span> 请自行查看源码  </p>
 <script src="http://lib.sinaapp.com/js/jquery/1.8.3/jquery.min.js"></script>
 <script>
  $.get("http://pyproxy.duapp.com/allow_origin/http://httpbin.duapp.com/ip",
@@ -90,8 +140,8 @@
 
 <p>不得不说，百度网速也太不怎么样了吧。。<br>第一次写网页代理，地址改写还真麻烦，xmlhttprequest好歹是拦截了，js动态加载的元素就算了。。</p>
 <p>附上rewrite代码：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">#!/usr/bin/env python</span></div><div class="line"><span class="comment"># -*- encoding: utf-8 -*-</span></div><div class="line"><span class="comment"># vim: set et sw=4 ts=4 sts=4 ff=unix fenc=utf8:</span></div><div class="line"><span class="comment"># Author: Binux&lt;17175297.hk@gmail.com&gt;</span></div><div class="line"><span class="comment">#         http://binux.me</span></div><div class="line"><span class="comment"># Created on 2012-09-06 22:22:21</span></div><div class="line"></div><div class="line"><span class="keyword">import</span> urlparse</div><div class="line"><span class="keyword">import</span> re</div><div class="line"></div><div class="line">xmlhttprequest = <span class="string">'''XMLHttpRequest.prototype._open=XMLHttpRequest.prototype.open;</span></div><div class="line">XMLHttpRequest.prototype.open = function(m,u,a,us,p) &#123;</div><div class="line">  var proxyurl='%s', baseurl='%s', a=document.createElement('a');</div><div class="line">  a.href=u;u=a.href.replace(proxyurl,'');u=proxyurl+(u.indexOf('http')==0?u:baseurl+u);</div><div class="line">  if(console&amp;&amp;console.log)&#123;console.log("XMLHTTPRequest:",u);&#125;</div><div class="line">  return this._open(m,u,a,us,p);</div><div class="line">&#125;'''</div><div class="line">http_re = re.compile(<span class="string">"https?://"</span>, re.I)</div><div class="line">href_re1 = re.compile(<span class="string">"((href|src|action)\s*=\s*\"([^\"&lt;&gt;]+)\")"</span>, re.I)</div><div class="line">href_re2 = re.compile(<span class="string">"((href|src|action)\s*=\s*\'([^\'&lt;&gt;]+)\')"</span>, re.I)</div><div class="line">href_re3 = re.compile(<span class="string">"((href|src|action)\s*=\s*([^\'\"\s&lt;&gt;]+))"</span>, re.I)</div><div class="line">xmlhttprequest_re = re.compile(<span class="string">"&lt;script"</span>, re.I)</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">rewrite</span><span class="params">(proxyurl, baseurl, content)</span>:</span></div><div class="line">    <span class="comment">#content = http_re.sub(proxyurl+"\g&lt;0&gt;", content)</span></div><div class="line">    <span class="keyword">for</span> all, href, url <span class="keyword">in</span> href_re1.findall(content):</div><div class="line">        rewrited_url = urlparse.urljoin(baseurl, url)</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> rewrited_url.startswith(proxyurl) <span class="keyword">and</span> rewrited_url.startswith(<span class="string">"http"</span>):</div><div class="line">            content = content.replace(all, <span class="string">'%s="%s%s"'</span> % (href, proxyurl, rewrited_url))</div><div class="line">    <span class="keyword">for</span> all, href, url <span class="keyword">in</span> href_re2.findall(content):</div><div class="line">        rewrited_url = urlparse.urljoin(baseurl, url)</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> rewrited_url.startswith(proxyurl) <span class="keyword">and</span> rewrited_url.startswith(<span class="string">"http"</span>):</div><div class="line">            content = content.replace(all, <span class="string">'%s=\'%s%s\''</span> % (href, proxyurl, rewrited_url))</div><div class="line">    <span class="keyword">for</span> all, href, url <span class="keyword">in</span> href_re3.findall(content):</div><div class="line">        rewrited_url = urlparse.urljoin(baseurl, url)</div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> rewrited_url.startswith(proxyurl) <span class="keyword">and</span> rewrited_url.startswith(<span class="string">"http"</span>):</div><div class="line">            content = content.replace(all, <span class="string">'%s="%s%s"'</span> % (href, proxyurl, rewrited_url))</div><div class="line">    content = content.replace(<span class="string">"&lt;/title&gt;"</span>, <span class="string">"&lt;/title&gt;&lt;script&gt;%s&lt;/script&gt;"</span> % xmlhttprequest % (proxyurl, urlparse.urljoin(baseurl, <span class="string">"/"</span>)), <span class="number">1</span>)</div><div class="line">    <span class="keyword">return</span> content</div></pre></td></tr></table></figure>
-<p><a href="https://gist.github.com/3663115" target="_blank" rel="external">https://gist.github.com/3663115</a></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- encoding: utf-8 -*-</span></span><br><span class="line"><span class="comment"># vim: set et sw=4 ts=4 sts=4 ff=unix fenc=utf8:</span></span><br><span class="line"><span class="comment"># Author: Binux&lt;17175297.hk@gmail.com&gt;</span></span><br><span class="line"><span class="comment">#         http://binux.me</span></span><br><span class="line"><span class="comment"># Created on 2012-09-06 22:22:21</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> urlparse</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"></span><br><span class="line">xmlhttprequest = <span class="string">'''XMLHttpRequest.prototype._open=XMLHttpRequest.prototype.open;</span></span><br><span class="line"><span class="string">XMLHttpRequest.prototype.open = function(m,u,a,us,p) &#123;</span></span><br><span class="line"><span class="string">  var proxyurl='%s', baseurl='%s', a=document.createElement('a');</span></span><br><span class="line"><span class="string">  a.href=u;u=a.href.replace(proxyurl,'');u=proxyurl+(u.indexOf('http')==0?u:baseurl+u);</span></span><br><span class="line"><span class="string">  if(console&amp;&amp;console.log)&#123;console.log("XMLHTTPRequest:",u);&#125;</span></span><br><span class="line"><span class="string">  return this._open(m,u,a,us,p);</span></span><br><span class="line"><span class="string">&#125;'''</span></span><br><span class="line">http_re = re.compile(<span class="string">"https?://"</span>, re.I)</span><br><span class="line">href_re1 = re.compile(<span class="string">"((href|src|action)\s*=\s*\"([^\"&lt;&gt;]+)\")"</span>, re.I)</span><br><span class="line">href_re2 = re.compile(<span class="string">"((href|src|action)\s*=\s*\'([^\'&lt;&gt;]+)\')"</span>, re.I)</span><br><span class="line">href_re3 = re.compile(<span class="string">"((href|src|action)\s*=\s*([^\'\"\s&lt;&gt;]+))"</span>, re.I)</span><br><span class="line">xmlhttprequest_re = re.compile(<span class="string">"&lt;script"</span>, re.I)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">rewrite</span><span class="params">(proxyurl, baseurl, content)</span>:</span></span><br><span class="line">    <span class="comment">#content = http_re.sub(proxyurl+"\g&lt;0&gt;", content)</span></span><br><span class="line">    <span class="keyword">for</span> all, href, url <span class="keyword">in</span> href_re1.findall(content):</span><br><span class="line">        rewrited_url = urlparse.urljoin(baseurl, url)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> rewrited_url.startswith(proxyurl) <span class="keyword">and</span> rewrited_url.startswith(<span class="string">"http"</span>):</span><br><span class="line">            content = content.replace(all, <span class="string">'%s="%s%s"'</span> % (href, proxyurl, rewrited_url))</span><br><span class="line">    <span class="keyword">for</span> all, href, url <span class="keyword">in</span> href_re2.findall(content):</span><br><span class="line">        rewrited_url = urlparse.urljoin(baseurl, url)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> rewrited_url.startswith(proxyurl) <span class="keyword">and</span> rewrited_url.startswith(<span class="string">"http"</span>):</span><br><span class="line">            content = content.replace(all, <span class="string">'%s=\'%s%s\''</span> % (href, proxyurl, rewrited_url))</span><br><span class="line">    <span class="keyword">for</span> all, href, url <span class="keyword">in</span> href_re3.findall(content):</span><br><span class="line">        rewrited_url = urlparse.urljoin(baseurl, url)</span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> rewrited_url.startswith(proxyurl) <span class="keyword">and</span> rewrited_url.startswith(<span class="string">"http"</span>):</span><br><span class="line">            content = content.replace(all, <span class="string">'%s="%s%s"'</span> % (href, proxyurl, rewrited_url))</span><br><span class="line">    content = content.replace(<span class="string">"&lt;/title&gt;"</span>, <span class="string">"&lt;/title&gt;&lt;script&gt;%s&lt;/script&gt;"</span> % xmlhttprequest % (proxyurl, urlparse.urljoin(baseurl, <span class="string">"/"</span>)), <span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> content</span><br></pre></td></tr></table></figure>
+<p><a href="https://gist.github.com/3663115" target="_blank" rel="noopener">https://gist.github.com/3663115</a></p>
 
       
     </div>
@@ -125,9 +175,9 @@
     <div class="entry">
       
         <p>经常在G+上收图，但是整理做桌面的时候经常发现分辨率不够<br>几百张图，一个个去google image search太慢了</p>
-<p>于是：<br><img src="/assets/image/find-larger-images.jpg" alt=""><br><a href="https://chrome.google.com/webstore/detail/fbjeidmgokkiojabmnkgmcigfggeklak" target="_blank" rel="external">https://chrome.google.com/webstore/detail/fbjeidmgokkiojabmnkgmcigfggeklak</a></p>
+<p>于是：<br><img src="/assets/image/find-larger-images.jpg" alt=""><br><a href="https://chrome.google.com/webstore/detail/fbjeidmgokkiojabmnkgmcigfggeklak" target="_blank" rel="noopener">https://chrome.google.com/webstore/detail/fbjeidmgokkiojabmnkgmcigfggeklak</a></p>
 <p>拖入图片搜索<br>左键下载，右键预览</p>
-<p>source：<br><a href="https://github.com/binux/find-larger-images" target="_blank" rel="external">https://github.com/binux/find-larger-images</a></p>
+<p>source：<br><a href="https://github.com/binux/find-larger-images" target="_blank" rel="noopener">https://github.com/binux/find-larger-images</a></p>
 
       
     </div>
@@ -168,9 +218,9 @@
 * 可以关闭不用的功能
 
 * 统一的接口方便添加更多的下载方式
-</code></pre><p><a href="https://raw.github.com/binux/ThunderLixianExporter/master/ThunderLixianExporter.png" target="_blank" rel="external"><img src="https://raw.github.com/binux/ThunderLixianExporter/master/ThunderLixianExporter.png" alt=""></a></p>
-<p>油猴脚本： <a href="https://raw.github.com/binux/ThunderLixianExporter/master/ThunderLixianExporter.user.js" target="_blank" rel="external">ThunderLixianExporter.user.js</a></p>
-<p>项目地址： <a href="http://binux.github.com/ThunderLixianExporter/" target="_blank" rel="external">http://binux.github.com/ThunderLixianExporter/</a></p>
+</code></pre><p><a href="https://raw.github.com/binux/ThunderLixianExporter/master/ThunderLixianExporter.png" target="_blank" rel="noopener"><img src="https://raw.github.com/binux/ThunderLixianExporter/master/ThunderLixianExporter.png" alt=""></a></p>
+<p>油猴脚本： <a href="https://raw.github.com/binux/ThunderLixianExporter/master/ThunderLixianExporter.user.js" target="_blank" rel="noopener">ThunderLixianExporter.user.js</a></p>
+<p>项目地址： <a href="http://binux.github.com/ThunderLixianExporter/" target="_blank" rel="noopener">http://binux.github.com/ThunderLixianExporter/</a></p>
 
       
     </div>
@@ -204,11 +254,11 @@
     <div class="entry">
       
         <blockquote>
-<p>loli.lu已关闭！<br>如需使用迅雷会员功能，请<a href="http://vip.xunlei.com/" target="_blank" rel="external">购买迅雷会员服务</a><br>如需在OSX，Linux环境下下载迅雷离线，请参阅<a href="/2012/07/thunderlixianexporter/">ThunderLixianExporter</a></p>
+<p>loli.lu已关闭！<br>如需使用迅雷会员功能，请<a href="http://vip.xunlei.com/" target="_blank" rel="noopener">购买迅雷会员服务</a><br>如需在OSX，Linux环境下下载迅雷离线，请参阅<a href="/2012/07/thunderlixianexporter/">ThunderLixianExporter</a></p>
 </blockquote>
 <p>首先参照YAAW以RPC模式启动ARIA2，保证YAAW能正常工作。</p>
 <p>在LOLI.LU中随便点开一个一个资源 &gt; 批量下载。<strong>右键点击</strong> 自定义，填入以下脚本（注意需要替换JSONRPC_PATH，和YAAW中的一样）：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">to_aria2</span>(<span class="params">taskname, links, cookie</span>) </span>&#123;</div><div class="line">  $.getScript(<span class="string">"https://raw.github.com/gist/3116833/aria2jsonrpc.js"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    <span class="keyword">var</span> aria2 = <span class="keyword">new</span> ARIA2(<span class="string">"&lt;your rpc path&gt;"</span>);</div><div class="line">    $.each(links, <span class="function"><span class="keyword">function</span>(<span class="params">i, n</span>) </span>&#123;</div><div class="line">      aria2.addUri(n.url, &#123;<span class="attr">out</span>: n.title, <span class="attr">header</span>: <span class="string">'Cookie: '</span>+cookie&#125;);</div><div class="line">    &#125;);</div><div class="line">  &#125;);</div><div class="line"></div><div class="line">  <span class="keyword">var</span> str = <span class="string">""</span>;</div><div class="line">  str += <span class="string">"taskname = "</span>+taskname+<span class="string">"\n"</span>;</div><div class="line">  str += <span class="string">"cookie = "</span>+cookie+<span class="string">"\n"</span>;</div><div class="line">  str += <span class="string">"==========================\n"</span>;</div><div class="line">  $.each(links, <span class="function"><span class="keyword">function</span>(<span class="params">i, n</span>) </span>&#123;</div><div class="line">    str += <span class="string">"links["</span>+i+<span class="string">"].title = "</span>+n.title+<span class="string">"\n"</span>;</div><div class="line">  &#125;);</div><div class="line">  <span class="keyword">return</span> str;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">to_aria2</span>(<span class="params">taskname, links, cookie</span>) </span>&#123;</span><br><span class="line">  $.getScript(<span class="string">"https://raw.github.com/gist/3116833/aria2jsonrpc.js"</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> aria2 = <span class="keyword">new</span> ARIA2(<span class="string">"&lt;your rpc path&gt;"</span>);</span><br><span class="line">    $.each(links, <span class="function"><span class="keyword">function</span>(<span class="params">i, n</span>) </span>&#123;</span><br><span class="line">      aria2.addUri(n.url, &#123;<span class="attr">out</span>: n.title, <span class="attr">header</span>: <span class="string">'Cookie: '</span>+cookie&#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> str = <span class="string">""</span>;</span><br><span class="line">  str += <span class="string">"taskname = "</span>+taskname+<span class="string">"\n"</span>;</span><br><span class="line">  str += <span class="string">"cookie = "</span>+cookie+<span class="string">"\n"</span>;</span><br><span class="line">  str += <span class="string">"==========================\n"</span>;</span><br><span class="line">  $.each(links, <span class="function"><span class="keyword">function</span>(<span class="params">i, n</span>) </span>&#123;</span><br><span class="line">    str += <span class="string">"links["</span>+i+<span class="string">"].title = "</span>+n.title+<span class="string">"\n"</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">return</span> str;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>点击保存，点自定义，到YAAW中看是否添加成功了吧。</p>
 
       
@@ -250,17 +300,17 @@
 <li>安装aria2</li>
 </ol>
 <ol>
-<li>打开<a href="http://binux.github.com/yaaw/" target="_blank" rel="external">YAAW</a></li>
+<li>打开<a href="http://binux.github.com/yaaw/" target="_blank" rel="noopener">YAAW</a></li>
 </ol>
 <p>非常简单没有压力。</p>
 <p>=============================================</p>
-<h3 id="第一步：挂载U盘"><a href="#第一步：挂载U盘" class="headerlink" title="第一步：挂载U盘"></a>第一步：挂载U盘</h3><p><strong>openwrt:</strong>  <a href="http://wiki.openwrt.org/zh-cn/doc/howto/usb.storage" target="_blank" rel="external">http://wiki.openwrt.org/zh-cn/doc/howto/usb.storage</a><br><br><strong>dd-wrt：</strong>  刷一个带USB的固件，固件中自动mount到/opt<br><br><strong>tomato：</strong>  刷一个带USB的固件，固件中自动mount到/opt<br></p>
-<h3 id="第二步：安装aria2"><a href="#第二步：安装aria2" class="headerlink" title="第二步：安装aria2"></a>第二步：安装aria2</h3><p><strong>openwrt:</strong> <code>opkg update &amp;&amp; opkg install aria2</code><br><br><strong>dd-wrt:</strong> <code>wget http://www.3iii.dk/linux/optware/optware-install-ddwrt.sh -O - | tr -d &#39;\r&#39; &gt; /tmp/optware-install.sh &amp;&amp; sh /tmp/optware-install.sh &amp;&amp; ipkg-opt update &amp;&amp; ipkg-opt install aria2</code><br><br><strong>tomato:</strong> <a href="http://tomatousb.org/tut:optware-installation" target="_blank" rel="external">http://tomatousb.org/tut:optware-installation</a><br></p>
+<h3 id="第一步：挂载U盘"><a href="#第一步：挂载U盘" class="headerlink" title="第一步：挂载U盘"></a>第一步：挂载U盘</h3><p><strong>openwrt:</strong>  <a href="http://wiki.openwrt.org/zh-cn/doc/howto/usb.storage" target="_blank" rel="noopener">http://wiki.openwrt.org/zh-cn/doc/howto/usb.storage</a><br><br><strong>dd-wrt：</strong>  刷一个带USB的固件，固件中自动mount到/opt<br><br><strong>tomato：</strong>  刷一个带USB的固件，固件中自动mount到/opt<br></p>
+<h3 id="第二步：安装aria2"><a href="#第二步：安装aria2" class="headerlink" title="第二步：安装aria2"></a>第二步：安装aria2</h3><p><strong>openwrt:</strong> <code>opkg update &amp;&amp; opkg install aria2</code><br><br><strong>dd-wrt:</strong> <code>wget http://www.3iii.dk/linux/optware/optware-install-ddwrt.sh -O - | tr -d &#39;\r&#39; &gt; /tmp/optware-install.sh &amp;&amp; sh /tmp/optware-install.sh &amp;&amp; ipkg-opt update &amp;&amp; ipkg-opt install aria2</code><br><br><strong>tomato:</strong> <a href="http://tomatousb.org/tut:optware-installation" target="_blank" rel="noopener">http://tomatousb.org/tut:optware-installation</a><br></p>
 <p>启动命令： <code>aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c</code><br><br>如果没有问题的话，可以将 <code>aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c -D</code> 加入开机启动<br><br>如果有问题的话，看输出的提示，有可能要加入<code>--event-poll=select</code>什么的参数<br></p>
-<h3 id="第三步：打开YAAW"><a href="#第三步：打开YAAW" class="headerlink" title="第三步：打开YAAW"></a>第三步：打开<a href="http://binux.github.com/yaaw/" target="_blank" rel="external">YAAW</a></h3><p>点击<a href="http://binux.github.com/yaaw/demo/" target="_blank" rel="external">demo</a>，在扳手处填入path： <code>http://&lt;ip_of_your_route&gt;:6800/jsonrpc</code>， 保存</p>
+<h3 id="第三步：打开YAAW"><a href="#第三步：打开YAAW" class="headerlink" title="第三步：打开YAAW"></a>第三步：打开<a href="http://binux.github.com/yaaw/" target="_blank" rel="noopener">YAAW</a></h3><p>点击<a href="http://binux.github.com/yaaw/demo/" target="_blank" rel="noopener">demo</a>，在扳手处填入path： <code>http://&lt;ip_of_your_route&gt;:6800/jsonrpc</code>， 保存</p>
 <p>=============================================<br>一些有用的aria2参数</p>
 <p>-i &lt;file&gt; 导入从loli.lu导出的aria2文件<br><br>-j &lt;num&gt; 同时下载数限制，由于路由和总带宽限制，建议设为3（默认5）<br><br>-x &lt;num&gt; 同一个服务器的同时链接数，建议为5-10（默认1）<br><br>-k &lt;size&gt; 文件最小分片，文件最多的线程数取决于能分出多少片，当文件小于最小分片大小时，只能开出一个线程，建议为2M（默认20M）<br><br>-s &lt;num&gt; 一个文件最多用几个线程下载，建议为8-10（默认5）<br><br>–file-allocation &lt;none,prealloc,falloc&gt; 文件预分配，如果USB设备是U盘，SD卡，预分配浪费时间，建议为none（默认prealloc)<br></p>
-<p>更多参数请访问 <a href="http://aria2.sourceforge.net/manual/en/html/" target="_blank" rel="external">Aria2 Manual</a></p>
+<p>更多参数请访问 <a href="http://aria2.sourceforge.net/manual/en/html/" target="_blank" rel="noopener">Aria2 Manual</a></p>
 
       
     </div>
@@ -332,7 +382,7 @@
         <p>aria2是个好软件，多线程，<strong>HTTP/FTP/BT通吃</strong>，参数设置丰富，功能强大。在我的TL-WR703n上比transmission快多了。</p>
 <p>看了官网上的3个web前端，两个是php的，一个是c的。先不说c的那个界面。。php我尝试在路由上跑，依赖实在太多。<br>简单man了一下aria2，这货明明可以JSON-RPC的啊，根本就用不着后端啊！　于是，就有了这个坑——YAAW。</p>
 <h3 id="YAAW简介"><a href="#YAAW简介" class="headerlink" title="YAAW简介"></a>YAAW简介</h3><p>YAAW - Yet Another Aria2 Web Frontend<br>是一个纯前端实现的Aria2 Web前端界面。无需架设任何服务器，只需要在浏览器中打开即刻使用。</p>
-<h3 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h3><p>首页/demo： <a href="http://binux.github.com/yaaw/" target="_blank" rel="external">http://binux.github.com/yaaw/</a><br>GitHub: <a href="https://github.com/binux/yaaw" target="_blank" rel="external">https://github.com/binux/yaaw</a></p>
+<h3 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h3><p>首页/demo： <a href="http://binux.github.com/yaaw/" target="_blank" rel="noopener">http://binux.github.com/yaaw/</a><br>GitHub: <a href="https://github.com/binux/yaaw" target="_blank" rel="noopener">https://github.com/binux/yaaw</a></p>
 
       
     </div>
@@ -367,7 +417,7 @@
       
         <p>Dropbox全平台并且各种工具齐全，在各个主机上都在用。用Dropbox备份VPS上的数据也很方便，但是之前看到的脚本都需要填写用户名密码，迟迟不敢用。。</p>
 <p>这里推荐这个使用API的Dropbox上传脚本，通过设置沙盒，把备份目录限制在应用中，保证其他文件的安全。<br>而且这个脚本是用curl驱动的，只有一个文件，在linux平台下毫无压力。</p>
-<p>Home page: <a href="http://www.andreafabrizi.it/?dropbox_uploader" target="_blank" rel="external">http://www.andreafabrizi.it/?dropbox_uploader</a><br>github: <a href="https://github.com/andreafabrizi/Dropbox-Uploader" target="_blank" rel="external">https://github.com/andreafabrizi/Dropbox-Uploader</a><br>原始版本是需要完全权限的，我fork了一个带沙盒限制的版本： github: <a href="https://github.com/binux/Dropbox-Uploader" target="_blank" rel="external">https://github.com/binux/Dropbox-Uploader</a></p>
+<p>Home page: <a href="http://www.andreafabrizi.it/?dropbox_uploader" target="_blank" rel="noopener">http://www.andreafabrizi.it/?dropbox_uploader</a><br>github: <a href="https://github.com/andreafabrizi/Dropbox-Uploader" target="_blank" rel="noopener">https://github.com/andreafabrizi/Dropbox-Uploader</a><br>原始版本是需要完全权限的，我fork了一个带沙盒限制的版本： github: <a href="https://github.com/binux/Dropbox-Uploader" target="_blank" rel="noopener">https://github.com/binux/Dropbox-Uploader</a></p>
 <p>使用方法：<br>第一次启动的时候会指引你去Dropbox创建一个应用，按照指引操作即可。</p>
 <p>上传： ./dropbox_uploader.sh upload [LOCAL_FILE]<br>下载： ./dropbox_uploader.sh download [REMOTE_FILE]<br>删除： ./dropbox_uploader.sh delete [REMOTE_FILE]</p>
 
@@ -434,7 +484,7 @@ n=01324486025B4775690D459D7F43726F770F6CBF6F345D5B46347DA817445D5B422876D1025B78
             stream.seek(size-0x5000)
             h.update(stream.read(0x5000))
     return h.hexdigest().upper()
-</code></pre><p>算法来自于<a href="https://github.com/iambus/xunlei-lixian" target="_blank" rel="external">https://github.com/iambus/xunlei-lixian</a>。<br>在api中，cid主要用于文件的索引。观察代码可知，cid并没有hash整个文件，而是根据文件的头/中/尾部的0x5000字节的内容计算Hash。这样就可以在不下载完整个文件，就能够查询到其他服务器上可能的相同文件。于是在下载支持range的文件的时候，即使该地址没有被索引到，但是通过cid，依旧可以被p2sp加速。<br>当然了，由于没有hash整个文件，文件在事实上有可能是不同的，那么根据下面这个gcid就可以唯一确定一个文件了。</p>
+</code></pre><p>算法来自于<a href="https://github.com/iambus/xunlei-lixian" target="_blank" rel="noopener">https://github.com/iambus/xunlei-lixian</a>。<br>在api中，cid主要用于文件的索引。观察代码可知，cid并没有hash整个文件，而是根据文件的头/中/尾部的0x5000字节的内容计算Hash。这样就可以在不下载完整个文件，就能够查询到其他服务器上可能的相同文件。于是在下载支持range的文件的时候，即使该地址没有被索引到，但是通过cid，依旧可以被p2sp加速。<br>当然了，由于没有hash整个文件，文件在事实上有可能是不同的，那么根据下面这个gcid就可以唯一确定一个文件了。</p>
 <h2 id="gcid"><a href="#gcid" class="headerlink" title="gcid"></a>gcid</h2><pre><code>def gcid_hash_file(path):
     h = hashlib.sha1()
     size = os.path.getsize(path)
@@ -447,7 +497,7 @@ n=01324486025B4775690D459D7F43726F770F6CBF6F345D5B46347DA817445D5B422876D1025B78
             h.update(hashlib.sha1(data).digest())
             data = stream.read(psize)
     return h.hexdigest().upper()
-</code></pre><p>这个算法是我完全没有通过逆向黑盒分析而来，虽然没有做完整的测试，但是一般来说是正确的。。分析借助了loli.lu的18万个已有文件的数据，以及<a href="http://coffee.xunlei.com:8000/viewthread.php?tid=692&amp;extra=page%3D1" target="_blank" rel="external">迅雷咖啡吧</a>上的一句话：“如果文件很大，则计算gcid非常耗时，因此可以在大文件传输过程中计算gcid，文件传输完毕，则gcid也计算好了“。。<br>gcid的作用是文件的唯一键，在迅雷服务器上唯一确定一个文件。可以说，只要有了gcid，实际上是可以任意下载到需要的文件的。算法采用了分片hash再二次sha1的算法。。猜测原因是因为分片被限制在512个一下，当hash较大文件的时候，可以边下载边hash，再在最后hash那个不到512*20字节的串即可，当文件下载完成的时候就能立即得出gcid。还有一个原因是bt文件也是用sha1分片Hash的，那么获得种子文件也就同时有可能获得gcid了。同时，如果迅雷服务器保存了每个分片的sha1 hash的话，那么在下载通过cid匹配的文件同时，就能同时比较各个分片是否正确，以此保证最终结果。</p>
+</code></pre><p>这个算法是我完全没有通过逆向黑盒分析而来，虽然没有做完整的测试，但是一般来说是正确的。。分析借助了loli.lu的18万个已有文件的数据，以及<a href="http://coffee.xunlei.com:8000/viewthread.php?tid=692&amp;extra=page%3D1" target="_blank" rel="noopener">迅雷咖啡吧</a>上的一句话：“如果文件很大，则计算gcid非常耗时，因此可以在大文件传输过程中计算gcid，文件传输完毕，则gcid也计算好了“。。<br>gcid的作用是文件的唯一键，在迅雷服务器上唯一确定一个文件。可以说，只要有了gcid，实际上是可以任意下载到需要的文件的。算法采用了分片hash再二次sha1的算法。。猜测原因是因为分片被限制在512个一下，当hash较大文件的时候，可以边下载边hash，再在最后hash那个不到512*20字节的串即可，当文件下载完成的时候就能立即得出gcid。还有一个原因是bt文件也是用sha1分片Hash的，那么获得种子文件也就同时有可能获得gcid了。同时，如果迅雷服务器保存了每个分片的sha1 hash的话，那么在下载通过cid匹配的文件同时，就能同时比较各个分片是否正确，以此保证最终结果。</p>
 <h2 id="fid"><a href="#fid" class="headerlink" title="fid"></a>fid</h2><p>算法如下：</p>
 <pre><code>def parse_fid(fid):
     cid, size, gcid = struct.unpack(&quot;&lt;20sq20s&quot;, fid.decode(&quot;base64&quot;))
@@ -456,7 +506,7 @@ n=01324486025B4775690D459D7F43726F770F6CBF6F345D5B46347DA817445D5B422876D1025B78
 def gen_fid(cid, size, gcid):
     return struct.pack(&quot;&lt;20sq20s&quot;, cid.decode(&quot;hex&quot;), size, gcid.decode(&quot;hex&quot;)).encode(&quot;base64&quot;).strip()
 </code></pre><p>首先这很明显是一个base64，但是一开始我并没有发现她们和cid,size,gcid的关系，<del>直到我膝盖中了一箭</del>。。<br>fid就是cid,size,gcid的二进制然后再base64而已。但是有了fid，神马cid,size,gcid这三大要素都不是问题了。应该是用于api分析url的便利，所做的一个接口性参数。</p>
-<h2 id="tid"><a href="#tid" class="headerlink" title="tid"></a>tid</h2><p>未知算法。<br>根据18万的文件数据，唯一能够知道的是，这个tid和文件大小一一对应。。size相同的文件tid一定相同，但是又不是size的直接hash，目前来说完全不知道这个参数的意义何在。。<br>如果有兴趣，您可以在<a href="https://github.com/binux/lixian.xunlei/blob/master/tid.dict" target="_blank" rel="external">https://github.com/binux/lixian.xunlei/blob/master/tid.dict</a>文件里面找到目前已知的映射。。如果分析出算法了请务必告诉我。</p>
+<h2 id="tid"><a href="#tid" class="headerlink" title="tid"></a>tid</h2><p>未知算法。<br>根据18万的文件数据，唯一能够知道的是，这个tid和文件大小一一对应。。size相同的文件tid一定相同，但是又不是size的直接hash，目前来说完全不知道这个参数的意义何在。。<br>如果有兴趣，您可以在<a href="https://github.com/binux/lixian.xunlei/blob/master/tid.dict" target="_blank" rel="noopener">https://github.com/binux/lixian.xunlei/blob/master/tid.dict</a>文件里面找到目前已知的映射。。如果分析出算法了请务必告诉我。</p>
 <h2 id="n"><a href="#n" class="headerlink" title="n"></a>n</h2><p>算法源码：</p>
 <pre><code>thunder_filename_mask = &quot;6131E45F00000000&quot;.decode(&quot;hex&quot;)
 def thunder_filename_encode(filename, encoding=&quot;gbk&quot;):
@@ -479,63 +529,8 @@ def thunder_filename_decode(code, encoding=&quot;gbk&quot;):
         result.append(chr(ord(word)^ord(mask)))
     result = &quot;&quot;.join(result).rstrip(&quot;\0&quot;)
     return result.decode(encoding)
-</code></pre><p>算法来源于<a href="https://plus.google.com/109026361274947112731" target="_blank" rel="external">+Zhang Youfu</a>。简单来说这个参数就是将文件名各位用掩码进行了简单转换而已，中文的编码与最终输出的header中的相同，既编码采用utf8，最终输出的也是utf8，值得指出的是默认的编码是gbk的。迅雷在输出文件名时会截断较长的文件名，但是实际上通过传递完整的n参数，可以无视这个限制。在<a href="https://github.com/binux/ThunderLixianExporter/blob/master/ThunderLixianExporter.js#L300" target="_blank" rel="external">binux/ThunderLixianExporter</a>还有一个js版本的实现。 </p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>由上面的分析可见，一个文件的离线地址完全就是根据文件的信息生成的，于是你发现了什么？对了，完全不需要通过迅雷服务器我们就可以生成自己的离线地址！如果这个文件在迅雷服务器上存在，我们可以直接下载回来！（等等，你说n。。那不就是文件名嘛。。我只关心内容。。文件名这种小问题。。）<br>说到做到，<strong>您可以通过<a href="https://github.com/binux/lixian.xunlei/blob/master/check_file.py" target="_blank" rel="external">https://github.com/binux/lixian.xunlei/blob/master/check_file.py</a>这个文件直接计算出文件的cid,gcid,fid</strong>，如果可能的话也能计算出tid。<br>然后，把fake_url添加到迅雷软件里面。然后。。就可以直接下载了！可以开启高速通道，可以在快盘秒传，运气好可以开启离线秒传。。。<br>over</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2012-03-03T08:45:21.000Z"><a href="/2012/03/jshare/">2012-03-03</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2012/03/jshare/">一个网盘的终结(？)及由其而生的思考的思考</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>标题是思考的思考的原因是《<a href="http://www.hexieshe.com/635859/" target="_blank" rel="external">一个网盘的终结(？)及由其而生的思考—JSharer或宣布长期暂停服务</a>》这样一篇文章。<br>在JShare还叫JShare的时候，就知道这样一个有责远大理想，而且界面很漂亮的网盘。虽然很少会去收集稀有物，所以很少去，但是深知寻找资源的不易，特别是当需要的时候。。</p>
-<p>《<a href="https://ra.gg/!rEOkP" target="_blank" rel="external">标题一定要写的生存战略マル～</a>》这是电磁猫那边的公告帖。<strong>生存战略这个词准确的反映了网盘的最大的问题——生存。</strong></p>
-<h2 id="一、钱"><a href="#一、钱" class="headerlink" title="一、钱"></a>一、钱</h2><p>在二次元概念范围内，我一般都避免谈及这个词，这个即使在三次元中都俗到不行的词。但是，<strong>没有钱是不成的，网盘是很烧钱的。</strong><br>爱吗？二次元不缺少爱，但是用爱能支撑一个论坛，支撑一个PT/BT，支撑几个内部FTP，但是支撑不起网盘; 网盘所需要的服务器，带宽都太多了，太花钱了。我相信，即使是115、腾讯、迅雷，单就网盘业务来说几乎肯定是亏损的，但是作为产品链中的一环，他们能通过其他业务支撑起这项服务，但是一个ACG向的网盘，难！</p>
-<p>解决的办法只有两个：</p>
-<h3 id="1-弄到钱"><a href="#1-弄到钱" class="headerlink" title="1.弄到钱"></a>1.弄到钱</h3><p>这很显而易见不是吗。如果能弄到钱就能做下去啦。<br>但是，收钱只有两种办法，向用户收，向第三方收。</p>
-<p>在中国，向用户收钱难，太难了。免费午餐吃惯了的中国网民，看到一个资源只会伸手，下载不了不骂娘就得感谢了。<br>即使对于有爱的人士来说，VIP收费+免费的模式是可以接受的，但是会有多少人付费？是否足以支撑这个项目？我个人认为难。</p>
-<p>向第三方收钱，最简单的例子就是广告了，但是依旧存在够不够烧的问题。<br>要知道对于一个点击，网盘可能需要付出的是1G的流量，换来的不过是不足0.5%的概率点击广告；这样的成本还是很难消化。</p>
-<h3 id="2-减低运营成本"><a href="#2-减低运营成本" class="headerlink" title="2.减低运营成本"></a>2.减低运营成本</h3><p>既然没钱，那就少花一点。</p>
-<h4 id="P2P"><a href="#P2P" class="headerlink" title="P2P"></a>P2P</h4><p>比如<a href="http://www.loushao.net" target="_blank" rel="external">漏勺</a>就有这样的尝试，但是包括BT，PT，电驴的所有P2P方式都有一点硬伤——Peer：</p>
-<ul>
-<li>持续性  没法保证资源长时间在网存活，PT可以通过定期重新发布+免费来再次刺激下载，激活资源，可能会好一些</li>
-</ul>
-<ul>
-<li>速度稳定  当Peer少的时候，速度依赖于Peer的网络状况</li>
-</ul>
-<ul>
-<li>时间稳定  资源是否可以下载依赖于在线的Peer，但是并不是任何时段都有种子，或者有足够的种子在线</li>
-</ul>
-<p>以上这些问题，在遇到冷门资源的时候更加明显，无种/速度/并不是随时可以下载，即使是采用了比较先进的管理方式的PT依旧存在。<br>但是，<strong>作为一个以“实现ACG资源长久分享的长期计划，目标是解决在资源分享的过程中一直存在的资源保存不便现状”的ACG网盘来说，冷门的问题依旧需要服务器和带宽资源来解决。</strong><br>当然了，P2P对于热门资源的解决能力依旧是可以借鉴的，毕竟互联网中的2/8法则在这应该也是基本适用的。</p>
-<h4 id="网盘中转"><a href="#网盘中转" class="headerlink" title="网盘中转"></a>网盘中转</h4><p>这是我在做了<a href="http://loli.lu" target="_blank" rel="external">loli.lu</a>之后的想法。<br>既然P2P无法保证一致的网络状况，自己又无法支撑网盘的资源开销，那就去用别人的网盘就好了。<br>每一份资源在本地服务器上保留一份，然后上传到别的网盘中，用户再通过别的网盘下载。由于网盘实际上不会真正删除他们服务器上的文件，并且存在秒传这样的机制，过期/重传这样的问题实际是可以解决的。<br>那么，通过别的网盘，我们在保留资源持续有效的同时，通过提供多个网盘的下载，也能适应各种不同的网络环境和保持一致的下载体验。</p>
-<p>当然，缺点也是有的，这样的行为不可能被其他网盘官方许可，也就是说存在用户方针风险。</p>
-<h2 id="二、版权"><a href="#二、版权" class="headerlink" title="二、版权"></a>二、版权</h2><p>这又是掌握着网盘命脉的，至关重要的资源。<br>ＡＣＧ向网盘由于自身特点，注定存在大量的非法版权的内容，注定会受到政策的影响。更加上内容是保存在服务器上的，也不接受用户私人数据，于是很难逃避版权方面的限制。<br>找避风港或是寻找借口，决定了这个项目的生存能力。可能转向小众是解决这个问题的一般可行办法，但是能支撑多久，天知道。</p>
-<p>ＡＣＧ向网盘是个碉堡了的事情，但是真正做起来，难，太难了。</p>
+</code></pre><p>算法来源于<a href="https://plus.google.com/109026361274947112731" target="_blank" rel="noopener">+Zhang Youfu</a>。简单来说这个参数就是将文件名各位用掩码进行了简单转换而已，中文的编码与最终输出的header中的相同，既编码采用utf8，最终输出的也是utf8，值得指出的是默认的编码是gbk的。迅雷在输出文件名时会截断较长的文件名，但是实际上通过传递完整的n参数，可以无视这个限制。在<a href="https://github.com/binux/ThunderLixianExporter/blob/master/ThunderLixianExporter.js#L300" target="_blank" rel="noopener">binux/ThunderLixianExporter</a>还有一个js版本的实现。 </p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>由上面的分析可见，一个文件的离线地址完全就是根据文件的信息生成的，于是你发现了什么？对了，完全不需要通过迅雷服务器我们就可以生成自己的离线地址！如果这个文件在迅雷服务器上存在，我们可以直接下载回来！（等等，你说n。。那不就是文件名嘛。。我只关心内容。。文件名这种小问题。。）<br>说到做到，<strong>您可以通过<a href="https://github.com/binux/lixian.xunlei/blob/master/check_file.py" target="_blank" rel="noopener">https://github.com/binux/lixian.xunlei/blob/master/check_file.py</a>这个文件直接计算出文件的cid,gcid,fid</strong>，如果可能的话也能计算出tid。<br>然后，把fake_url添加到迅雷软件里面。然后。。就可以直接下载了！可以开启高速通道，可以在快盘秒传，运气好可以开启离线秒传。。。<br>over</p>
 
       
     </div>
@@ -610,6 +605,10 @@ def thunder_filename_decode(code, encoding=&quot;gbk&quot;):
   <ul class="entry">
     
       <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
@@ -623,10 +622,6 @@ def thunder_filename_decode(code, encoding=&quot;gbk&quot;):
     
       <li>
         <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
-      </li>
-    
-      <li>
-        <a href="/2015/12/uk2/">足兆叉虫的2015</a>
       </li>
     
   </ul>
