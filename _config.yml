@@ -12,7 +12,7 @@ timezone:
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
-url: http://binux.blog
+url: https://binux.blog
 root: /
 permalink: :year/:month/:title/
 permalink_defaults:
@@ -68,17 +68,16 @@ theme: light
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type: git
-  repo: git@github.com:binux/binux_github_com.git
-  branch: gh-pages
-  #- type: rsync
-    #host: o.stdyun.net
-    #user: binux
-    #root: ~/blog.binux.me/
-    #port: 22
-    #delete: true
-    #verbose: true
-    #ignore_errors: true
+  - type: git
+    repo: git@github.com:binux/binux_github_com.git
+    branch: gh-pages
+  - type: rsync
+    host: c3.binux.me
+    user: binux
+    root: /srv/binux.blog/
+    delete: true
+    verbose: true
+    ignore_errors: true
 
 disqus_shortname: binux
 feed:
