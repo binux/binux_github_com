@@ -63,6 +63,68 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2011-02-11T21:19:06.000Z"><a href="/2011/02/css_selector_for_fulltext/">2011-02-11</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/02/css_selector_for_fulltext/">CssFullText - CSS选择器 说明</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="CSS-Selector-简介："><a href="#CSS-Selector-简介：" class="headerlink" title="CSS Selector 简介："></a>CSS Selector 简介：</h2><p>CSS 选择器( css selector) 是CSS的灵魂。对于一个HTML页面来说，CSS选择器是方便的元素(element)选取工具。</p>
+<h2 id="支持的选择器类型："><a href="#支持的选择器类型：" class="headerlink" title="支持的选择器类型："></a>支持的选择器类型：</h2><ul>
+<li>派生选择器 ( E F)</li>
+<li>id 选择器 ( E#id )</li>
+<li>类选择器 ( E.class )</li>
+<li>属性选择器 ( E[attr=val] )</li>
+</ul>
+<p>暂时不支持伪类选择器( E:last )。</p>
+<h2 id="选择器语法简介："><a href="#选择器语法简介：" class="headerlink" title="选择器语法简介："></a>选择器语法简介：</h2><h3 id="派生选择器"><a href="#派生选择器" class="headerlink" title="派生选择器"></a>派生选择器</h3><p>派生选择器用于根据元素的上下文关系定位元素。<br>HTML 代码:</p>
+<pre><code>&lt;form&gt;
+  &lt;label&gt;Name:&lt;/label&gt;
+  &lt;input name=&quot;name&quot; /&gt;
+  &lt;fieldset&gt;
+      &lt;label&gt;Newsletter:&lt;/label&gt;
+      &lt;input name=&quot;newsletter&quot; /&gt;
+ &lt;/fieldset&gt;
+&lt;/form&gt;
+&lt;input name=&quot;none&quot; /&gt;
+</code></pre><p><strong>选择器：</strong>form input<br><strong>选择元素：</strong><code>&lt;input name=&quot;name&quot; /&gt;</code>, <code>&lt;input name=&quot;newsletter&quot; /&gt;</code></p>
+<p>也可以使用子类选择器( E &gt; F )，仅选择元素的子元素，而不会选取其孙子元素<br>对于以上代码， <strong>选择器：</strong>form &gt; input<br><strong>选择元素：</strong><code>&lt;input name=&quot;name&quot; /&gt;</code></p>
+<h3 id="id-选择器"><a href="#id-选择器" class="headerlink" title="id 选择器"></a>id 选择器</h3><p>id 选择器用于选取特定id的元素。<br>HTML 代码:</p>
+<pre><code>&lt;div id=&quot;notMe&quot;&gt;&lt;p&gt;id=&quot;notMe&quot;&lt;/p&gt;&lt;/div&gt;
+&lt;div id=&quot;myDiv&quot;&gt;id=&quot;myDiv&quot;&lt;/div&gt;
+</code></pre><p><strong>选择器：</strong>#myDiv<br><strong>选择元素：</strong><code>&lt;div id=&quot;myDiv&quot;&gt;id=&quot;myDiv&quot;&lt;/div&gt;</code></p>
+<h3 id="类选择器"><a href="#类选择器" class="headerlink" title="类选择器"></a>类选择器</h3><p>类选择器用于选取拥有特性class的元素。<br>HTML 代码:</p>
+<pre><code>&lt;div class=&quot;notMe&quot;&gt;div class=&quot;notMe&quot;&lt;/div&gt;
+&lt;div class=&quot;Me myClass&quot;&gt;div class=&quot;Me myClass&quot;&lt;/div&gt;
+&lt;span class=&quot;myClass&quot;&gt;span class=&quot;myClass&quot;&lt;/span&gt;
+</code></pre><p><strong>选择器：</strong>.Me<br><strong>选择元素：</strong><code>&lt;div class=&quot;Me myClass&quot;&gt;div class=&quot;Me myClass&quot;&lt;/div&gt;</code></p>
+<h3 id="属性选择器"><a href="#属性选择器" class="headerlink" title="属性选择器"></a>属性选择器</h3><p>选择包含特定属性的元素，不支持在同一个选择器中使用多个属性选择器（ span[hello=”Cleveland”][goodbye=”Columbus”] ）<br>[attribute]         包含属性<br>[attribute=value]         属性等于特定值的元素<br>[attribute~value]         匹配给定的属性包含特定值的元素<br>[attribute!value]         匹配给定的属性不包含特定值的元素（not~ ）<br>[attribute|value]         匹配如”lang”属性中的en, en-US, en-cockney<br>[attribute^value]         匹配给定的属性以特定值开头的元素<br>[attribute$value]         匹配给定的属性以特定值结尾的元素<br>[attribute*value]         匹配给定的属性的值中包含给定的字符串<br><strong>例子</strong><br>参见：<a href="http://www.w3.org/TR/CSS2/selector.html#attribute-selectors" target="_blank" rel="noopener">http://www.w3.org/TR/CSS2/selector.html#attribute-selectors</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2011-01-28T10:31:24.000Z"><a href="/2011/01/gentoo_pptp_vpn/">2011-01-28</a></time>
       
       
@@ -409,6 +471,10 @@ ebuild rtorrent-0.8.6.ebuild merge
   <ul class="entry">
     
       <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
         <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
       </li>
     
@@ -422,10 +488,6 @@ ebuild rtorrent-0.8.6.ebuild merge
     
       <li>
         <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
-      </li>
-    
-      <li>
-        <a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a>
       </li>
     
   </ul>
@@ -444,7 +506,7 @@ ebuild rtorrent-0.8.6.ebuild merge
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2018 Roy Binux
+  &copy; 2019 Roy Binux
   
 </div>
 <div class="clearfix"></div></footer>
