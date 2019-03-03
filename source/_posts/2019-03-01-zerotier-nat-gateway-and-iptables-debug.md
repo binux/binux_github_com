@@ -1,7 +1,7 @@
 ---
 title: Zerotier Nat 网关出口 和 iptables 调试
 date: 2019-03-01 22:48:44
-tags: zerotier, nat gateway, full tunnel mode, iptables
+tags: [zerotier, nat gateway, full tunnel mode, iptables]
 ---
 
 每当看到各类教程中的 iptables 指令，在格式参数组合之下可以实现从防火墙，封禁 IP 端口到 NAT 的各种操作，就如同魔法一般，看不明白，却又感到无比强大。想学，但又好像不得要领，稍微不慎可能就再也连不上了。最近配置 Zerotier 的 Nat 网关的时候，看着 [教程](https://zerotier.atlassian.net/wiki/spaces/SD/pages/7110693/Overriding+Default+Route+Full+Tunnel+Mode) 中的各种指令，抄过之后完全不通，花了3个晚上之后，逼着搞清楚了怎么 debug ( 打 log ) 后，终于配置成功 (虽然最终失败的原因和 iptables 无关)。

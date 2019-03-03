@@ -1,7 +1,7 @@
 ---
 title: 少女前线拖尸脚本 和 生成它的可视化工具
 date: 2018-10-14 15:22:15
-tags: 少女前线,ankulua,ankulua-vision,安卓,自动化,open-source,github
+tags: [少女前线,ankulua,ankulua-vision,安卓,自动化,open-source,github]
 ---
 
 最近在玩少女前线，这是一个手机游戏，over。不是，就真的没有什么好讲的嘛，了解的人早有耳闻，不了解的就只要知道这是个手机游戏就好了，嗯。
