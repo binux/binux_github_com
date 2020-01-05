@@ -1,0 +1,316 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>家居自动化 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="从 Google Assistant, Amazon Alexa, Apple Homekit 到米家，智能家居自动化已经不是什么新鲜的概念了。对于我来说，入坑的契机也非常简单：我不想下床关灯。然后随着想要自动化的场景增加，智能设备（可编程设备）就越来越多。这篇文章就根据自动场景介绍一下我现在的一些">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="家居自动化"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="true" title="Binuxの杂货铺" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2020-01-05T01:54:54.000Z"><a href="/2020/01/home-assistant/">2020-01-04</a></time>
+      
+      
+  
+    <h1 class="title">家居自动化</h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>从 Google Assistant, Amazon Alexa, Apple Homekit 到米家，智能家居自动化已经不是什么新鲜的概念了。对于我来说，入坑的契机也非常简单：我不想下床关灯。然后随着想要自动化的场景增加，智能设备（可编程设备）就越来越多。这篇文章就根据自动场景介绍一下我现在的一些方案（本文无任何 affiliate ）。</p>
+<h2 id="Hub"><a href="#Hub" class="headerlink" title="Hub"></a>Hub</h2><p>首先，在配置场景之前，需要选择一个 Hub —— 作为自动化中心，连接传感器和操作控制器（例如灯，插座，IR 遥控器等）。你可以选择 Google Home，Alexa，Homekit 这样大厂的方案，不过这里我还是推荐 <a href="https://www.home-assistant.io/" target="_blank" rel="noopener">Home Assistant</a> 这样的开源方案：</p>
+<ul>
+<li>更多的<a href="https://www.home-assistant.io/integrations/" target="_blank" rel="noopener">接入设备支持</a>（你甚至可以同时接入 Alexa 和 Google Assistant 的设备）</li>
+<li>更自由的自动化配置（例如 Google Assistant 不支持延迟触发；你甚至可以写 shell 脚本）</li>
+<li>更好的隐私保护（Home Assistant 的设备支持大多来源于逆向设备 API，能不联网就不联网）</li>
+</ul>
+<p>我在 Synology DS218+ 上以 docker 运行 Home Assistant。</p>
+<p>不过无论你选择什么方案，在这之后购买传感器和控制器的时候都需要注意你的 Hub 是否支持设备接入。考虑到价格，我的设备主要是 TP-Link 的插座加上米家的传感器，我会在具体场景中详细列出。</p>
+<h2 id="自动化场景"><a href="#自动化场景" class="headerlink" title="自动化场景"></a>自动化场景</h2><h3 id="Hey-Google-Good-Night"><a href="#Hey-Google-Good-Night" class="headerlink" title="Hey Google, Good Night"></a>Hey Google, Good Night</h3><p>首先就是我入坑的第一个场景，在床上关上家中所有的灯。我用到的设备有：</p>
+<ul>
+<li><a href="https://store.google.com/us/product/google_home_mini" target="_blank" rel="noopener">Google Home Mini</a></li>
+<li><a href="https://www.kasasmart.com/us/products/smart-plugs/kasa-smart-plug-energy-monitoring-hs110" target="_blank" rel="noopener">TP-Link Smart Plug HS110</a></li>
+<li><a href="https://www.kasasmart.com/us/products/smart-switches/kasa-smart-wi-fi-light-switch-hs200" target="_blank" rel="noopener">TP-Link Smart Switch HS200</a></li>
+</ul>
+<p>由于美国的房子没有灯，对的，没·有·灯。默认的开关控制的插座不一定在我想要的位置。这时候就可以用一个 Smart Plug 接一个落地灯。而对于其他自带的例如浴室厨房灯，就通过替换 Smart Switch 控制。</p>
+<p>设置方面也很简单，直接在 Google Home 的 Routines 中关掉所有的开关就好了。</p>
+<h3 id="自动开关厕所灯"><a href="#自动开关厕所灯" class="headerlink" title="自动开关厕所灯"></a>自动开关厕所灯</h3><p>这也是很常见的使用场景，红外感应人进入就开灯，然后延迟关灯，用到的设备有：</p>
+<ul>
+<li><a href="https://www.mi.com/wangguan" target="_blank" rel="noopener">米家多功能网关</a></li>
+<li><a href="https://item.mi.com/product/5005.html" target="_blank" rel="noopener">米家人体传感器</a></li>
+<li><a href="https://www.kasasmart.com/us/products/smart-switches/kasa-smart-wi-fi-light-switch-hs200" target="_blank" rel="noopener">TP-Link Smart Switch HS200</a></li>
+</ul>
+<p>首先跟着<a href="https://www.home-assistant.io/integrations/xiaomi_aqara/" target="_blank" rel="noopener">文档</a>将米家多功能网关接入 Home Assistant，然后就可以添加 Automation 了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">- id: &apos;1561354113814&apos;</span><br><span class="line">  alias: Turn On Bathroom</span><br><span class="line">  trigger:</span><br><span class="line">  - entity_id: binary_sensor.xiaomi_motion_sensor</span><br><span class="line">    platform: state</span><br><span class="line">    to: &apos;on&apos;</span><br><span class="line">  condition: []</span><br><span class="line">  action:</span><br><span class="line">  - data:</span><br><span class="line">      entity_id: switch.bathroom_light</span><br><span class="line">    service: switch.turn_on</span><br><span class="line">- id: &apos;1560102516271&apos;</span><br><span class="line">  alias: Turn Off Bathroom</span><br><span class="line">  trigger:</span><br><span class="line">  - entity_id: switch.bathroom_light</span><br><span class="line">    for: 00:10:00</span><br><span class="line">    platform: state</span><br><span class="line">    to: &apos;on&apos;</span><br><span class="line">  - entity_id: binary_sensor.xiaomi_motion_sensor</span><br><span class="line">    for: 00:10:00</span><br><span class="line">    platform: state</span><br><span class="line">    to: &apos;off&apos;</span><br><span class="line">  condition:</span><br><span class="line">  - condition: template</span><br><span class="line">    value_template: &apos;&#123;&#123; is_state(&quot;switch.bathroom_light&quot;, &quot;on&quot;) and as_timestamp(now())</span><br><span class="line">      - as_timestamp(states.switch.bathroom_light.last_changed) &gt; 600 &#125;&#125;&apos;</span><br><span class="line">  - condition: template</span><br><span class="line">    value_template: &apos;&#123;&#123; is_state(&quot;binary_sensor.xiaomi_motion_sensor&quot;, &quot;off&quot;) and</span><br><span class="line">      as_timestamp(now()) - as_timestamp(states.binary_sensor.xiaomi_motion_sensor.last_changed)</span><br><span class="line">      &gt; 600 &#125;&#125;&apos;</span><br><span class="line">  action:</span><br><span class="line">  - alias: &apos;&apos;</span><br><span class="line">    data:</span><br><span class="line">      entity_id: switch.bathroom_light</span><br><span class="line">    service: switch.turn_off</span><br></pre></td></tr></table></figure>
+<h3 id="进门自动开灯"><a href="#进门自动开灯" class="headerlink" title="进门自动开灯"></a>进门自动开灯</h3><p>这可以有两个方案，一个是用摄像头检测到人就开灯，或者用 Smart Lock 的开锁事件。</p>
+<ul>
+<li><a href="https://wyze.com/wyze-cam.html" target="_blank" rel="noopener">Wyze Cam</a></li>
+<li><a href="https://august.com/products/august-smart-lock-pro-connect" target="_blank" rel="noopener">August Smart Lock Pro</a></li>
+<li><a href="https://www.kasasmart.com/us/products/smart-switches/kasa-smart-wi-fi-light-switch-hs200" target="_blank" rel="noopener">TP-Link Smart Switch HS200</a></li>
+</ul>
+<p>Wyze Cam 就是<a href="https://www.mi.com/xiaofang" target="_blank" rel="noopener">小方智能摄像机</a> 的国外版本，你可以用<a href="https://github.com/EliasKotlyar/Xiaomi-Dafang-Hacks" target="_blank" rel="noopener">开源的固件</a>。如果直接用它自带的。接入 Home Assistant 需要通过 ifttt。August Lock 就能直接支持了。</p>
+<p>设置自动化和上面类似，condition 里面可以设置只在下班时间或者太阳落山后时才开灯。这里就贴配置了。总的来说 Smart Lock 比摄像头的方案要稳定得多，误触也少。</p>
+<h3 id="Hey-Google-True-on-Projector"><a href="#Hey-Google-True-on-Projector" class="headerlink" title="Hey Google, True on Projector"></a>Hey Google, True on Projector</h3><p>由于经常搬家，我都是用投影代替电视的。毕竟同样的尺寸，投影机容易搬多了。然后我现在的投影机是内置音响的，所以我还有一个 soundbar。这个场景就是，当我打开投影的时候，同时打开音响，关闭客厅灯，然后 PC 的输出切换到投影上，再打开 Plex。这里面用到的是：</p>
+<ul>
+<li><a href="https://store.google.com/us/product/google_home_mini" target="_blank" rel="noopener">Google Home Mini</a></li>
+<li><a href="https://item.mi.com/product/9465.html" target="_blank" rel="noopener">米家万能遥控器</a></li>
+<li><a href="https://github.com/KjetilSv/Win10As" target="_blank" rel="noopener">Win10As</a></li>
+</ul>
+<p>首先是将这几个设备接入 Home Assistant，参考 <a href="https://www.home-assistant.io/integrations/remote.xiaomi_miio/" target="_blank" rel="noopener">Xiaomi IR Remote</a> 和 <a href="https://www.home-assistant.io/integrations/mqtt/" target="_blank" rel="noopener">mqtt</a> 的文档就好了。</p>
+<p>然后是控制投影的开关，当米家万能遥控器接入 Home Assistant 后，可以通过 <code>xiaomi_miio.remote_learn_command</code> 指令学习投影遥控的开关机代码，然后在 Home Assistant 中建立一个虚拟开关：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">remote:</span><br><span class="line">  - platform: xiaomi_miio</span><br><span class="line">    host: 192.168.1.104</span><br><span class="line">    token: dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxb</span><br><span class="line">    commands:</span><br><span class="line">      project_on:</span><br><span class="line">        command:</span><br><span class="line">        - raw:nMwmkwlk0mkxmEsms4mEsmM2m0wlk2AMKYzYBYgCDmoDLTUA85gAOUyAXkB+wOfAhkBDwEPAQYGSAXOCE8IQwQVCNsAcghfAI8AjwPImM2mYDPg7tMIA</span><br><span class="line">      project_off:</span><br><span class="line">        command:</span><br><span class="line">        - raw:nMwmMwlk0mk1mEsms3mEsmM2AEIAjJqAywA/gD+Bz4DPgIeAh4CHgy+BB4EHgMeAh4BHgReAz4A6TCAA</span><br><span class="line"></span><br><span class="line">switch:</span><br><span class="line">  - platform: template</span><br><span class="line">    switches:</span><br><span class="line">      projector:</span><br><span class="line">        value_template: &quot;&#123;&#123; states(&apos;input_boolean.projector&apos;) &#125;&#125;&quot;</span><br><span class="line">        turn_on:</span><br><span class="line">          - service: remote.send_command</span><br><span class="line">            data:</span><br><span class="line">              command:</span><br><span class="line">              - project_on</span><br><span class="line">              entity_id: remote.xiaomi_miio_192_168_1_104</span><br><span class="line">          - service: input_boolean.turn_on</span><br><span class="line">            entity_id: input_boolean.projector</span><br><span class="line">        turn_off:</span><br><span class="line">          - service: remote.send_command</span><br><span class="line">            data:</span><br><span class="line">              command:</span><br><span class="line">              - project_off</span><br><span class="line">              entity_id: remote.xiaomi_miio_192_168_1_104</span><br><span class="line">          - service: input_boolean.turn_off</span><br><span class="line">            entity_id: input_boolean.projector</span><br><span class="line"></span><br><span class="line">input_boolean:</span><br><span class="line">  projector: &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>音响也是一样，依葫芦画瓢就好了。</p>
+<p>然后是 PC 这边，这里用了一个一个开源程序 <a href="https://github.com/KjetilSv/Win10As" target="_blank" rel="noopener">Win10As</a> 然后通过 <a href="https://www.home-assistant.io/integrations/mqtt/" target="_blank" rel="noopener">mqtt</a> 协议和 Home Assistant 连接。</p>
+<p>设置三个指令：</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>cmdtext</th>
+<th>cmdparameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>exec/plex</td>
+<td>D:\plex.bat</td>
+<td>1</td>
+</tr>
+<tr>
+<td>display/pc</td>
+<td>D:\DisplaySwitch.exe</td>
+<td>/internal</td>
+</tr>
+<tr>
+<td>display/projector</td>
+<td>D:\DisplaySwitch.exe</td>
+<td>/external</td>
+</tr>
+</tbody>
+</table>
+<p>其中 plex.bat：<code>start &quot;&quot; /B &quot;C:\Program Files\Plex\Plex Media Player\PlexMediaPlayer.exe&quot; --tv --fullscreen</code><br>DisplaySwitch.exe 位于 <code>C:\Windows\System32\DisplaySwitch.exe</code> 不知道为什么从 Win10As 中无法访问这个程序，不过把它拷贝出来也是一样用的。</p>
+<p>然后可以在 Home Assistant 中加一个 pc_screen 的 switch：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">switch:</span><br><span class="line">  - platform: template</span><br><span class="line">      pc_screen:</span><br><span class="line">        value_template: &quot;&#123;&#123; states(&apos;input_boolean.pc_screen&apos;) &#125;&#125;&quot;</span><br><span class="line">        turn_on:</span><br><span class="line">          - service: mqtt.publish</span><br><span class="line">            data:</span><br><span class="line">              topic: GAMEBOX/display/pc</span><br><span class="line">          - service: input_boolean.turn_on</span><br><span class="line">            entity_id: input_boolean.pc_screen</span><br><span class="line">        turn_off:</span><br><span class="line">          - service: mqtt.publish</span><br><span class="line">            data:</span><br><span class="line">              topic: GAMEBOX/display/projector</span><br><span class="line">          - service: input_boolean.turn_on</span><br><span class="line">            entity_id: input_boolean.pc_screen</span><br><span class="line"></span><br><span class="line">input_boolean:</span><br><span class="line">  pc_screen: &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>然后就可以通过 Automation 把它们串起来了。由于是 WebUI 就能配置的，我就不贴出来了。注意一点是在打开投影机到切换 PC 输出之间加一个延迟，等到投影 ready 再切换，切换后再加个延迟再启动 Plex 就能保证 Plex 在投影的窗口前台全屏显示了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其他的例如</p>
+<ul>
+<li>Hey Google, Turn on XXX 等单独的开关</li>
+<li>Good Night 的时候同时关电脑，关投影</li>
+<li>Google Assistant 控制 Alexa 设备</li>
+<li>监控本月流量有没有超过 1T，在 80% 关掉 PT 上传</li>
+<li>通过路由器监控接入设备，判断人在家的时候关闭摄像头监控</li>
+<li>当阳台摄像头检测到移动，Google Home Mini 的喇叭鸣警笛。</li>
+<li>当按照某种特定的顺序打开灯的时候，自动打开门，以防止出门忘带手机（前提是你能让 Google Home Mini 听到在门外的你）</li>
+</ul>
+<p>由于都是重用现有设备这里就不介绍了，这些都能通过 Home Assistant 接入后用 Automation 完成。</p>
+<p>总之「智能家居」中的「智能」其实就是一个语音识别加上一个个预定的场景，很蠢，但是，<strong>真香</strong>。当习惯了叫一句 Hey Google 就能躺着沙发上开关各种设备之后，就再也回不去找各种遥控器了。比起一个「懂你」然后随时监听上传的设备，一个<a href="https://github.com/synesthesiam/rhasspy" target="_blank" rel="noopener">离线语音识别</a>，加自定义的场景可能能更快地满足你对自动化的需要。</p>
+<p>如果你有家居自动化的点子或者方案也可以留言交流，(´▽`ʃ♡ƪ)</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/home-assistant/">home-assistant</a>, <a href="/tags/google-assistant/">google-assistant</a>, <a href="/tags/alexa/">alexa</a>, <a href="/tags/米家/">米家</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="q" value="site:binux.blog">
+  </form>
+</div>
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2020 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = 'https://binux.blog/2020/01/home-assistant/';
+this.page.identifier = 'https://binux.blog/2020/01/home-assistant/';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

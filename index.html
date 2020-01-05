@@ -63,6 +63,126 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2020-01-05T01:54:54.000Z"><a href="/2020/01/home-assistant/">2020-01-04</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2020/01/home-assistant/">家居自动化</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>从 Google Assistant, Amazon Alexa, Apple Homekit 到米家，智能家居自动化已经不是什么新鲜的概念了。对于我来说，入坑的契机也非常简单：我不想下床关灯。然后随着想要自动化的场景增加，智能设备（可编程设备）就越来越多。这篇文章就根据自动场景介绍一下我现在的一些方案（本文无任何 affiliate ）。</p>
+<h2 id="Hub"><a href="#Hub" class="headerlink" title="Hub"></a>Hub</h2><p>首先，在配置场景之前，需要选择一个 Hub —— 作为自动化中心，连接传感器和操作控制器（例如灯，插座，IR 遥控器等）。你可以选择 Google Home，Alexa，Homekit 这样大厂的方案，不过这里我还是推荐 <a href="https://www.home-assistant.io/" target="_blank" rel="noopener">Home Assistant</a> 这样的开源方案：</p>
+<ul>
+<li>更多的<a href="https://www.home-assistant.io/integrations/" target="_blank" rel="noopener">接入设备支持</a>（你甚至可以同时接入 Alexa 和 Google Assistant 的设备）</li>
+<li>更自由的自动化配置（例如 Google Assistant 不支持延迟触发；你甚至可以写 shell 脚本）</li>
+<li>更好的隐私保护（Home Assistant 的设备支持大多来源于逆向设备 API，能不联网就不联网）</li>
+</ul>
+<p>我在 Synology DS218+ 上以 docker 运行 Home Assistant。</p>
+<p>不过无论你选择什么方案，在这之后购买传感器和控制器的时候都需要注意你的 Hub 是否支持设备接入。考虑到价格，我的设备主要是 TP-Link 的插座加上米家的传感器，我会在具体场景中详细列出。</p>
+<h2 id="自动化场景"><a href="#自动化场景" class="headerlink" title="自动化场景"></a>自动化场景</h2><h3 id="Hey-Google-Good-Night"><a href="#Hey-Google-Good-Night" class="headerlink" title="Hey Google, Good Night"></a>Hey Google, Good Night</h3><p>首先就是我入坑的第一个场景，在床上关上家中所有的灯。我用到的设备有：</p>
+<ul>
+<li><a href="https://store.google.com/us/product/google_home_mini" target="_blank" rel="noopener">Google Home Mini</a></li>
+<li><a href="https://www.kasasmart.com/us/products/smart-plugs/kasa-smart-plug-energy-monitoring-hs110" target="_blank" rel="noopener">TP-Link Smart Plug HS110</a></li>
+<li><a href="https://www.kasasmart.com/us/products/smart-switches/kasa-smart-wi-fi-light-switch-hs200" target="_blank" rel="noopener">TP-Link Smart Switch HS200</a></li>
+</ul>
+<p>由于美国的房子没有灯，对的，没·有·灯。默认的开关控制的插座不一定在我想要的位置。这时候就可以用一个 Smart Plug 接一个落地灯。而对于其他自带的例如浴室厨房灯，就通过替换 Smart Switch 控制。</p>
+<p>设置方面也很简单，直接在 Google Home 的 Routines 中关掉所有的开关就好了。</p>
+<h3 id="自动开关厕所灯"><a href="#自动开关厕所灯" class="headerlink" title="自动开关厕所灯"></a>自动开关厕所灯</h3><p>这也是很常见的使用场景，红外感应人进入就开灯，然后延迟关灯，用到的设备有：</p>
+<ul>
+<li><a href="https://www.mi.com/wangguan" target="_blank" rel="noopener">米家多功能网关</a></li>
+<li><a href="https://item.mi.com/product/5005.html" target="_blank" rel="noopener">米家人体传感器</a></li>
+<li><a href="https://www.kasasmart.com/us/products/smart-switches/kasa-smart-wi-fi-light-switch-hs200" target="_blank" rel="noopener">TP-Link Smart Switch HS200</a></li>
+</ul>
+<p>首先跟着<a href="https://www.home-assistant.io/integrations/xiaomi_aqara/" target="_blank" rel="noopener">文档</a>将米家多功能网关接入 Home Assistant，然后就可以添加 Automation 了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">- id: &apos;1561354113814&apos;</span><br><span class="line">  alias: Turn On Bathroom</span><br><span class="line">  trigger:</span><br><span class="line">  - entity_id: binary_sensor.xiaomi_motion_sensor</span><br><span class="line">    platform: state</span><br><span class="line">    to: &apos;on&apos;</span><br><span class="line">  condition: []</span><br><span class="line">  action:</span><br><span class="line">  - data:</span><br><span class="line">      entity_id: switch.bathroom_light</span><br><span class="line">    service: switch.turn_on</span><br><span class="line">- id: &apos;1560102516271&apos;</span><br><span class="line">  alias: Turn Off Bathroom</span><br><span class="line">  trigger:</span><br><span class="line">  - entity_id: switch.bathroom_light</span><br><span class="line">    for: 00:10:00</span><br><span class="line">    platform: state</span><br><span class="line">    to: &apos;on&apos;</span><br><span class="line">  - entity_id: binary_sensor.xiaomi_motion_sensor</span><br><span class="line">    for: 00:10:00</span><br><span class="line">    platform: state</span><br><span class="line">    to: &apos;off&apos;</span><br><span class="line">  condition:</span><br><span class="line">  - condition: template</span><br><span class="line">    value_template: &apos;&#123;&#123; is_state(&quot;switch.bathroom_light&quot;, &quot;on&quot;) and as_timestamp(now())</span><br><span class="line">      - as_timestamp(states.switch.bathroom_light.last_changed) &gt; 600 &#125;&#125;&apos;</span><br><span class="line">  - condition: template</span><br><span class="line">    value_template: &apos;&#123;&#123; is_state(&quot;binary_sensor.xiaomi_motion_sensor&quot;, &quot;off&quot;) and</span><br><span class="line">      as_timestamp(now()) - as_timestamp(states.binary_sensor.xiaomi_motion_sensor.last_changed)</span><br><span class="line">      &gt; 600 &#125;&#125;&apos;</span><br><span class="line">  action:</span><br><span class="line">  - alias: &apos;&apos;</span><br><span class="line">    data:</span><br><span class="line">      entity_id: switch.bathroom_light</span><br><span class="line">    service: switch.turn_off</span><br></pre></td></tr></table></figure>
+<h3 id="进门自动开灯"><a href="#进门自动开灯" class="headerlink" title="进门自动开灯"></a>进门自动开灯</h3><p>这可以有两个方案，一个是用摄像头检测到人就开灯，或者用 Smart Lock 的开锁事件。</p>
+<ul>
+<li><a href="https://wyze.com/wyze-cam.html" target="_blank" rel="noopener">Wyze Cam</a></li>
+<li><a href="https://august.com/products/august-smart-lock-pro-connect" target="_blank" rel="noopener">August Smart Lock Pro</a></li>
+<li><a href="https://www.kasasmart.com/us/products/smart-switches/kasa-smart-wi-fi-light-switch-hs200" target="_blank" rel="noopener">TP-Link Smart Switch HS200</a></li>
+</ul>
+<p>Wyze Cam 就是<a href="https://www.mi.com/xiaofang" target="_blank" rel="noopener">小方智能摄像机</a> 的国外版本，你可以用<a href="https://github.com/EliasKotlyar/Xiaomi-Dafang-Hacks" target="_blank" rel="noopener">开源的固件</a>。如果直接用它自带的。接入 Home Assistant 需要通过 ifttt。August Lock 就能直接支持了。</p>
+<p>设置自动化和上面类似，condition 里面可以设置只在下班时间或者太阳落山后时才开灯。这里就贴配置了。总的来说 Smart Lock 比摄像头的方案要稳定得多，误触也少。</p>
+<h3 id="Hey-Google-True-on-Projector"><a href="#Hey-Google-True-on-Projector" class="headerlink" title="Hey Google, True on Projector"></a>Hey Google, True on Projector</h3><p>由于经常搬家，我都是用投影代替电视的。毕竟同样的尺寸，投影机容易搬多了。然后我现在的投影机是内置音响的，所以我还有一个 soundbar。这个场景就是，当我打开投影的时候，同时打开音响，关闭客厅灯，然后 PC 的输出切换到投影上，再打开 Plex。这里面用到的是：</p>
+<ul>
+<li><a href="https://store.google.com/us/product/google_home_mini" target="_blank" rel="noopener">Google Home Mini</a></li>
+<li><a href="https://item.mi.com/product/9465.html" target="_blank" rel="noopener">米家万能遥控器</a></li>
+<li><a href="https://github.com/KjetilSv/Win10As" target="_blank" rel="noopener">Win10As</a></li>
+</ul>
+<p>首先是将这几个设备接入 Home Assistant，参考 <a href="https://www.home-assistant.io/integrations/remote.xiaomi_miio/" target="_blank" rel="noopener">Xiaomi IR Remote</a> 和 <a href="https://www.home-assistant.io/integrations/mqtt/" target="_blank" rel="noopener">mqtt</a> 的文档就好了。</p>
+<p>然后是控制投影的开关，当米家万能遥控器接入 Home Assistant 后，可以通过 <code>xiaomi_miio.remote_learn_command</code> 指令学习投影遥控的开关机代码，然后在 Home Assistant 中建立一个虚拟开关：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">remote:</span><br><span class="line">  - platform: xiaomi_miio</span><br><span class="line">    host: 192.168.1.104</span><br><span class="line">    token: dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxb</span><br><span class="line">    commands:</span><br><span class="line">      project_on:</span><br><span class="line">        command:</span><br><span class="line">        - raw:nMwmkwlk0mkxmEsms4mEsmM2m0wlk2AMKYzYBYgCDmoDLTUA85gAOUyAXkB+wOfAhkBDwEPAQYGSAXOCE8IQwQVCNsAcghfAI8AjwPImM2mYDPg7tMIA</span><br><span class="line">      project_off:</span><br><span class="line">        command:</span><br><span class="line">        - raw:nMwmMwlk0mk1mEsms3mEsmM2AEIAjJqAywA/gD+Bz4DPgIeAh4CHgy+BB4EHgMeAh4BHgReAz4A6TCAA</span><br><span class="line"></span><br><span class="line">switch:</span><br><span class="line">  - platform: template</span><br><span class="line">    switches:</span><br><span class="line">      projector:</span><br><span class="line">        value_template: &quot;&#123;&#123; states(&apos;input_boolean.projector&apos;) &#125;&#125;&quot;</span><br><span class="line">        turn_on:</span><br><span class="line">          - service: remote.send_command</span><br><span class="line">            data:</span><br><span class="line">              command:</span><br><span class="line">              - project_on</span><br><span class="line">              entity_id: remote.xiaomi_miio_192_168_1_104</span><br><span class="line">          - service: input_boolean.turn_on</span><br><span class="line">            entity_id: input_boolean.projector</span><br><span class="line">        turn_off:</span><br><span class="line">          - service: remote.send_command</span><br><span class="line">            data:</span><br><span class="line">              command:</span><br><span class="line">              - project_off</span><br><span class="line">              entity_id: remote.xiaomi_miio_192_168_1_104</span><br><span class="line">          - service: input_boolean.turn_off</span><br><span class="line">            entity_id: input_boolean.projector</span><br><span class="line"></span><br><span class="line">input_boolean:</span><br><span class="line">  projector: &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>音响也是一样，依葫芦画瓢就好了。</p>
+<p>然后是 PC 这边，这里用了一个一个开源程序 <a href="https://github.com/KjetilSv/Win10As" target="_blank" rel="noopener">Win10As</a> 然后通过 <a href="https://www.home-assistant.io/integrations/mqtt/" target="_blank" rel="noopener">mqtt</a> 协议和 Home Assistant 连接。</p>
+<p>设置三个指令：</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>cmdtext</th>
+<th>cmdparameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>exec/plex</td>
+<td>D:\plex.bat</td>
+<td>1</td>
+</tr>
+<tr>
+<td>display/pc</td>
+<td>D:\DisplaySwitch.exe</td>
+<td>/internal</td>
+</tr>
+<tr>
+<td>display/projector</td>
+<td>D:\DisplaySwitch.exe</td>
+<td>/external</td>
+</tr>
+</tbody>
+</table>
+<p>其中 plex.bat：<code>start &quot;&quot; /B &quot;C:\Program Files\Plex\Plex Media Player\PlexMediaPlayer.exe&quot; --tv --fullscreen</code><br>DisplaySwitch.exe 位于 <code>C:\Windows\System32\DisplaySwitch.exe</code> 不知道为什么从 Win10As 中无法访问这个程序，不过把它拷贝出来也是一样用的。</p>
+<p>然后可以在 Home Assistant 中加一个 pc_screen 的 switch：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">switch:</span><br><span class="line">  - platform: template</span><br><span class="line">      pc_screen:</span><br><span class="line">        value_template: &quot;&#123;&#123; states(&apos;input_boolean.pc_screen&apos;) &#125;&#125;&quot;</span><br><span class="line">        turn_on:</span><br><span class="line">          - service: mqtt.publish</span><br><span class="line">            data:</span><br><span class="line">              topic: GAMEBOX/display/pc</span><br><span class="line">          - service: input_boolean.turn_on</span><br><span class="line">            entity_id: input_boolean.pc_screen</span><br><span class="line">        turn_off:</span><br><span class="line">          - service: mqtt.publish</span><br><span class="line">            data:</span><br><span class="line">              topic: GAMEBOX/display/projector</span><br><span class="line">          - service: input_boolean.turn_on</span><br><span class="line">            entity_id: input_boolean.pc_screen</span><br><span class="line"></span><br><span class="line">input_boolean:</span><br><span class="line">  pc_screen: &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>然后就可以通过 Automation 把它们串起来了。由于是 WebUI 就能配置的，我就不贴出来了。注意一点是在打开投影机到切换 PC 输出之间加一个延迟，等到投影 ready 再切换，切换后再加个延迟再启动 Plex 就能保证 Plex 在投影的窗口前台全屏显示了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其他的例如</p>
+<ul>
+<li>Hey Google, Turn on XXX 等单独的开关</li>
+<li>Good Night 的时候同时关电脑，关投影</li>
+<li>Google Assistant 控制 Alexa 设备</li>
+<li>监控本月流量有没有超过 1T，在 80% 关掉 PT 上传</li>
+<li>通过路由器监控接入设备，判断人在家的时候关闭摄像头监控</li>
+<li>当阳台摄像头检测到移动，Google Home Mini 的喇叭鸣警笛。</li>
+<li>当按照某种特定的顺序打开灯的时候，自动打开门，以防止出门忘带手机（前提是你能让 Google Home Mini 听到在门外的你）</li>
+</ul>
+<p>由于都是重用现有设备这里就不介绍了，这些都能通过 Home Assistant 接入后用 Automation 完成。</p>
+<p>总之「智能家居」中的「智能」其实就是一个语音识别加上一个个预定的场景，很蠢，但是，<strong>真香</strong>。当习惯了叫一句 Hey Google 就能躺着沙发上开关各种设备之后，就再也回不去找各种遥控器了。比起一个「懂你」然后随时监听上传的设备，一个<a href="https://github.com/synesthesiam/rhasspy" target="_blank" rel="noopener">离线语音识别</a>，加自定义的场景可能能更快地满足你对自动化的需要。</p>
+<p>如果你有家居自动化的点子或者方案也可以留言交流，(´▽`ʃ♡ƪ)</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2019-03-02T06:48:44.000Z"><a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">2019-03-01</a></time>
       
       
@@ -679,90 +799,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-01-09T08:00:00.000Z"><a href="/2015/01/pyspider-tutorial-level-2-ajax-and-more-http/">2015-01-09</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/01/pyspider-tutorial-level-2-ajax-and-more-http/">pyspider 爬虫教程（二）：AJAX 和 HTTP</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>在上一篇教程中，我们使用 <code>self.crawl</code> API 抓取豆瓣电影的 HTML 内容，并使用 CSS 选择器解析了一些内容。不过，现在的网站通过使用 <a href="http://www.w3school.com.cn/ajax/ajax_intro.asp" target="_blank" rel="noopener">AJAX</a> 等技术，在你与服务器交互的同时，不用重新加载整个页面。但是，这些交互手段，让抓取变得稍微难了一些：你会发现，这些网页在抓回来后，和浏览器中的并不相同。你需要的信息并不在返回 HTML 代码中。</p>
-<p>在这一篇教程中，我们会讨论这些技术 和 抓取他们的方法。（英文版：<a href="http://docs.pyspider.org/en/latest/tutorial/AJAX-and-more-HTTP/" target="_blank" rel="noopener">AJAX-and-more-HTTP</a>）</p>
-<h2 id="AJAX"><a href="#AJAX" class="headerlink" title="AJAX"></a>AJAX</h2><p><a href="http://www.w3school.com.cn/ajax/ajax_intro.asp" target="_blank" rel="noopener">AJAX</a> 是 Asynchronous JavaScript and XML（异步的 JavaScript 和 XML）的缩写。AJAX 通过使用原有的 web 标准组件，实现了在不重新加载整个页面的情况下，与服务器进行数据交互。例如在新浪微博中，你可以展开一条微博的评论，而不需要重新加载，或者打开一个新的页面。但是这些内容并不是一开始就在页面中的（这样页面就太大了），而是在你点击的时候被加载进来的。这就导致了你抓取这个页面的时候，并不能获得这些评论信息（因为你没有『展开』）。</p>
-<p><a href="http://www.w3school.com.cn/ajax/ajax_intro.asp" target="_blank" rel="noopener">AJAX</a> 的一种常见用法是使用 <a href="http://www.w3school.com.cn/ajax/ajax_intro.asp" target="_blank" rel="noopener">AJAX</a> 加载 <a href="http://www.w3school.com.cn/json/" target="_blank" rel="noopener">JSON</a> 数据，然后在浏览器端渲染。如果能直接抓取到 <a href="http://www.w3school.com.cn/json/" target="_blank" rel="noopener">JSON</a> 数据，会比 HTML 更容易解析。</p>
-<p>当一个网站使用了 AJAX 的时候，除了用 pyspider 抓取到的页面和浏览器看到的不同以外。你在浏览器中打开这样的页面，或者点击『展开』的时候，常常会看到『加载中』或者类似的图标/动画。例如，当你尝试抓取：<a href="http://movie.douban.com/explore" target="_blank" rel="noopener">http://movie.douban.com/explore</a></p>
-<p><img src="/assets/image/douban_explore.png" alt="douban explore"></p>
-<p>你会发现电影是『载入中…』</p>
-<h3 id="找到真实的请求"><a href="#找到真实的请求" class="headerlink" title="找到真实的请求"></a>找到真实的请求</h3><p>由于 AJAX 实际上也是通过 HTTP 传输数据的，所以我们可以通过 <a href="https://developer.chrome.com/devtools" target="_blank" rel="noopener">Chrome Developer Tools</a> 找到真实的请求，直接发起真实请求的抓取就可以获得数据了。</p>
-<ol>
-<li>打开一个新窗口</li>
-<li>按 <code>Ctrl</code>+<code>Shift</code>+<code>I</code> (在 Mac 上请按 <code>Cmd</code>+<code>Opt</code>+<code>I</code>) 打开开发者工具。</li>
-<li>切换到网络（ Netwotk 面板）</li>
-<li>在窗口中打开 <a href="http://movie.douban.com/explore" target="_blank" rel="noopener">http://movie.douban.com/explore</a></li>
-</ol>
-<p>在页面加载的过程中，你会在面板中看到所有的资源请求。</p>
-<p><img src="/assets/image/douban_explore_network_panel.png" alt="douban explore network panel"></p>
-<p>AJAX 一般是通过 <a href="http://www.w3school.com.cn/ajax/ajax_xmlhttprequest_create.asp" target="_blank" rel="noopener">XMLHttpRequest</a> 对象接口发送请求的，XMLHttpRequest 一般被缩写为 XHR。点击网络面板上漏斗形的过滤按钮，过滤出 XHR 请求。挨个查看每个请求，通过访问路径和预览，找到包含信息的请求：<a href="http://movie.douban.com/j/search_subjects?type=movie&amp;tag=%E7%83%AD%E9%97%A8&amp;sort=recommend&amp;page_limit=20&amp;page_start=0" target="_blank" rel="noopener">http://movie.douban.com/j/search_subjects?type=movie&amp;tag=%E7%83%AD%E9%97%A8&amp;sort=recommend&amp;page_limit=20&amp;page_start=0</a></p>
-<p><img src="/assets/image/douban_explore_xhr_preview.png" alt="douban explore xhr preview"></p>
-<p>在豆瓣这个例子中，XHR 请求并不多，可以挨个查看来确认。但在 XHR 请求较多的时候，可能需要结合触发动作的时间，请求的路径等信息帮助在大量的请求中找到包含信息的关键请求。这需要抓取或者前端的相关经验。所以，有一个我一直在提的观点，学习抓取的最好方法是：学会写网站。</p>
-<p>现在可以在新窗口中打开 <a href="http://movie.douban.com/j/search_subjects?type=movie&amp;tag=%E7%83%AD%E9%97%A8&amp;sort=recommend&amp;page_limit=20&amp;page_start=0" target="_blank" rel="noopener">http://movie.douban.com/j/search_subjects?type=movie&amp;tag=%E7%83%AD%E9%97%A8&amp;sort=recommend&amp;page_limit=20&amp;page_start=0</a>，你会看到包含电影数据的 <a href="http://www.w3school.com.cn/json/" target="_blank" rel="noopener">JSON</a> 原始数据。推荐安装 <a href="https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc" target="_blank" rel="noopener">JSONView</a>（<a href="http://jsonview.com/" target="_blank" rel="noopener">Firfox版</a>）插件，这样可以看到更好看的 JSON 格式，展开折叠列等功能。然后，我们根据 <a href="http://www.w3school.com.cn/json/" target="_blank" rel="noopener">JSON</a> 数据，编写一个提取电影名和评分的脚本：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Handler</span><span class="params">(BaseHandler)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">on_start</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.crawl(<span class="string">'http://movie.douban.com/j/search_subjects?type=movie&amp;tag=%E7%83%AD%E9%97%A8&amp;sort=recommend&amp;page_limit=20&amp;page_start=0'</span>,</span><br><span class="line">                   callback=self.json_parser)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">json_parser</span><span class="params">(self, response)</span>:</span></span><br><span class="line">        <span class="keyword">return</span> [&#123;</span><br><span class="line">            <span class="string">"title"</span>: x[<span class="string">'title'</span>],</span><br><span class="line">            <span class="string">"rate"</span>: x[<span class="string">'rate'</span>],</span><br><span class="line">            <span class="string">"url"</span>: x[<span class="string">'url'</span>]</span><br><span class="line">        &#125; <span class="keyword">for</span> x <span class="keyword">in</span> response.json[<span class="string">'subjects'</span>]]</span><br></pre></td></tr></table></figure>
-<blockquote>
-<ul>
-<li>你可以使用 <code>response.json</code> 将结果转为一个 python 的 <code>dict</code> 对象</li>
-</ul>
-</blockquote>
-<p>你可以在 <a href="http://demo.pyspider.org/debug/tutorial_douban_explore" target="_blank" rel="noopener">http://demo.pyspider.org/debug/tutorial_douban_explore</a> 获得完整的代码，并进行调试。脚本中还有一个使用 <a href="http://phantomjs.org/" target="_blank" rel="noopener">PhantomJS</a> 渲染的提取版本，将会在下一篇教程中介绍。</p>
-<h2 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h2><p><a href="http://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE" target="_blank" rel="noopener">HTTP</a> 是用来传输网页内容的协议。在前面的教程中，我们已经通过 <code>self.crawl</code> 接口提交了 URL 进行了抓取。这些抓取就是通过 HTTP 协议传输的。</p>
-<p>在抓取过程中，你可能会遇到类似 <code>403 Forbidden</code>，或者需要登录的情况，这时候你就需要正确的 HTTP 参数进行抓取了。</p>
-<p>一个典型的 HTTP 请求包如下，这个请求是发往 <a href="http://example.com/" target="_blank" rel="noopener">http://example.com/</a> 的：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET / HTTP/1.1</span><br><span class="line">Host: example.com</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.45 Safari/537.36</span><br><span class="line">Referer: http://en.wikipedia.org/wiki/Example.com</span><br><span class="line">Accept-Encoding: gzip, deflate, sdch</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8</span><br><span class="line">If-None-Match: <span class="string">"359670651"</span></span><br><span class="line">If-Modified-Since: Fri, 09 Aug 2013 23:54:35 GMT</span><br></pre></td></tr></table></figure>
-<blockquote>
-<ul>
-<li>请求的第一行包含 <code>method</code>, <code>path</code> 和 HTTP 协议的版本信息</li>
-<li>余下的行被称为 header，是以 <code>key: value</code> 的形式呈现的</li>
-<li>如果是 POST 请求，在请求结尾可能还会有 <code>body</code> 内容</li>
-</ul>
-</blockquote>
-<p>你可以通过前面用过的 <a href="https://developer.chrome.com/devtools" target="_blank" rel="noopener">Chrome Developer Tools</a> 工具查看到这些信息：</p>
-<p><img src="/assets/image/request-headers.png" alt="request headers"></p>
-<p>在大多数时候，使用正确的 <code>method</code>, <code>path</code>, <code>headers</code> 和 <code>body</code> 总是能抓取到你需要的信息的。</p>
-<h3 id="HTTP-Method"><a href="#HTTP-Method" class="headerlink" title="HTTP Method"></a>HTTP Method</h3><p><a href="http://www.w3school.com.cn/tags/html_ref_httpmethods.asp" target="_blank" rel="noopener">HTTP Method</a> 告诉服务器对 URL 资源期望进行的操作。例如在打开一个 URL 的时候使用的是 GET 方式，而在提交数据的时候一般使用 POST。</p>
-<p>TODO： need example here</p>
-<h3 id="HTTP-Headers"><a href="#HTTP-Headers" class="headerlink" title="HTTP Headers"></a>HTTP Headers</h3><p>HTTP Headers 是请求所带的一个参数列表，你可以在 <a href="http://en.wikipedia.org/wiki/List_of_HTTP_header_fields" target="_blank" rel="noopener">这里</a> 找到完整的常用 Headers 列表。一些常用的需要注意的有：</p>
-<h4 id="User-Agent"><a href="#User-Agent" class="headerlink" title="User-Agent"></a>User-Agent</h4><p>UA 是标识你使用的浏览器，或抓取程序的一段字符串。pyspider 使用的默认 UA 是 <code>pyspider/VERSION (+http://pyspider.org/)</code>。网站常用这个字符串来区分用户的操作系统和浏览器，以及判断对方是否是爬虫。所以在抓取的时候，常常会对 UA 进行伪装。</p>
-<p>在 pyspider 中，你可以通过 <code>self.crawl(URL, headers={&#39;User-Agent&#39;: &#39;pyspider&#39;})</code>，或者是 <code>crawl_config = {&#39;headers&#39;: {&#39;User-Agent&#39;: &#39;xxxx&#39;}}</code> 来指定脚本级别的 UA。详细请查看 <a href="http://docs.pyspider.org/en/latest/apis/self.crawl/#fetch" target="_blank" rel="noopener">API 文档</a>。</p>
-<h4 id="Referer"><a href="#Referer" class="headerlink" title="Referer"></a>Referer</h4><p>Referer 用于告诉服务器，你访问的上一个网页是什么。常常被用于防盗链，在抓取图片的时候可能会用到。</p>
-<h4 id="X-Requested-With"><a href="#X-Requested-With" class="headerlink" title="X-Requested-With"></a>X-Requested-With</h4><p>当使用 XHR 发送 AJAX 请求时会带上的 Header，常被用于判断是不是 AJAX 请求。例如在 <a href="http://bbs.byr.cn/" target="_blank" rel="noopener">北邮人论坛</a> 中，你需要：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">on_start</span><span class="params">(self)</span>:</span></span><br><span class="line">    self.crawl(<span class="string">'http://bbs.byr.cn/board/Python'</span>,</span><br><span class="line">               headers=&#123;<span class="string">'X-Requested-With'</span>: <span class="string">'XMLHttpRequest'</span>&#125;,</span><br><span class="line">               callback=self.index_page)</span><br></pre></td></tr></table></figure>
-<p>带有 <code>headers={&#39;X-Requested-With&#39;: &#39;XMLHttpRequest&#39;}</code> 才能抓取到内容。</p>
-<h3 id="HTTP-Cookie"><a href="#HTTP-Cookie" class="headerlink" title="HTTP Cookie"></a>HTTP Cookie</h3><p>虽然 <code>Cookie</code> 只是 HTTP Header 中的一个，但是因为非常重要，但是拿出来说一下。<code>Cookie</code> 被 HTTP 请求用来区分、追踪用户的身份，当你在一个网站登录的时候，就是通过写入 <code>Cookie</code> 字段来记录登录状态的。</p>
-<p>当遇到需要登录的网站，你需要通过设置 Cookie 参数，来请求需要登录的内容。Cookie 可以通过开发者工具的请求面板，或者是资源面板中获得。在 pyspider 中，你也可以使用 <code>response.cookies</code> 获得返回的 cookie，并使用 <code>self.crawl(URL, cookie={&#39;key&#39;: &#39;value&#39;})</code> 来设置请求的 Cookie 参数。</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -819,6 +855,10 @@
   <ul class="entry">
     
       <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
         <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
       </li>
     
@@ -832,10 +872,6 @@
     
       <li>
         <a href="/2016/12/data-highlighter/">Data Highlighter</a>
-      </li>
-    
-      <li>
-        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
       </li>
     
   </ul>
@@ -854,7 +890,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2019 Roy Binux
+  &copy; 2020 Roy Binux
   
 </div>
 <div class="clearfix"></div></footer>

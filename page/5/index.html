@@ -63,6 +63,43 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2012-04-29T00:03:21.000Z"><a href="/2012/04/dropbox-uploader-script/">2012-04-28</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2012/04/dropbox-uploader-script/">Dropbox Uploader Script</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Dropbox全平台并且各种工具齐全，在各个主机上都在用。用Dropbox备份VPS上的数据也很方便，但是之前看到的脚本都需要填写用户名密码，迟迟不敢用。。</p>
+<p>这里推荐这个使用API的Dropbox上传脚本，通过设置沙盒，把备份目录限制在应用中，保证其他文件的安全。<br>而且这个脚本是用curl驱动的，只有一个文件，在linux平台下毫无压力。</p>
+<p>Home page: <a href="http://www.andreafabrizi.it/?dropbox_uploader" target="_blank" rel="noopener">http://www.andreafabrizi.it/?dropbox_uploader</a><br>github: <a href="https://github.com/andreafabrizi/Dropbox-Uploader" target="_blank" rel="noopener">https://github.com/andreafabrizi/Dropbox-Uploader</a><br>原始版本是需要完全权限的，我fork了一个带沙盒限制的版本： github: <a href="https://github.com/binux/Dropbox-Uploader" target="_blank" rel="noopener">https://github.com/binux/Dropbox-Uploader</a></p>
+<p>使用方法：<br>第一次启动的时候会指引你去Dropbox创建一个应用，按照指引操作即可。</p>
+<p>上传： ./dropbox_uploader.sh upload [LOCAL_FILE]<br>下载： ./dropbox_uploader.sh download [REMOTE_FILE]<br>删除： ./dropbox_uploader.sh delete [REMOTE_FILE]</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2012-03-25T20:46:57.000Z"><a href="/2012/03/hash_algorithm_of_xunlei/">2012-03-25</a></time>
       
       
@@ -763,107 +800,6 @@ FILE: /home/binux/work/lixian.xunlei/[SumiSora][C3][01][GB][x264_aac][720p](5393
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2011-12-14T21:30:03.000Z"><a href="/2011/12/xunlei_lixian_for_flexget/">2011-12-14</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2011/12/xunlei_lixian_for_flexget/">让资源灌满你的离线空间吧 -- 迅雷离线插件 for flexget</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><strong><font color="red">OUT OF DATA</font></strong></p>
-<p>迅雷离线空间已经开放到1PB了，总是用不完，手头上那个100M的种子压缩包里面东西好多啊，把它塞满离线空间如何？</p>
-<p>这个是一篇教程，适用于所有python环境，包括Linux, Windows, OSX, routers, NAS boxes，只要有python环境就可以。（不过搭建python环境并不是本文的内容，本文默认您已经有python了）</p>
-<h3 id="1、工具介绍"><a href="#1、工具介绍" class="headerlink" title="1、工具介绍"></a>1、工具介绍</h3><p>我们这次使用的主要是两个东西</p>
-<ul>
-<li><a href="http://flexget.com/" target="_blank" rel="noopener">flexget</a></li>
-</ul>
-<ul>
-<li><a href="https://github.com/binux/lixian.xunlei" target="_blank" rel="noopener">lixian.xunlei</a></li>
-</ul>
-<p><strong>flexget</strong>是一个能够从RSS，HTML页面，CSV文件，本地目录等等地方抓取资源，经过过滤，然后下载的一套框架。<br>flexget会自动监控追踪下载过的资源，保证不会被重复下载，后端可以调用各种BT，命令来处理这些资源。</p>
-<p>flexget对于操作分为三种基本类型：</p>
-<p>Inputs<br>Filters<br>Outputs</p>
-<p><strong>lixian.xunlei</strong>是我写得一个lixian.xunlei.com的python API封装，本身是为了挖迅雷墙角的，不过本着一物多用的原则，提供了一个flexget的插件，支持作为资源的output向迅雷推送资源，也可以作为input从迅雷取出资源。</p>
-<h3 id="2、环境准备"><a href="#2、环境准备" class="headerlink" title="2、环境准备"></a>2、环境准备</h3><p>介绍完插件，那么就开始动手吧，既然需要工具，那么首先安装他们。这里以linux环境为例，不过都是python的工具，你应该能很容易在其他的环境找到对应的命令。</p>
-<ol>
-<li>安装flexget<br>直接从pypi中安装即可，依赖会自动解决</li>
-</ol>
-<blockquote>
-<p>easy_install flexget</p>
-</blockquote>
-<ol>
-<li>安装xunlei.lixian<br>由于暂时还没有自动安装脚本，只能手动了。。。首先是依赖</li>
-</ol>
-<blockquote>
-<p>easy_install requests<br>easy_install pyparsing<br>easy_install beautifulsoup</p>
-</blockquote>
-<p>然后安装插件：</p>
-<blockquote>
-<p>下载<a href="https://gist.github.com/gists/1476520/download" target="_blank" rel="noopener">https://gist.github.com/gists/1476520/download</a>，将文件解压到 ~/.flexget/plugins 文件文件夹中（若文件夹不存在，创建一个）<br>注意：解压出来带了一层gist<strong><em>**</em></strong>的目录，请将文件从那个目录中拷贝出来</p>
-</blockquote>
-<h3 id="3、配置"><a href="#3、配置" class="headerlink" title="3、配置"></a>3、配置</h3><p>flexget的配置使用的是yaml，虽然没有听说过，不过其实还是很简单的。。</p>
-<p>flexget的配置文件位于  ~/.flexget/config.yml （若不存在，创建一个即可）。<br>一个基本的配置是这样的：</p>
-<pre><code>feeds:
-  Fate/Zero:
-    rss: http://bt.ktxp.com/rss-search-Fate%2FZero+%E6%BE%84%E7%A9%BA%E5%AD%A6%E5%9B%AD+720p.xml
-    accept_all: true
-    xunlei_lixian:
-      username: &quot;&lt;your username&gt;&quot;
-      password: &quot;&lt;your password&gt;&quot;
-</code></pre><p>flexget将多个不同的来源视为不同的feed，放在feeds下，Fate/Zero是它的名字</p>
-<p>在前面我们说过，flexget有input, filter, output三种类型，在这个feed下面的配置中rss就是input, accept_all是filter, output是xunlei_lixian。</p>
-<p>对于一个feed来说，input, filter, output这三个角色是必不可少的，但是使用的插件是可以变化的，通过不同的插件组合来达到各种各样的功能。<br>更多的input, filter, output和他们的参数可以去<a href="http://flexget.com/wiki/Plugins" target="_blank" rel="noopener">http://flexget.com/wiki/Plugins</a>这里参看。</p>
-<p>虽然这三者总是需要的，但是每次都写一次完全相同的accept_all和xunlei_lixian也是一件麻烦的事情，于是你可以这么写</p>
-<pre><code>presets:
-  global:
-    accept_all: true
-    xunlei_lixian:
-      username: &quot;&lt;your username&gt;&quot;
-      password: &quot;&lt;your password&gt;&quot;
-
-feeds:
-  Fate/Zero:
-    rss: http://bt.ktxp.com/rss-search-Fate%2FZero+%E6%BE%84%E7%A9%BA%E5%AD%A6%E5%9B%AD+720p.xml
-  C3:
-    rss: http://bt.ktxp.com/rss-search-%E9%9B%AA%E9%85%B7%E5%AD%97%E5%B9%95%E7%BB%84+C3+%E7%B9%81%E4%BD%93+RMVB.xml
-  local_file:
-    find:
-      path: /home/me/incoming
-      mask: &apos;*.torrent&apos;
-</code></pre><p>用presets就可以把一些公共的配置放到一起了</p>
-<p>需要注意的地方是，<strong>如果参数中带中文，或者有其他特殊支付，比如’*.torrent’，请用引号包起来。</strong></p>
-<p>你可能注意到了，本地文件也是可以作为input的，写法就是用find插件，像例子中那样。<br>不过，由于xunlei只接受种子，所有一定要记得过滤 ‘*.torrent’ 啊，不然我也不知道会怎么样。。</p>
-<p>好了，就是这样了，该做的都完成了，现在我们<strong>运行flexget</strong>看看吧：</p>
-<blockquote>
-<p>输入命令flexget看看吧<br>如果不放心，可以先使用命令： flexget –test 来试试结果是否正确。</p>
-</blockquote>
-<p>如果没出什么问题的话，资源已经通通导入到你的离线空间了，慢慢下载回来吧，或者也可以参考我的下一篇教程：<a href="http://blog.binux.me/2011/12/from_xunlei_lixian_for_flexget/" target="_blank" rel="noopener">自动将离线空间的内容通通下回本地</a></p>
-<p>除了这种用法，flexget也可以订阅资源到transmission中等其他软件中，配合RSS可以达到自动订阅新番的效果，具体参阅<a href="http://flexget.com/wiki/Plugins" target="_blank" rel="noopener">http://flexget.com/wiki/Plugins</a>中对应的插件就可以了。</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -922,6 +858,10 @@ feeds:
   <ul class="entry">
     
       <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
         <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
       </li>
     
@@ -935,10 +875,6 @@ feeds:
     
       <li>
         <a href="/2016/12/data-highlighter/">Data Highlighter</a>
-      </li>
-    
-      <li>
-        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
       </li>
     
   </ul>
@@ -957,7 +893,7 @@ feeds:
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2019 Roy Binux
+  &copy; 2020 Roy Binux
   
 </div>
 <div class="clearfix"></div></footer>

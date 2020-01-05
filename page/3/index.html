@@ -63,6 +63,62 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-10-20T07:00:00.000Z"><a href="/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/">2013-10-20</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/">动画新番订阅-从ktxp到迅雷离线</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><span style="font-size: 2em">需要解决方案请直接跳到 <strong>解决方案</strong> 一节</span></p>
+<p>曾经折腾过<a href="http://blog.binux.me/2011/12/from_xunlei_lixian_for_flexget/" target="_blank" rel="noopener">flexget+迅雷离线</a>的新番订阅方案，但是因为越来越忙+越来越懒，这种挨个写配置文件的方式太麻烦了，之后就再也没用过。<br>于是我在想，用RSS追番的痛点在哪？</p>
+<ul>
+<li>需要挨个构造过滤条件？</li>
+<li>flexget配置文件太难写，不方便下载到本地？</li>
+<li>下载的文件看不懂罗马拼音？</li>
+<li>不方便记录进度？</li>
+</ul>
+<h3 id="过滤调教"><a href="#过滤调教" class="headerlink" title="过滤调教"></a>过滤调教</h3><p>首先是需要构造过滤条件，这个好说，每一集动画，每一个字幕组发布的名字只会有集数不同，那么只需要配上关键字（字幕组/作品名/格式/语言）就可以了。<br>即便如此，痛点依旧存在。当季连续播放的内容还好说，OVA怎么办？OAD怎么办？TV未放送怎么办？这些很可能命名方式不一样，甚至是原来追番的字幕组压根没做！<br>像bilibili合集或者专有tag这样人工收集固然完美，但是作为程序员，使用人工是可耻的！</p>
+<p>于是，设想中的方案：</p>
+<ul>
+<li>抓取所有资源，对抓取到的信息，通过分词等手段对资源打tag，这些第一批产生的tag称为raw tag</li>
+<li>对所有raw tag，通过推导规则生成衍生tag。（例如作品名归一化，作品名生成x月番，作品名+第x季关键词进行消歧义）</li>
+<li>对不确定信息，产生不确定tag，多个不确定tag依旧可以产生衍生tag</li>
+<li>选取主要的tag（包括raw tag，衍生tag，不确定tag）保存，以供筛选</li>
+<li>对tag进行分类</li>
+</ul>
+<p>方案的核心在于tag推导，而这样的推导公式可以人工配置，也可以通过机器学习/规则聚类获得。<br>最后给用户展现的是一堆tag（但是同一部作品只会有一个tag，即使不同字幕组译法不一样），用户首先选择作品，之后是字幕组/格式/语言等等tag组合。而OVA等资源只要能衍生出和作品一致的tag，资源就不会漏。</p>
+<h3 id="下载到本地"><a href="#下载到本地" class="headerlink" title="下载到本地"></a>下载到本地</h3><p>下载管理，本地资源库管理，这些其实都是大问题。不过我们不如换个思路。以现在的用户带宽，200M的一部新番在线播放根本不成问题，但是问题在于资源从哪来：bt? ftp? http? 目前可能的资源来源无外乎这三种，直接播放不就好了嘛！对于任何主流视频播放器，http，ftp自不用说，基本没有不支持的。即使http需要cookie验证，本地做一个代理就好了。bt直接播放也不是什么困难的问题，缓冲之后流式输出，甚至可以把bt/http/ftp统统封装成http/FTP协议，内容想怎么播就怎么播。</p>
+<h3 id="海报查看-播放进度管理"><a href="#海报查看-播放进度管理" class="headerlink" title="海报查看/播放进度管理"></a>海报查看/播放进度管理</h3><p>既然上面说到，在线播放实际上可以来源于任何媒介——只要有一个本地代理，将这些内容转换成播放器支持的格式即可。那么，web化的内容展示+本地播放也就顺理成章地得以实现。<br>将本地代理API开放出来，任何网站只要通过这个API即可让用户通过本地的协议转换/播放来源于任何地方的任何内容，而网站不需要花费流量。</p>
+<h1 id="临时解决方案"><a href="#临时解决方案" class="headerlink" title="临时解决方案"></a>临时解决方案</h1><p>好吧。。既然我连配个flexget都没时间，怎么有时间搞爬虫, tag system, 机器学习, 分词, 流式bt, http代理, 协议转换, 动画内容站呢？<br>既然这样，先来个简单的解决方案吧，从ktxp订阅到迅雷离线：</p>
+<p><strong><em>第一步：</em></strong>将 <a href="javascript:(function%20()%7Bfunction%20add_search(e)%7B%20var%20a=$(%22#top-search-wd%22);%20if(a.hasClass('empty'))a.removeClass('empty').val('');a.val(a.val()+%22%20%22+$(e).text());ktxp.search.submit()%7Dwindow.add_search=add_search;$(%22.ttitle%22).each(function(e,t)%7Bvar%20n=$(t).find(%22a:nth-child(2)%22).text();var%20r=%22%22;var%20i=%22%22,s=%22%22;$.each(n,function(e,t)%7Bif(t.match(/%5B%20%5C%5B%5C%5D%EF%BC%8F%E3%80%8E%E3%80%8F%E3%80%8C%E3%80%8D%E3%80%90&%E3%80%91%EF%BC%86%E2%98%85%5C%5C%5C/%5C+%5C(%5C)%5C-_%5D/))%7Bif(i)%7Br+='%3Ca%20href=%22#%22%20onclick=%22add_search(this);return%20false;%22%3E'+i+%22%3C/a%3E%22;i=%22%22%7Ds+=t%7Delse%7Bif(s)%7Br+=s;s=%22%22%7Di+=t%7D%7D);if(i)%7Br+='%3Ca%20href=%22#%22%20onclick=%22add_search(this);return%20false;%22%3E'+i+%22%3C/a%3E%22;i=%22%22%7Dif(s)%7Br+=s;s=%22%22%7D$(t).find(%22a:nth-child(2)%22).replaceWith(r)%7D)%7D)()" target="_blank" rel="noopener">ktxp筛选器</a> 保存为书签</p>
+<p><strong><em>第二步：</em></strong> 访问 bt.ktxp.com ，点击书签，你会发现标题都被分割成tag了，根据节目单+字幕组+格式+语言等筛选tag。选好之后，列表右上角有个黄色的小小的rss，复制它的url，比如<a href="http://bt.ktxp.com/rss-search-%E9%AD%94%E7%AC%9B.xml" target="_blank" rel="noopener">http://bt.ktxp.com/rss-search-%E9%AD%94%E7%AC%9B.xml</a> 这样的。保存下载。</p>
+<p><strong><em>第三步：</em></strong> 访问 <a href="https://script.google.com/macros/s/AKfycbxqWzZ6CSVaXtUBO313S8bFhleYXzv5CbfeLpEs4_WVfnTYeco/exec" target="_blank" rel="noopener">aria2/迅雷离线订阅器</a>，根据提示保存书签，访问迅雷离线，点击书签。你会看到一个aria2 path的框（如果你不用aria2，那就留空吧），和一个RSS订阅的框。将上面提取的RSS地址填到RSS订阅的框中（每行一个），点保存即可。现在，最近更新的新番会自动添加到你的迅雷离线里面了！</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-09-30T07:00:00.000Z"><a href="/2013/09/howto-crawl-web/">2013-09-30</a></time>
       
       
@@ -740,43 +796,6 @@ function format_size(spare_size)
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2012-11-17T08:00:00.000Z"><a href="/2012/11/moefm-playlist/">2012-11-17</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2012/11/moefm-playlist/">再也不会听不完电台了——萌否电台播放列表</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>一直不爽萌否电台的播放器，跳歌一首首跳太慢，mp3加载不了直接挂掉。想听个<a href="http://moe.fm/radio/enjoy" target="_blank" rel="noopener">一百多首歌的电台</a>不是时间不够，就是听到一半挂掉了。</p>
-<p>于是，我有一个愿望，<strong>听完一次这个电台！</strong>。于是就有了这货</p>
-<p><img src="/assets/image/Screenshot+2012-11-17+at+00.15.43.png" alt="screenshot"></p>
-<p>代码依旧在<a href="https://gist.github.com/4087765" target="_blank" rel="noopener">github</a>上，这里有一个书签，在播放页点一下即可使用：</p>
-<p><code>javascript:void((function(){var d=document;var s=d.createElement(&#39;script&#39;);s.src=&#39;https://raw.github.com/gist/4087765/playlist.js&#39;;s.id=&#39;binux_js&#39;;d.body.appendChild(s)})())</code></p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -835,6 +854,10 @@ function format_size(spare_size)
   <ul class="entry">
     
       <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
         <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
       </li>
     
@@ -848,10 +871,6 @@ function format_size(spare_size)
     
       <li>
         <a href="/2016/12/data-highlighter/">Data Highlighter</a>
-      </li>
-    
-      <li>
-        <a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a>
       </li>
     
   </ul>
@@ -870,7 +889,7 @@ function format_size(spare_size)
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2019 Roy Binux
+  &copy; 2020 Roy Binux
   
 </div>
 <div class="clearfix"></div></footer>
