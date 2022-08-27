@@ -1,0 +1,338 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>如何抓取WEB页面 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="好忙好忙，忙到打完dota，看完新番，写完一个外挂就懒得更新blog的地步。。。一不小心从事spider已经快3年了，也没给爬虫写过点什么。本来打算趁着十一写个什么《三天学会爬虫》什么的，但是列了下清单，其实爬虫这东西简单到爆啊。看我一天就把它搞定了(・ω&amp;lt;)☆
+##HTTP协议WEB内容是通">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="如何抓取WEB页面"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-howto-crawl-web" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2013-09-30T07:00:00.000Z"><a href="/2013/09/howto-crawl-web/">2013-09-30</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">如何抓取WEB页面</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>好忙好忙，忙到打完dota，看完新番，写完一个外挂就懒得更新blog的地步。。。一不小心从事spider已经快3年了，也没给爬虫写过点什么。本来打算趁着十一写个什么《三天学会爬虫》什么的，但是列了下清单，其实爬虫这东西简单到爆啊。看我一天就把它搞定了(・ω&lt;)☆</p>
+<p>##HTTP协议<br>WEB内容是通过HTTP协议传输的，实际上，<strong>任何的抓取行为都是在对浏览器的HTTP请求的模拟</strong>。那么，首先通过 <a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE">http://zh.wikipedia.org/wiki/超文本传输协议</a> 来对HTTP协议来进行初步的了解：</p>
+<ul>
+<li>HTTP通常通过创建到服务器80端口的TCP连接进行通信</li>
+<li>HTTP协议的内容包括请求方式（method）, url，header，body，通常以纯文本方式发送</li>
+<li>HTTP返回内容包括状态码，header，body，通常以纯文本方式返回</li>
+<li>header以及body间以CRLF(\r\n)分割</li>
+</ul>
+<blockquote>
+<p>由于富web应用越来越盛行，单纯的HTTP协议已经不能满足 -人类的欲望- 人们的需求了，websocket,  spdy等越来越多的非HTTP协议信息传输手段被使用，但是目前看来，web的主要信息依旧承载于http协议。</p>
+</blockquote>
+<h3 id="HTTP请求"><a href="#HTTP请求" class="headerlink" title="HTTP请求"></a>HTTP请求</h3><p>现在打开 chrome&gt;菜单&gt;工具&gt;开发者工具 切换到network面板，访问 <a target="_blank" rel="noopener" href="http://www.baidu.com/">http://www.baidu.com/</a>，点击红色高亮处的<code>view source</code>：</p>
+<p><img src="/assets/image/http_in_chrome.png" alt="http in chrome"></p>
+<p>我们可以看到一个真实的HTTP请求的全部内容（这里的换行均为CRLF）：</p>
+<pre>
+GET / HTTP/1.1
+
+Host: www.baidu.com
+
+Connection: keep-alive
+
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.66 Safari/537.36
+
+DNT: 1
+
+Accept-Encoding: gzip,deflate,sdch
+
+Accept-Language: zh-CN,zh;q=0.8
+</pre>
+
+<p>请求中的第一行称为<a target="_blank" rel="noopener" href="http://tools.ietf.org/html/rfc2616#section-5.1">Request-Line</a>，包含了<code>请求方式 URL HTTP版本</code>，在上面的例子中，这个请求方式(method)为 <code>GET</code>，URL为 <code>/</code>, HTTP版本为 <code>HTTP/1.1</code> 。</p>
+<blockquote>
+<p>注意到这里的URL并不是我们访问时的 <a target="_blank" rel="noopener" href="http://www.baidu.com/">http://www.baidu.com/</a> 而只是一个 <code>/</code>，而<a target="_blank" rel="noopener" href="http://www.baidu.com的域名在header/">www.baidu.com的域名在Header</a> <code>Host: www.baidu.com</code> 中体现。这样表示请求的资源 <code>/</code> 是位于主机(host) <code>www.baidu.com</code> 上的，而 <code>GET http://www.baidu.com/ HTTP/1.1</code> 则表示请求的资源位于别的地方，通常用于http代理请求中。</p>
+</blockquote>
+<p>请求的后续行都是Header，其中比较重要的header有 <code>Host, User-Agent, Cookie, Referer, X-Requested-With</code> （这个请求中未展现）。如果是POST请求，还会有body。</p>
+<blockquote>
+<p>虽然并不需要理解HTTP请求，只要参照chrome中展示的内容模拟请求就可以抓取到内容，但是学习一下各个header的作用有助于理解哪些元素是必须的，哪些可以被忽略或修改。</p>
+<p>更多内容可以通过以下链接进行进一步学习：<br><a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/URL">http://zh.wikipedia.org/wiki/URL</a><br><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Query_string">http://en.wikipedia.org/wiki/Query_string</a><br><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/HTTP_POST">http://en.wikipedia.org/wiki/HTTP_POST</a><br><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/List_of_HTTP_header_fields">http://en.wikipedia.org/wiki/List_of_HTTP_header_fields</a><br>抱歉很多内容无法找到好的中文版本，欢迎在留言中提供</p>
+</blockquote>
+<p>好了，这就是一个请求的全部，<strong>只要正确模拟了method，uri，header，body 这四要素，任何内容都能抓下来，而所有的四个要素，只要打开 chrome&gt;菜单&gt;工具&gt;开发者工具 切换到network面板 就能看到</strong>，怎么样，很简单吧！</p>
+<blockquote>
+<p>现在我们就可以通过curl命令来模拟一个请求：<br><code>curl -v -H &quot;User-Agent: Chrome&quot; http://www.baidu.com/</code><br>其中 <code>-v</code> 用于显示了请求的内容，<code>-H</code> 指定header，具体curl的使用方式可以 <code>man curl</code> 或者你可以在chrome或者其他平台上找到很多类似的工具。<br>如果想看到请求是否正确，可以 <code>curl http://httpbin.org/get</code> 这个地址，它会返回经过解析的请求内容，来看看你的请求是否符合预期（<a target="_blank" rel="noopener" href="http://httpbin.org/">http://httpbin.org/</a>中有包括POST在内的完整API）</p>
+</blockquote>
+<h3 id="HTTP返回"><a href="#HTTP返回" class="headerlink" title="HTTP返回"></a>HTTP返回</h3><p>下面展示了一个http返回的header部分，body内容被省略：</p>
+<pre>
+HTTP/1.1 200 OK
+
+Date: Mon, 30 Sep 2013 06:51:11 GMT
+
+Server: BWS/1.0
+
+Content-Length: 4379
+
+Content-Type: text/html;charset=utf-8
+
+Cache-Control: private
+
+BDPAGETYPE: 1
+
+BDUSERID: 0
+
+BDQID: 0x8e3bf8800bcc3d7e
+
+Set-Cookie: BDSVRTM=2; path=/
+
+Set-Cookie: H_PS_PSSID=3409_3381_1462_2980_3089_3502_3439; path=/; domain=.baidu.com
+
+Set-Cookie: BAIDUID=5DDF70314DF9C307385D1821EC3B9F78:FG=1; expires=Mon, 30-Sep-43 06:51:11 GMT; path=/; domain=.baidu.com
+
+Expires: Mon, 30 Sep 2013 06:51:11 GMT
+
+Content-Encoding: gzip
+
+P3P: CP=" OTI DSP COR IVA OUR IND COM "
+
+Connection: Keep-Alive
+</pre>
+
+<p>其中第一行为 <code>HTTP版本 状态码 状态文字说明</code> 之后的内容都是header，其中比较重要的有：<code>Content-Type,  Set-Cookie, Location, Content-Encoding</code>（参见 <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/HTTP_header#Requests">HTTP_header#Requests</a>）。返回之后的内容就是我们看到的网页内容了。</p>
+<p><strong>返回中最重要的是状态码和body中的内容</strong>，状态码决定抓取是否成功(200)，是否会有跳转 （<a target="_blank" rel="noopener" href="http://zh.wikipedia.org/zh-cn/HTTP%E7%8A%B6%E6%80%81%E7%A0%81">HTTP状态码</a>），内容就是我们关心的内容了。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="http库"><a href="#http库" class="headerlink" title="http库"></a>http库</h3><p>在实际抓取中，选择一个方便的HTTP库会帮你解决很多http的细节问题，比如http库会帮你：</p>
+<ul>
+<li>建立http连接</li>
+<li>设定常用header，生成正确的http请求</li>
+<li>get&#x2F;post参数编码</li>
+<li>跳转重定向</li>
+<li>自动保存处理cookie</li>
+<li>返回gzip解压，内容编码</li>
+</ul>
+<p><em>python中推荐 <a target="_blank" rel="noopener" href="http://docs.python-requests.org/en/latest/">requests</a>，在命令行中我一般用curl进行调试。</em></p>
+<h3 id="AJAX"><a href="#AJAX" class="headerlink" title="AJAX"></a>AJAX</h3><p>现在越来越多的页面使用了AJAX技术，表现为内容并不在打开的页面的源码中，而是通过称为 <a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/Ajax">AJAX</a> 的技术，在页面打开后加载的。但实际上，<strong>AJAX也是通过HTTP传送信息的，只不过内容来自于页面发起的另一个http请求</strong>，通过查看chome中的network列出的页面所有请求，一定可以找到内容，之后只需要模拟对应的这个请求即可。</p>
+<h3 id="HTML内容解析"><a href="#HTML内容解析" class="headerlink" title="HTML内容解析"></a>HTML内容解析</h3><p>web页面大都以HTML编写，对于简单的内容提取，使用正则即可。但是对付复杂的内容提取需求正则并不是一个好的选择（甚至称不上一个正确的选择），一款HTML&#x2F;XML解析器+xpath&#x2F;css selector是一个更有效的选择。</p>
+<h3 id="富web应用"><a href="#富web应用" class="headerlink" title="富web应用"></a>富web应用</h3><p>对于富web应用，可能分析AJAX请求，和内容提取的代价太高。这时可能需要上最后手段——浏览器渲染。通过 <a target="_blank" rel="noopener" href="http://phantomjs.org/">phantomjs</a> 或类似浏览器引擎，构建一个真实的浏览器执行js、渲染页面。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/crawler/">crawler</a>, <a href="/tags/howto/">howto</a>, <a href="/tags/%E7%88%AC%E8%99%AB/">爬虫</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = 'https://binux.blog/2013/09/howto-crawl-web/';
+this.page.identifier = 'https://binux.blog/2013/09/howto-crawl-web/';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,813 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>第 6 页 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-xunlei_lixian_for_flexget" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-12-14T21:30:03.000Z"><a href="/2011/12/xunlei_lixian_for_flexget/">2011-12-14</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/12/xunlei_lixian_for_flexget/">让资源灌满你的离线空间吧 -- 迅雷离线插件 for flexget</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p><strong><font color=red>OUT OF DATA</font></strong></p>
+<p>迅雷离线空间已经开放到1PB了，总是用不完，手头上那个100M的种子压缩包里面东西好多啊，把它塞满离线空间如何？</p>
+<p>这个是一篇教程，适用于所有python环境，包括Linux, Windows, OSX, routers, NAS boxes，只要有python环境就可以。（不过搭建python环境并不是本文的内容，本文默认您已经有python了）</p>
+<h3 id="1、工具介绍"><a href="#1、工具介绍" class="headerlink" title="1、工具介绍"></a>1、工具介绍</h3><p>我们这次使用的主要是两个东西</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="http://flexget.com/">flexget</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/binux/lixian.xunlei">lixian.xunlei</a></p>
+</li>
+</ul>
+<p><strong>flexget</strong>是一个能够从RSS，HTML页面，CSV文件，本地目录等等地方抓取资源，经过过滤，然后下载的一套框架。<br>flexget会自动监控追踪下载过的资源，保证不会被重复下载，后端可以调用各种BT，命令来处理这些资源。</p>
+<p>flexget对于操作分为三种基本类型：</p>
+<p>Inputs<br>Filters<br>Outputs</p>
+<p><strong>lixian.xunlei</strong>是我写得一个lixian.xunlei.com的python API封装，本身是为了挖迅雷墙角的，不过本着一物多用的原则，提供了一个flexget的插件，支持作为资源的output向迅雷推送资源，也可以作为input从迅雷取出资源。</p>
+<h3 id="2、环境准备"><a href="#2、环境准备" class="headerlink" title="2、环境准备"></a>2、环境准备</h3><p>介绍完插件，那么就开始动手吧，既然需要工具，那么首先安装他们。这里以linux环境为例，不过都是python的工具，你应该能很容易在其他的环境找到对应的命令。</p>
+<ol>
+<li>安装flexget<br>直接从pypi中安装即可，依赖会自动解决</li>
+</ol>
+<blockquote>
+<p>easy_install flexget</p>
+</blockquote>
+<ol start="2">
+<li>安装xunlei.lixian<br>由于暂时还没有自动安装脚本，只能手动了。。。首先是依赖</li>
+</ol>
+<blockquote>
+<p>easy_install requests<br>easy_install pyparsing<br>easy_install beautifulsoup</p>
+</blockquote>
+<p>然后安装插件：</p>
+<blockquote>
+<p>下载<a target="_blank" rel="noopener" href="https://gist.github.com/gists/1476520/download">https://gist.github.com/gists/1476520/download</a>，将文件解压到 ~&#x2F;.flexget&#x2F;plugins 文件文件夹中（若文件夹不存在，创建一个）<br>注意：解压出来带了一层gist********的目录，请将文件从那个目录中拷贝出来</p>
+</blockquote>
+<h3 id="3、配置"><a href="#3、配置" class="headerlink" title="3、配置"></a>3、配置</h3><p>flexget的配置使用的是yaml，虽然没有听说过，不过其实还是很简单的。。</p>
+<p>flexget的配置文件位于  ~&#x2F;.flexget&#x2F;config.yml （若不存在，创建一个即可）。<br>一个基本的配置是这样的：</p>
+<pre><code>feeds:
+  Fate/Zero:
+    rss: http://bt.ktxp.com/rss-search-Fate%2FZero+%E6%BE%84%E7%A9%BA%E5%AD%A6%E5%9B%AD+720p.xml
+    accept_all: true
+    xunlei_lixian:
+      username: &quot;&lt;your username&gt;&quot;
+      password: &quot;&lt;your password&gt;&quot;
+</code></pre>
+<p>flexget将多个不同的来源视为不同的feed，放在feeds下，Fate&#x2F;Zero是它的名字</p>
+<p>在前面我们说过，flexget有input, filter, output三种类型，在这个feed下面的配置中rss就是input, accept_all是filter, output是xunlei_lixian。</p>
+<p>对于一个feed来说，input, filter, output这三个角色是必不可少的，但是使用的插件是可以变化的，通过不同的插件组合来达到各种各样的功能。<br>更多的input, filter, output和他们的参数可以去<a target="_blank" rel="noopener" href="http://flexget.com/wiki/Plugins">http://flexget.com/wiki/Plugins</a>这里参看。</p>
+<p>虽然这三者总是需要的，但是每次都写一次完全相同的accept_all和xunlei_lixian也是一件麻烦的事情，于是你可以这么写</p>
+<pre><code>presets:
+  global:
+    accept_all: true
+    xunlei_lixian:
+      username: &quot;&lt;your username&gt;&quot;
+      password: &quot;&lt;your password&gt;&quot;
+
+feeds:
+  Fate/Zero:
+    rss: http://bt.ktxp.com/rss-search-Fate%2FZero+%E6%BE%84%E7%A9%BA%E5%AD%A6%E5%9B%AD+720p.xml
+  C3:
+    rss: http://bt.ktxp.com/rss-search-%E9%9B%AA%E9%85%B7%E5%AD%97%E5%B9%95%E7%BB%84+C3+%E7%B9%81%E4%BD%93+RMVB.xml
+  local_file:
+    find:
+      path: /home/me/incoming
+      mask: &#39;*.torrent&#39;
+</code></pre>
+<p>用presets就可以把一些公共的配置放到一起了</p>
+<p>需要注意的地方是，<strong>如果参数中带中文，或者有其他特殊支付，比如’*.torrent’，请用引号包起来。</strong></p>
+<p>你可能注意到了，本地文件也是可以作为input的，写法就是用find插件，像例子中那样。<br>不过，由于xunlei只接受种子，所有一定要记得过滤 ‘*.torrent’ 啊，不然我也不知道会怎么样。。</p>
+<p>好了，就是这样了，该做的都完成了，现在我们<strong>运行flexget</strong>看看吧：</p>
+<blockquote>
+<p>输入命令flexget看看吧<br>如果不放心，可以先使用命令： flexget –test 来试试结果是否正确。</p>
+</blockquote>
+<p>如果没出什么问题的话，资源已经通通导入到你的离线空间了，慢慢下载回来吧，或者也可以参考我的下一篇教程：<a target="_blank" rel="noopener" href="http://blog.binux.me/2011/12/from_xunlei_lixian_for_flexget/">自动将离线空间的内容通通下回本地</a></p>
+<p>除了这种用法，flexget也可以订阅资源到transmission中等其他软件中，配合RSS可以达到自动订阅新番的效果，具体参阅<a target="_blank" rel="noopener" href="http://flexget.com/wiki/Plugins">http://flexget.com/wiki/Plugins</a>中对应的插件就可以了。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-csse5ae9ee78eb0e69687e5ad97e4b8ade997b4e688aae696ade69588e69e9ce79a84e4b880e7a78de5b09de8af95" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-12-12T20:07:47.000Z"><a href="/2011/12/csse5ae9ee78eb0e69687e5ad97e4b8ade997b4e688aae696ade69588e69e9ce79a84e4b880e7a78de5b09de8af95/">2011-12-12</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/12/csse5ae9ee78eb0e69687e5ad97e4b8ade997b4e688aae696ade69588e69e9ce79a84e4b880e7a78de5b09de8af95/">CSS实现文字中间截断效果的一种尝试</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>CSS属性</p>
+<blockquote>
+<p>text-overflow: ellipsis;<br>-o-text-overflow: ellipsis;<br>white-space: nowrap;</p>
+</blockquote>
+<p>能够实现文字溢出时截断，不过只能在文字结尾处。但是像文件名这样的文字，很有可能一组的前面都是相同的，只有最后的一部分是不同的。这时候需要进行文字的中部截断。</p>
+<p><strong>而一般实现文字中间</strong>截断都是使用：</p>
+<p>1、按照字符个数在服务器端直接截断<br>这样做的缺陷是，文字并不是等宽的，很容易产生长短不一的情况。</p>
+<p>2、用js获取文本的长度，不断删除中间的文字<br>虽然说这种方式最为可行，但是总是感觉不优雅。。而且爬虫爬取的时候没办法获得完整的内容</p>
+<p>于是<strong>尝试用自己的办法来解决这个问题</strong>。</p>
+<p>首先这个是演示地址，和代码：<a target="_blank" rel="noopener" href="http://jsbin.com/okopiz">http://jsbin.com/okopiz</a></p>
+<p>考虑到浏览器默认支持的截断其实效果还不错，为了达到中部截断的效果，可以<strong>将文字分成前后两个部分</strong>。然后<strong>将前面部分的文字设置成溢出隐藏，而后面部分的文字接上</strong>即可。<br>在实际操作中，使用了padding这个属性，<strong>在div尾部推出200px的空间</strong>用于放置文字的结尾部分。</p>
+<p><img src="http://s0.binux.me/201112/2890/14044_o.png"></p>
+<p>只需要保证后面文字不超出200px的空间即可。</p>
+<p><strong>不过，这里有个问题：</strong><br>如果将后面文字固定在200px空间内的话，当宽度足够显示整个文字的时候，会导致后面部分文字被推开。<br>而如果不这么做的话，当文字溢出，会导致后面部分位置不正确。。</p>
+<p>一直没有想到好的办法解决这个问题。。。于是只好求助于js了。。这个是一个缺憾吧。。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-e4bdbfe794a8valgrinde6a380e6b58be58685e5ad98e6b384e6bc8f" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-11-18T17:12:06.000Z"><a href="/2011/11/e4bdbfe794a8valgrinde6a380e6b58be58685e5ad98e6b384e6bc8f/">2011-11-18</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/11/e4bdbfe794a8valgrinde6a380e6b58be58685e5ad98e6b384e6bc8f/">使用Valgrind检测内存泄漏</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <h2 id="valgrind-介绍"><a href="#valgrind-介绍" class="headerlink" title="valgrind_介绍"></a>valgrind_介绍</h2><p><a target="_blank" rel="noopener" href="http://valgrind.org/">Valgrind</a>是一个GPL的软件，用于Linux（For x86, amd64 and ppc32）程序的内存调试和代码剖析。你可以在它的环境中运行你的程序来监视内存的使用情况，比如C 语言中的malloc和free或者 C++中的new和 delete。使用Valgrind的工具包，你可以自动的检测许多内存管理和线程的bug，避免花费太多的时间在bug寻找上，使得你的程序更加稳固。</p>
+<h2 id="valgrind的主要功能"><a href="#valgrind的主要功能" class="headerlink" title="valgrind的主要功能"></a>valgrind的主要功能</h2><p>Valgrind工具包包含多个工具，如Memcheck,Cachegrind,Helgrind, Callgrind，Massif。下面分别介绍个工具的作用：</p>
+<p>Memcheck 工具主要检查下面的程序错误：</p>
+<ul>
+<li><p>未初始化的内存 (Use of uninitialised memory)</p>
+</li>
+<li><p>已经释放了的内存 (Reading&#x2F;writing memory after it has been free’d)</p>
+</li>
+<li><p>超过 malloc分配的内存空间(Reading&#x2F;writing off the end of malloc’d blocks)</p>
+</li>
+<li><p>对堆栈的非法访问 (Reading&#x2F;writing inappropriate areas on the stack)</p>
+</li>
+<li><p>申请的空间是否有释放 (Memory leaks - where pointers to malloc’d blocks are lost forever)</p>
+</li>
+<li><p>malloc&#x2F;free&#x2F;new&#x2F;delete申请和释放内存的匹配(Mismatched use of malloc&#x2F;new&#x2F;new [] vs free&#x2F;delete&#x2F;delete [])</p>
+</li>
+<li><p>src和dst的重叠(Overlapping src and dst pointers in memcpy() and related functions)</p>
+</li>
+</ul>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; 我不是分割线 &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<p>最近发现我们的爬虫的内存泄漏现象已经达到完全无法接受的地步，泄漏的内存将整个内存使用完之后，继续占用swap，直到整个系统无相应，负债超过了60。。直到swap再也没有空间，内核将爬虫的程序干掉了事。。</p>
+<p>于是检查内存泄漏不得不立即执行，稍微google了一下，决定使用Valgrind</p>
+<p>下载编译安装毫无压力，就不说了，毫无意义。</p>
+<p>之后就是使用了。由于Valgrind能够直接对二进制的程序进行检测，完全不需要修改代码，连重新编译都不需要，所以直接上。  </p>
+<p>在这里犯了个错误，由于程序是通过启动脚本启动的，于是我就valgrind –tool&#x3D;memcheck –leak-check&#x3D;full 结果完全都是没有内存泄漏。。  </p>
+<p>在脚本里面程序是fork执行的，这样没法监控吧，于是这样：</p>
+<pre><code>valgrind --tool=memcheck --leak-check=full bin/crawler --bigtable_implementation=Mysql --mysql_host=localhost $*
+</code></pre>
+<p>OK，程序运行明显变慢了，过一段时间后CUT掉，输出好多。。于是</p>
+<pre><code>valgrind --tool=memcheck --leak-check=full bin/crawler --bigtable_implementation=Mysql --mysql_host=localhost $* 2&gt;&amp;1 | tee memcheck
+</code></pre>
+<p>得到如下的信息：</p>
+<pre><code>==18073== Memcheck, a memory error detector
+==18073== Copyright (C) 2002-2009, and GNU GPL&#39;d, by Julian Seward et al.
+==18073== Using Valgrind-3.5.0 and LibVEX; rerun with -h for copyright info
+==18073== Command: bin/crawler --bigtable_implementation=Mysql --mysql_host=localhost
+==18073==
+libprotobuf INFO srcs/mysql_table_client.cc:98] Database Selected.
+libprotobuf INFO srcs/mysql_table_client.cc:103] Initialized successfully.
+libprotobuf INFO srcs/mysql_table_client.cc:98] Database Selected.
+libprotobuf INFO srcs/mysql_table_client.cc:103] Initialized successfully.
+libprotobuf INFO srcs/crawl_queue.cc:48] loading processing tasks ...
+libprotobuf INFO srcs/crawl_queue.cc:57] loading queue tasks ...
+libprotobuf INFO srcs/crawl_queue.cc:66] loading delayed tasks ...
+libprotobuf INFO srcs/crawl_queue.cc:74] loaded 16750 tasks ...
+libprotobuf INFO srcs/crawl_queue.cc:77] initialize buckets ...
+libprotobuf INFO srcs/redis_client.cc:78] RedisClient::Initialize...
+libprotobuf INFO srcs/js_interpreter.cc:204] JavaScript-C 1.8.5 2011-03-31
+libprotobuf INFO srcs/js_interpreter.cc:601] Setup runtime successfully.
+
+................
+
+==18073== 7,592 bytes in 785 blocks are definitely lost in loss record 1,498 of 1,615
+==18073==    at 0x4A05E1C: malloc (vg_replace_malloc.c:195)
+==18073==    by 0x4FD59B2: js::VectorToIdArray(JSContext*, js::AutoIdVector&amp;, JSIdArray**) (in /usr/local/lib/libmozjs185.so.1.0.0)
+==18073==    by 0x4F4E262: JS_Enumerate (in /usr/local/lib/libmozjs185.so.1.0.0)
+==18073==    by 0x4293D7: hypercrawler::JSInterpreter::GetObjectStringArrayProperty(JSObject*, std::string const&amp;, std::map, std::allocat
+or &gt; &gt;*) (js_interpreter.cc:361)
+==18073==    by 0x429E96: hypercrawler::JSInterpreter::FinalizeReturnObject(unsigned long, hypercrawler::CallParserResponse*) (js_interpreter.cc:517)
+==18073==    by 0x42AA59: hypercrawler::JSInterpreter::CallFunction(std::string const&amp;, hypercrawler::CallParserRequest const&amp;, hypercrawler::CallParserResponse*) (js_interpreter.cc:567)
+==18073==    by 0x45974C: hypercrawler::ProcessCrawlRequest(hypercrawler::CrawlRequest&amp;, hypercrawler::PuppetExecutionEngine&amp;, std::string&amp;, ypercrawler::CrawlResponse&amp;, hyperindex::Document&amp;, std::vector &gt;&amp;, std::string) (crawling_process_request.cc:170)
+==18073==    by 0x446B06: hypercrawler::CrawlingWorker::operator()() (crawling_worker_service.cc:186)
+==18073==    by 0x62C8D3F: thread_proxy (in /usr/lib/libboost_thread-mt.so.1.42.0)
+==18073==    by 0x3546C0673C: start_thread (in /lib64/libpthread-2.5.so)
+==18073==    by 0x35460D44BC: clone (in /lib64/libc-2.5.so)
+==18073==
+==18073==
+==18073== LEAK SUMMARY:
+==18073==    definitely lost: 90,928 bytes in 8,466 blocks
+==18073==    indirectly lost: 0 bytes in 0 blocks
+==18073==      possibly lost: 4,077,170 bytes in 38,041 blocks
+==18073==    still reachable: 21,575,205 bytes in 70,837 blocks
+==18073==         suppressed: 0 bytes in 0 blocks
+==18073== Reachable blocks (those to which a pointer was found) are not shown.
+==18073== To see them, rerun with: --leak-check=full --show-reachable=yes
+==18073==
+==18073== For counts of detected and suppressed errors, rerun with: -v
+==18073== ERROR SUMMARY: 390 errors from 259 contexts (suppressed: 4 from 4)
+</code></pre>
+<p><strong>definitely lost: 90,928 bytes in 8,466 blocks</strong></p>
+<p>这个就是表示存在内存泄漏，而因为是用的SpiderMonkey存在自己内存回收机制，并且是非正常退出，possibly lost暂时能够接受。</p>
+<p>可以看出Valgrind，<strong>7,592 bytes in 785 blocks are definitely lost in loss record 1,498 of 1,615</strong>这一段的执行路径上存在内存泄漏。  </p>
+<p>通过查阅文档<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en/SpiderMonkey/JSAPI_Reference/JS_Enumerate">JS_Enumerate</a>、<a target="_blank" rel="noopener" href="https://developer.mozilla.org/en/JS_GetStringBytes">JS_EncodeString</a>这两个SpiderMonkey API函数是需要用户释放内存的。。而我确实没有释放。。</p>
+<p>我不得不吐槽。。JS_EncodeString的文档里面**The caller may modify it and is responsible for freeing it.**，就这么一句话说到要用户负责释放。。就不能写大一点吗！  </p>
+<p>明明上面一段还是说”The array returned by JS_GetStringBytes or JS_GetStringBytesZ is automatically freed when str is finalized by the JavaScript garbage collection mechanism.”来着。。</p>
+<p>于是，正常释放之后，再次执行Valgrind检查没问题，OK，问题解决。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-e8aeb0e4b880e6aca1e7a59ee5a587e79a84bug-e6858ee794a8sqlalchemye79a84autocommit" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-11-17T19:37:18.000Z"><a href="/2011/11/e8aeb0e4b880e6aca1e7a59ee5a587e79a84bug-e6858ee794a8sqlalchemye79a84autocommit/">2011-11-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/11/e8aeb0e4b880e6aca1e7a59ee5a587e79a84bug-e6858ee794a8sqlalchemye79a84autocommit/">记一次神奇的BUG —— 慎用sqlalchemy的autocommit</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>东西是是用<a target="_blank" rel="noopener" href="http://www.sqlalchemy.org/">sqlalchemy</a>写的数据处理的程序。就是从一个库里面取出数据，然后处理后写回去。</p>
+<p>数据库用的是MySQL+MyISAM，因为考虑到MyISAM是不支持事务的，即使commit也没什么用，而且处理逻辑中对只是有一定可能对数据修改，还要commit太麻烦了。于是：</p>
+<pre><code>Session(autoflush=True, autocommit=True, expire_on_commit=True)
+</code></pre>
+<p>由于是周末，匆匆提交了就回去了。到了周六，我惊悚的看到<a target="_blank" rel="noopener" href="http://pycounters.readthedocs.org/">pycounter</a>做的数据统计非常完美地呈现出1&#x2F;t的曲线</p>
+<p><img src="http://s3.binux.me/201112/2890/14043_o.png" alt="request rate"></p>
+<p>无论再次启动多次依旧如此。。。非常完美的1&#x2F;t的曲线。。</p>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;</p>
+<p>由于频率是成1&#x2F;t，表示用时随着“处理过”的数据量以一次指数增长，想想最近添加的代码不太可能有这样增长的操作啊。</p>
+<p>由于手头正好有pycounters在操作中打入几个计数器，观察到在sqlalchemy在做session.expire_all()的操作时符合O(x)的时间特性。</p>
+<p>猜测是sqlalchemy的实例cache的机制导致每次处理完后，并没有释放掉获取到的对象，而expire_all对这些对象进行了一个大循环，以标记过期。<br>既然问题找到了，就好办了，<strong>不要使用sqlalchemy的autocommit，在修改后正常进行add,commit</strong>，故障消除。</p>
+<p>随后查看了sqlalchemy的代码，expire_all的确是挨个expire操作的：</p>
+<pre><code>for state in self.identity_map.all_states():
+    state.expire(state.dict, self.identity_map._modified)
+</code></pre>
+<p>而commit会将transaction close掉，清理掉identity_map，autocommit？还真没看出来怎么auto了。。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-python-tools-pool" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-08-12T18:37:18.000Z"><a href="/2011/08/python-tools-pool/">2011-08-12</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/08/python-tools-pool/">python 工具脚本： 线程池pool.py</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>这个脚本是仿照multiprocessing中的pool编写的（<a target="_blank" rel="noopener" href="http://docs.python.org/library/multiprocessing.html#module-multiprocessing.pool">http://docs.python.org/library/multiprocessing.html#module-multiprocessing.pool</a>）。</p>
+<p>但是，python自带的multiprocessing的Pool是基于函数的，无法在线程内部保存各个线程的独立资源。例如在操作数据库时，数据库操作大都不是线程安全的，这时就需要每个线程有自己的连接。<br>其次，python自带的线程池在join之后会陷入内核态，无法接受CTRL+C，从而无法中断自行，这一点让我很是不爽。于是实现了这个线程池。</p>
+<p><strong>特性：</strong><br>1、仿照multiprocessing的Pool，提供apply,apply_async,map,map_async这几个类似的接口，和wait函数进行等待执行结束</p>
+<p>2、worker线程为一个类：</p>
+<p>[crayon lang&#x3D;”python]<br>class Work(threading.Thread):<br>  def init(self):<br>    pass<br>  def do(self, args):<br>    pass<br>[&#x2F;crayon]</p>
+<p>可以通过重载init来初始化一些线程自己的资源。重载do来自行需要的操作，参数会通过args传入。</p>
+<p>3、wait时可以使用KeyboardInterrupt（CTRL+C）中断进程执行。</p>
+<p><strong>缺陷：</strong>线程没有返回值。。。</p>
+<p>另：发现对于这种小东西gist真是方便。</p>
+<p>源码：<a target="_blank" rel="noopener" href="https://gist.github.com/992657">https://gist.github.com/992657</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-baidu_404" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-03-28T18:42:21.000Z"><a href="/2011/03/baidu_404/">2011-03-28</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/03/baidu_404/">百度你能靠谱一点吗？</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>写个test_link的脚本，想要只获取http头部来测试链接是否失效。想着国内百度连接速度快些吧，于是用百度测试。。</p>
+<p>assert(test_link(“<a target="_blank" rel="noopener" href="http://baidu.com/xyz&quot;">http://baidu.com/xyz&quot;</a>) &#x3D;&#x3D; False)</p>
+<p>结果。。百度返回的头居然是：</p>
+<pre>
+ Request URL:http://www.baidu.com/xyz
+ Request Method:GET
+ Status Code:302 Found
+ Response Headers
+ Cache-Control:max-age=86400
+ Connection:Keep-Alive
+ Content-Length:222
+ Content-Type:text/html; charset=iso-8859-1
+ Date:Mon, 28 Mar 2011 11:22:25 GMT
+ Expires:Tue, 29 Mar 2011 11:22:25 GMT
+ Location:http://www.baidu.com/search/error.html
+ Server:Apache
+</pre>
+
+
+<p>好吧。。。302就302吧，我们看看后面的这个<a target="_blank" rel="noopener" href="http://www.baidu.com/search/error.html">http://www.baidu.com/search/error.html</a>是什么</p>
+<pre>
+ Request URL:http://www.baidu.com/search/error.html
+ Request Method:GET
+ Status Code:200 OK
+</pre>
+
+
+<p>喂喂，你这明显是error啊，200是怎么回事啊！明明页面上写着</p>
+<blockquote>
+<p><strong>您要访问的页面不存在</strong></p>
+</blockquote>
+<p>返回一个200到底是怎么回事啊！难道就不能返回个404让爬虫知道吗？<br>百度明明是个搜索引擎，写出来的网页就让自己认识是吗。。</p>
+<p>google就明明白白地返回一个</p>
+<pre>
+ Request URL:http://www.google.com/xyz
+ Request Method:GET
+ Status Code:404 Not Found
+</pre>
+
+
+<p>类似的页面还有：</p>
+<p><a target="_blank" rel="noopener" href="http://www.baidu.com/forbiddenip/forbidden.html">http://www.baidu.com/forbiddenip/forbidden.html</a></p>
+<p>百度你还能再靠谱一点吗？</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-python-tools-getpy" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-03-17T21:57:26.000Z"><a href="/2011/03/python-tools-getpy/">2011-03-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/03/python-tools-getpy/">python工具脚本： 获取中文汉字拼音声母 getPY.py</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>一般来说要获取中文汉字全拼是需要查表的，不过只需要声母的话还是很简单就能实现的。</p>
+<p>方法是利用GBK编码是按照拼音的顺序编排汉字的，所以，只需要将文字转化成GBK编码，通过匹配范围即可获得声母了（当然理论上也应该能获取全拼，我猜的-。-）。</p>
+<p>这样的代码网上有很多，这里也是抄袭而来，抄自何处也忘记了。。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding : utf-8</span></span><br><span class="line"><span class="comment"># author : binux(17175297.hk@gmail.com)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">getFirstPY</span>(<span class="params">word, encoding=<span class="string">&#x27;utf-8&#x27;</span></span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(word, unicode):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            word = word[<span class="number">0</span>].encode(<span class="string">&#x27;gbk&#x27;</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;?&#x27;</span></span><br><span class="line">    <span class="keyword">elif</span> <span class="built_in">isinstance</span>(word, <span class="built_in">str</span>):</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            word = word.decode(encoding)[<span class="number">0</span>].encode(<span class="string">&#x27;gbk&#x27;</span>)</span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;?&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(word) == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> word</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        asc = <span class="built_in">ord</span>(word[<span class="number">0</span>])*<span class="number">256</span> + <span class="built_in">ord</span>(word[<span class="number">1</span>]) - <span class="number">65536</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">20319</span> <span class="keyword">and</span> asc &lt;= -<span class="number">20284</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;a&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">20283</span> <span class="keyword">and</span> asc &lt;= -<span class="number">19776</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;b&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">19775</span> <span class="keyword">and</span> asc &lt;= -<span class="number">19219</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;c&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">19218</span> <span class="keyword">and</span> asc &lt;= -<span class="number">18711</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;d&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">18710</span> <span class="keyword">and</span> asc &lt;= -<span class="number">18527</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;e&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">18526</span> <span class="keyword">and</span> asc &lt;= -<span class="number">18240</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;f&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">18239</span> <span class="keyword">and</span> asc &lt;= -<span class="number">17923</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;g&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">17922</span> <span class="keyword">and</span> asc &lt;= -<span class="number">17418</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;h&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">17417</span> <span class="keyword">and</span> asc &lt;= -<span class="number">16475</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;j&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">16474</span> <span class="keyword">and</span> asc &lt;= -<span class="number">16213</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;k&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">16212</span> <span class="keyword">and</span> asc &lt;= -<span class="number">15641</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;l&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">15640</span> <span class="keyword">and</span> asc &lt;= -<span class="number">15166</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;m&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">15165</span> <span class="keyword">and</span> asc &lt;= -<span class="number">14923</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;n&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">14922</span> <span class="keyword">and</span> asc &lt;= -<span class="number">14915</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;o&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">14914</span> <span class="keyword">and</span> asc &lt;= -<span class="number">14631</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;p&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">14630</span> <span class="keyword">and</span> asc &lt;= -<span class="number">14150</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;q&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">14149</span> <span class="keyword">and</span> asc &lt;= -<span class="number">14091</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;r&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">14090</span> <span class="keyword">and</span> asc &lt;= -<span class="number">13119</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;s&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">13118</span> <span class="keyword">and</span> asc &lt;= -<span class="number">12839</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;t&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">12838</span> <span class="keyword">and</span> asc &lt;= -<span class="number">12557</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;w&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">12556</span> <span class="keyword">and</span> asc &lt;= -<span class="number">11848</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;x&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">11847</span> <span class="keyword">and</span> asc &lt;= -<span class="number">11056</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;y&#x27;</span></span><br><span class="line">        <span class="keyword">if</span> asc &gt;= -<span class="number">11055</span> <span class="keyword">and</span> asc &lt;= -<span class="number">10247</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;z&#x27;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;?&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">getPY</span>(<span class="params">string, encoding=<span class="string">&quot;utf-8&quot;</span></span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(string, <span class="built_in">str</span>):</span><br><span class="line">        string = string.decode(encoding)</span><br><span class="line"></span><br><span class="line">    result = []</span><br><span class="line">    <span class="keyword">for</span> each <span class="keyword">in</span> string:</span><br><span class="line">        result.append(getFirstPY(each))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;&quot;</span>.join(result)</span><br></pre></td></tr></table></figure>
+
+<p>最新的代码可以在<a target="_blank" rel="noopener" href="https://github.com/binux/binux-tools/blob/master/python/getPY.py">https://github.com/binux/binux-tools/blob/master/python/getPY.py</a>这里找到。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-e59ca8windowse78eafe5a283e4b8ade7bc96e8af91e5b8a6python-dissectore694afe68c81e79a84wiresharkefbc88msvc2010e7bc96e8af91e599a8efbc89e38090e697a0" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-03-12T17:46:26.000Z"><a href="/2011/03/e59ca8windowse78eafe5a283e4b8ade7bc96e8af91e5b8a6python-dissectore694afe68c81e79a84wiresharkefbc88msvc2010e7bc96e8af91e599a8efbc89e38090e697a0/">2011-03-12</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/03/e59ca8windowse78eafe5a283e4b8ade7bc96e8af91e5b8a6python-dissectore694afe68c81e79a84wiresharkefbc88msvc2010e7bc96e8af91e599a8efbc89e38090e697a0/">在windows环境中编译带python-dissector支持的wireshark（MSVC2010编译器）【无法开启】</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>虽然Windows的编程非常不爽，无论是编译环境还是编辑环境什么的，搭起来累的一比。不过，既然毕设题目是QQ协议分析，我总不能去分析Linux下那个阉割的QQ吧。<br>当然了，抓包之后扔到Linux下分析也是一个解决方案，不过实时的协议解析还是挺有吸引力的。</p>
+<p>同时楼主一年来python上瘾，看着C++那几行开头include就头大，一直不想起手写C++，更何况Wireshark的API是C的。更可怕的是README.developer还没开始告诉你怎么写dissector呢，编程规范就一大堆，而且各种数据类型不建议使用，strlen不建议使用，strcp不建议使用。这不是从头又学一遍了嘛！  </p>
+<p>如果是这样还不如直接Lua搞起了， 最后顶着windows恶劣的编程环境尝试编译带python-dissector支持的wireshark。</p>
+<p>step 1:<br>首先需要有一份源码。。建议直接到<a target="_blank" rel="noopener" href="http://www.wireshark.org/%E4%B8%8B%E8%BD%BD%E6%9C%80%E6%96%B0%E7%A8%B3%E5%AE%9A%E7%89%88%E7%9A%84%E6%BA%90%E7%A0%81%E5%8D%B3%E5%8F%AF">http://www.wireshark.org/下载最新稳定版的源码即可</a></p>
+<p>step 2:<br>参照[Win32: Step-by-Step Guide]  <a target="_blank" rel="noopener" href="http://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html">http://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html</a>  的过程编译即可。。完全没有压力</p>
+<p><strong>python-dissector:</strong></p>
+<p>在下不才，无法在windows平台下开启python-dissector支持。。</p>
+<p>看了下代码，这部分代码还是相当的简单，基本上是处于测试，初步的阶段。<br>编译后执行若出现xxx地址不能为read之类的报错，将epan&#x2F;wspython&#x2F;wspy_register.c +128行</p>
+<p><code>void register_all_py_protocols_func(register_cb cb _U_, gpointer client_data _U_)</code></p>
+<p>函数修改为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PyObject * py_reg;</span><br><span class="line"><span class="comment">// .....</span></span><br><span class="line"><span class="comment">/* load the python register module */</span></span><br><span class="line">py_reg = <span class="built_in">PyFile_FromString</span>(<span class="built_in">get_py_register_file</span>(), <span class="string">&quot;r&quot;</span>);</span><br><span class="line">  <span class="keyword">if</span> (py_reg == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;no register file %sn&quot;</span>, <span class="built_in">get_py_register_file</span>());</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="built_in">PyRun_SimpleFile</span>(<span class="built_in">PyFile_AsFile</span>(py_reg), <span class="built_in">get_py_register_file</span>());</span><br></pre></td></tr></table></figure>
+
+
+<p>但是，一旦开启PYTHON_EMBED&#x3D;1参数之后，会导致所有的plugin无法加载。。。</p>
+<p>加上开发程度不高，文档几乎没有，暂时还是放弃了。。改用直接编写c plugin的方式吧</p>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;<br>PS:1.4.4中有函数原型变化，文档并没有更新：<br>如：<br>dissector_add_uint已经变为dissector_add</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-python-tools-chinese-digit" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-03-06T22:38:33.000Z"><a href="/2011/03/python-tools-chinese-digit/">2011-03-06</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/03/python-tools-chinese-digit/">python工具脚本： chinese_digit.py - 中文数字 转换为 阿拉伯数字</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <h2 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h2><p>经常会有这种需要将中文数字如 “五千三百零一”，全角数字”１２３４５”等等各种中文数字，转换成阿拉伯数字的场合。嘛，毕竟中文比较复杂，这种东西还是很发杂的。</p>
+<p>下面这段代码来源于<a target="_blank" rel="noopener" href="http://bbs.chinaunix.net/redirect.php?tid=1755895">http://bbs.chinaunix.net/redirect.php?tid=1755895</a>。</p>
+<p><strong>但是这段代码有如下的BUG：</strong></p>
+<p>1、只能正确转换亿亿以下的数</p>
+<p>2、”十万”等十之前没有个位数字的字符串转换错误</p>
+<p><strong>而且有如下不足：</strong></p>
+<p>1、不能转换大写中文（壹贰叁）和全角数字</p>
+<p>2、不能转换电话号码（如 一零零五）</p>
+<p>下面是一个修改过的python脚本，支持如上的所有特性，并修正了BUG</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="comment"># author: binux(17175297.hk@gmail.com)</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">dict</span> =&#123;<span class="string">u&#x27;零&#x27;</span>:<span class="number">0</span>, <span class="string">u&#x27;一&#x27;</span>:<span class="number">1</span>, <span class="string">u&#x27;二&#x27;</span>:<span class="number">2</span>, <span class="string">u&#x27;三&#x27;</span>:<span class="number">3</span>, <span class="string">u&#x27;四&#x27;</span>:<span class="number">4</span>, <span class="string">u&#x27;五&#x27;</span>:<span class="number">5</span>, <span class="string">u&#x27;六&#x27;</span>:<span class="number">6</span>, <span class="string">u&#x27;七&#x27;</span>:<span class="number">7</span>, <span class="string">u&#x27;八&#x27;</span>:<span class="number">8</span>, <span class="string">u&#x27;九&#x27;</span>:<span class="number">9</span>, <span class="string">u&#x27;十&#x27;</span>:<span class="number">10</span>, <span class="string">u&#x27;百&#x27;</span>:<span class="number">100</span>, <span class="string">u&#x27;千&#x27;</span>:<span class="number">1000</span>, <span class="string">u&#x27;万&#x27;</span>:<span class="number">10000</span>,</span><br><span class="line">       <span class="string">u&#x27;０&#x27;</span>:<span class="number">0</span>, <span class="string">u&#x27;１&#x27;</span>:<span class="number">1</span>, <span class="string">u&#x27;２&#x27;</span>:<span class="number">2</span>, <span class="string">u&#x27;３&#x27;</span>:<span class="number">3</span>, <span class="string">u&#x27;４&#x27;</span>:<span class="number">4</span>, <span class="string">u&#x27;５&#x27;</span>:<span class="number">5</span>, <span class="string">u&#x27;６&#x27;</span>:<span class="number">6</span>, <span class="string">u&#x27;７&#x27;</span>:<span class="number">7</span>, <span class="string">u&#x27;８&#x27;</span>:<span class="number">8</span>, <span class="string">u&#x27;９&#x27;</span>:<span class="number">9</span>,</span><br><span class="line">                <span class="string">u&#x27;壹&#x27;</span>:<span class="number">1</span>, <span class="string">u&#x27;贰&#x27;</span>:<span class="number">2</span>, <span class="string">u&#x27;叁&#x27;</span>:<span class="number">3</span>, <span class="string">u&#x27;肆&#x27;</span>:<span class="number">4</span>, <span class="string">u&#x27;伍&#x27;</span>:<span class="number">5</span>, <span class="string">u&#x27;陆&#x27;</span>:<span class="number">6</span>, <span class="string">u&#x27;柒&#x27;</span>:<span class="number">7</span>, <span class="string">u&#x27;捌&#x27;</span>:<span class="number">8</span>, <span class="string">u&#x27;玖&#x27;</span>:<span class="number">9</span>, <span class="string">u&#x27;拾&#x27;</span>:<span class="number">10</span>, <span class="string">u&#x27;佰&#x27;</span>:<span class="number">100</span>, <span class="string">u&#x27;仟&#x27;</span>:<span class="number">1000</span>, <span class="string">u&#x27;萬&#x27;</span>:<span class="number">10000</span>,</span><br><span class="line">       <span class="string">u&#x27;亿&#x27;</span>:<span class="number">100000000</span>&#125;</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">getResultForDigit</span>(<span class="params">a, encoding=<span class="string">&quot;utf-8&quot;</span></span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(a, <span class="built_in">str</span>):</span><br><span class="line">        a = a.decode(encoding)</span><br><span class="line"></span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    result = <span class="number">0</span></span><br><span class="line">    tmp = <span class="number">0</span></span><br><span class="line">    Billion = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> count &lt; <span class="built_in">len</span>(a):</span><br><span class="line">        tmpChr = a[count]</span><br><span class="line">        <span class="comment">#print tmpChr</span></span><br><span class="line">        tmpNum = <span class="built_in">dict</span>.get(tmpChr, <span class="literal">None</span>)</span><br><span class="line">        <span class="comment">#如果等于1亿</span></span><br><span class="line">        <span class="keyword">if</span> tmpNum == <span class="number">100000000</span>:</span><br><span class="line">            result = result + tmp</span><br><span class="line">            result = result * tmpNum</span><br><span class="line">            <span class="comment">#获得亿以上的数量，将其保存在中间变量Billion中并清空result</span></span><br><span class="line">            Billion = Billion * <span class="number">100000000</span> + result</span><br><span class="line">            result = <span class="number">0</span></span><br><span class="line">            tmp = <span class="number">0</span></span><br><span class="line">        <span class="comment">#如果等于1万</span></span><br><span class="line">        <span class="keyword">elif</span> tmpNum == <span class="number">10000</span>:</span><br><span class="line">            result = result + tmp</span><br><span class="line">            result = result * tmpNum</span><br><span class="line">            tmp = <span class="number">0</span></span><br><span class="line">        <span class="comment">#如果等于十或者百，千</span></span><br><span class="line">        <span class="keyword">elif</span> tmpNum &gt;= <span class="number">10</span>:</span><br><span class="line">            <span class="keyword">if</span> tmp == <span class="number">0</span>:</span><br><span class="line">                tmp = <span class="number">1</span></span><br><span class="line">            result = result + tmpNum * tmp</span><br><span class="line">            tmp = <span class="number">0</span></span><br><span class="line">        <span class="comment">#如果是个位数</span></span><br><span class="line">        <span class="keyword">elif</span> tmpNum <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            tmp = tmp * <span class="number">10</span> + tmpNum</span><br><span class="line">        count += <span class="number">1</span></span><br><span class="line">    result = result + tmp</span><br><span class="line">    result = result + Billion</span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+
+<p>**完整版带测试用例的版本可以从这里获得：</p>
+<p>** <a target="_blank" rel="noopener" href="https://github.com/binux/binux-tools/blob/master/python/chinese_digit.py">https://github.com/binux/binux-tools/blob/master/python/chinese_digit.py</a></p>
+<p>测试用例来源于：<a target="_blank" rel="noopener" href="http://fayaa.com/code/view/37/">http://fayaa.com/code/view/37/</a>（不记得一开始在哪看到的了&#x3D;。&#x3D;）</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-python-tools-pprint" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-03-06T22:16:25.000Z"><a href="/2011/03/python-tools-pprint/">2011-03-06</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/03/python-tools-pprint/">python工具脚本：pprint.py 中文支持</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>这是一个支持unicode的pprint修改版本，来自<a target="_blank" rel="noopener" href="http://groups.google.com/group/python-cn/browse_thread/thread/d881b328386ce396/e68057c8a7531326">http://groups.google.com/group/python-cn/browse_thread&#x2F;thread&#x2F;d881b328386ce396&#x2F;e68057c8a7531326</a></p>
+<p>默认使用pprint的时候，list, tuple, dict中的中文都显示成这个样子：</p>
+<blockquote>
+<p>&gt;&gt;&gt; from pprint import pprint<br>&gt;&gt;&gt; pprint([‘中文字符串’, u’中文统一码字符串’, {‘中文键名’: ‘中文键值’, u’中文 unicode 键名’: u’中文unicode 键值’}])</p>
+<p>[‘xe4xb8xadxe6x96x87xe5xadx97xe7xacxa6xe4xb8xb2’,<br>u’u4e2du6587u7edfu4e00u7801u5b57u7b26u4e32’,<br>{u’u4e2du6587 unicode u952eu540d’: u’u4e2du6587 unicode<br>u952eu503c’,<br>‘xe4xb8xadxe6x96x87xe9x94xaexe5x90x8d’:<br>‘xe4xb8xadxe6x96x87xe9x94xaexe5x80xbc’}]</p>
+</blockquote>
+<p>修改之后会把字符串中文形式输出，而不是repr的形式：</p>
+<blockquote>
+<p>&gt;&gt;&gt; from pprint import pprint<br>&gt;&gt;&gt; pprint([‘中文字符串’, u’中文统一码字符串’, {‘中文键名’: ‘中文键值’, u’中文 unicode 键名’: u’中文unicode 键值’}])</p>
+<p>[‘中文字符串’,<br>u’中文统一码字符串’,<br>{u’中文 unicode 键名’: u’中文 unicode 键值’,<br>‘中文键名’: ‘中文键值’}]</p>
+</blockquote>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+
+<nav id="pagination">
+  
+    <a href="/page/5/" class="alignleft prev">上一页</a>
+  
+  
+    <a href="/page/7/" class="alignright next">下一页</a>
+  
+  <div class="clearfix"></div>
+</nav></div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = '';
+this.page.identifier = '';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

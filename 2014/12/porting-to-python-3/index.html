@@ -1,0 +1,282 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>迁移 Python 3 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="porting pyspider project to Python 3 with Python 2 compatible">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="迁移 Python 3"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-porting-to-python-3" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2014-12-21T08:00:00.000Z"><a href="/2014/12/porting-to-python-3/">2014-12-21</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">迁移 Python 3</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>使用 Python 3 的呼声一直很高，Python 3 解决了很多 2 中的坑，比如 unicode，在向他们解释为什么 <code>print str</code> 乱码，<code>fp.write(str)</code> 时报错，在什么时候需要 <code>encode</code>，更容易了。</p>
+<p>但是由于一开始接触的就是 Python 2，熟悉的包都是 Python 2（我也不确定他们是否支持 Python 3）。公司机器上的 Python 2.7 就算是“最新”版本。于是一直没有升级。不过有一种说法，切换到 Python 3 的最好时机就是现在。-为了庆祝 star 过 3000-，由于见到两次要求支持 Python 3，用一个周末为 pyspider 加入了 Python 3 支持（怎么样，不难吧）。</p>
+<p>主要参考：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.python.org/3/howto/pyporting.html">Porting Python 2 Code to Python 3</a></li>
+<li><a target="_blank" rel="noopener" href="http://python-future.org/compatible_idioms.html">Cheat Sheet: Writing Python 2-3 compatible code</a></li>
+<li><a target="_blank" rel="noopener" href="https://pythonhosted.org/six/">Six: Python 2 and 3 Compatibility Library</a></li>
+</ul>
+<h2 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h2><p>其实 <a target="_blank" rel="noopener" href="https://docs.python.org/3/howto/pyporting.html">Porting Python 2 Code to Python 3</a> 这篇文章是一个非常好的索引，能让你对将要进行的工作有一个整体的把握，同时能提供细节的链接，能让你立即开始工作。而且这一节内容就来自此文的 <a target="_blank" rel="noopener" href="https://docs.python.org/3/howto/pyporting.html#the-short-explanation">The Short Explanation</a> 一节。因为总结得很好，所以就不重复造轮子了。</p>
+<p>首先，低版本的 Python 2 与 Python 3 之间的鸿沟太大了，特别是 Python 2.5(含) 以前的版本。要同时兼容他们的代价太大。而 Python 2.6 和 Python 2.7 已经带有部分 Python 3 的特性，这让迁移的代价大大降低了。同时，不建议支持 Python 3.3 以下的 3 字头版本，由于 Python 3 实际上已经 release 6 年了，这些 Python 3.x 版本也比较老了，很多特性还没有，或者包不支持。所以建议跳过他们。</p>
+<p>其次，一定要有测试，保证测试足够的代码覆盖。Python 2 到 Python 3 从包改名到语法都有变化，几乎所有的代码都需要有修改。足够的代码覆盖，才能在这样大规模修改中，保证所有功能可用。而 pyspider 正是因为有 86% 的代码覆盖，我能这么快地完成代码迁移。</p>
+<p>读一读 Python 2 和 Python 3 有什么不同。这个可以看看 <a target="_blank" rel="noopener" href="https://docs.python.org/3/whatsnew/index.html">What’s New in Python</a>，特别是 <a target="_blank" rel="noopener" href="https://docs.python.org/3/whatsnew/3.0.html">What’s New In Python 3.0</a>。当然也可以找一些中文的文章，这个方面应该还蛮多的。反正最主要的就是大量的包改名，以及 <code>bytes</code>, <code>str</code>, <code>unicode</code> 三者的变化。或者你可以先读一读 <a target="_blank" rel="noopener" href="http://python-future.org/compatible_idioms.html">Cheat Sheet</a>，虽然等下我们还需要它。</p>
+<p>好，现在可以来看看你的包依赖是否支持 Python 3 了。并不是 pip 能安装的包就是支持 Python 3 的，可能装上了依旧不能工作。你可以用 <a target="_blank" rel="noopener" href="https://caniusepython3.com/">Can I Use Python 3</a> 检测包是否支持。不过我更推荐 <a target="_blank" rel="noopener" href="https://python3wos.appspot.com/">PYTHON 3 WALL OF SUPERPOWERS</a> （需要翻墙）。不过也不用担心，大部分包都是支持 Python 3 的，如果不支持，一般都会有替代，例如 pika 就可以被 ampq 替换，而 MySQL-python 能被 mysql-connector-python 替代。</p>
+<h2 id="第一步——查找替换"><a href="#第一步——查找替换" class="headerlink" title="第一步——查找替换"></a>第一步——查找替换</h2><p>首先我们从大的方向入手，把一些改名了的包和函数处理一下。请打开 <a target="_blank" rel="noopener" href="http://python-future.org/compatible_idioms.html">Cheat Sheet: Writing Python 2-3 compatible code</a> 参照它们一条条进行。在能搜索的地方，使用搜索统一修改，不然挨个文件太慢，而且会忘记的。因为我用的是 six 作为多环境间的桥梁。所以需要同时参考 <a target="_blank" rel="noopener" href="https://pythonhosted.org/six/">six的文档</a>。你可能需要打开两个窗口，同时运行 Python 2 和 Python 3，确认语句在两个环境下都能执行。</p>
+<p>在这一步，我做了以下处理：</p>
+<ul>
+<li>相对导入 - <a target="_blank" rel="noopener" href="http://python-future.org/compatible_idioms.html#imports-relative-to-a-package">Imports relative to a package</a></li>
+<li>urlparse &#x2F; urllib 库改名 - <a target="_blank" rel="noopener" href="https://pythonhosted.org/six/#module-six.moves.urllib.parse">six</a></li>
+<li>thread 包改名，而且 <code>get_ident</code> 函数不再存在了。将 <code>thread.get_ident()</code> 改为 <code>threading.current_thread().ident</code> <a target="_blank" rel="noopener" href="https://pythonhosted.org/six/#module-six.moves">six</a></li>
+<li><code>basestring</code> 类型不再存在，用 <code>six.string_types</code> 代替 <a target="_blank" rel="noopener" href="http://python-future.org/compatible_idioms.html#basestring">sheet</a></li>
+<li><code>__metaclass__</code> 不再存在，用 <code>six.add_metaclass</code> 代替 <a target="_blank" rel="noopener" href="http://python-future.org/compatible_idioms.html#metaclasses">sheet</a></li>
+<li><code>UserDict.DictMixin</code> 不再存在，用 <code>collections.Mapping</code> 或者 <code>collections.MutableMapping</code> 代替</li>
+<li><code>/</code> 现在是真的除法了，也就是说 int &#x2F; int 会得到一个 float，使用 <code>//</code> 获得地板除效果（由于在 python 中，地板除用得少，实际上不改关系不大） <a target="_blank" rel="noopener" href="http://python-future.org/compatible_idioms.html#division">sheet</a></li>
+<li><code>StringIO</code> 现在分为 <code>io.BytesIO</code> 和 <code>io.StringIO</code> 视情况使用</li>
+<li>print 现在是一个 function 了 <a target="_blank" rel="noopener" href="http://python-future.org/compatible_idioms.html#stringio">sheet</a></li>
+<li><code>unicode</code> 关键字不再存在 使用 <code>six.text_type</code> 代替</li>
+<li><code>__builtins__</code> 不存在了，<a target="_blank" rel="noopener" href="https://pythonhosted.org/six/#module-six.moves"><code>six.moves.builtins</code></a> <a target="_blank" rel="noopener" href="http://python-future.org/compatible_idioms.html#unicode-text-string-literals">sheet</a></li>
+<li><code>reload</code> 改为 <a target="_blank" rel="noopener" href="https://pythonhosted.org/six/#module-six.moves"><code>six.reload_module</code></a></li>
+<li>dict 的 <code>keys</code>， <code>items</code>， <code>values</code> 现在都是迭代器了，不返回列表，原来的 <code>iteritems</code>, <code>itervalues</code> 不再存在，使用 <a target="_blank" rel="noopener" href="https://pythonhosted.org/six/#six.iterkeys">six.iterkeys</a> 等函数代替。</li>
+<li><code>raise exc_type, exc_value, tb</code> 的形式不再支持，使用 <code>six.reraise(exc_type, exc_value, tb)</code> 代替。</li>
+</ul>
+<p>其他的例如 try…catch，如果你在 Python 2 中就比较标准地使用 <code>as</code>，那么这时就不用修改了。</p>
+<p>另外，如果你和我一样有 str(object) 来获得 object 的文字结果的习惯话，每次写 <code>six.text_type(object)</code> 太长了。可以写一些兼容性函数，然后在整个项目中使用。</p>
+<p>注意到这里，我们并没有处理 <code>bytes</code>, <code>string</code>, <code>unicode</code>，请放下他们，我们在下一节处理这些问题。</p>
+<h2 id="第二步——处理-unicode"><a href="#第二步——处理-unicode" class="headerlink" title="第二步——处理 unicode"></a>第二步——处理 unicode</h2><p>由于在 Python 3 中，所有的 <code>&#39;text&#39;</code> 都变成 unicode 了，所以你会觉得它会是一个大问题，是否需要给所有的 <code>&#39;text&#39;</code> 加上 <code>u</code> ，或者干脆所有文件都加上 <code>from __future__ import unicode_literals</code>？</p>
+<p>实际上，大部分时候不需要。</p>
+<p>在 Python 2 中，我们很少有意识地区分 <code>str</code> 和 <code>unicode</code>，对于大部分函数调用来说，给它 <code>str</code> 或者 <code>unicode</code> 都是一样的，因为他们共享大部分行为。但是在 Python 3 中，<code>bytes</code> 和 <code>str</code>(<code>unicode</code>) 却大不一样。例如当你 <code>for c in bytes</code> 时，得到的是一个 <code>int</code> 而不是一个 <code>str</code>。</p>
+<p>虽然不做任何修改，<code>&#39;text&#39;</code> 在 Python 2 中，是 <code>str</code>(<code>bytes</code>)，而在 Python 3 中是 <code>str</code>(<code>unicode</code>)。但是提交给函数时，既然 Python 2 的函数同时支持 <code>str</code> 和 <code>unicode</code>，所以没有任何问题。而且，在 Python 2 中，<code>&#39;text&#39;+u&#39;中文&#39;</code> 会自动升级为 <code>unicode</code>，所以，只需要注意在出现中文的地方使用 <code>u&#39;中文&#39;</code> 就好了（即使在 Python 2 中，这也是一个好的习惯）。而 <code>b&#39;bytes&#39;</code> 的场合非常少，更多的是使用 <code>text.encode</code> 进行转换。所以，对于习惯良好的 Python 2 代码来说，是几乎不需要修改的。</p>
+<p>除了源代码之中的 unicode 问题，其他主要问题出现在输入输出上。但是，只要遵循：程序中流通的数据，只能是 unicode。数据进来之后必须转换成 unicode 即可。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>运行测试，哪报错改哪就好了。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/python/">python</a>, <a href="/tags/porting/">porting</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = 'https://binux.blog/2014/12/porting-to-python-3/';
+this.page.identifier = 'https://binux.blog/2014/12/porting-to-python-3/';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>从wordpress迁移到jekyll | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="又到月末了，这一个月还没写blog呢。。虽然这段时间发生了很多事
+
+做了一个外包
+回了一趟家
+公司要搬家了
+
+不过因为沉迷了半个月的D3，一个月的WOW，人变懒了。再加上wordpress的html写作方式搞得我非常没有写blog的欲望，一直想迁移到jekyll用markdown来写。为了每个月写一">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="从wordpress迁移到jekyll"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-migrate-from-wordpress-to-jekyll" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2012-10-25T07:00:00.000Z"><a href="/2012/10/migrate-from-wordpress-to-jekyll/">2012-10-25</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">从wordpress迁移到jekyll</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>又到月末了，这一个月还没写blog呢。。虽然这段时间发生了很多事</p>
+<ul>
+<li>做了一个外包</li>
+<li>回了一趟家</li>
+<li>公司要搬家了</li>
+</ul>
+<p>不过因为沉迷了半个月的D3，一个月的WOW，人变懒了。再加上wordpress的html写作方式搞得我非常没有写blog的欲望，一直想迁移到jekyll用markdown来写。为了每个月写一篇blog的目标，于是下决心迁移。。</p>
+<p>由于jekyll太简单了，工具又少，不能立即使用，于是用<a target="_blank" rel="noopener" href="http://jekyllbootstrap.com/">jekyllbootstrap</a>作为基础。另一个热门的选择是<a target="_blank" rel="noopener" href="http://octopress.org/">Octopress</a>。</p>
+<p>不过这两都太jekyll了，于是把原来wordpress的主题以前迁移了过来。</p>
+<h2 id="迁移准备"><a href="#迁移准备" class="headerlink" title="迁移准备"></a>迁移准备</h2><p>首先，<strong>迁移评论</strong>，在使用wordpress时就开始准备，把评论导入disqus，然后用disqus替换wordpress的评论系统，工作了一周没有问题之后开始迁移。</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><strong>安装jekyll本地环境</strong>，参照<a target="_blank" rel="noopener" href="https://github.com/mojombo/jekyll/wiki/install">https://github.com/mojombo/jekyll/wiki/install</a>即可。<strong>为了语法高亮，把Pygments也装上</strong></p>
+<p><strong>安装JB</strong>，跟着jekyllbootstrap首页上的<a target="_blank" rel="noopener" href="http://jekyllbootstrap.com/">Zero to Hosted Jekyll Blog in 3 Minutes</a>做就好了</p>
+<h2 id="迁移"><a href="#迁移" class="headerlink" title="迁移"></a>迁移</h2><p><strong>将wordpress内容导出成xml文件</strong></p>
+<p><strong>将xml变成markdown</strong>:<a target="_blank" rel="noopener" href="https://github.com/thomasf/exitwp">https://github.com/thomasf/exitwp</a></p>
+<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><p><code>jekyll --server</code> 然后访问本地 <code>http://localhost:4000/</code> 看看效果。<br>因为用了jekyllbootstrap，可以去 <a target="_blank" rel="noopener" href="http://themes.jekyllbootstrap.com/">http://themes.jekyllbootstrap.com/</a> 选择主题安装</p>
+<p><code>rake post title=&quot;asdfasdf&quot;</code> 新建文章<br><br><code>rake page name=&quot;adsfasdf/asdf&quot;</code> 新建页面<br><br>然后就是用任何编辑器开始编写了</p>
+<p>对了，发现maruku对于解析有中文的list，比如开头的那个，有bug，而且github的效果和本地是不完全一样的。。即使是markdown也问题多多啊。。</p>
+<h2 id="上传github"><a href="#上传github" class="headerlink" title="上传github"></a>上传github</h2><p>把整个git项目push上去就好，不过后来发现_site文件夹是不需要的，github会自己重新生成一遍。这样就不需要每次都几千行改动了。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/migrate/">migrate</a>, <a href="/tags/wordpress/">wordpress</a>, <a href="/tags/jekyll/">jekyll</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = 'https://binux.blog/2012/10/migrate-from-wordpress-to-jekyll/';
+this.page.identifier = 'https://binux.blog/2012/10/migrate-from-wordpress-to-jekyll/';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>少女前线拖尸脚本 和 生成它的可视化工具 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="最近在玩少女前线，这是一个手机游戏，over。不是，就真的没有什么好讲的嘛，了解的人早有耳闻，不了解的就只要知道这是个手机游戏就好了，嗯。
+然后，我会好好地，正常地，氪金地去玩这个游戏吗？不可能的，玩游戏哪有破解它有意思呢。当年破解 Ingress 是因为它用的 HTTPS 通信的，算是本行。百万亚">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="少女前线拖尸脚本 和 生成它的可视化工具"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-girls-frontline-ankulua-vision" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2018-10-14T22:22:15.000Z"><a href="/2018/10/girls-frontline-ankulua-vision/">2018-10-14</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">少女前线拖尸脚本 和 生成它的可视化工具</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>最近在玩少女前线，这是一个手机游戏，over。不是，就真的没有什么好讲的嘛，了解的人早有耳闻，不了解的就只要知道这是个手机游戏就好了，嗯。</p>
+<p>然后，我会好好地，正常地，氪金地去玩这个游戏吗？不可能的，玩游戏哪有破解它有意思呢。当年破解 Ingress 是因为它用的 HTTPS 通信的，算是本行。百万亚瑟王是因为别人已经逆向好了，我只是写了一些 bot。现在这么办，玩不了了吗？作为一个不会安卓，不会逆向，不会汇编的菜鸡，那我只好上按键精灵了啊。于是乎，我找到了这个： <a target="_blank" rel="noopener" href="http://ankulua-tw.boards.net/thread/2/ankulua">AnkuLua</a></p>
+<blockquote>
+<p>AnkuLua 是一個專注在自動化的Android App<br>基本自動化動作有:</p>
+<ul>
+<li>抓取螢幕並找尋指定圖案 </li>
+<li>對找圖結果採取使用者要的動作(例如點擊、抓放(drag and drop)、打字…等等)</li>
+</ul>
+</blockquote>
+<p>最重要的是，它能运行 lua 脚本！虽然我是一个不会安卓，不会逆向，不会汇编的菜鸡，但是我会 lua 啊。</p>
+<h3 id="ankulua-vision"><a href="#ankulua-vision" class="headerlink" title="ankulua-vision"></a>ankulua-vision</h3><p>不过，在使用过程中发现，找寻指定图案，需要不断截图&#x2F;裁剪，这样太麻烦了。于是我又用 electron 做了一个可视化的截图资源管理器 <a target="_blank" rel="noopener" href="https://github.com/binux/ankulua-vision">ankulua-vision</a>，像这样的：</p>
+<p><img src="https://raw.githack.com/binux/ankulua-vision/master/static/Screenshot.png" alt="screenshot"></p>
+<p>基本思路就是，一般游戏是由众多 UI 界面组成的，点击某个按钮能跳转到某个界面上去。那么通过截图，标注<strong>识别区域</strong>，那么程序就能知道游戏现在所处的界面。通过标注<strong>按钮区域</strong>，那么只需要 <code>goto(&#39;battle&#39;)</code>，程序就能自动规划从当前界面到 battle 的可行路径，然后点啊点啊就完成需要的操作了。这样一方面不需要自己去裁剪图片了，另一方面通过框架代码，在运行过程中能够有更多的错误检查，自动应对可能出现的各种异常。</p>
+<p>理论上，对于点啊点的游戏，是能实现无代码的。即使不能，对于复杂的动作，也可以通过 lua 拓展。</p>
+<p>源码在这里：<a target="_blank" rel="noopener" href="https://github.com/binux/ankulua-vision">https://github.com/binux/ankulua-vision</a>  </p>
+<p>你依旧需要在安卓手机或者模拟器中安装 ankulua，然后加载生成的 start.lua 脚本。默认自带了一个简单的循环逻辑，运行后可以直接图形化界面配置运行。当然你也可以通过 lua 脚本拓展，除了 ankulua 本身的 API 可用之外，你也可以使用 <code>stateMachine</code> 这套界面跳转逻辑 API，重用简化步骤。<code>stateMachine</code> 的 API 在 README 中有简略的文档说明。</p>
+<p><img src="/assets/image/MuMu20181014200018.png" alt="setting screenshot"></p>
+<p>源码使用 GPLv3 或 MIT 许可证，取决于第一个有效 PR（例如 fix typo 不算），如果第一个 PR 之前有商业化需求或者 PR 作者要求，则 MIT。</p>
+<h3 id="少女前线拖尸脚本"><a href="#少女前线拖尸脚本" class="headerlink" title="少女前线拖尸脚本"></a>少女前线拖尸脚本</h3><p><strong>WARNING: 任何使用脚本的行为都是官方禁止的，我不对下文所述任何内容以及其后果负责</strong></p>
+<p>于是，这里就是 少女前线的拖尸脚本：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/binux/binux_github_com/releases/download/gf/shojo.zip">https://github.com/binux/binux_github_com/releases/download/gf/shojo.zip</a></p>
+<p>同时它也是一个 ankulua-vision 的项目，你可以通过 ankulua-vision 打开这个项目目录，调整截屏或者按钮位置。</p>
+<h4 id="脚本实现的功能"><a href="#脚本实现的功能" class="headerlink" title="脚本实现的功能"></a>脚本实现的功能</h4><ul>
+<li>43e, 02, 52n 拖尸</li>
+<li>自动重启后勤</li>
+<li>自动强化或者分解人形</li>
+<li>自动修理</li>
+</ul>
+<h4 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h4><ol>
+<li>根据 <a target="_blank" rel="noopener" href="http://bbs.nga.cn/read.php?tid=13670657">[填坑结束？][失了智]萌新向拖尸教学帖[更新8-1N相关]</a> 一文准备好打手和阵型，一队练级队，二队补给队，52n 还需要 3 队狗粮队。</li>
+<li>解压拷贝脚本到手机中，在 ankulua 中加载 start.lua。</li>
+<li>在启动界面中选择你的两个打手（每轮结束后，两个打手会交换），选择拖尸任务，如果仅自动后勤，选择 null 就好了。</li>
+</ol>
+<p>其中 52n 会在战斗中撤退 5, 8 号位 （见 NGA 文 “43e的说明” 展开部分），02 在选择 m4a1 时会撤退 1, 7 号位。</p>
+<p><img src="/assets/image/MuMu20181014200007.png" alt="setting screenshot"></p>
+<p>然后开始吧！</p>
+<p><strong>WARNING: 任何使用脚本的行为都是官方禁止的，我不对上文所述任何内容以及其后果负责</strong></p>
+<p>over</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/%E5%B0%91%E5%A5%B3%E5%89%8D%E7%BA%BF/">少女前线</a>, <a href="/tags/ankulua/">ankulua</a>, <a href="/tags/ankulua-vision/">ankulua-vision</a>, <a href="/tags/%E5%AE%89%E5%8D%93/">安卓</a>, <a href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/">自动化</a>, <a href="/tags/open-source/">open-source</a>, <a href="/tags/github/">github</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = 'https://binux.blog/2018/10/girls-frontline-ankulua-vision/';
+this.page.identifier = 'https://binux.blog/2018/10/girls-frontline-ankulua-vision/';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

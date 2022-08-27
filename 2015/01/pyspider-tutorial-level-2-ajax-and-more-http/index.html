@@ -1,0 +1,297 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>pyspider 爬虫教程（二）：AJAX 和 HTTP | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="在上一篇教程中，我们使用 self.crawl API 抓取豆瓣电影的 HTML 内容，并使用 CSS 选择器解析了一些内容。不过，现在的网站通过使用 AJAX 等技术，在你与服务器交互的同时，不用重新加载整个页面。但是，这些交互手段，让抓取变得稍微难了一些：你会发现，这些网页在抓回来后，和浏览器中">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="pyspider 爬虫教程（二）：AJAX 和 HTTP"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-pyspider-tutorial-level-2-ajax-and-more-http" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2015-01-09T08:00:00.000Z"><a href="/2015/01/pyspider-tutorial-level-2-ajax-and-more-http/">2015-01-09</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">pyspider 爬虫教程（二）：AJAX 和 HTTP</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>在上一篇教程中，我们使用 <code>self.crawl</code> API 抓取豆瓣电影的 HTML 内容，并使用 CSS 选择器解析了一些内容。不过，现在的网站通过使用 <a target="_blank" rel="noopener" href="http://www.w3school.com.cn/ajax/ajax_intro.asp">AJAX</a> 等技术，在你与服务器交互的同时，不用重新加载整个页面。但是，这些交互手段，让抓取变得稍微难了一些：你会发现，这些网页在抓回来后，和浏览器中的并不相同。你需要的信息并不在返回 HTML 代码中。</p>
+<p>在这一篇教程中，我们会讨论这些技术 和 抓取他们的方法。（英文版：<a target="_blank" rel="noopener" href="http://docs.pyspider.org/en/latest/tutorial/AJAX-and-more-HTTP/">AJAX-and-more-HTTP</a>）</p>
+<h2 id="AJAX"><a href="#AJAX" class="headerlink" title="AJAX"></a>AJAX</h2><p><a target="_blank" rel="noopener" href="http://www.w3school.com.cn/ajax/ajax_intro.asp">AJAX</a> 是 Asynchronous JavaScript and XML（异步的 JavaScript 和 XML）的缩写。AJAX 通过使用原有的 web 标准组件，实现了在不重新加载整个页面的情况下，与服务器进行数据交互。例如在新浪微博中，你可以展开一条微博的评论，而不需要重新加载，或者打开一个新的页面。但是这些内容并不是一开始就在页面中的（这样页面就太大了），而是在你点击的时候被加载进来的。这就导致了你抓取这个页面的时候，并不能获得这些评论信息（因为你没有『展开』）。</p>
+<p><a target="_blank" rel="noopener" href="http://www.w3school.com.cn/ajax/ajax_intro.asp">AJAX</a> 的一种常见用法是使用 <a target="_blank" rel="noopener" href="http://www.w3school.com.cn/ajax/ajax_intro.asp">AJAX</a> 加载 <a target="_blank" rel="noopener" href="http://www.w3school.com.cn/json/">JSON</a> 数据，然后在浏览器端渲染。如果能直接抓取到 <a target="_blank" rel="noopener" href="http://www.w3school.com.cn/json/">JSON</a> 数据，会比 HTML 更容易解析。</p>
+<p>当一个网站使用了 AJAX 的时候，除了用 pyspider 抓取到的页面和浏览器看到的不同以外。你在浏览器中打开这样的页面，或者点击『展开』的时候，常常会看到『加载中』或者类似的图标&#x2F;动画。例如，当你尝试抓取：<a target="_blank" rel="noopener" href="http://movie.douban.com/explore">http://movie.douban.com/explore</a></p>
+<p><img src="/assets/image/douban_explore.png" alt="douban explore"></p>
+<p>你会发现电影是『载入中…』</p>
+<h3 id="找到真实的请求"><a href="#找到真实的请求" class="headerlink" title="找到真实的请求"></a>找到真实的请求</h3><p>由于 AJAX 实际上也是通过 HTTP 传输数据的，所以我们可以通过 <a target="_blank" rel="noopener" href="https://developer.chrome.com/devtools">Chrome Developer Tools</a> 找到真实的请求，直接发起真实请求的抓取就可以获得数据了。</p>
+<ol>
+<li>打开一个新窗口</li>
+<li>按 <code>Ctrl</code>+<code>Shift</code>+<code>I</code> (在 Mac 上请按 <code>Cmd</code>+<code>Opt</code>+<code>I</code>) 打开开发者工具。</li>
+<li>切换到网络（ Netwotk 面板）</li>
+<li>在窗口中打开 <a target="_blank" rel="noopener" href="http://movie.douban.com/explore">http://movie.douban.com/explore</a></li>
+</ol>
+<p>在页面加载的过程中，你会在面板中看到所有的资源请求。</p>
+<p><img src="/assets/image/douban_explore_network_panel.png" alt="douban explore network panel"></p>
+<p>AJAX 一般是通过 <a target="_blank" rel="noopener" href="http://www.w3school.com.cn/ajax/ajax_xmlhttprequest_create.asp">XMLHttpRequest</a> 对象接口发送请求的，XMLHttpRequest 一般被缩写为 XHR。点击网络面板上漏斗形的过滤按钮，过滤出 XHR 请求。挨个查看每个请求，通过访问路径和预览，找到包含信息的请求：<a target="_blank" rel="noopener" href="http://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0">http://movie.douban.com/j/search_subjects?type&#x3D;movie&amp;tag&#x3D;%E7%83%AD%E9%97%A8&amp;sort&#x3D;recommend&amp;page_limit&#x3D;20&amp;page_start&#x3D;0</a></p>
+<p><img src="/assets/image/douban_explore_xhr_preview.png" alt="douban explore xhr preview"></p>
+<p>在豆瓣这个例子中，XHR 请求并不多，可以挨个查看来确认。但在 XHR 请求较多的时候，可能需要结合触发动作的时间，请求的路径等信息帮助在大量的请求中找到包含信息的关键请求。这需要抓取或者前端的相关经验。所以，有一个我一直在提的观点，学习抓取的最好方法是：学会写网站。</p>
+<p>现在可以在新窗口中打开 <a target="_blank" rel="noopener" href="http://movie.douban.com/j/search_subjects?type=movie&tag=%E7%83%AD%E9%97%A8&sort=recommend&page_limit=20&page_start=0">http://movie.douban.com/j/search_subjects?type&#x3D;movie&amp;tag&#x3D;%E7%83%AD%E9%97%A8&amp;sort&#x3D;recommend&amp;page_limit&#x3D;20&amp;page_start&#x3D;0</a>，你会看到包含电影数据的 <a target="_blank" rel="noopener" href="http://www.w3school.com.cn/json/">JSON</a> 原始数据。推荐安装 <a target="_blank" rel="noopener" href="https://chrome.google.com/webstore/detail/jsonview/chklaanhfefbnpoihckbnefhakgolnmc">JSONView</a>（<a target="_blank" rel="noopener" href="http://jsonview.com/">Firfox版</a>）插件，这样可以看到更好看的 JSON 格式，展开折叠列等功能。然后，我们根据 <a target="_blank" rel="noopener" href="http://www.w3school.com.cn/json/">JSON</a> 数据，编写一个提取电影名和评分的脚本：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Handler</span>(<span class="title class_ inherited__">BaseHandler</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">on_start</span>(<span class="params">self</span>):</span><br><span class="line">        self.crawl(<span class="string">&#x27;http://movie.douban.com/j/search_subjects?type=movie&amp;tag=%E7%83%AD%E9%97%A8&amp;sort=recommend&amp;page_limit=20&amp;page_start=0&#x27;</span>,</span><br><span class="line">                   callback=self.json_parser)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">json_parser</span>(<span class="params">self, response</span>):</span><br><span class="line">        <span class="keyword">return</span> [&#123;</span><br><span class="line">            <span class="string">&quot;title&quot;</span>: x[<span class="string">&#x27;title&#x27;</span>],</span><br><span class="line">            <span class="string">&quot;rate&quot;</span>: x[<span class="string">&#x27;rate&#x27;</span>],</span><br><span class="line">            <span class="string">&quot;url&quot;</span>: x[<span class="string">&#x27;url&#x27;</span>]</span><br><span class="line">        &#125; <span class="keyword">for</span> x <span class="keyword">in</span> response.json[<span class="string">&#x27;subjects&#x27;</span>]]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>你可以使用 <code>response.json</code> 将结果转为一个 python 的 <code>dict</code> 对象</li>
+</ul>
+</blockquote>
+<p>你可以在 <a target="_blank" rel="noopener" href="http://demo.pyspider.org/debug/tutorial_douban_explore">http://demo.pyspider.org/debug/tutorial_douban_explore</a> 获得完整的代码，并进行调试。脚本中还有一个使用 <a target="_blank" rel="noopener" href="http://phantomjs.org/">PhantomJS</a> 渲染的提取版本，将会在下一篇教程中介绍。</p>
+<h2 id="HTTP"><a href="#HTTP" class="headerlink" title="HTTP"></a>HTTP</h2><p><a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE">HTTP</a> 是用来传输网页内容的协议。在前面的教程中，我们已经通过 <code>self.crawl</code> 接口提交了 URL 进行了抓取。这些抓取就是通过 HTTP 协议传输的。</p>
+<p>在抓取过程中，你可能会遇到类似 <code>403 Forbidden</code>，或者需要登录的情况，这时候你就需要正确的 HTTP 参数进行抓取了。</p>
+<p>一个典型的 HTTP 请求包如下，这个请求是发往 <a target="_blank" rel="noopener" href="http://example.com/">http://example.com/</a> 的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET / HTTP/1.1</span><br><span class="line">Host: example.com</span><br><span class="line">Connection: keep-alive</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8</span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.45 Safari/537.36</span><br><span class="line">Referer: http://en.wikipedia.org/wiki/Example.com</span><br><span class="line">Accept-Encoding: gzip, deflate, sdch</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.8</span><br><span class="line">If-None-Match: <span class="string">&quot;359670651&quot;</span></span><br><span class="line">If-Modified-Since: Fri, 09 Aug 2013 23:54:35 GMT</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>请求的第一行包含 <code>method</code>, <code>path</code> 和 HTTP 协议的版本信息</li>
+<li>余下的行被称为 header，是以 <code>key: value</code> 的形式呈现的</li>
+<li>如果是 POST 请求，在请求结尾可能还会有 <code>body</code> 内容</li>
+</ul>
+</blockquote>
+<p>你可以通过前面用过的 <a target="_blank" rel="noopener" href="https://developer.chrome.com/devtools">Chrome Developer Tools</a> 工具查看到这些信息：</p>
+<p><img src="/assets/image/request-headers.png" alt="request headers"></p>
+<p>在大多数时候，使用正确的 <code>method</code>, <code>path</code>, <code>headers</code> 和 <code>body</code> 总是能抓取到你需要的信息的。</p>
+<h3 id="HTTP-Method"><a href="#HTTP-Method" class="headerlink" title="HTTP Method"></a>HTTP Method</h3><p><a target="_blank" rel="noopener" href="http://www.w3school.com.cn/tags/html_ref_httpmethods.asp">HTTP Method</a> 告诉服务器对 URL 资源期望进行的操作。例如在打开一个 URL 的时候使用的是 GET 方式，而在提交数据的时候一般使用 POST。</p>
+<p>TODO： need example here</p>
+<h3 id="HTTP-Headers"><a href="#HTTP-Headers" class="headerlink" title="HTTP Headers"></a>HTTP Headers</h3><p>HTTP Headers 是请求所带的一个参数列表，你可以在 <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/List_of_HTTP_header_fields">这里</a> 找到完整的常用 Headers 列表。一些常用的需要注意的有：</p>
+<h4 id="User-Agent"><a href="#User-Agent" class="headerlink" title="User-Agent"></a>User-Agent</h4><p>UA 是标识你使用的浏览器，或抓取程序的一段字符串。pyspider 使用的默认 UA 是 <code>pyspider/VERSION (+http://pyspider.org/)</code>。网站常用这个字符串来区分用户的操作系统和浏览器，以及判断对方是否是爬虫。所以在抓取的时候，常常会对 UA 进行伪装。</p>
+<p>在 pyspider 中，你可以通过 <code>self.crawl(URL, headers=&#123;&#39;User-Agent&#39;: &#39;pyspider&#39;&#125;)</code>，或者是 <code>crawl_config = &#123;&#39;headers&#39;: &#123;&#39;User-Agent&#39;: &#39;xxxx&#39;&#125;&#125;</code> 来指定脚本级别的 UA。详细请查看 <a target="_blank" rel="noopener" href="http://docs.pyspider.org/en/latest/apis/self.crawl/#fetch">API 文档</a>。</p>
+<h4 id="Referer"><a href="#Referer" class="headerlink" title="Referer"></a>Referer</h4><p>Referer 用于告诉服务器，你访问的上一个网页是什么。常常被用于防盗链，在抓取图片的时候可能会用到。</p>
+<h4 id="X-Requested-With"><a href="#X-Requested-With" class="headerlink" title="X-Requested-With"></a>X-Requested-With</h4><p>当使用 XHR 发送 AJAX 请求时会带上的 Header，常被用于判断是不是 AJAX 请求。例如在 <a target="_blank" rel="noopener" href="http://bbs.byr.cn/">北邮人论坛</a> 中，你需要：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">on_start</span>(<span class="params">self</span>):</span><br><span class="line">    self.crawl(<span class="string">&#x27;http://bbs.byr.cn/board/Python&#x27;</span>,</span><br><span class="line">               headers=&#123;<span class="string">&#x27;X-Requested-With&#x27;</span>: <span class="string">&#x27;XMLHttpRequest&#x27;</span>&#125;,</span><br><span class="line">               callback=self.index_page)</span><br></pre></td></tr></table></figure>
+
+<p>带有 <code>headers=&#123;&#39;X-Requested-With&#39;: &#39;XMLHttpRequest&#39;&#125;</code> 才能抓取到内容。</p>
+<h3 id="HTTP-Cookie"><a href="#HTTP-Cookie" class="headerlink" title="HTTP Cookie"></a>HTTP Cookie</h3><p>虽然 <code>Cookie</code> 只是 HTTP Header 中的一个，但是因为非常重要，但是拿出来说一下。<code>Cookie</code> 被 HTTP 请求用来区分、追踪用户的身份，当你在一个网站登录的时候，就是通过写入 <code>Cookie</code> 字段来记录登录状态的。</p>
+<p>当遇到需要登录的网站，你需要通过设置 Cookie 参数，来请求需要登录的内容。Cookie 可以通过开发者工具的请求面板，或者是资源面板中获得。在 pyspider 中，你也可以使用 <code>response.cookies</code> 获得返回的 cookie，并使用 <code>self.crawl(URL, cookie=&#123;&#39;key&#39;: &#39;value&#39;&#125;)</code> 来设置请求的 Cookie 参数。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/pyspider/">pyspider</a>, <a href="/tags/scrape/">scrape</a>, <a href="/tags/crawl/">crawl</a>, <a href="/tags/AJAX/">AJAX</a>, <a href="/tags/HTTP/">HTTP</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = 'https://binux.blog/2015/01/pyspider-tutorial-level-2-ajax-and-more-http/';
+this.page.identifier = 'https://binux.blog/2015/01/pyspider-tutorial-level-2-ajax-and-more-http/';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

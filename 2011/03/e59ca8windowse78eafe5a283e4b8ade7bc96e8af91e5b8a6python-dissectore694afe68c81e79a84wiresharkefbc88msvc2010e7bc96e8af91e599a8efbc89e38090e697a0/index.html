@@ -1,0 +1,264 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>在windows环境中编译带python-dissector支持的wireshark（MSVC2010编译器）【无法开启】 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="虽然Windows的编程非常不爽，无论是编译环境还是编辑环境什么的，搭起来累的一比。不过，既然毕设题目是QQ协议分析，我总不能去分析Linux下那个阉割的QQ吧。当然了，抓包之后扔到Linux下分析也是一个解决方案，不过实时的协议解析还是挺有吸引力的。
+同时楼主一年来python上瘾，看着C++那几">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="在windows环境中编译带python-dissector支持的wireshark（MSVC2010编译器）【无法开启】"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-e59ca8windowse78eafe5a283e4b8ade7bc96e8af91e5b8a6python-dissectore694afe68c81e79a84wiresharkefbc88msvc2010e7bc96e8af91e599a8efbc89e38090e697a0" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-03-12T17:46:26.000Z"><a href="/2011/03/e59ca8windowse78eafe5a283e4b8ade7bc96e8af91e5b8a6python-dissectore694afe68c81e79a84wiresharkefbc88msvc2010e7bc96e8af91e599a8efbc89e38090e697a0/">2011-03-12</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">在windows环境中编译带python-dissector支持的wireshark（MSVC2010编译器）【无法开启】</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>虽然Windows的编程非常不爽，无论是编译环境还是编辑环境什么的，搭起来累的一比。不过，既然毕设题目是QQ协议分析，我总不能去分析Linux下那个阉割的QQ吧。<br>当然了，抓包之后扔到Linux下分析也是一个解决方案，不过实时的协议解析还是挺有吸引力的。</p>
+<p>同时楼主一年来python上瘾，看着C++那几行开头include就头大，一直不想起手写C++，更何况Wireshark的API是C的。更可怕的是README.developer还没开始告诉你怎么写dissector呢，编程规范就一大堆，而且各种数据类型不建议使用，strlen不建议使用，strcp不建议使用。这不是从头又学一遍了嘛！  </p>
+<p>如果是这样还不如直接Lua搞起了， 最后顶着windows恶劣的编程环境尝试编译带python-dissector支持的wireshark。</p>
+<p>step 1:<br>首先需要有一份源码。。建议直接到<a target="_blank" rel="noopener" href="http://www.wireshark.org/%E4%B8%8B%E8%BD%BD%E6%9C%80%E6%96%B0%E7%A8%B3%E5%AE%9A%E7%89%88%E7%9A%84%E6%BA%90%E7%A0%81%E5%8D%B3%E5%8F%AF">http://www.wireshark.org/下载最新稳定版的源码即可</a></p>
+<p>step 2:<br>参照[Win32: Step-by-Step Guide]  <a target="_blank" rel="noopener" href="http://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html">http://www.wireshark.org/docs/wsdg_html_chunked/ChSetupWin32.html</a>  的过程编译即可。。完全没有压力</p>
+<p><strong>python-dissector:</strong></p>
+<p>在下不才，无法在windows平台下开启python-dissector支持。。</p>
+<p>看了下代码，这部分代码还是相当的简单，基本上是处于测试，初步的阶段。<br>编译后执行若出现xxx地址不能为read之类的报错，将epan&#x2F;wspython&#x2F;wspy_register.c +128行</p>
+<p><code>void register_all_py_protocols_func(register_cb cb _U_, gpointer client_data _U_)</code></p>
+<p>函数修改为：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">PyObject * py_reg;</span><br><span class="line"><span class="comment">// .....</span></span><br><span class="line"><span class="comment">/* load the python register module */</span></span><br><span class="line">py_reg = <span class="built_in">PyFile_FromString</span>(<span class="built_in">get_py_register_file</span>(), <span class="string">&quot;r&quot;</span>);</span><br><span class="line">  <span class="keyword">if</span> (py_reg == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;no register file %sn&quot;</span>, <span class="built_in">get_py_register_file</span>());</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line"><span class="built_in">PyRun_SimpleFile</span>(<span class="built_in">PyFile_AsFile</span>(py_reg), <span class="built_in">get_py_register_file</span>());</span><br></pre></td></tr></table></figure>
+
+
+<p>但是，一旦开启PYTHON_EMBED&#x3D;1参数之后，会导致所有的plugin无法加载。。。</p>
+<p>加上开发程度不高，文档几乎没有，暂时还是放弃了。。改用直接编写c plugin的方式吧</p>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;<br>PS:1.4.4中有函数原型变化，文档并没有更新：<br>如：<br>dissector_add_uint已经变为dissector_add</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/wireshark-c-python-windows-%E7%BC%96%E8%AF%91/">wireshark c++ python windows 编译</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = 'https://binux.blog/2011/03/e59ca8windowse78eafe5a283e4b8ade7bc96e8af91e5b8a6python-dissectore694afe68c81e79a84wiresharkefbc88msvc2010e7bc96e8af91e599a8efbc89e38090e697a0/';
+this.page.identifier = 'https://binux.blog/2011/03/e59ca8windowse78eafe5a283e4b8ade7bc96e8af91e5b8a6python-dissectore694afe68c81e79a84wiresharkefbc88msvc2010e7bc96e8af91e599a8efbc89e38090e697a0/';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>动画新番订阅-从ktxp到迅雷离线 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="需要解决方案请直接跳到 解决方案 一节
+曾经折腾过flexget+迅雷离线的新番订阅方案，但是因为越来越忙+越来越懒，这种挨个写配置文件的方式太麻烦了，之后就再也没用过。于是我在想，用RSS追番的痛点在哪？
+
+需要挨个构造过滤条件？
+flexget配置文件太难写，不方便下载到本地？
+下载的文件看不懂">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="动画新番订阅-从ktxp到迅雷离线"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-bangumi-subscribe-from-ktxp-to-xunlei" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2013-10-20T07:00:00.000Z"><a href="/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/">2013-10-20</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">动画新番订阅-从ktxp到迅雷离线</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p><span style="font-size: 2em">需要解决方案请直接跳到 <strong>解决方案</strong> 一节</span></p>
+<p>曾经折腾过<a target="_blank" rel="noopener" href="http://blog.binux.me/2011/12/from_xunlei_lixian_for_flexget/">flexget+迅雷离线</a>的新番订阅方案，但是因为越来越忙+越来越懒，这种挨个写配置文件的方式太麻烦了，之后就再也没用过。<br>于是我在想，用RSS追番的痛点在哪？</p>
+<ul>
+<li>需要挨个构造过滤条件？</li>
+<li>flexget配置文件太难写，不方便下载到本地？</li>
+<li>下载的文件看不懂罗马拼音？</li>
+<li>不方便记录进度？</li>
+</ul>
+<h3 id="过滤调教"><a href="#过滤调教" class="headerlink" title="过滤调教"></a>过滤调教</h3><p>首先是需要构造过滤条件，这个好说，每一集动画，每一个字幕组发布的名字只会有集数不同，那么只需要配上关键字（字幕组&#x2F;作品名&#x2F;格式&#x2F;语言）就可以了。<br>即便如此，痛点依旧存在。当季连续播放的内容还好说，OVA怎么办？OAD怎么办？TV未放送怎么办？这些很可能命名方式不一样，甚至是原来追番的字幕组压根没做！<br>像bilibili合集或者专有tag这样人工收集固然完美，但是作为程序员，使用人工是可耻的！</p>
+<p>于是，设想中的方案：</p>
+<ul>
+<li>抓取所有资源，对抓取到的信息，通过分词等手段对资源打tag，这些第一批产生的tag称为raw tag</li>
+<li>对所有raw tag，通过推导规则生成衍生tag。（例如作品名归一化，作品名生成x月番，作品名+第x季关键词进行消歧义）</li>
+<li>对不确定信息，产生不确定tag，多个不确定tag依旧可以产生衍生tag</li>
+<li>选取主要的tag（包括raw tag，衍生tag，不确定tag）保存，以供筛选</li>
+<li>对tag进行分类</li>
+</ul>
+<p>方案的核心在于tag推导，而这样的推导公式可以人工配置，也可以通过机器学习&#x2F;规则聚类获得。<br>最后给用户展现的是一堆tag（但是同一部作品只会有一个tag，即使不同字幕组译法不一样），用户首先选择作品，之后是字幕组&#x2F;格式&#x2F;语言等等tag组合。而OVA等资源只要能衍生出和作品一致的tag，资源就不会漏。</p>
+<h3 id="下载到本地"><a href="#下载到本地" class="headerlink" title="下载到本地"></a>下载到本地</h3><p>下载管理，本地资源库管理，这些其实都是大问题。不过我们不如换个思路。以现在的用户带宽，200M的一部新番在线播放根本不成问题，但是问题在于资源从哪来：bt? ftp? http? 目前可能的资源来源无外乎这三种，直接播放不就好了嘛！对于任何主流视频播放器，http，ftp自不用说，基本没有不支持的。即使http需要cookie验证，本地做一个代理就好了。bt直接播放也不是什么困难的问题，缓冲之后流式输出，甚至可以把bt&#x2F;http&#x2F;ftp统统封装成http&#x2F;FTP协议，内容想怎么播就怎么播。</p>
+<h3 id="海报查看-x2F-播放进度管理"><a href="#海报查看-x2F-播放进度管理" class="headerlink" title="海报查看&#x2F;播放进度管理"></a>海报查看&#x2F;播放进度管理</h3><p>既然上面说到，在线播放实际上可以来源于任何媒介——只要有一个本地代理，将这些内容转换成播放器支持的格式即可。那么，web化的内容展示+本地播放也就顺理成章地得以实现。<br>将本地代理API开放出来，任何网站只要通过这个API即可让用户通过本地的协议转换&#x2F;播放来源于任何地方的任何内容，而网站不需要花费流量。</p>
+<h1 id="临时解决方案"><a href="#临时解决方案" class="headerlink" title="临时解决方案"></a>临时解决方案</h1><p>好吧。。既然我连配个flexget都没时间，怎么有时间搞爬虫, tag system, 机器学习, 分词, 流式bt, http代理, 协议转换, 动画内容站呢？<br>既然这样，先来个简单的解决方案吧，从ktxp订阅到迅雷离线：</p>
+<p><em><strong>第一步：</strong></em>将 <a href="javascript:(function%20()%7Bfunction%20add_search(e)%7B%20var%20a=$(%22#top-search-wd%22);%20if(a.hasClass('empty'))a.removeClass('empty').val('');a.val(a.val()+%22%20%22+$(e).text());ktxp.search.submit()%7Dwindow.add_search=add_search;$(%22.ttitle%22).each(function(e,t)%7Bvar%20n=$(t).find(%22a:nth-child(2)%22).text();var%20r=%22%22;var%20i=%22%22,s=%22%22;$.each(n,function(e,t)%7Bif(t.match(/%5B%20%5C%5B%5C%5D%EF%BC%8F%E3%80%8E%E3%80%8F%E3%80%8C%E3%80%8D%E3%80%90&%E3%80%91%EF%BC%86%E2%98%85%5C%5C%5C/%5C+%5C(%5C)%5C-_%5D/))%7Bif(i)%7Br+='%3Ca%20href=%22#%22%20onclick=%22add_search(this);return%20false;%22%3E'+i+%22%3C/a%3E%22;i=%22%22%7Ds+=t%7Delse%7Bif(s)%7Br+=s;s=%22%22%7Di+=t%7D%7D);if(i)%7Br+='%3Ca%20href=%22#%22%20onclick=%22add_search(this);return%20false;%22%3E'+i+%22%3C/a%3E%22;i=%22%22%7Dif(s)%7Br+=s;s=%22%22%7D$(t).find(%22a:nth-child(2)%22).replaceWith(r)%7D)%7D)()">ktxp筛选器</a> 保存为书签</p>
+<p><em><strong>第二步：</strong></em> 访问 bt.ktxp.com ，点击书签，你会发现标题都被分割成tag了，根据节目单+字幕组+格式+语言等筛选tag。选好之后，列表右上角有个黄色的小小的rss，复制它的url，比如<a target="_blank" rel="noopener" href="http://bt.ktxp.com/rss-search-%E9%AD%94%E7%AC%9B.xml">http://bt.ktxp.com/rss-search-%E9%AD%94%E7%AC%9B.xml</a> 这样的。保存下载。</p>
+<p><em><strong>第三步：</strong></em> 访问 <a target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxqWzZ6CSVaXtUBO313S8bFhleYXzv5CbfeLpEs4_WVfnTYeco/exec">aria2&#x2F;迅雷离线订阅器</a>，根据提示保存书签，访问迅雷离线，点击书签。你会看到一个aria2 path的框（如果你不用aria2，那就留空吧），和一个RSS订阅的框。将上面提取的RSS地址填到RSS订阅的框中（每行一个），点保存即可。现在，最近更新的新番会自动添加到你的迅雷离线里面了！</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/GAS/">GAS</a>, <a href="/tags/%E5%8A%A8%E7%94%BB/">动画</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = 'https://binux.blog/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/';
+this.page.identifier = 'https://binux.blog/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

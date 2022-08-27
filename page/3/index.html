@@ -1,0 +1,947 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>第 3 页 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-bangumi-subscribe-from-ktxp-to-xunlei" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2013-10-20T07:00:00.000Z"><a href="/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/">2013-10-20</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/10/bangumi-subscribe-from-ktxp-to-xunlei/">动画新番订阅-从ktxp到迅雷离线</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p><span style="font-size: 2em">需要解决方案请直接跳到 <strong>解决方案</strong> 一节</span></p>
+<p>曾经折腾过<a target="_blank" rel="noopener" href="http://blog.binux.me/2011/12/from_xunlei_lixian_for_flexget/">flexget+迅雷离线</a>的新番订阅方案，但是因为越来越忙+越来越懒，这种挨个写配置文件的方式太麻烦了，之后就再也没用过。<br>于是我在想，用RSS追番的痛点在哪？</p>
+<ul>
+<li>需要挨个构造过滤条件？</li>
+<li>flexget配置文件太难写，不方便下载到本地？</li>
+<li>下载的文件看不懂罗马拼音？</li>
+<li>不方便记录进度？</li>
+</ul>
+<h3 id="过滤调教"><a href="#过滤调教" class="headerlink" title="过滤调教"></a>过滤调教</h3><p>首先是需要构造过滤条件，这个好说，每一集动画，每一个字幕组发布的名字只会有集数不同，那么只需要配上关键字（字幕组&#x2F;作品名&#x2F;格式&#x2F;语言）就可以了。<br>即便如此，痛点依旧存在。当季连续播放的内容还好说，OVA怎么办？OAD怎么办？TV未放送怎么办？这些很可能命名方式不一样，甚至是原来追番的字幕组压根没做！<br>像bilibili合集或者专有tag这样人工收集固然完美，但是作为程序员，使用人工是可耻的！</p>
+<p>于是，设想中的方案：</p>
+<ul>
+<li>抓取所有资源，对抓取到的信息，通过分词等手段对资源打tag，这些第一批产生的tag称为raw tag</li>
+<li>对所有raw tag，通过推导规则生成衍生tag。（例如作品名归一化，作品名生成x月番，作品名+第x季关键词进行消歧义）</li>
+<li>对不确定信息，产生不确定tag，多个不确定tag依旧可以产生衍生tag</li>
+<li>选取主要的tag（包括raw tag，衍生tag，不确定tag）保存，以供筛选</li>
+<li>对tag进行分类</li>
+</ul>
+<p>方案的核心在于tag推导，而这样的推导公式可以人工配置，也可以通过机器学习&#x2F;规则聚类获得。<br>最后给用户展现的是一堆tag（但是同一部作品只会有一个tag，即使不同字幕组译法不一样），用户首先选择作品，之后是字幕组&#x2F;格式&#x2F;语言等等tag组合。而OVA等资源只要能衍生出和作品一致的tag，资源就不会漏。</p>
+<h3 id="下载到本地"><a href="#下载到本地" class="headerlink" title="下载到本地"></a>下载到本地</h3><p>下载管理，本地资源库管理，这些其实都是大问题。不过我们不如换个思路。以现在的用户带宽，200M的一部新番在线播放根本不成问题，但是问题在于资源从哪来：bt? ftp? http? 目前可能的资源来源无外乎这三种，直接播放不就好了嘛！对于任何主流视频播放器，http，ftp自不用说，基本没有不支持的。即使http需要cookie验证，本地做一个代理就好了。bt直接播放也不是什么困难的问题，缓冲之后流式输出，甚至可以把bt&#x2F;http&#x2F;ftp统统封装成http&#x2F;FTP协议，内容想怎么播就怎么播。</p>
+<h3 id="海报查看-x2F-播放进度管理"><a href="#海报查看-x2F-播放进度管理" class="headerlink" title="海报查看&#x2F;播放进度管理"></a>海报查看&#x2F;播放进度管理</h3><p>既然上面说到，在线播放实际上可以来源于任何媒介——只要有一个本地代理，将这些内容转换成播放器支持的格式即可。那么，web化的内容展示+本地播放也就顺理成章地得以实现。<br>将本地代理API开放出来，任何网站只要通过这个API即可让用户通过本地的协议转换&#x2F;播放来源于任何地方的任何内容，而网站不需要花费流量。</p>
+<h1 id="临时解决方案"><a href="#临时解决方案" class="headerlink" title="临时解决方案"></a>临时解决方案</h1><p>好吧。。既然我连配个flexget都没时间，怎么有时间搞爬虫, tag system, 机器学习, 分词, 流式bt, http代理, 协议转换, 动画内容站呢？<br>既然这样，先来个简单的解决方案吧，从ktxp订阅到迅雷离线：</p>
+<p><em><strong>第一步：</strong></em>将 <a href="javascript:(function%20()%7Bfunction%20add_search(e)%7B%20var%20a=$(%22#top-search-wd%22);%20if(a.hasClass('empty'))a.removeClass('empty').val('');a.val(a.val()+%22%20%22+$(e).text());ktxp.search.submit()%7Dwindow.add_search=add_search;$(%22.ttitle%22).each(function(e,t)%7Bvar%20n=$(t).find(%22a:nth-child(2)%22).text();var%20r=%22%22;var%20i=%22%22,s=%22%22;$.each(n,function(e,t)%7Bif(t.match(/%5B%20%5C%5B%5C%5D%EF%BC%8F%E3%80%8E%E3%80%8F%E3%80%8C%E3%80%8D%E3%80%90&%E3%80%91%EF%BC%86%E2%98%85%5C%5C%5C/%5C+%5C(%5C)%5C-_%5D/))%7Bif(i)%7Br+='%3Ca%20href=%22#%22%20onclick=%22add_search(this);return%20false;%22%3E'+i+%22%3C/a%3E%22;i=%22%22%7Ds+=t%7Delse%7Bif(s)%7Br+=s;s=%22%22%7Di+=t%7D%7D);if(i)%7Br+='%3Ca%20href=%22#%22%20onclick=%22add_search(this);return%20false;%22%3E'+i+%22%3C/a%3E%22;i=%22%22%7Dif(s)%7Br+=s;s=%22%22%7D$(t).find(%22a:nth-child(2)%22).replaceWith(r)%7D)%7D)()">ktxp筛选器</a> 保存为书签</p>
+<p><em><strong>第二步：</strong></em> 访问 bt.ktxp.com ，点击书签，你会发现标题都被分割成tag了，根据节目单+字幕组+格式+语言等筛选tag。选好之后，列表右上角有个黄色的小小的rss，复制它的url，比如<a target="_blank" rel="noopener" href="http://bt.ktxp.com/rss-search-%E9%AD%94%E7%AC%9B.xml">http://bt.ktxp.com/rss-search-%E9%AD%94%E7%AC%9B.xml</a> 这样的。保存下载。</p>
+<p><em><strong>第三步：</strong></em> 访问 <a target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxqWzZ6CSVaXtUBO313S8bFhleYXzv5CbfeLpEs4_WVfnTYeco/exec">aria2&#x2F;迅雷离线订阅器</a>，根据提示保存书签，访问迅雷离线，点击书签。你会看到一个aria2 path的框（如果你不用aria2，那就留空吧），和一个RSS订阅的框。将上面提取的RSS地址填到RSS订阅的框中（每行一个），点保存即可。现在，最近更新的新番会自动添加到你的迅雷离线里面了！</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-howto-crawl-web" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2013-09-30T07:00:00.000Z"><a href="/2013/09/howto-crawl-web/">2013-09-30</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/09/howto-crawl-web/">如何抓取WEB页面</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>好忙好忙，忙到打完dota，看完新番，写完一个外挂就懒得更新blog的地步。。。一不小心从事spider已经快3年了，也没给爬虫写过点什么。本来打算趁着十一写个什么《三天学会爬虫》什么的，但是列了下清单，其实爬虫这东西简单到爆啊。看我一天就把它搞定了(・ω&lt;)☆</p>
+<p>##HTTP协议<br>WEB内容是通过HTTP协议传输的，实际上，<strong>任何的抓取行为都是在对浏览器的HTTP请求的模拟</strong>。那么，首先通过 <a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE">http://zh.wikipedia.org/wiki/超文本传输协议</a> 来对HTTP协议来进行初步的了解：</p>
+<ul>
+<li>HTTP通常通过创建到服务器80端口的TCP连接进行通信</li>
+<li>HTTP协议的内容包括请求方式（method）, url，header，body，通常以纯文本方式发送</li>
+<li>HTTP返回内容包括状态码，header，body，通常以纯文本方式返回</li>
+<li>header以及body间以CRLF(\r\n)分割</li>
+</ul>
+<blockquote>
+<p>由于富web应用越来越盛行，单纯的HTTP协议已经不能满足 -人类的欲望- 人们的需求了，websocket,  spdy等越来越多的非HTTP协议信息传输手段被使用，但是目前看来，web的主要信息依旧承载于http协议。</p>
+</blockquote>
+<h3 id="HTTP请求"><a href="#HTTP请求" class="headerlink" title="HTTP请求"></a>HTTP请求</h3><p>现在打开 chrome&gt;菜单&gt;工具&gt;开发者工具 切换到network面板，访问 <a target="_blank" rel="noopener" href="http://www.baidu.com/">http://www.baidu.com/</a>，点击红色高亮处的<code>view source</code>：</p>
+<p><img src="/assets/image/http_in_chrome.png" alt="http in chrome"></p>
+<p>我们可以看到一个真实的HTTP请求的全部内容（这里的换行均为CRLF）：</p>
+<pre>
+GET / HTTP/1.1
+
+Host: www.baidu.com
+
+Connection: keep-alive
+
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.66 Safari/537.36
+
+DNT: 1
+
+Accept-Encoding: gzip,deflate,sdch
+
+Accept-Language: zh-CN,zh;q=0.8
+</pre>
+
+<p>请求中的第一行称为<a target="_blank" rel="noopener" href="http://tools.ietf.org/html/rfc2616#section-5.1">Request-Line</a>，包含了<code>请求方式 URL HTTP版本</code>，在上面的例子中，这个请求方式(method)为 <code>GET</code>，URL为 <code>/</code>, HTTP版本为 <code>HTTP/1.1</code> 。</p>
+<blockquote>
+<p>注意到这里的URL并不是我们访问时的 <a target="_blank" rel="noopener" href="http://www.baidu.com/">http://www.baidu.com/</a> 而只是一个 <code>/</code>，而<a target="_blank" rel="noopener" href="http://www.baidu.com的域名在header/">www.baidu.com的域名在Header</a> <code>Host: www.baidu.com</code> 中体现。这样表示请求的资源 <code>/</code> 是位于主机(host) <code>www.baidu.com</code> 上的，而 <code>GET http://www.baidu.com/ HTTP/1.1</code> 则表示请求的资源位于别的地方，通常用于http代理请求中。</p>
+</blockquote>
+<p>请求的后续行都是Header，其中比较重要的header有 <code>Host, User-Agent, Cookie, Referer, X-Requested-With</code> （这个请求中未展现）。如果是POST请求，还会有body。</p>
+<blockquote>
+<p>虽然并不需要理解HTTP请求，只要参照chrome中展示的内容模拟请求就可以抓取到内容，但是学习一下各个header的作用有助于理解哪些元素是必须的，哪些可以被忽略或修改。</p>
+<p>更多内容可以通过以下链接进行进一步学习：<br><a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/URL">http://zh.wikipedia.org/wiki/URL</a><br><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/Query_string">http://en.wikipedia.org/wiki/Query_string</a><br><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/HTTP_POST">http://en.wikipedia.org/wiki/HTTP_POST</a><br><a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/List_of_HTTP_header_fields">http://en.wikipedia.org/wiki/List_of_HTTP_header_fields</a><br>抱歉很多内容无法找到好的中文版本，欢迎在留言中提供</p>
+</blockquote>
+<p>好了，这就是一个请求的全部，<strong>只要正确模拟了method，uri，header，body 这四要素，任何内容都能抓下来，而所有的四个要素，只要打开 chrome&gt;菜单&gt;工具&gt;开发者工具 切换到network面板 就能看到</strong>，怎么样，很简单吧！</p>
+<blockquote>
+<p>现在我们就可以通过curl命令来模拟一个请求：<br><code>curl -v -H &quot;User-Agent: Chrome&quot; http://www.baidu.com/</code><br>其中 <code>-v</code> 用于显示了请求的内容，<code>-H</code> 指定header，具体curl的使用方式可以 <code>man curl</code> 或者你可以在chrome或者其他平台上找到很多类似的工具。<br>如果想看到请求是否正确，可以 <code>curl http://httpbin.org/get</code> 这个地址，它会返回经过解析的请求内容，来看看你的请求是否符合预期（<a target="_blank" rel="noopener" href="http://httpbin.org/">http://httpbin.org/</a>中有包括POST在内的完整API）</p>
+</blockquote>
+<h3 id="HTTP返回"><a href="#HTTP返回" class="headerlink" title="HTTP返回"></a>HTTP返回</h3><p>下面展示了一个http返回的header部分，body内容被省略：</p>
+<pre>
+HTTP/1.1 200 OK
+
+Date: Mon, 30 Sep 2013 06:51:11 GMT
+
+Server: BWS/1.0
+
+Content-Length: 4379
+
+Content-Type: text/html;charset=utf-8
+
+Cache-Control: private
+
+BDPAGETYPE: 1
+
+BDUSERID: 0
+
+BDQID: 0x8e3bf8800bcc3d7e
+
+Set-Cookie: BDSVRTM=2; path=/
+
+Set-Cookie: H_PS_PSSID=3409_3381_1462_2980_3089_3502_3439; path=/; domain=.baidu.com
+
+Set-Cookie: BAIDUID=5DDF70314DF9C307385D1821EC3B9F78:FG=1; expires=Mon, 30-Sep-43 06:51:11 GMT; path=/; domain=.baidu.com
+
+Expires: Mon, 30 Sep 2013 06:51:11 GMT
+
+Content-Encoding: gzip
+
+P3P: CP=" OTI DSP COR IVA OUR IND COM "
+
+Connection: Keep-Alive
+</pre>
+
+<p>其中第一行为 <code>HTTP版本 状态码 状态文字说明</code> 之后的内容都是header，其中比较重要的有：<code>Content-Type,  Set-Cookie, Location, Content-Encoding</code>（参见 <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/HTTP_header#Requests">HTTP_header#Requests</a>）。返回之后的内容就是我们看到的网页内容了。</p>
+<p><strong>返回中最重要的是状态码和body中的内容</strong>，状态码决定抓取是否成功(200)，是否会有跳转 （<a target="_blank" rel="noopener" href="http://zh.wikipedia.org/zh-cn/HTTP%E7%8A%B6%E6%80%81%E7%A0%81">HTTP状态码</a>），内容就是我们关心的内容了。</p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><h3 id="http库"><a href="#http库" class="headerlink" title="http库"></a>http库</h3><p>在实际抓取中，选择一个方便的HTTP库会帮你解决很多http的细节问题，比如http库会帮你：</p>
+<ul>
+<li>建立http连接</li>
+<li>设定常用header，生成正确的http请求</li>
+<li>get&#x2F;post参数编码</li>
+<li>跳转重定向</li>
+<li>自动保存处理cookie</li>
+<li>返回gzip解压，内容编码</li>
+</ul>
+<p><em>python中推荐 <a target="_blank" rel="noopener" href="http://docs.python-requests.org/en/latest/">requests</a>，在命令行中我一般用curl进行调试。</em></p>
+<h3 id="AJAX"><a href="#AJAX" class="headerlink" title="AJAX"></a>AJAX</h3><p>现在越来越多的页面使用了AJAX技术，表现为内容并不在打开的页面的源码中，而是通过称为 <a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/Ajax">AJAX</a> 的技术，在页面打开后加载的。但实际上，<strong>AJAX也是通过HTTP传送信息的，只不过内容来自于页面发起的另一个http请求</strong>，通过查看chome中的network列出的页面所有请求，一定可以找到内容，之后只需要模拟对应的这个请求即可。</p>
+<h3 id="HTML内容解析"><a href="#HTML内容解析" class="headerlink" title="HTML内容解析"></a>HTML内容解析</h3><p>web页面大都以HTML编写，对于简单的内容提取，使用正则即可。但是对付复杂的内容提取需求正则并不是一个好的选择（甚至称不上一个正确的选择），一款HTML&#x2F;XML解析器+xpath&#x2F;css selector是一个更有效的选择。</p>
+<h3 id="富web应用"><a href="#富web应用" class="headerlink" title="富web应用"></a>富web应用</h3><p>对于富web应用，可能分析AJAX请求，和内容提取的代价太高。这时可能需要上最后手段——浏览器渲染。通过 <a target="_blank" rel="noopener" href="http://phantomjs.org/">phantomjs</a> 或类似浏览器引擎，构建一个真实的浏览器执行js、渲染页面。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-webrtc-video" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2013-05-05T07:00:00.000Z"><a href="/2013/05/webrtc-video/">2013-05-05</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/05/webrtc-video/">基于WEBRTC的免插件点到点视频分享</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <h2 id="WebRTC"><a href="#WebRTC" class="headerlink" title="WebRTC"></a>WebRTC</h2><p><a target="_blank" rel="noopener" href="http://www.webrtc.org/">WebRTC</a> 是基于浏览器的实时通信协议（Real-Time Communications），通过WebRTC，可以在浏览器中直接进行<strong>点到点</strong>视频聊天和数据通信。WebRTC目前尚在协议开发中，但是已经在Chrome stable版和Firefox’s Nightly中实现，并且 <a target="_blank" rel="noopener" href="http://blog.chromium.org/2013/02/hello-firefox-this-is-chrome-calling.html">能够互相通信了</a>。通过WebRTC，浏览器将不仅限于和服务器通行，它将能够直接在浏览器间传输数据。通过 <a target="_blank" rel="noopener" href="http://en.wikipedia.org/wiki/STUN">STUN</a> 协议，即使有防火墙也没问题。</p>
+<p>DEMO: <a target="_blank" rel="noopener" href="https://webrtc-experiment.appspot.com/">https://webrtc-experiment.appspot.com/</a> (需翻墙)</p>
+<p>但是，WebRTC作为发布不到一年的协议，还存在非常多的问题：</p>
+<ul>
+<li>文档少</li>
+<li>协议繁琐，实现与<a target="_blank" rel="noopener" href="http://dev.w3.org/2011/webrtc/editor/webrtc.html">W3C标准</a>有出入</li>
+<li>实现不完全，Chrome下的DateChannel不支持可靠传输，只能传text，还有长度限制</li>
+<li>浏览器依赖</li>
+</ul>
+<p>但是相信随着标准慢慢完善，支持的实现变多，这样点到点的通信方式一定能给Web带来更多的可能。</p>
+<p>入门建议：参照 <a target="_blank" rel="noopener" href="http://dev.w3.org/2011/webrtc/editor/webrtc.html">W3C标准</a> 文档，对比 <a target="_blank" rel="noopener" href="https://apprtc.appspot.com/">https://apprtc.appspot.com/</a> 实现自行尝试（apprtc是封装最浅的实现版本）。另外需要指出的是，<a target="_blank" rel="noopener" href="http://www.html5rocks.com/en/tutorials/webrtc/basics/">HTML5 Rocks</a> 的文档是错误的。</p>
+<h2 id="WebRTC-video"><a href="#WebRTC-video" class="headerlink" title="WebRTC-video"></a>WebRTC-video</h2><p>GitHub： <a target="_blank" rel="noopener" href="https://github.com/binux/webrtc_video">https://github.com/binux/webrtc_video</a><br>DEMO： <a target="_blank" rel="noopener" href="http://webrtc.binux.me/">http://webrtc.binux.me/</a></p>
+<p>这是一个用WebRTC的DataChannel特性实现的，免插件，基于浏览器P2P文件&#x2F;视频分享DEMO。<br>只要打开浏览器就能使用，每个访问者都是分享节点：</p>
+<ul>
+<li>免插件，仅依赖浏览器随时随地地文件分享</li>
+<li>HTML5视频边下边播</li>
+<li>Peer-to-Peer通信，像BitTorrent一样在多用户间加速分享，传输</li>
+<li>支持额外的HTTP，WebSocket节点，保证内容随时可用，并能保持P2P加速的特性</li>
+<li>通信数据量统计，等等。。。</li>
+</ul>
+<p>注：</p>
+<ul>
+<li>视频边下边播需要MP4、webm、ogg格式</li>
+<li>HTTP节点需要CORS来源允许</li>
+<li>WebSocket节点，文件置于 <code>project_path/data/</code> 下，文件名只能包含英文和数字，通过 <code>ws://host:port/file/filename</code> 添加</li>
+</ul>
+<p>因为WebRTC协议还非常不完善，这个项目更多的是demo性质的，但是这个demo展现了WEB+P2P的更多可能。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-googleplus-comments-test" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2013-04-19T07:00:00.000Z"><a href="/2013/04/googleplus-comments-test/">2013-04-19</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/04/googleplus-comments-test/">Google+评论组件测试</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        
+Google+给Blogger添加了Google+的评论组件，看起来可以移植到别的地方，于是:
+
+<pre>
+
+  &lt;div id='gpluscomments'&gt;&lt;/div&gt;
+  &lt;script src='https://apis.google.com/js/plusone.js' type='text/javascript'&gt;&lt;/script&gt;
+  &lt;script&gt;
+    gapi.comments.render('gpluscomments', {href: '{{ site.production_url }}{{ page.url }}', first_party_property: 'BLOGGER', view_type: 'FILTERED_POSTMOD'})
+  &lt;/script&gt;
+
+</pre>
+
+<br />
+<br />
+<hr />
+<div id='gpluscomments'></div>
+<script src='https://apis.google.com/js/plusone.js' type='text/javascript'></script>
+<script>
+  gapi.comments.render('gpluscomments', {href: '', first_party_property: 'BLOGGER', view_type: 'FILTERED_POSTMOD'})
+</script>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-google-apps-script" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2013-03-18T07:00:00.000Z"><a href="/2013/03/google-apps-script/">2013-03-18</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/03/google-apps-script/">Google Apps Script</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p><a href="/2012/11/google-sb/">#google你个sb</a> 把Google Reader关闭了，就像 <a href="/2012/11/google-sb/">#google你个sb</a> 里说的，<strong>永远不要相信有什么免费的东西，即使他是google提供的</strong>。比如今天介绍的这个 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/">Google Apps Script</a>，请不要相信它能长久运行下去，请准备好迁移的方案。</p>
+<h2 id="Google-Apps-Script"><a href="#Google-Apps-Script" class="headerlink" title="Google Apps Script"></a>Google Apps Script</h2><p>简称GAS，是一个JavaScript脚本驱动的云平台，通过GAS可以方便的连接Google和其他各种服务，执行各种自动化的任务。</p>
+<p>平台API提供了：  </p>
+<ul>
+<li>Google服务访问（mail, docs, charts, maps, calendar甚至还有翻译）</li>
+<li>界面</li>
+<li>数据库</li>
+<li><a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/service_urlfetch"><strong>urlfetch</strong></a>！（可以post、可以修改header、可以修改body、甚至有一个帮助使用OAuth的类）</li>
+<li><a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_time_triggers">定时任务</a>、<a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_container_triggers">触发器</a></li>
+<li>可以发布为<a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_web_apps">web apps</a>，可以获得get、post参数等</li>
+</ul>
+<p>甚至还有cache、lock，俨然要什么有什么啊！虽然有<a target="_blank" rel="noopener" href="http://docs.google.com/macros/dashboard">配额</a>限制，虽然HTML会被 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/html_service#Caja">重新渲染</a>，无法在页面中完整使用JavaScript，但是，冲着免费的 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/service_urlfetch">urlfetch</a> 和 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_time_triggers">定时任务</a> 就大有可为啊！我能想到的各种应用可以有：</p>
+<ul>
+<li>RSS转烧</li>
+<li>各种HTTP代理，转换，绕过</li>
+<li>数据统计、采集</li>
+<li>各种WebHook的定时触发、检测HTTP服务是不是挂了</li>
+<li>各种ifttt功能（特别是google自己的服务之间的）</li>
+<li>建一个简单的动态网站，或者给自己的静态网站提供直接API</li>
+</ul>
+<p>只要你想，大有可为。<br>API请参考 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/defaultservices">Default Services</a>，上方的 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_methods">Execution Methods for Scripts</a> 等文章对环境以及常见的需求有一些介绍，建议阅读。</p>
+<h2 id="应用示例"><a href="#应用示例" class="headerlink" title="应用示例"></a>应用示例</h2><h3 id="RSS转烧"><a href="#RSS转烧" class="headerlink" title="RSS转烧"></a>RSS转烧</h3><p>虽然HTML输出有限制，但 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/content_service">XML、JSON、JSONP</a> 却没有限制的，配合 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/service_urlfetch">urlfetch</a>，非常适合用来做RSS转烧，全文输出（这里建议用上缓存或者数据存储）等功能。</p>
+<p><strong>示例：</strong><br><a target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbys9aUHz-WVB2j6qIKOE4-ZVtEjRrLz8VeSph26WrivKFIlH0U/exec">yande.re高画质转烧</a> &#x2F; <a target="_blank" rel="noopener" href="https://script.google.com/d/1A-j39cTR8lnmJMaAodHHcjpyRyEoeTtZB4AE8RR4klKYxdZtbEklGHYb/edit?usp=sharing">源码</a><br><strong>发布指南：</strong></p>
+<ol>
+<li>阅读<a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_web_apps#deploying">Deploying Your Script as a Web App</a></li>
+<li>以自己的身份执行、访问权限为允许匿名</li>
+</ol>
+<p><strong>说明：</strong>这里展示的是图站 <a target="_blank" rel="noopener" href="https://yande.re/">yande.re</a> 的sample画质输出以及title修改，这是我的第一个脚本，这里稍微尝试了一下环境以及urlfetch的功能，应该还是蛮简单的。更多转烧：</p>
+<p><a target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbw4yYvSaKebIaHrlzM0BRJcb8DraGST_3EFHlIBX7ZRZ4JKlGk/exec">danbooru</a> <a target="_blank" rel="noopener" href="https://script.google.com/d/1HT85VFrLj_5kHH2ek3ONGgnHGhSSnYooZT_6ywCe-EOHIbvDvVrv1CX_/edit?usp=sharing">源码</a><br><a target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycby56iyEAOfVKpjspuV7e_vzfSLBOel4x02AXzFW1UoEfMJSwGnj/exec">konachan</a> <a target="_blank" rel="noopener" href="https://script.google.com/d/1PZBEnh63gfP9N6RpkgFlyoim_IpSrke5KxMjGUC_ApgGNoNnodfil3v1/edit?usp=sharing">源码</a></p>
+<h3 id="reader2gplus"><a href="#reader2gplus" class="headerlink" title="reader2gplus"></a>reader2gplus</h3><p>自动将Google Reader中加星的条目同步到Google+上（反正Google Reader也快死了。。这个也用不了多久了吧。。）</p>
+<p><strong>示例：</strong><a target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxWjsB7_8CHlgnyKo_AVFlgf8VPm5ZQ4OuNG1xL_7NKXG6prVw/exec">reader2gplus</a> &#x2F; <a target="_blank" rel="noopener" href="https://script.google.com/d/1FZad9bf60QJPRs-CcX9q8Q3qFS6-oMBYi5n3DNVoqZC2Wac0YFLXrJkW/edit?usp=sharing">源码</a><br><strong>发布指南：</strong></p>
+<ol>
+<li>阅读<a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_web_apps#deploying">Deploying Your Script as a Web App</a></li>
+<li>首先前往 <a target="_blank" rel="noopener" href="https://code.google.com/apis/console/">Google API Console</a> 生成一个API，启用Google+ API，并为其生成一个Web Apps的key</li>
+<li>在script脚本编辑页面中，Project Properties新建两个key：client_id, client_secret，填写上一步生成的key和secret</li>
+<li>发布为以访问者身份执行，分享您fork的脚本与访问权限相一致</li>
+</ol>
+<p><strong>说明：</strong>这里使用了 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/service_urlfetch">urlfetch</a> 更多的参数，实现了OAuth2.0认证，尝试了一下 <a target="_blank" rel="noopener" href="https://developers.google.com/+/api/latest/moments">Google+的新API</a>，使用了 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_time_triggers">定时任务</a> 、GET参数、<a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/html_service">界面</a> 以及 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/script_user_properties#userProperties">用户数据存储</a> 。</p>
+<h3 id="迅雷离线预约下载"><a href="#迅雷离线预约下载" class="headerlink" title="迅雷离线预约下载"></a>迅雷离线预约下载</h3><p>自动将迅雷离线中完成的任务添加到Aria2上</p>
+<p><strong>示例：</strong><a target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxqWzZ6CSVaXtUBO313S8bFhleYXzv5CbfeLpEs4_WVfnTYeco/exec">xunlei2aria2</a> &#x2F; <a target="_blank" rel="noopener" href="https://script.google.com/d/18pQAmp0THrjN148xoBFCgsUWJ__Xgi1nsih8WrOEM6eWVDziDPVDXc42/edit?usp=sharing">源码</a>  </p>
+<p><strong>使用说明：</strong></p>
+<ol>
+<li>访问示例页面，将【】中的脚本拖拽到书签栏中保存</li>
+<li>访问迅雷离线页面（建议先新建一个文件夹），登陆，点击书签</li>
+<li>选择要预约的文件夹，填写<a target="_blank" rel="noopener" href="http://binux.github.com/yaaw/">JSON-RPC地址</a>（<strong>需要能被外网访问</strong>）</li>
+<li>将需要下载到aria2中的任务添加或移动到预约的文件夹中，当文件从文件夹消失，文件已经被添加到aria2中了</li>
+</ol>
+<p><strong>发布指南：</strong></p>
+<ol>
+<li>阅读<a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_web_apps#deploying">Deploying Your Script as a Web App</a></li>
+<li>发布为以访问者身份执行，分享您fork的脚本与访问权限相一致</li>
+</ol>
+<p><strong>说明：</strong>终于到了一个比较实用的脚本了，这里演示的是urlfetch真正有用的地方——跨API操作。所有的东西在reader2gplus中都已经用过了，但是结构要比reader2gplus好不少。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>GAS比起 <a target="_blank" rel="noopener" href="http://appengine.google.com/">GAE</a> 更加简单，但是功能足够强大，通过在线的调试器，写一两行代码比GAE要轻松不少。我JavaScript是在 <a target="_blank" rel="noopener" href="http://www.w3school.com.cn/index.html">w3school</a> 学的，完全野生程序猿，在这里只是为了抛砖引玉，希望您能通过 GAS 能玩出更多有意思的东西。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-yandere-automatic" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2013-03-03T08:00:00.000Z"><a href="/2013/03/yandere-automatic/">2013-03-03</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/03/yandere-automatic/">收图自动化</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>从小开始，我对“自动”特别着迷。小时候，去妈妈的工厂帮忙折包装盒，每个动作都是一样的，很无聊。我就想，如果我发明一个机器，重复折纸盒的动作，那我不就可以什么都不干，在家领工资了吗？于是，你也知道了，<strong>这份工作叫程序员</strong>。。。</p>
+<p>虽然机器在不断地自动运行，我也没能在家什么都不干就领到工资。互联网的大潮下，自动变得如此简单，甚至有人说，互联网就是印钞机，只要程序还在执行，编写程序的人都放半年假都能赚钱。所以说，程序员这个职业是自我毁灭的，他们从来不自己干活，他们编写自动的程序不断填充着这个世界，直到他们自己都不再被需要。这不，互联网已被竞相涌入的程序员和他们的程序占满，“用户需求”已经不能满足程序员的饥渴，他们又开始创造需求，这个世界上只要有互联网公司和快递公司就好了，他们想。</p>
+<p>但是，那些后来者发现，所有现实世界都几乎都被搬上网了，那我们干什么？很快，他们将目光看向了现实世界，他们开始将互联网搬到现实中，智能手机，pad，glass。终于，他们开始在自己的现实世界中自我毁灭了，自动驾驶，智能家居——他们开始将带电的，不带电的，能动的，不能动的物体自动化。嗯，对了，这有个很热的名字——物联网。</p>
+<p>主人早上好，北京的雾霾天气已被weather block plus拦截，室内健康指数98分，已打败73.5%的北京用户，赶快购买空气清新插件提升您的健康指数。室内壁纸5D（试用版）已根据您的喜好为您挑选了壁纸，10分钟广告后显示。冰箱余菜已更新，您是要先洗澡，先吃早餐还是打一炮？【选择】使用左手还是右手？（67.8%的用户推荐使用左手）【选择】今日热榜 &#x2F; Kimer猜 。。。。。。</p>
+<p>##正文<br>咳咳，扯远了，虽然G+福利满地，但是有收不全、怕收重、格式命名不统一，还是喜欢自己收图。最常用的方案是用支持内容离线的RSS阅读器订阅图站的RSS。我订阅的有</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://yande.re/post/atom?tags=">yande.re</a> 建议用atom的，输出带分辨率</li>
+<li><a href="konachan.com/post/atom?tags=">konachan.com</a> 壁纸向</li>
+<li><a target="_blank" rel="noopener" href="http://pyproxy.duapp.com/s;ssd%2Fdata%2Fpreview;data/re;((%3Cimg%20src%3D%22http%3A%2F%2Fdanbooru.donmai.us%2Fdata%2F%5Cw%2B.)jpg%22%2F%3E);%5C1%5C2png%22%20%2F%3E/http://danbooru.donmai.us/posts.atom">danbooru</a> 很杂，转烧输出大图</li>
+</ul>
+<p>使用google reader订阅，看到好图就标星，月底统一收。但是每个月几百张收到手软。现在使用的方案是：</p>
+<ol>
+<li>google reader订阅，标星</li>
+<li><a target="_blank" rel="noopener" href="https://ifttt.com/">ifttt</a>将url追加到dropbox的文件里</li>
+<li>脚本收图<br><img src="/assets/image/ifttt.png" alt="ifttt"></li>
+</ol>
+<p>###脚本收图</p>
+<p>虽然我用google reader进行筛选，但是直接全收也是可以的，方法也类似。<br>首先，创建一个ifttt账号，现在应该已经开放注册了吧。</p>
+<ol>
+<li>登陆 &gt; <code>Create a Recipe</code></li>
+<li>this选择 <code>Google Reader</code> Trigger选择 <code>New starred item</code>（如果全收，this选择 <code>Feed</code> Trigger选 <code>New feed item</code>）</li>
+<li>then选择<code>Dropbox</code> Trigger选<code>Append to a text file</code></li>
+<li>file name：  （每个网站一个文件） content： </li>
+<li>保存即可</li>
+</ol>
+<p>现在在reader中标星，过一会就会收到Dropbox的文件更新提示。</p>
+<p>第二步就是脚本<strong>（需要linux shell环境支持）</strong>，脚本支持yande.re，konachan.com，danbooru三个站的原图地址解析（当原图大于5M时下载jpg格式）</p>
+<ol>
+<li>下载 <a target="_blank" rel="noopener" href="https://gist.github.com/binux/5071536/raw/imgurl.py">imgurl.py</a></li>
+<li>在下载目录执行<code>python imgurl.py [刚才ifttt创建的文件] | xargs -n 1 wget</code></li>
+</ol>
+<p>###自动分享到pinterest</p>
+<p><strong>您需要一台VPS</strong><br>本来是打算自动分享到pinterest和G+的，但是G+没有publish的API，唯一的write API——moments还没上线。等有了再弄吧。  </p>
+<ol>
+<li>VPS环境需要python2.6+，<code>easy_install requests tornado</code></li>
+<li>VPS下载 <a target="_blank" rel="noopener" href="https://gist.github.com/binux/5075775/raw/img_share.py">img_share.py</a></li>
+<li>登陆<a target="_blank" rel="noopener" href="http://pinterest.com/">http://pinterest.com/</a>，提取cookie</li>
+<li>访问<a href="view-source:http://pinterest.com/me/">http://pinterest.com/me/</a> &gt; 查看源码，查找<code>&lt;ul class=&quot;BoardListUl&quot;&gt;</code>，提取要发布到board的id，在对应的&lt;li data属性中，比如<code>215258125878507279</code>这样的串</li>
+<li>用<code>python img_share.py  --pinterest_cookie=&#39;[第3步]&#39; --pinterest_board=[第4步]</code> 命令启动</li>
+<li>登陆<a target="_blank" rel="noopener" href="https://ifttt.com/">ifttt</a> &gt; <code>Create a Recipe</code></li>
+<li>this选择 <code>Google Reader</code> Trigger选择 <code>New starred item</code></li>
+<li>then选择 <code>WordPress</code> Blog URL： <code>ifttt.captnemo.in</code>, Username,password任意填。Trigger选<code>Create a post</code></li>
+<li>Title: , Body: , Tags: <code>http://[VPS的hostname/ip]:8888/</code></li>
+</ol>
+<p>保存即可，比如<a target="_blank" rel="noopener" href="http://pinterest.com/binux/auto/">我的pinterest</a>。img_share.py可以设置<code>--username --password</code>验证（与第8步对应，不设置不验证），可以<code>--port</code>修改端口。具体<code>python img_share.py --help</code> 即可。</p>
+<p><strong>本文写于2013年02月31日</strong></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-about-ingress" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2013-01-28T08:00:00.000Z"><a href="/2013/01/about-ingress/">2013-01-28</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/01/about-ingress/">Ingress Portals Map</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>ingress是google出品的AR（增强现实）游戏，与以往的游戏不同的是，它真的需要在现实中移动，进行游戏。在《奋斗吧！系统工程师》也有看到类似的。虽然处于内测之中，在拿到激活码之后的第一个周末就难道地去天安门（游戏场景集中）转了一下午，玩起来还蛮新鲜的。</p>
+<p>但是，这样就满足了吗？！不，出门活动这种和冬天、北京天气、宅等等词汇完全不搭的游戏方式，怎么看都适合我。于是，我开始了自己的decode ingress。</p>
+<p>好吧，其实中间有很多内容，写一半又删掉了，但是有宣扬cheat的嫌疑，作为结论：bot是存在的，以上。<br><img src="/assets/image/ingress_hello_world.png" alt="ingress_hello_world"></p>
+<p>作为可以公开的成果：<br>###ingress portals map</p>
+<ul>
+<li>每15分钟更新一次</li>
+<li>直接显示等级，中立portal</li>
+<li>显示24小时内即将变为中立portal</li>
+</ul>
+<p> <strong>求图标！</strong></p>
+<p>北京：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/beijing.kmz">http://s.binux.me/ingress/beijing.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_beijing.kmz">坐标修正</a><br>香港：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/hongkong.kmz">http://s.binux.me/ingress/hongkong.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_hongkong.kmz">坐标修正</a><br>台湾：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/taiwan.kmz">http://s.binux.me/ingress/taiwan.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_taiwan.kmz">坐标修正</a><br>天津：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/tianjin.kmz">http://s.binux.me/ingress/tianjin.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_tianjin.kmz">坐标修正</a><br>上海：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/shanghai.kmz">http://s.binux.me/ingress/shanghai.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_shanghai.kmz">坐标修正</a><br>成都：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/cengdu.kmz">http://s.binux.me/ingress/cengdu.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_cengdu.kmz">坐标修正</a><br>桂林：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/guilin.kmz">http://s.binux.me/ingress/guilin.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_guilin.kmz">坐标修正</a><br>广州：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/guangzhou.kmz">http://s.binux.me/ingress/guangzhou.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_guangzhou.kmz">坐标修正</a><br>重庆：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/congqing.kmz">http://s.binux.me/ingress/congqing.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_congqing.kmz">坐标修正</a><br>澳门：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/macao.kmz">http://s.binux.me/ingress/macao.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_macao.kmz">坐标修正</a><br>武汉：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/wuhan.kmz">http://s.binux.me/ingress/wuhan.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_wuhan.kmz">坐标修正</a><br>南京：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/nanjing.kmz">http://s.binux.me/ingress/nanjing.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_nanjing.kmz">坐标修正</a><br>郑州：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/zhengzhou.kmz">http://s.binux.me/ingress/zhengzhou.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_zhengzhou.kmz">坐标修正</a><br>太原：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/taiyuan.kmz">http://s.binux.me/ingress/taiyuan.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_taiyuan.kmz">坐标修正</a><br>哈尔滨：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/haerbin.kmz">http://s.binux.me/ingress/taiyuan.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_haerbin.kmz">坐标修正</a><br>西安：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/xian.kmz">http://s.binux.me/ingress/xian.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_xian.kmz">坐标修正</a><br>济南：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/jinan.kmz">http://s.binux.me/ingress/jinan.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_jinan.kmz">坐标修正</a><br>海南：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/hainan.kmz">http://s.binux.me/ingress/hainan.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_hainan.kmz">坐标修正</a><br>长沙：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/changsha.kmz">http://s.binux.me/ingress/changsha.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_changsha.kmz">坐标修正</a><br>南宁：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/nanning.kmz">http://s.binux.me/ingress/nanning.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_nanning.kmz">坐标修正</a><br>昆明：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/kunming.kmz">http://s.binux.me/ingress/kunming.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_kunming.kmz">坐标修正</a><br>长春：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/changchun.kmz">http://s.binux.me/ingress/changchun.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_changchun.kmz">坐标修正</a><br>汕头：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/shantou.kmz">http://s.binux.me/ingress/shantou.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_shantou.kmz">坐标修正</a><br>廊坊：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/langfang.kmz">http://s.binux.me/ingress/langfang.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_langfang.kmz">坐标修正</a><br>徐州：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/xuzhou.kmz">http://s.binux.me/ingress/xuzhou.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_xuzhou.kmz">坐标修正</a><br>德阳：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/deyang.kmz">http://s.binux.me/ingress/deyang.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_deyang.kmz">坐标修正</a><br>茂名：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/maoming.kmz">http://s.binux.me/ingress/maoming.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_maoming.kmz">坐标修正</a><br>厦门：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/xiamen.kmz">http://s.binux.me/ingress/xiamen.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_xiamen.kmz">坐标修正</a>  </p>
+<p>如果上述城市范围不正确，或者您所在的城市不在上述列表中，欢迎留言。</p>
+<p><strong>如何添加到我的地图：</strong><br>打开<a target="_blank" rel="noopener" href="http://maps.google.com/">http://maps.google.com/</a> &gt; 点击“我的地点” &gt; 新建 &gt; 导入。在弹出框内填入如：<a target="_blank" rel="noopener" href="http://s.binux.me/ingress/beijing.kmz%E7%9A%84url%E5%8D%B3%E5%8F%AF%E3%80%82">http://s.binux.me/ingress/beijing.kmz的url即可。</a><br>西安：<a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/haerbin.kmz">http://s.binux.me/ingress/taiyuan.kmz</a> | <a target="_blank" rel="noopener" href="https://maps.google.com/?q=http://s.binux.me/ingress/fixed_haerbin.kmz">坐标修正</a>  </p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-magnet-support-for-lixianqqcom" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2013-01-21T08:00:00.000Z"><a href="/2013/01/magnet-support-for-lixianqqcom/">2013-01-21</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/01/magnet-support-for-lixianqqcom/">QQ旋风离线页面 磁力链支持</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>我QQ不是会员，也没法挂旋风等级，所以一直以来我都没有用过QQ旋风，虽然它有免费的离线空间。直到后来外包的一个项目要求一些QQ旋风的功能，才不得不开通了90天试用。<br>比起迅雷来说，QQ旋风离线页面还真是够干净啊，同样干净的还有它的资源库。。东西实在太少了。  </p>
+<p>功能上，BT没分文件夹就不吐槽了。磁力链都不支持，G+有人向疼讯提意见，结果是直接被删除？！<a target="_blank" rel="noopener" href="https://plus.google.com/u/1/117337204302188511498/posts/PMrLviy1inx">https://plus.google.com/u/1/117337204302188511498/posts/PMrLviy1inx</a></p>
+<p>好吧，自己动手丰衣足食</p>
+<p>使用了以下一些东西:</p>
+<ul>
+<li><a href="/2012/09/python-web-proxy-on-ba/">http://pyproxy.duapp.com/</a> 用于承载cookie</li>
+<li><a target="_blank" rel="noopener" href="http://httpbin.duapp.com/">http://httpbin.duapp.com/cookies/set?name=value</a> 用于设置cookie</li>
+<li>然后还有迅雷的一些接口。。。</li>
+</ul>
+<p>地址：<a target="_blank" rel="noopener" href="https://gist.github.com/4585941">https://gist.github.com/4585941</a> 使用LGPL许可证发布<br>书签：<a href="javascript:void((function(){var d=document;var s=d.createElement('script');s.src='http://blog.binux.me/assets/image/xf_magnet.js';s.id='binux_script';d.body.appendChild(s)})())">xf_magnet</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-aria2-examples" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2012-12-24T08:00:00.000Z"><a href="/2012/12/aria2-examples/">2012-12-24</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2012/12/aria2-examples/">aria2配置示例</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>其实面对man的存在，写什么总结完全没有必要，一切宝藏都在<a target="_blank" rel="noopener" href="http://aria2.sourceforge.net/manual/en/html/aria2c.html">manual</a>。不过反正不会有人会读就是了。那我就写一下吧</p>
+<p>##基础<br>首先，aria2或者叫做aria2c，它是一个下载器，嗯。<br>常用的两种模式是直接下载，比如 <code>aria2c &quot;http://host/file.zip&quot;</code> 这样，当它完成后就退出了，就像wget（估计你们也不知道吧）那样。<br>另一种就是rpc server模式，特点就是，它启动之后什么都不干，然后等着从rpc接口添加任务，下载完也不退出，而是一直等着。对，就像迅雷干的那样，当然，它不会上传你硬盘上的数据。</p>
+<p>因为第一种方式要每次都敲命令，除非像我是原生<em>nix，没有命令行就没法用电脑，估计也没什么用，于是常用的就是第二种。一般启动命令是 <code>aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c -D</code> 。但是，其实*<em>这个命令是不好的！不要使用这种启动方式。</em></em><br>首先，用命令方式导致配置不方便修改保存，<code>-D</code>导致无法看到出错信息。</p>
+<p><strong>推荐启动方式是使用配置文件</strong> <code>$HOME/.aria2/aria2.conf</code> 。嗯，我知道路由上这个地址是无法修改或者重启后会丢失的，那么你可以放到别的地方，然后 <code>aria2c --conf-path=&lt;PATH&gt;</code> 注意 <code>&lt;PATH&gt;</code> 填完整路径，因为鬼知道这个程序是从那个路径启动的。<code>-D</code> (用于后台执行, 这样ssh断开连接后程序不会退出） 只有在确认OK之后在启动脚本中使用。</p>
+<p><strong>以下方案都基于配置文件方式</strong></p>
+<p>##图形界面<br>aria2是没有图形界面的，已知相对好用的图形界面有：</p>
+<ul>
+<li>我的<a target="_blank" rel="noopener" href="http://blog.binux.me/yaaw/">YAAW</a></li>
+<li>另一个web前端<a target="_blank" rel="noopener" href="http://ziahamza.github.com/webui-aria2/">webui-aria2</a></li>
+</ul>
+<p><strong>请使用chrome，firefox等现代浏览器访问。</strong>这两个东西都可以直接使用，除了看英文不爽以外，有什么必要下载回来使用？（吐槽：难道你们就不觉得webui-aria2的title总是被压成好几行，诡异的配色（对，说的就是那个蓝色背景，深蓝颜色的 <code>Use custom IP and port settings</code> 按钮）不难看吗？）<br><strong>这两个东西上的配置在重启后都会失效!</strong> 使用配置文件保存您的设置</p>
+<ul>
+<li>windows下有<a target="_blank" rel="noopener" href="http://sourceforge.net/projects/aria2cremote/">Aria2c Remote Control</a></li>
+<li>iphone有<a target="_blank" rel="noopener" href="https://itunes.apple.com/us/app/aria2-download-manager-remote/id525944692">Aria2 Download Manager</a></li>
+</ul>
+<p>图形界面基本都基于RPC模式，所以一定<strong>确定开启了RPC，IP端口可访问，并且在管理器中填写了正确的地址</strong>。</p>
+<p>##配置</p>
+<p><strong>请将所有配置置于配置文件中</strong><br><strong>只有在确认配置无误后再加上 <code>-D</code> 选项</strong><br><strong>请阅读出错信息!</strong></p>
+<p>###RPC<br><strong>需要1.14及以上版本</strong><br><a target="_blank" rel="noopener" href="http://aria2.sourceforge.net/manual/en/html/aria2c.html#rpc-options">http://aria2.sourceforge.net/manual/en/html/aria2c.html#rpc-options</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#允许rpc</span></span><br><span class="line">enable-rpc=<span class="literal">true</span></span><br><span class="line"><span class="comment">#允许所有来源, web界面跨域权限需要</span></span><br><span class="line">rpc-allow-origin-all=<span class="literal">true</span></span><br><span class="line"><span class="comment">#允许非外部访问</span></span><br><span class="line">rpc-listen-all=<span class="literal">true</span></span><br><span class="line"><span class="comment">#RPC端口, 仅当默认端口被占用时修改</span></span><br><span class="line"><span class="comment">#rpc-listen-port=6800</span></span><br></pre></td></tr></table></figure>
+
+<p>如果启动时出现 <code>Initializing EpollEventPoll failed.</code> 或相似错误, 在配置中加上 <code>event-poll=select</code></p>
+<p><strong>使用token验证（建议使用，需要1.18.4以上版本，帐号密码方式将在后续版本中停用！）</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># token验证</span></span><br><span class="line">rpc-secret=secret</span><br></pre></td></tr></table></figure>
+<p>在YAAW中使用 <code>http://token:secret@hostname:port/jsonrpc</code> 的地址格式设置secret.</p>
+<p>如果需要使用密码验证（需要1.15.2以上，1.18.6以下版本）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#用户名</span></span><br><span class="line">rpc-user=username</span><br><span class="line"><span class="comment">#密码</span></span><br><span class="line">rpc-passwd=passwd</span><br></pre></td></tr></table></figure>
+<p>在YAAW中使用 <code>http://username:passwd@hostname:port/jsonrpc</code> 的地址格式设置密码.<br>对于RPC模式来说, 界面和后端是分离的, 只要给后端设置密码即可. 前端认证什么的是毫无意义的.<br>如果你比较新潮, 在YAAW中也可以用 <code>ws://</code> 为前缀,只用websocket连接aria2c, 如果你不知道websocket是什么. 那就算了.</p>
+<p>###速度相关</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#最大同时下载数(任务数), 路由建议值: 3</span></span><br><span class="line">max-concurrent-downloads=5</span><br><span class="line"><span class="comment">#断点续传</span></span><br><span class="line"><span class="built_in">continue</span>=<span class="literal">true</span></span><br><span class="line"><span class="comment">#同服务器连接数</span></span><br><span class="line">max-connection-per-server=5</span><br><span class="line"><span class="comment">#最小文件分片大小, 下载线程数上限取决于能分出多少片, 对于小文件重要</span></span><br><span class="line">min-split-size=10M</span><br><span class="line"><span class="comment">#单文件最大线程数, 路由建议值: 5</span></span><br><span class="line"><span class="built_in">split</span>=10</span><br><span class="line"><span class="comment">#下载速度限制</span></span><br><span class="line">max-overall-download-limit=0</span><br><span class="line"><span class="comment">#单文件速度限制</span></span><br><span class="line">max-download-limit=0</span><br><span class="line"><span class="comment">#上传速度限制</span></span><br><span class="line">max-overall-upload-limit=0</span><br><span class="line"><span class="comment">#单文件速度限制</span></span><br><span class="line">max-upload-limit=0</span><br><span class="line"><span class="comment">#断开速度过慢的连接</span></span><br><span class="line"><span class="comment">#lowest-speed-limit=0</span></span><br><span class="line"><span class="comment">#验证用，需要1.16.1之后的release版本</span></span><br><span class="line"><span class="comment">#referer=*</span></span><br></pre></td></tr></table></figure>
+
+<p>###进度保存相关<br>aria2c只有在正常退出时(ctrl-c), 突然断电是无法保存进度的. 在第一次使用的时候会出现会话文件不存在的错误, 手动创建一个空文件即可. 如果您编写的是自动启动脚本, 在启动aria2前加上 <code>touch aria2.session</code> 这句命令.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">input-file=/some/where/aria2.session</span><br><span class="line">save-session=/some/where/aria2.session</span><br><span class="line"><span class="comment">#定时保存会话，需要1.16.1之后的release版</span></span><br><span class="line"><span class="comment">#save-session-interval=60</span></span><br></pre></td></tr></table></figure>
+
+<p>###磁盘相关</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#文件保存路径, 默认为当前启动位置</span></span><br><span class="line"><span class="built_in">dir</span>=/some/where</span><br><span class="line"><span class="comment">#文件缓存, 使用内置的文件缓存, 如果你不相信Linux内核文件缓存和磁盘内置缓存时使用, 需要1.16及以上版本</span></span><br><span class="line"><span class="comment">#disk-cache=0</span></span><br><span class="line"><span class="comment">#另一种Linux文件缓存方式, 使用前确保您使用的内核支持此选项, 需要1.15及以上版本(?)</span></span><br><span class="line"><span class="comment">#enable-mmap=true</span></span><br><span class="line"><span class="comment">#文件预分配, 能有效降低文件碎片, 提高磁盘性能. 缺点是预分配时间较长</span></span><br><span class="line"><span class="comment">#所需时间 none &lt; falloc ? trunc &lt;&lt; prealloc, falloc和trunc需要文件系统和内核支持</span></span><br><span class="line">file-allocation=prealloc</span><br></pre></td></tr></table></figure>
+
+<p>###BT相关<br><a target="_blank" rel="noopener" href="http://aria2.sourceforge.net/manual/en/html/aria2c.html#bittorrent-specific-options">http://aria2.sourceforge.net/manual/en/html/aria2c.html#bittorrent-specific-options</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#启用本地节点查找</span></span><br><span class="line">bt-enable-lpd=<span class="literal">true</span></span><br><span class="line"><span class="comment">#添加额外的tracker</span></span><br><span class="line"><span class="comment">#bt-tracker=&lt;URI&gt;,…</span></span><br><span class="line"><span class="comment">#单种子最大连接数</span></span><br><span class="line"><span class="comment">#bt-max-peers=55</span></span><br><span class="line"><span class="comment">#强制加密, 防迅雷必备</span></span><br><span class="line"><span class="comment">#bt-require-crypto=true</span></span><br><span class="line"><span class="comment">#当下载的文件是一个种子(以.torrent结尾)时, 自动下载BT</span></span><br><span class="line">follow-torrent=<span class="literal">true</span></span><br><span class="line"><span class="comment">#BT监听端口, 当端口屏蔽时使用</span></span><br><span class="line"><span class="comment">#listen-port=6881-6999</span></span><br></pre></td></tr></table></figure>
+
+<p>aria2亦可以用于PT下载, 下载的关键在于伪装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#不确定是否需要，为保险起见，need more test</span></span><br><span class="line">enable-dht=<span class="literal">false</span></span><br><span class="line">bt-enable-lpd=<span class="literal">false</span></span><br><span class="line">enable-peer-exchange=<span class="literal">false</span></span><br><span class="line"><span class="comment">#修改特征</span></span><br><span class="line">user-agent=uTorrent/2210(25130)</span><br><span class="line">peer-id-prefix=-UT2210-</span><br><span class="line"><span class="comment">#修改做种设置, 允许做种</span></span><br><span class="line">seed-ratio=0</span><br><span class="line"><span class="comment">#保存会话</span></span><br><span class="line">force-save=<span class="literal">true</span></span><br><span class="line">bt-hash-check-seed=<span class="literal">true</span></span><br><span class="line">bt-seed-unverified=<span class="literal">true</span></span><br><span class="line">bt-save-metadata=<span class="literal">true</span></span><br><span class="line"><span class="comment">#定时保存会话，需要1.16.1之后的某个release版本（比如1.16.2）</span></span><br><span class="line"><span class="comment">#save-session-interval=60</span></span><br></pre></td></tr></table></figure>
+
+<p>##常见问题<br>###Internal server error<br>手动访问你的JSON-RPC地址 <code>http://hostname:port/jsonrpc?jsoncallback=1</code> 如果没有返回, 请确认aria2是否启动以及连通性. 如果aria2在路由器后或没有公网IP, 请做好端口映射.</p>
+<p>###如何使用迅雷离线</p>
+<p><a target="_blank" rel="noopener" href="http://binux.github.com/ThunderLixianExporter/">http://binux.github.com/ThunderLixianExporter/</a><br>安装后, 在迅雷离线的右上角的设置中设置RPC地址.<br>提供chrome插件: <a target="_blank" rel="noopener" href="https://chrome.google.com/webstore/detail/thunderlixianassistant/eehlmkfpnagoieibahhcghphdbjcdmen">https://chrome.google.com/webstore/detail/thunderlixianassistant/eehlmkfpnagoieibahhcghphdbjcdmen</a></p>
+<p>###如何使用旋风离线(QQ离线)<br><a target="_blank" rel="noopener" href="http://userscripts.org/scripts/show/142624">http://userscripts.org/scripts/show/142624</a>安装脚本后, 在旋风离线页面使用.</p>
+<p>###如何安装aria2<br>我也不知道, 看你的box上有什么开源包管理器之类的东西, 有什么用什么. 如果没有, google之, 如果没有, 放弃吧.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-xunlei-any-down" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2012-12-10T08:00:00.000Z"><a href="/2012/12/xunlei-any-down/">2012-12-10</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2012/12/xunlei-any-down/">迅雷随便下</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        
+<p>本来这个漏洞在loli.lu关闭的时候就已经被发现，并且也告知了相关人员，而且我一度认为这个漏洞是有意留下的。后来经<a href="https://plus.google.com/u/1/112035543705440091116" target="_blank">+李草木</a>提起，发现为数众多的迅雷云点播破解依旧用的是这个漏洞。<b>既然要玩，就要玩票大的。</b></p>
+
+<ul>
+  <li> 任意地址，任意类型，立即提取下载链接</li>
+  <li> 管开坑，<b>不管填</b></li>
+  <li><b>您可能需要登陆一个迅雷账号（不需要VIP）</b></li>
+</ul>
+
+<hr />
+
+<section style="margin-top: 20px;">
+<script src="http://dynamic.vod.lixian.xunlei.com/fx"></script>
+<script src="http://lib.sinaapp.com/js/jquery/1.8.3/jquery.min.js"></script>
+<form id="xunlei-form">
+  <input id="xunlei-url" type=text placeholder="在这里填入各种链接" style="width:550px" /> <input type="submit" value="go" id="xunlei-go" />
+</form>
+
+<table><tbody id="result-table"></tbody></table>
+
+<script>
+$("#xunlei-form").on("submit", function() {
+  function doo() {
+    var url = $("#xunlei-url").val();
+    if (url) {
+      $("#result-table").empty().append("<tr><td>loading</td></tr>")
+      $.getJSON("http://roybinux.duapp.com/get?callback=?", {url: url, userid: window.xunlei_userid},
+        function(data) {
+          data = data.data;
+          if (data.items && data.items.length) {
+            $("#result-table").empty()
+            $.each(data.items, function(n, e) {
+              if (e.url) {
+                $("#result-table").append("<tr><td><a href='"+e.url+"' target='_blank'>"+e.title+"</a></td><td>"+format_size(parseInt(e.size))+"</td></tr>");
+              } else {
+                $("#result-table").append("<tr><td>"+e.title+"</td><td>"+format_size(parseInt(e.size))+"</td></tr>");
+              }
+            });
+          } else {
+            $("#result-table").empty().append("<tr><td>没有找到资源</td></tr>");
+          }
+        }).error(function() {
+          $("#result-table").empty().append("<tr><td>请求出错</td></tr>")
+        });
+    } else {
+      $("#result-table").empty().append("<tr><td>需要url</td></tr>")
+    }
+  }
+
+  if (!window.xunlei_userid) {
+    $.getJSON('http://i.vod.xunlei.com/req_subBT?jsonp=?', function(data) {
+      window.xunlei_userid = data.resp.userid || 21;
+      doo();
+    });
+  } else {
+    doo();
+  }
+  return false;
+});
+function format_size(spare_size)
+{
+  if (spare_size == 0)
+    return "0B";
+	var spare_str;
+	var spare_left;
+	if( spare_size >= 1024*1024*1024  )
+	{
+		spare_left = Math.floor(spare_size/(1024*1024*1024)*10);
+		spare_str = (spare_left/10).toString()+"GB";
+	}else if( spare_size >= 1024*1024 ){
+		spare_left = (Math.floor(spare_size*100/(1024*1024)))/100;
+		spare_str = spare_left.toString()+"MB";
+	}
+	else if(spare_size >= 1024){
+		spare_left = Math.floor(spare_size/1024);
+		spare_str = spare_left.toString()+"KB";
+	}
+	else{
+		spare_str = spare_size + "B";
+	}
+
+	return spare_str;
+}
+</script>
+</section>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+
+<nav id="pagination">
+  
+    <a href="/page/2/" class="alignleft prev">上一页</a>
+  
+  
+    <a href="/page/4/" class="alignright next">下一页</a>
+  
+  <div class="clearfix"></div>
+</nav></div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = '';
+this.page.identifier = '';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>Google Apps Script | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="#google你个sb 把Google Reader关闭了，就像 #google你个sb 里说的，永远不要相信有什么免费的东西，即使他是google提供的。比如今天介绍的这个 Google Apps Script，请不要相信它能长久运行下去，请准备好迁移的方案。
+Google Apps Script">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="Google Apps Script"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-google-apps-script" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2013-03-18T07:00:00.000Z"><a href="/2013/03/google-apps-script/">2013-03-18</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">Google Apps Script</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p><a href="/2012/11/google-sb/">#google你个sb</a> 把Google Reader关闭了，就像 <a href="/2012/11/google-sb/">#google你个sb</a> 里说的，<strong>永远不要相信有什么免费的东西，即使他是google提供的</strong>。比如今天介绍的这个 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/">Google Apps Script</a>，请不要相信它能长久运行下去，请准备好迁移的方案。</p>
+<h2 id="Google-Apps-Script"><a href="#Google-Apps-Script" class="headerlink" title="Google Apps Script"></a>Google Apps Script</h2><p>简称GAS，是一个JavaScript脚本驱动的云平台，通过GAS可以方便的连接Google和其他各种服务，执行各种自动化的任务。</p>
+<p>平台API提供了：  </p>
+<ul>
+<li>Google服务访问（mail, docs, charts, maps, calendar甚至还有翻译）</li>
+<li>界面</li>
+<li>数据库</li>
+<li><a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/service_urlfetch"><strong>urlfetch</strong></a>！（可以post、可以修改header、可以修改body、甚至有一个帮助使用OAuth的类）</li>
+<li><a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_time_triggers">定时任务</a>、<a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_container_triggers">触发器</a></li>
+<li>可以发布为<a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_web_apps">web apps</a>，可以获得get、post参数等</li>
+</ul>
+<p>甚至还有cache、lock，俨然要什么有什么啊！虽然有<a target="_blank" rel="noopener" href="http://docs.google.com/macros/dashboard">配额</a>限制，虽然HTML会被 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/html_service#Caja">重新渲染</a>，无法在页面中完整使用JavaScript，但是，冲着免费的 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/service_urlfetch">urlfetch</a> 和 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_time_triggers">定时任务</a> 就大有可为啊！我能想到的各种应用可以有：</p>
+<ul>
+<li>RSS转烧</li>
+<li>各种HTTP代理，转换，绕过</li>
+<li>数据统计、采集</li>
+<li>各种WebHook的定时触发、检测HTTP服务是不是挂了</li>
+<li>各种ifttt功能（特别是google自己的服务之间的）</li>
+<li>建一个简单的动态网站，或者给自己的静态网站提供直接API</li>
+</ul>
+<p>只要你想，大有可为。<br>API请参考 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/defaultservices">Default Services</a>，上方的 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_methods">Execution Methods for Scripts</a> 等文章对环境以及常见的需求有一些介绍，建议阅读。</p>
+<h2 id="应用示例"><a href="#应用示例" class="headerlink" title="应用示例"></a>应用示例</h2><h3 id="RSS转烧"><a href="#RSS转烧" class="headerlink" title="RSS转烧"></a>RSS转烧</h3><p>虽然HTML输出有限制，但 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/content_service">XML、JSON、JSONP</a> 却没有限制的，配合 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/service_urlfetch">urlfetch</a>，非常适合用来做RSS转烧，全文输出（这里建议用上缓存或者数据存储）等功能。</p>
+<p><strong>示例：</strong><br><a target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbys9aUHz-WVB2j6qIKOE4-ZVtEjRrLz8VeSph26WrivKFIlH0U/exec">yande.re高画质转烧</a> &#x2F; <a target="_blank" rel="noopener" href="https://script.google.com/d/1A-j39cTR8lnmJMaAodHHcjpyRyEoeTtZB4AE8RR4klKYxdZtbEklGHYb/edit?usp=sharing">源码</a><br><strong>发布指南：</strong></p>
+<ol>
+<li>阅读<a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_web_apps#deploying">Deploying Your Script as a Web App</a></li>
+<li>以自己的身份执行、访问权限为允许匿名</li>
+</ol>
+<p><strong>说明：</strong>这里展示的是图站 <a target="_blank" rel="noopener" href="https://yande.re/">yande.re</a> 的sample画质输出以及title修改，这是我的第一个脚本，这里稍微尝试了一下环境以及urlfetch的功能，应该还是蛮简单的。更多转烧：</p>
+<p><a target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbw4yYvSaKebIaHrlzM0BRJcb8DraGST_3EFHlIBX7ZRZ4JKlGk/exec">danbooru</a> <a target="_blank" rel="noopener" href="https://script.google.com/d/1HT85VFrLj_5kHH2ek3ONGgnHGhSSnYooZT_6ywCe-EOHIbvDvVrv1CX_/edit?usp=sharing">源码</a><br><a target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycby56iyEAOfVKpjspuV7e_vzfSLBOel4x02AXzFW1UoEfMJSwGnj/exec">konachan</a> <a target="_blank" rel="noopener" href="https://script.google.com/d/1PZBEnh63gfP9N6RpkgFlyoim_IpSrke5KxMjGUC_ApgGNoNnodfil3v1/edit?usp=sharing">源码</a></p>
+<h3 id="reader2gplus"><a href="#reader2gplus" class="headerlink" title="reader2gplus"></a>reader2gplus</h3><p>自动将Google Reader中加星的条目同步到Google+上（反正Google Reader也快死了。。这个也用不了多久了吧。。）</p>
+<p><strong>示例：</strong><a target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxWjsB7_8CHlgnyKo_AVFlgf8VPm5ZQ4OuNG1xL_7NKXG6prVw/exec">reader2gplus</a> &#x2F; <a target="_blank" rel="noopener" href="https://script.google.com/d/1FZad9bf60QJPRs-CcX9q8Q3qFS6-oMBYi5n3DNVoqZC2Wac0YFLXrJkW/edit?usp=sharing">源码</a><br><strong>发布指南：</strong></p>
+<ol>
+<li>阅读<a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_web_apps#deploying">Deploying Your Script as a Web App</a></li>
+<li>首先前往 <a target="_blank" rel="noopener" href="https://code.google.com/apis/console/">Google API Console</a> 生成一个API，启用Google+ API，并为其生成一个Web Apps的key</li>
+<li>在script脚本编辑页面中，Project Properties新建两个key：client_id, client_secret，填写上一步生成的key和secret</li>
+<li>发布为以访问者身份执行，分享您fork的脚本与访问权限相一致</li>
+</ol>
+<p><strong>说明：</strong>这里使用了 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/service_urlfetch">urlfetch</a> 更多的参数，实现了OAuth2.0认证，尝试了一下 <a target="_blank" rel="noopener" href="https://developers.google.com/+/api/latest/moments">Google+的新API</a>，使用了 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_time_triggers">定时任务</a> 、GET参数、<a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/html_service">界面</a> 以及 <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/script_user_properties#userProperties">用户数据存储</a> 。</p>
+<h3 id="迅雷离线预约下载"><a href="#迅雷离线预约下载" class="headerlink" title="迅雷离线预约下载"></a>迅雷离线预约下载</h3><p>自动将迅雷离线中完成的任务添加到Aria2上</p>
+<p><strong>示例：</strong><a target="_blank" rel="noopener" href="https://script.google.com/macros/s/AKfycbxqWzZ6CSVaXtUBO313S8bFhleYXzv5CbfeLpEs4_WVfnTYeco/exec">xunlei2aria2</a> &#x2F; <a target="_blank" rel="noopener" href="https://script.google.com/d/18pQAmp0THrjN148xoBFCgsUWJ__Xgi1nsih8WrOEM6eWVDziDPVDXc42/edit?usp=sharing">源码</a>  </p>
+<p><strong>使用说明：</strong></p>
+<ol>
+<li>访问示例页面，将【】中的脚本拖拽到书签栏中保存</li>
+<li>访问迅雷离线页面（建议先新建一个文件夹），登陆，点击书签</li>
+<li>选择要预约的文件夹，填写<a target="_blank" rel="noopener" href="http://binux.github.com/yaaw/">JSON-RPC地址</a>（<strong>需要能被外网访问</strong>）</li>
+<li>将需要下载到aria2中的任务添加或移动到预约的文件夹中，当文件从文件夹消失，文件已经被添加到aria2中了</li>
+</ol>
+<p><strong>发布指南：</strong></p>
+<ol>
+<li>阅读<a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/execution_web_apps#deploying">Deploying Your Script as a Web App</a></li>
+<li>发布为以访问者身份执行，分享您fork的脚本与访问权限相一致</li>
+</ol>
+<p><strong>说明：</strong>终于到了一个比较实用的脚本了，这里演示的是urlfetch真正有用的地方——跨API操作。所有的东西在reader2gplus中都已经用过了，但是结构要比reader2gplus好不少。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>GAS比起 <a target="_blank" rel="noopener" href="http://appengine.google.com/">GAE</a> 更加简单，但是功能足够强大，通过在线的调试器，写一两行代码比GAE要轻松不少。我JavaScript是在 <a target="_blank" rel="noopener" href="http://www.w3school.com.cn/index.html">w3school</a> 学的，完全野生程序猿，在这里只是为了抛砖引玉，希望您能通过 GAS 能玩出更多有意思的东西。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/javascript/">javascript</a>, <a href="/tags/GAS/">GAS</a>, <a href="/tags/google-apps-script/">google_apps_script</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = 'https://binux.blog/2013/03/google-apps-script/';
+this.page.identifier = 'https://binux.blog/2013/03/google-apps-script/';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

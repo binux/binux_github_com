@@ -1,0 +1,266 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="英文原文：http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/
+在上两篇教程中，我们学习了怎么从 HTML 中提取信息，也学习了怎么处理一些请求复杂的页面。但是有一些页面，它实在太复杂了，无论是分析 API 请求的地址，">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-pyspider-tutorial-level-3-render-with-phantomjs" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2015-01-10T08:00:00.000Z"><a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">2015-01-10</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>英文原文：<a target="_blank" rel="noopener" href="http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/">http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/</a></p>
+<p>在上两篇教程中，我们学习了怎么从 HTML 中提取信息，也学习了怎么处理一些请求复杂的页面。但是有一些页面，它实在太复杂了，无论是分析 API 请求的地址，还是渲染时进行了加密，让直接抓取请求非常麻烦。这时候就是 <a target="_blank" rel="noopener" href="http://phantomjs.org/">PhantomJS</a> 大显身手的时候了。</p>
+<p>在使用 <a target="_blank" rel="noopener" href="http://phantomjs.org/">PhantomJS</a> 之前，你需要安装它（<a target="_blank" rel="noopener" href="http://phantomjs.org/download.html">安装文档</a>）。当你安装了之后，在运行 <code>all</code> 模式的 pyspider 时就会自动启用了。当然，你也可以在 <a target="_blank" rel="noopener" href="http://demo.pyspider.org/">demo.pyspider.org</a> 上尝试。</p>
+<h2 id="使用-PhantomJS"><a href="#使用-PhantomJS" class="headerlink" title="使用 PhantomJS"></a>使用 PhantomJS</h2><p>当 pyspider 连上 PhantomJS 代理后，你就能通过在 <code>self.crawl</code> 中添加 <code>fetch_type=&#39;js&#39;</code> 的参数，开启使用 PhantomJS 抓取。例如，在教程二中，我们尝试抓取的 <a target="_blank" rel="noopener" href="http://movie.douban.com/explore">http://movie.douban.com/explore</a> 就可以通过 PhantomJS 直接抓取：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Handler</span>(<span class="title class_ inherited__">BaseHandler</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">on_start</span>(<span class="params">self</span>):</span><br><span class="line">        self.crawl(<span class="string">&#x27;http://movie.douban.com/explore&#x27;</span>,</span><br><span class="line">                   fetch_type=<span class="string">&#x27;js&#x27;</span>, callback=self.phantomjs_parser)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">phantomjs_parser</span>(<span class="params">self, response</span>):</span><br><span class="line">        <span class="keyword">return</span> [&#123;</span><br><span class="line">            <span class="string">&quot;title&quot;</span>: <span class="string">&quot;&quot;</span>.join(</span><br><span class="line">                s <span class="keyword">for</span> s <span class="keyword">in</span> x(<span class="string">&#x27;p&#x27;</span>).contents() <span class="keyword">if</span> <span class="built_in">isinstance</span>(s, basestring)</span><br><span class="line">            ).strip(),</span><br><span class="line">            <span class="string">&quot;rate&quot;</span>: x(<span class="string">&#x27;p strong&#x27;</span>).text(),</span><br><span class="line">            <span class="string">&quot;url&quot;</span>: x.attr.href,</span><br><span class="line">        &#125; <span class="keyword">for</span> x <span class="keyword">in</span> response.doc(<span class="string">&#x27;a.item&#x27;</span>).items()]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>我在这里使用了一些 PyQuery 的 API，你可以在 <a target="_blank" rel="noopener" href="https://pythonhosted.org/pyquery/api.html">PyQuery complete API</a> 获得完整的 API 手册。</li>
+</ul>
+</blockquote>
+<h2 id="在页面上执行自定义脚本"><a href="#在页面上执行自定义脚本" class="headerlink" title="在页面上执行自定义脚本"></a>在页面上执行自定义脚本</h2><p>你会发现，在上面我们使用 <a target="_blank" rel="noopener" href="http://phantomjs.org/">PhantomJS</a> 抓取的豆瓣热门电影只有 20 条。当你点击『加载更多』时，能获得更多的热门电影。为了获得更多的电影，我们可以使用 <code>self.crawl</code> 的 <code>js_script</code> 参数，在页面上执行一段脚本，点击加载更多：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">on_start</span>(<span class="params">self</span>):</span><br><span class="line">    self.crawl(<span class="string">&#x27;http://movie.douban.com/explore#more&#x27;</span>,</span><br><span class="line">               fetch_type=<span class="string">&#x27;js&#x27;</span>, js_script=<span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">               function() &#123;</span></span><br><span class="line"><span class="string">                 setTimeout(&quot;$(&#x27;.more&#x27;).click()&quot;, 1000);</span></span><br><span class="line"><span class="string">               &#125;&quot;&quot;&quot;</span>, callback=self.phantomjs_parser)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>这个脚本默认在页面加载结束后执行，你可以通过 <code>js_run_at</code> <a target="_blank" rel="noopener" href="http://docs.pyspider.org/en/latest//apis/self.crawl/#enable-javascript-fetcher-need-support-by-fetcher">参数</a> 修改这个行为</li>
+<li>由于是 AJAX 异步加载的，在页面加载完成时，第一页的电影可能还没有加载完，所以我们用 <code>setTimeout</code> 延迟 1 秒执行。</li>
+<li>你可以间隔一定时间，多次点击，这样可以加载更多页。</li>
+<li>由于相同 URL （实际是相同 taskid） 的任务会被去重，所以这里为 URL 加了一个 <code>#more</code></li>
+</ul>
+</blockquote>
+<p>上面两个例子，都可以在 <a target="_blank" rel="noopener" href="http://demo.pyspider.org/debug/tutorial_douban_explore">http://demo.pyspider.org/debug/tutorial_douban_explore</a> 中找到。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/python/">python</a>, <a href="/tags/pyspider/">pyspider</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = 'https://binux.blog/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/';
+this.page.identifier = 'https://binux.blog/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

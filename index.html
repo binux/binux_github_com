@@ -1,0 +1,1069 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-home-assistant" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2020-01-05T01:54:54.000Z"><a href="/2020/01/home-assistant/">2020-01-04</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2020/01/home-assistant/">家居自动化</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>从 Google Assistant, Amazon Alexa, Apple Homekit 到米家，智能家居自动化已经不是什么新鲜的概念了。对于我来说，入坑的契机也非常简单：我不想下床关灯。然后随着想要自动化的场景增加，智能设备（可编程设备）就越来越多。这篇文章就根据自动场景介绍一下我现在的一些方案（本文无任何 affiliate ）。</p>
+<h2 id="Hub"><a href="#Hub" class="headerlink" title="Hub"></a>Hub</h2><p>首先，在配置场景之前，需要选择一个 Hub —— 作为自动化中心，连接传感器和操作控制器（例如灯，插座，IR 遥控器等）。你可以选择 Google Home，Alexa，Homekit 这样大厂的方案，不过这里我还是推荐 <a target="_blank" rel="noopener" href="https://www.home-assistant.io/">Home Assistant</a> 这样的开源方案：</p>
+<ul>
+<li>更多的<a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/">接入设备支持</a>（你甚至可以同时接入 Alexa 和 Google Assistant 的设备）</li>
+<li>更自由的自动化配置（例如 Google Assistant 不支持延迟触发；你甚至可以写 shell 脚本）</li>
+<li>更好的隐私保护（Home Assistant 的设备支持大多来源于逆向设备 API，能不联网就不联网）</li>
+</ul>
+<p>我在 Synology DS218+ 上以 docker 运行 Home Assistant。</p>
+<p>不过无论你选择什么方案，在这之后购买传感器和控制器的时候都需要注意你的 Hub 是否支持设备接入。考虑到价格，我的设备主要是 TP-Link 的插座加上米家的传感器，我会在具体场景中详细列出。</p>
+<h2 id="自动化场景"><a href="#自动化场景" class="headerlink" title="自动化场景"></a>自动化场景</h2><h3 id="Hey-Google-Good-Night"><a href="#Hey-Google-Good-Night" class="headerlink" title="Hey Google, Good Night"></a>Hey Google, Good Night</h3><p>首先就是我入坑的第一个场景，在床上关上家中所有的灯。我用到的设备有：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://store.google.com/us/product/google_home_mini">Google Home Mini</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.kasasmart.com/us/products/smart-plugs/kasa-smart-plug-energy-monitoring-hs110">TP-Link Smart Plug HS110</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.kasasmart.com/us/products/smart-switches/kasa-smart-wi-fi-light-switch-hs200">TP-Link Smart Switch HS200</a></li>
+</ul>
+<p>由于美国的房子没有灯，对的，没·有·灯。默认的开关控制的插座不一定在我想要的位置。这时候就可以用一个 Smart Plug 接一个落地灯。而对于其他自带的例如浴室厨房灯，就通过替换 Smart Switch 控制。</p>
+<p>设置方面也很简单，直接在 Google Home 的 Routines 中关掉所有的开关就好了。</p>
+<h3 id="自动开关厕所灯"><a href="#自动开关厕所灯" class="headerlink" title="自动开关厕所灯"></a>自动开关厕所灯</h3><p>这也是很常见的使用场景，红外感应人进入就开灯，然后延迟关灯，用到的设备有：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.mi.com/wangguan">米家多功能网关</a></li>
+<li><a target="_blank" rel="noopener" href="https://item.mi.com/product/5005.html">米家人体传感器</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.kasasmart.com/us/products/smart-switches/kasa-smart-wi-fi-light-switch-hs200">TP-Link Smart Switch HS200</a></li>
+</ul>
+<p>首先跟着<a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/xiaomi_aqara/">文档</a>将米家多功能网关接入 Home Assistant，然后就可以添加 Automation 了：</p>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token punctuation">-</span> <span class="token key atrule">id</span><span class="token punctuation">:</span> <span class="token string">'1561354113814'</span>
+  <span class="token key atrule">alias</span><span class="token punctuation">:</span> Turn On Bathroom
+  <span class="token key atrule">trigger</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">entity_id</span><span class="token punctuation">:</span> binary_sensor.xiaomi_motion_sensor
+    <span class="token key atrule">platform</span><span class="token punctuation">:</span> state
+    <span class="token key atrule">to</span><span class="token punctuation">:</span> <span class="token string">'on'</span>
+  <span class="token key atrule">condition</span><span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+  <span class="token key atrule">action</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">data</span><span class="token punctuation">:</span>
+      <span class="token key atrule">entity_id</span><span class="token punctuation">:</span> switch.bathroom_light
+    <span class="token key atrule">service</span><span class="token punctuation">:</span> switch.turn_on
+<span class="token punctuation">-</span> <span class="token key atrule">id</span><span class="token punctuation">:</span> <span class="token string">'1560102516271'</span>
+  <span class="token key atrule">alias</span><span class="token punctuation">:</span> Turn Off Bathroom
+  <span class="token key atrule">trigger</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">entity_id</span><span class="token punctuation">:</span> switch.bathroom_light
+    <span class="token key atrule">for</span><span class="token punctuation">:</span> <span class="token datetime number">00:10:00</span>
+    <span class="token key atrule">platform</span><span class="token punctuation">:</span> state
+    <span class="token key atrule">to</span><span class="token punctuation">:</span> <span class="token string">'on'</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">entity_id</span><span class="token punctuation">:</span> binary_sensor.xiaomi_motion_sensor
+    <span class="token key atrule">for</span><span class="token punctuation">:</span> <span class="token datetime number">00:10:00</span>
+    <span class="token key atrule">platform</span><span class="token punctuation">:</span> state
+    <span class="token key atrule">to</span><span class="token punctuation">:</span> <span class="token string">'off'</span>
+  <span class="token key atrule">condition</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">condition</span><span class="token punctuation">:</span> template
+    <span class="token key atrule">value_template</span><span class="token punctuation">:</span> '<span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> is_state("switch.bathroom_light"<span class="token punctuation">,</span> "on") and as_timestamp(now())
+      <span class="token punctuation">-</span> as_timestamp(states.switch.bathroom_light.last_changed) <span class="token punctuation">></span> 600 <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>'
+  <span class="token punctuation">-</span> <span class="token key atrule">condition</span><span class="token punctuation">:</span> template
+    <span class="token key atrule">value_template</span><span class="token punctuation">:</span> '<span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span> is_state("binary_sensor.xiaomi_motion_sensor"<span class="token punctuation">,</span> "off") and
+      as_timestamp(now()) <span class="token punctuation">-</span> as_timestamp(states.binary_sensor.xiaomi_motion_sensor.last_changed)
+      <span class="token punctuation">></span> 600 <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>'
+  <span class="token key atrule">action</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">alias</span><span class="token punctuation">:</span> <span class="token string">''</span>
+    <span class="token key atrule">data</span><span class="token punctuation">:</span>
+      <span class="token key atrule">entity_id</span><span class="token punctuation">:</span> switch.bathroom_light
+    <span class="token key atrule">service</span><span class="token punctuation">:</span> switch.turn_off<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="进门自动开灯"><a href="#进门自动开灯" class="headerlink" title="进门自动开灯"></a>进门自动开灯</h3><p>这可以有两个方案，一个是用摄像头检测到人就开灯，或者用 Smart Lock 的开锁事件。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://wyze.com/wyze-cam.html">Wyze Cam</a></li>
+<li><a target="_blank" rel="noopener" href="https://august.com/products/august-smart-lock-pro-connect">August Smart Lock Pro</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.kasasmart.com/us/products/smart-switches/kasa-smart-wi-fi-light-switch-hs200">TP-Link Smart Switch HS200</a></li>
+</ul>
+<p>Wyze Cam 就是<a target="_blank" rel="noopener" href="https://www.mi.com/xiaofang">小方智能摄像机</a> 的国外版本，你可以用<a target="_blank" rel="noopener" href="https://github.com/EliasKotlyar/Xiaomi-Dafang-Hacks">开源的固件</a>。如果直接用它自带的。接入 Home Assistant 需要通过 ifttt。August Lock 就能直接支持了。</p>
+<p>设置自动化和上面类似，condition 里面可以设置只在下班时间或者太阳落山后时才开灯。这里就贴配置了。总的来说 Smart Lock 比摄像头的方案要稳定得多，误触也少。</p>
+<h3 id="Hey-Google-True-on-Projector"><a href="#Hey-Google-True-on-Projector" class="headerlink" title="Hey Google, True on Projector"></a>Hey Google, True on Projector</h3><p>由于经常搬家，我都是用投影代替电视的。毕竟同样的尺寸，投影机容易搬多了。然后我现在的投影机是内置音响的，所以我还有一个 soundbar。这个场景就是，当我打开投影的时候，同时打开音响，关闭客厅灯，然后 PC 的输出切换到投影上，再打开 Plex。这里面用到的是：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://store.google.com/us/product/google_home_mini">Google Home Mini</a></li>
+<li><a target="_blank" rel="noopener" href="https://item.mi.com/product/9465.html">米家万能遥控器</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/KjetilSv/Win10As">Win10As</a></li>
+</ul>
+<p>首先是将这几个设备接入 Home Assistant，参考 <a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/remote.xiaomi_miio/">Xiaomi IR Remote</a> 和 <a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/mqtt/">mqtt</a> 的文档就好了。</p>
+<p>然后是控制投影的开关，当米家万能遥控器接入 Home Assistant 后，可以通过 <code>xiaomi_miio.remote_learn_command</code> 指令学习投影遥控的开关机代码，然后在 Home Assistant 中建立一个虚拟开关：</p>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">remote</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">platform</span><span class="token punctuation">:</span> xiaomi_miio
+    <span class="token key atrule">host</span><span class="token punctuation">:</span> 192.168.1.104
+    <span class="token key atrule">token</span><span class="token punctuation">:</span> dxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxb
+    <span class="token key atrule">commands</span><span class="token punctuation">:</span>
+      <span class="token key atrule">project_on</span><span class="token punctuation">:</span>
+        <span class="token key atrule">command</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> raw<span class="token punctuation">:</span>nMwmkwlk0mkxmEsms4mEsmM2m0wlk2AMKYzYBYgCDmoDLTUA85gAOUyAXkB+wOfAhkBDwEPAQYGSAXOCE8IQwQVCNsAcghfAI8AjwPImM2mYDPg7tMIA
+      <span class="token key atrule">project_off</span><span class="token punctuation">:</span>
+        <span class="token key atrule">command</span><span class="token punctuation">:</span>
+        <span class="token punctuation">-</span> raw<span class="token punctuation">:</span>nMwmMwlk0mk1mEsms3mEsmM2AEIAjJqAywA/gD+Bz4DPgIeAh4CHgy+BB4EHgMeAh4BHgReAz4A6TCAA
+
+<span class="token key atrule">switch</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">platform</span><span class="token punctuation">:</span> template
+    <span class="token key atrule">switches</span><span class="token punctuation">:</span>
+      <span class="token key atrule">projector</span><span class="token punctuation">:</span>
+        <span class="token key atrule">value_template</span><span class="token punctuation">:</span> <span class="token string">"&#123;&#123; states('input_boolean.projector') &#125;&#125;"</span>
+        <span class="token key atrule">turn_on</span><span class="token punctuation">:</span>
+          <span class="token punctuation">-</span> <span class="token key atrule">service</span><span class="token punctuation">:</span> remote.send_command
+            <span class="token key atrule">data</span><span class="token punctuation">:</span>
+              <span class="token key atrule">command</span><span class="token punctuation">:</span>
+              <span class="token punctuation">-</span> project_on
+              <span class="token key atrule">entity_id</span><span class="token punctuation">:</span> remote.xiaomi_miio_192_168_1_104
+          <span class="token punctuation">-</span> <span class="token key atrule">service</span><span class="token punctuation">:</span> input_boolean.turn_on
+            <span class="token key atrule">entity_id</span><span class="token punctuation">:</span> input_boolean.projector
+        <span class="token key atrule">turn_off</span><span class="token punctuation">:</span>
+          <span class="token punctuation">-</span> <span class="token key atrule">service</span><span class="token punctuation">:</span> remote.send_command
+            <span class="token key atrule">data</span><span class="token punctuation">:</span>
+              <span class="token key atrule">command</span><span class="token punctuation">:</span>
+              <span class="token punctuation">-</span> project_off
+              <span class="token key atrule">entity_id</span><span class="token punctuation">:</span> remote.xiaomi_miio_192_168_1_104
+          <span class="token punctuation">-</span> <span class="token key atrule">service</span><span class="token punctuation">:</span> input_boolean.turn_off
+            <span class="token key atrule">entity_id</span><span class="token punctuation">:</span> input_boolean.projector
+
+<span class="token key atrule">input_boolean</span><span class="token punctuation">:</span>
+  <span class="token key atrule">projector</span><span class="token punctuation">:</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>音响也是一样，依葫芦画瓢就好了。</p>
+<p>然后是 PC 这边，这里用了一个一个开源程序 <a target="_blank" rel="noopener" href="https://github.com/KjetilSv/Win10As">Win10As</a> 然后通过 <a target="_blank" rel="noopener" href="https://www.home-assistant.io/integrations/mqtt/">mqtt</a> 协议和 Home Assistant 连接。</p>
+<p>设置三个指令：</p>
+<table>
+<thead>
+<tr>
+<th>name</th>
+<th>cmdtext</th>
+<th>cmdparameters</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>exec&#x2F;plex</td>
+<td>D:\plex.bat</td>
+<td>1</td>
+</tr>
+<tr>
+<td>display&#x2F;pc</td>
+<td>D:\DisplaySwitch.exe</td>
+<td>&#x2F;internal</td>
+</tr>
+<tr>
+<td>display&#x2F;projector</td>
+<td>D:\DisplaySwitch.exe</td>
+<td>&#x2F;external</td>
+</tr>
+</tbody></table>
+<p>其中 plex.bat：<code>start &quot;&quot; /B &quot;C:\Program Files\Plex\Plex Media Player\PlexMediaPlayer.exe&quot; --tv --fullscreen</code><br>DisplaySwitch.exe 位于 <code>C:\Windows\System32\DisplaySwitch.exe</code> 不知道为什么从 Win10As 中无法访问这个程序，不过把它拷贝出来也是一样用的。</p>
+<p>然后可以在 Home Assistant 中加一个 pc_screen 的 switch：</p>
+<pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">switch</span><span class="token punctuation">:</span>
+  <span class="token punctuation">-</span> <span class="token key atrule">platform</span><span class="token punctuation">:</span> template
+      <span class="token key atrule">pc_screen</span><span class="token punctuation">:</span>
+        <span class="token key atrule">value_template</span><span class="token punctuation">:</span> <span class="token string">"&#123;&#123; states('input_boolean.pc_screen') &#125;&#125;"</span>
+        <span class="token key atrule">turn_on</span><span class="token punctuation">:</span>
+          <span class="token punctuation">-</span> <span class="token key atrule">service</span><span class="token punctuation">:</span> mqtt.publish
+            <span class="token key atrule">data</span><span class="token punctuation">:</span>
+              <span class="token key atrule">topic</span><span class="token punctuation">:</span> GAMEBOX/display/pc
+          <span class="token punctuation">-</span> <span class="token key atrule">service</span><span class="token punctuation">:</span> input_boolean.turn_on
+            <span class="token key atrule">entity_id</span><span class="token punctuation">:</span> input_boolean.pc_screen
+        <span class="token key atrule">turn_off</span><span class="token punctuation">:</span>
+          <span class="token punctuation">-</span> <span class="token key atrule">service</span><span class="token punctuation">:</span> mqtt.publish
+            <span class="token key atrule">data</span><span class="token punctuation">:</span>
+              <span class="token key atrule">topic</span><span class="token punctuation">:</span> GAMEBOX/display/projector
+          <span class="token punctuation">-</span> <span class="token key atrule">service</span><span class="token punctuation">:</span> input_boolean.turn_on
+            <span class="token key atrule">entity_id</span><span class="token punctuation">:</span> input_boolean.pc_screen
+
+<span class="token key atrule">input_boolean</span><span class="token punctuation">:</span>
+  <span class="token key atrule">pc_screen</span><span class="token punctuation">:</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>然后就可以通过 Automation 把它们串起来了。由于是 WebUI 就能配置的，我就不贴出来了。注意一点是在打开投影机到切换 PC 输出之间加一个延迟，等到投影 ready 再切换，切换后再加个延迟再启动 Plex 就能保证 Plex 在投影的窗口前台全屏显示了。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其他的例如</p>
+<ul>
+<li>Hey Google, Turn on XXX 等单独的开关</li>
+<li>Good Night 的时候同时关电脑，关投影</li>
+<li>Google Assistant 控制 Alexa 设备</li>
+<li>监控本月流量有没有超过 1T，在 80% 关掉 PT 上传</li>
+<li>通过路由器监控接入设备，判断人在家的时候关闭摄像头监控</li>
+<li>当阳台摄像头检测到移动，Google Home Mini 的喇叭鸣警笛。</li>
+<li>当按照某种特定的顺序打开灯的时候，自动打开门，以防止出门忘带手机（前提是你能让 Google Home Mini 听到在门外的你）</li>
+</ul>
+<p>由于都是重用现有设备这里就不介绍了，这些都能通过 Home Assistant 接入后用 Automation 完成。</p>
+<p>总之「智能家居」中的「智能」其实就是一个语音识别加上一个个预定的场景，很蠢，但是，<strong>真香</strong>。当习惯了叫一句 Hey Google 就能躺着沙发上开关各种设备之后，就再也回不去找各种遥控器了。比起一个「懂你」然后随时监听上传的设备，一个<a target="_blank" rel="noopener" href="https://github.com/synesthesiam/rhasspy">离线语音识别</a>，加自定义的场景可能能更快地满足你对自动化的需要。</p>
+<p>如果你有家居自动化的点子或者方案也可以留言交流，(´▽&#96;ʃ♡ƪ)</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-zerotier-nat-gateway-and-iptables-debug" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2019-03-02T06:48:44.000Z"><a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">2019-03-01</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>每当看到各类教程中的 iptables 指令，在格式参数组合之下可以实现从防火墙，封禁 IP 端口到 NAT 的各种操作，就如同魔法一般，看不明白，却又感到无比强大。想学，但又好像不得要领，稍微不慎可能就再也连不上了。最近配置 Zerotier 的 Nat 网关的时候，看着 <a target="_blank" rel="noopener" href="https://zerotier.atlassian.net/wiki/spaces/SD/pages/7110693/Overriding+Default+Route+Full+Tunnel+Mode">教程</a> 中的各种指令，抄过之后完全不通，花了3个晚上之后，逼着搞清楚了怎么 debug ( 打 log ) 后，终于配置成功 (虽然最终失败的原因和 iptables 无关)。</p>
+<h2 id="Zerotier"><a href="#Zerotier" class="headerlink" title="Zerotier"></a>Zerotier</h2><p>首先介绍下 <a target="_blank" rel="noopener" href="https://www.zerotier.com/">Zerotier</a> 和为什么要配置 Nat 网关。</p>
+<p><a target="_blank" rel="noopener" href="https://www.zerotier.com/">Zerotier</a> 是一个虚拟局域网软件，可以很简单地将无限量（社区服务器版100台）设备放入同一个虚拟局域网中。这样就能在任何网络环境中，访问家中的 NAS 或其他设备。反过来，如果将一台服务器加入这个局域网中，将它配置为一个 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Network_address_translation">NAT</a> 网关，只要你加入这个虚拟局域网，就可以通过它连接世界。</p>
+<p>选择 Zerotier 的原因是，它足够简单，只要一个 16 位的 network ID 就能实现组网了，相比我之前用过的 <a target="_blank" rel="noopener" href="https://www.tinc-vpn.org/">tinc</a>，不需要节点 IP，不需要挨个配置节点，并且支持的操作系统广泛。</p>
+<p>当然，第一步是<a target="_blank" rel="noopener" href="http://www.zerotier.com/download.shtml">安装 Zerotier</a>，然后<a target="_blank" rel="noopener" href="https://my.zerotier.com/">注册一个帐号</a>，<a target="_blank" rel="noopener" href="https://my.zerotier.com/network">创建一个私人网络</a>。复制 network ID 在本地加入，然后回到网站中通过许可 (<code>Auth?</code>) 就好了。</p>
+<p>当你将本地计算机和一台服务器加入网络后，然后就是根据 <a target="_blank" rel="noopener" href="https://zerotier.atlassian.net/wiki/spaces/SD/pages/7110693/Overriding+Default+Route+Full+Tunnel+Mode">这个教程</a> 。运行下面4个命令就行了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo sysctl -w net.ipv4.ip_forward=1</span><br><span class="line">sudo iptables -t nat -A POSTROUTING -o eth0 -s 10.6.4.0/22 -j SNAT --to-source 45.32.69.220</span><br><span class="line">sudo iptables -A FORWARD -i zt+ -s 10.6.4.0/22 -d 0.0.0.0/0 -j ACCEPT</span><br><span class="line">sudo iptables -A FORWARD -i eth0 -s 0.0.0.0/0 -d 10.6.4.0/0 -j ACCEPT</span><br></pre></td></tr></table></figure>
+
+<p>当然了，很明显，这里的 <code>eth0</code>, <code>10.6.4.0/22</code>, <code>45.32.69.220</code> 是需要根据实际环境替换的，<code>zt+</code> 是指的任何以 <code>zt</code> 开头的网络，zerotier 都是以这样的名字创建的，所以不用修改。这都可以通过 <code>ip addr</code> 或者 <code>ifconfig</code> 进行确认。比如在我的环境中，环境是这样的：</p>
+<ul>
+<li>网关外网 IP：123.45.67.89</li>
+<li>zertier 网络: 192.168.11.0&#x2F;24</li>
+<li>网关 zerotier 网络 IP: 192.168.11.1</li>
+<li>本机 IP：192.168.11.20</li>
+</ul>
+<p>命令是这样的：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo sysctl -w net.ipv4.ip_forward=1</span><br><span class="line">sudo iptables -t nat -A POSTROUTING -o venet0 -s 192.168.111.0/24 -j SNAT --to-source 123.45.67.89</span><br><span class="line">sudo iptables -A FORWARD -i zt+ -s 192.168.111.0/24 -d 0.0.0.0/0 -j ACCEPT</span><br><span class="line">sudo iptables -A FORWARD -i venet0 -s 0.0.0.0/0 -d 192.168.111.0/24 -j ACCEPT</span><br></pre></td></tr></table></figure>
+
+<p>当我设置完了这些，然后把这个服务器设置为默认 0.0.0.0&#x2F;0 的网关之后，我断网了<br><del>如果这样有用的话，我岂不是就没机会学习 iptables 了。</del>  </p>
+<h2 id="iptables"><a href="#iptables" class="headerlink" title="iptables"></a>iptables</h2><p>首先当然是把默认路由改回来。然后，如果只是为了调试，是不需要设置默认路由的，或者说最好不要设置默认路由到这台机器上的，你可以通过</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># macos</span></span><br><span class="line">sudo route add -net 98.76.54.32 192.168.111.1</span><br><span class="line"><span class="comment"># linux</span></span><br><span class="line"><span class="comment"># sudo route add -net 98.76.64.32 gw 192.168.111.1</span></span><br></pre></td></tr></table></figure>
+
+<p>设置一条单独的路由，到另一台主机上，然后就可以单独监控调试这条链路的情况了。</p>
+<h3 id="LOG-和-TRACE"><a href="#LOG-和-TRACE" class="headerlink" title="LOG 和 TRACE"></a>LOG 和 TRACE</h3><p>好了，既然现在网络不通，我最想知道的当然是哪断了。</p>
+<h4 id="本机-gt-网关"><a href="#本机-gt-网关" class="headerlink" title="本机 -&gt; 网关"></a>本机 -&gt; 网关</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -t raw -A PREROUTING -p TCP -s 192.168.111.20 -j LOG</span><br></pre></td></tr></table></figure>
+
+<p>这里就给所有从 本机 发往 网关 的 TCP 数据包打了 LOG，然后 <code>tail -f /var/log/messages</code> （或者 <code>tail -f /var/log/kern.log</code>) 追踪日志。<br>现在你可以从本地往测试服务器发个请求： <code>curl 98.76.54.32</code>，如果在日志中看到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mar  2 15:53:14 myserver kernel: [5377966.960574] IN=zthnhi321 OUT= MAC=88:55:bb:99:88:88:88:66:11:dd:ff:bb:00:00 SRC=192.168.111.20 DST=98.76.54.32 LEN=64 TOS=0x00 PREC=0x00 TTL=64 ID=45807 DF PROTO=TCP SPT=64408 DPT=80 WINDOW=65535 RES=0x00 SYN URGP=0</span><br></pre></td></tr></table></figure>
+
+<p>那么就可以确认网关确实收到这个包了</p>
+<h4 id="网关-gt-网站"><a href="#网关-gt-网站" class="headerlink" title="网关 -&gt; 网站"></a>网关 -&gt; 网站</h4><p>然后可以用 TRACE 追踪这个包是否触发了 NAT。</p>
+<blockquote>
+<p>在一些环境中，你可能需要开启 TRACE 内核支持，参考 <a target="_blank" rel="noopener" href="https://serverfault.com/questions/385937/how-to-enable-iptables-trace-target-on-debian-squeeze-6">How to Enable IPtables TRACE Target on Debian Squeeze (6)</a></p>
+</blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -t raw -A PREROUTING -p TCP -s 192.168.111.20 -j TRACE </span><br></pre></td></tr></table></figure>
+
+<p>你会看到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Mar  2 15:58:11 myserver kernel: [5378263.921579] IN=zthnhi321 OUT= MAC=88:55:bb:99:88:88:88:66:11:dd:ff:bb:00:00 SRC=192.168.111.20 DST=98.76.54.32 LEN=64 TOS=0x00 PREC=0x00 TTL=64 ID=32766 DF PROTO=TCP SPT=65087 DPT=80 WINDOW=65535 RES=0x00 CWR ECE SYN URGP=0</span><br><span class="line">Mar  2 15:58:11 myserver kernel: [5378263.921611] TRACE: raw:PREROUTING:policy:3 IN=zthnhi321 OUT= MAC=88:55:bb:99:88:88:88:66:11:dd:ff:bb:00:00 SRC=192.168.111.20 DST=98.76.54.32 LEN=64 TOS=0x00 PREC=0x00 TTL=64 ID=32766 DF PROTO=TCP SPT=65087 DPT=80 SEQ=3874826404 ACK=0 WINDOW=65535 RES=0x00 CWR ECE SYN URGP=0 OPT (02040ACA2C84454E80103030501000004010800000020000)</span><br><span class="line">Mar  2 15:58:11 myserver kernel: [5378263.921645] TRACE: mangle:PREROUTING:policy:1 IN=zthnhi321 OUT= MAC=88:55:bb:99:88:88:88:66:11:dd:ff:bb:00:00 SRC=192.168.111.20 DST=98.76.54.32 LEN=64 TOS=0x00 PREC=0x00 TTL=64 ID=32766 DF PROTO=TCP SPT=65087 DPT=80 SEQ=3874826404 ACK=0 WINDOW=65535 RES=0x00 CWR ECE SYN URGP=0 OPT (02040ACA2C84454E80103030501000004010800000020000)</span><br><span class="line">Mar  2 15:58:11 myserver kernel: [5378263.921672] TRACE: nat:PREROUTING:policy:1 IN=zthnhi321 OUT= MAC=88:55:bb:99:88:88:88:66:11:dd:ff:bb:00:00 SRC=192.168.111.20 DST=98.76.54.32 LEN=64 TOS=0x00 PREC=0x00 TTL=64 ID=32766 DF PROTO=TCP SPT=65087 DPT=80 SEQ=3874826404 ACK=0 WINDOW=65535 RES=0x00 CWR ECE SYN URGP=0 OPT (02040ACA2C84454E80103030501000004010800000020000)</span><br><span class="line">Mar  2 15:58:11 myserver kernel: [5378263.921698] TRACE: mangle:FORWARD:policy:1 IN=zthnhi321 OUT=venet0 SRC=192.168.111.20 DST=98.76.54.32 LEN=64 TOS=0x00 PREC=0x00 TTL=63 ID=32766 DF PROTO=TCP SPT=65087 DPT=80 SEQ=3874826404 ACK=0 WINDOW=65535 RES=0x00 CWR ECE SYN URGP=0 OPT (02040ACA2C84454E80103030501000004010800000020000)</span><br><span class="line">Mar  2 15:58:11 myserver kernel: [5378263.921719] TRACE: filter:FORWARD:rule:1 IN=zthnhi321 OUT=venet0 SRC=192.168.111.20 DST=98.76.54.32 LEN=64 TOS=0x00 PREC=0x00 TTL=63 ID=32766 DF PROTO=TCP SPT=65087 DPT=80 SEQ=3874826404 ACK=0 WINDOW=65535 RES=0x00 CWR ECE SYN URGP=0 OPT (02040ACA2C84454E80103030501000004010800000020000)</span><br><span class="line">Mar  2 15:58:11 myserver kernel: [5378263.921741] TRACE: mangle:POSTROUTING:policy:1 IN= OUT=venet0 SRC=192.168.111.20 DST=98.76.54.32 LEN=64 TOS=0x00 PREC=0x00 TTL=63 ID=32766 DF PROTO=TCP SPT=65087 DPT=80 SEQ=3874826404 ACK=0 WINDOW=65535 RES=0x00 CWR ECE SYN URGP=0 OPT (02040ACA2C84454E80103030501000004010800000020000)</span><br><span class="line">Mar  2 15:58:11 myserver kernel: [5378263.921763] TRACE: nat:POSTROUTING:rule:1 IN= OUT=venet0 SRC=192.168.111.20 DST=98.76.54.32 LEN=64 TOS=0x00 PREC=0x00 TTL=63 ID=32766 DF PROTO=TCP SPT=65087 DPT=80 SEQ=3874826404 ACK=0 WINDOW=65535 RES=0x00 CWR ECE SYN URGP=0 OPT (02040ACA2C84454E80103030501000004010800000020000)</span><br></pre></td></tr></table></figure>
+
+<p>表明这个包分别经过了</p>
+<ul>
+<li>raw:PREROUTING:policy:3</li>
+<li>mangle:PREROUTING:policy:1</li>
+<li>nat:PREROUTING:policy:1</li>
+<li>mangle:FORWARD:policy:1</li>
+<li>filter:FORWARD:rule:1</li>
+<li>mangle:POSTROUTING:policy:1</li>
+<li>nat:POSTROUTING:rule:1</li>
+</ul>
+<p>你可以通过</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -t nat -nvL --line-numbers</span><br></pre></td></tr></table></figure>
+
+<p>查看对应的规则编号。在这里，可以看到 <code>filter:FORWARD:rule:1</code> 和 <code>nat:POSTROUTING:rule:1</code> 被触发了。即</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo iptables -A FORWARD -i zt+ -s 192.168.111.0/24 -d 0.0.0.0/0 -j ACCEPT</span><br><span class="line">sudo iptables -t nat -A POSTROUTING -o venet0 -s 192.168.111.0/24 -j SNAT --to-source 123.45.67.89</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>另外如果你尝试过执行 <code>iptables -t nat -A POSTROUTING -i zt+ -o venet0</code> ，会收到 <code>Can&#39;t use -i with POSTROUTING</code> 报错。从 TRACE 中可以看出 <code>nat:POSTROUTING:rule:1</code> 中 <code>IN=</code> 是空的。所以在 <code>POSTROUTING</code> 表中是不能使用 <code>-i</code> 指定入包接口的。</p>
+</blockquote>
+<h4 id="网站-gt-网关-gt-本机"><a href="#网站-gt-网关-gt-本机" class="headerlink" title="网站 -&gt; 网关 -&gt; 本机"></a>网站 -&gt; 网关 -&gt; 本机</h4><p>这次我们一步到位</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">iptables -t raw -A PREROUTING -p TCP -s 98.76.54.32 -j LOG</span><br><span class="line">iptables -t raw -A PREROUTING -p TCP -s 98.76.54.32 -j TRACE</span><br></pre></td></tr></table></figure>
+
+<p>另外为了防止日志太多，这里可以把刚才添加的那条 TRACE 删掉：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iptables -t raw -D PREROUTING -p TCP -s 192.168.111.20 -j TRACE </span><br></pre></td></tr></table></figure>
+
+<p>再次 <code>curl 98.76.54.32</code> 就能看到包返回了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Mar  3 14:04:55 myserver kernel: [5457820.771146] IN=zthnhi321 OUT= MAC=88:55:bb:99:88:88:88:66:11:dd:ff:bb:00:00 SRC=192.168.111.20 DST=98.76.54.32 LEN=64 TOS=0x00 PREC=0x00 TTL=64 ID=64965 DF PROTO=TCP SPT=57286 DPT=80 WINDOW=65535 RES=0x00 CWR ECE SYN URGP=0</span><br><span class="line">Mar  3 14:04:55 myserver kernel: [5457820.771696] IN=venet0 OUT= MAC= SRC=98.76.54.32 DST=123.45.67.89 LEN=60 TOS=0x00 PREC=0x00 TTL=55 ID=0 DF PROTO=TCP SPT=80 DPT=57286 WINDOW=14480 RES=0x00 ECE ACK SYN URGP=0</span><br><span class="line">Mar  3 14:04:55 myserver kernel: [5457820.771713] TRACE: raw:PREROUTING:policy:4 IN=venet0 OUT= MAC= SRC=98.76.54.32 DST=123.45.67.89 LEN=60 TOS=0x00 PREC=0x00 TTL=55 ID=0 DF PROTO=TCP SPT=80 DPT=57286 SEQ=1319922288 ACK=3993987234 WINDOW=14480 RES=0x00 ECE ACK SYN URGP=0 OPT (020401AA7250238401080A2F75F14B4048030307)</span><br><span class="line">Mar  3 14:04:55 myserver kernel: [5457820.771729] TRACE: mangle:PREROUTING:policy:1 IN=venet0 OUT= MAC= SRC=98.76.54.32 DST=123.45.67.89 LEN=60 TOS=0x00 PREC=0x00 TTL=55 ID=0 DF PROTO=TCP SPT=80 DPT=57286 SEQ=1319922288 ACK=3993987234 WINDOW=14480 RES=0x00 ECE ACK SYN URGP=0 OPT (020401AA7250238401080A2F75F14B4048030307)</span><br><span class="line">Mar  3 14:04:55 myserver kernel: [5457820.771743] TRACE: mangle:FORWARD:policy:1 IN=venet0 OUT=zthnhi321 SRC=98.76.54.32 DST=192.168.111.20 LEN=60 TOS=0x00 PREC=0x00 TTL=55 ID=0 DF PROTO=TCP SPT=80 DPT=57286 SEQ=1319922288 ACK=3993987234 WINDOW=14480 RES=0x00 ECE ACK SYN URGP=0 OPT (020401AA7250238401080A2F75F14B4048030307)</span><br><span class="line">Mar  3 14:04:55 myserver kernel: [5457820.771755] TRACE: filter:FORWARD:rule:2 IN=venet0 OUT=zthnhi321 SRC=98.76.54.32 DST=192.168.111.20 LEN=60 TOS=0x00 PREC=0x00 TTL=55 ID=0 DF PROTO=TCP SPT=80 DPT=57286 SEQ=1319922288 ACK=3993987234 WINDOW=14480 RES=0x00 ECE ACK SYN URGP=0 OPT (020401AA7250238401080A2F75F14B4048030307)</span><br><span class="line">Mar  3 14:04:55 myserver kernel: [5457820.771767] TRACE: mangle:POSTROUTING:policy:1 IN= OUT=zthnhi321 SRC=98.76.54.32 DST=192.168.111.20 LEN=60 TOS=0x00 PREC=0x00 TTL=55 ID=0 DF PROTO=TCP SPT=80 DPT=57286 SEQ=1319922288 ACK=3993987234 WINDOW=14480 RES=0x00 ECE ACK SYN URGP=0 OPT (020401AA7250238401080A2F75F14B4048030307)</span><br></pre></td></tr></table></figure>
+
+<p>同理，可以看到数据包在经过 <code>mangle:PREROUTING:policy:1</code> 之后，DST 被改写回了 <code>192.168.111.20</code>。于是一次成功的 NAT 就完成了。</p>
+<p>最后，这里有一张图，显示了数据包都会经过什么表:</p>
+<p><a title="Jan Engelhardt [CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0)], via Wikimedia Commons" target="_blank" rel="noopener" href="https://commons.wikimedia.org/wiki/File:Netfilter-packet-flow.svg"><img width="512" alt="Netfilter-packet-flow" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Netfilter-packet-flow.svg/512px-Netfilter-packet-flow.svg.png"></a></p>
+<blockquote>
+<p>之前配置 NAT 网关不成功的原因是：zerotier 防火墙错误设置了如下规则，导致包没法发回本机。</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">drop</span><br><span class="line">	not chr ipauth</span><br><span class="line">;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="网关"><a href="#网关" class="headerlink" title="网关+"></a>网关+</h2><p>既然有网关了，我就想能不能再搞个智能回国网关。，只要我连上这个局域网，就能听网易云音乐了。我用的 vnet.one 用的是 anyconnect 连接，它有一个开源实现 openconnect，于是我<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/38369950/openconnect-not-able-to-connect-to-gateway/42342253">这样</a>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install curl vpnc-scripts build-essential libssl-dev libxml2-dev liblz4-dev</span><br><span class="line">wget ftp://ftp.infradead.org/pub/openconnect/openconnect-8.02.tar.gz</span><br><span class="line">tar xzf openconnect-8.02.tar.gz</span><br><span class="line"><span class="built_in">cd</span> openconnect-8.02</span><br><span class="line">./configure --without-gnutls --with-vpnc-script=/usr/share/vpnc-scripts/vpnc-script</span><br><span class="line">make</span><br><span class="line">sudo make install</span><br><span class="line">sudo ldconfig /usr/local/lib</span><br></pre></td></tr></table></figure>
+
+<p>然后用 <a target="_blank" rel="noopener" href="https://github.com/ashi009/bestroutetb">bestroutetb</a> 生成个路由：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bestroutetb --route.net=US,GB  --route.vpn=CN -p json -o routes.json -f</span><br><span class="line">jq <span class="string">&#x27;.[] | select(.gateway == &quot;vpn&quot;) | .prefix + &quot;/&quot; + (.length | tostring)&#x27;</span>  routes.json  -c -r &gt; routes.cn</span><br></pre></td></tr></table></figure>
+
+<p>整个设置路由的脚本</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="built_in">source</span> /root/.bashrc</span><br><span class="line"></span><br><span class="line">DIR=$(<span class="built_in">dirname</span> <span class="variable">$0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Routes that we want to be used by the VPN link</span></span><br><span class="line">ROUTES=`<span class="built_in">cat</span> <span class="variable">$DIR</span>/routes.cn`</span><br><span class="line"></span><br><span class="line"><span class="comment"># Helpers to create dotted-quad netmask strings.</span></span><br><span class="line">MASKS[1]=<span class="string">&quot;128.0.0.0&quot;</span></span><br><span class="line">MASKS[2]=<span class="string">&quot;192.0.0.0&quot;</span></span><br><span class="line">MASKS[3]=<span class="string">&quot;224.0.0.0&quot;</span></span><br><span class="line">MASKS[4]=<span class="string">&quot;240.0.0.0&quot;</span></span><br><span class="line">MASKS[5]=<span class="string">&quot;248.0.0.0&quot;</span></span><br><span class="line">MASKS[6]=<span class="string">&quot;252.0.0.0&quot;</span></span><br><span class="line">MASKS[7]=<span class="string">&quot;254.0.0.0&quot;</span></span><br><span class="line">MASKS[8]=<span class="string">&quot;255.0.0.0&quot;</span></span><br><span class="line">MASKS[9]=<span class="string">&quot;255.128.0.0&quot;</span></span><br><span class="line">MASKS[10]=<span class="string">&quot;255.192.0.0&quot;</span></span><br><span class="line">MASKS[11]=<span class="string">&quot;255.224.0.0&quot;</span></span><br><span class="line">MASKS[12]=<span class="string">&quot;255.240.0.0&quot;</span></span><br><span class="line">MASKS[13]=<span class="string">&quot;255.248.0.0&quot;</span></span><br><span class="line">MASKS[14]=<span class="string">&quot;255.252.0.0&quot;</span></span><br><span class="line">MASKS[15]=<span class="string">&quot;255.254.0.0&quot;</span></span><br><span class="line">MASKS[16]=<span class="string">&quot;255.255.0.0&quot;</span></span><br><span class="line">MASKS[17]=<span class="string">&quot;255.255.128.0&quot;</span></span><br><span class="line">MASKS[18]=<span class="string">&quot;255.255.192.0&quot;</span></span><br><span class="line">MASKS[19]=<span class="string">&quot;255.255.224.0&quot;</span></span><br><span class="line">MASKS[20]=<span class="string">&quot;255.255.240.0&quot;</span></span><br><span class="line">MASKS[21]=<span class="string">&quot;255.255.248.0&quot;</span></span><br><span class="line">MASKS[22]=<span class="string">&quot;255.255.252.0&quot;</span></span><br><span class="line">MASKS[23]=<span class="string">&quot;255.255.254.0&quot;</span></span><br><span class="line">MASKS[24]=<span class="string">&quot;255.255.255.0&quot;</span></span><br><span class="line">MASKS[25]=<span class="string">&quot;255.255.255.128&quot;</span></span><br><span class="line">MASKS[26]=<span class="string">&quot;255.255.255.192&quot;</span></span><br><span class="line">MASKS[27]=<span class="string">&quot;255.255.255.224&quot;</span></span><br><span class="line">MASKS[28]=<span class="string">&quot;255.255.255.240&quot;</span></span><br><span class="line">MASKS[29]=<span class="string">&quot;255.255.255.248&quot;</span></span><br><span class="line">MASKS[30]=<span class="string">&quot;255.255.255.252&quot;</span></span><br><span class="line">MASKS[31]=<span class="string">&quot;255.255.255.254&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">export</span> CISCO_SPLIT_INC=0</span><br><span class="line"></span><br><span class="line"><span class="comment"># Create environment variables that vpnc-script uses to configure network</span></span><br><span class="line"><span class="keyword">function</span> <span class="function"><span class="title">addroute</span></span>()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">local</span> ROUTE=<span class="string">&quot;<span class="variable">$1</span>&quot;</span></span><br><span class="line">    <span class="built_in">export</span> CISCO_SPLIT_INC_<span class="variable">$&#123;CISCO_SPLIT_INC&#125;</span>_ADDR=<span class="variable">$&#123;ROUTE%%/*&#125;</span></span><br><span class="line">    <span class="built_in">export</span> CISCO_SPLIT_INC_<span class="variable">$&#123;CISCO_SPLIT_INC&#125;</span>_MASKLEN=<span class="variable">$&#123;ROUTE##*/&#125;</span></span><br><span class="line">    <span class="built_in">export</span> CISCO_SPLIT_INC_<span class="variable">$&#123;CISCO_SPLIT_INC&#125;</span>_MASK=<span class="variable">$&#123;MASKS[<span class="variable">$&#123;ROUTE##*/&#125;</span>]&#125;</span></span><br><span class="line">    <span class="built_in">export</span> CISCO_SPLIT_INC=$((<span class="variable">$&#123;CISCO_SPLIT_INC&#125;</span>+<span class="number">1</span>))</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> r <span class="keyword">in</span> <span class="variable">$ROUTES</span>; <span class="keyword">do</span></span><br><span class="line">    addroute <span class="variable">$r</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> l <span class="keyword">in</span> <span class="variable">$INTERNAL_IP4_DNS</span>; <span class="keyword">do</span></span><br><span class="line">    <span class="keyword">if</span> [ <span class="variable">$reason</span> = <span class="string">&quot;connect&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">        iptables -t nat -A PREROUTING -i zt+ -p udp --dport 53 -j DNAT --to <span class="variable">$l</span></span><br><span class="line">    <span class="keyword">elif</span> [ <span class="variable">$reason</span> = <span class="string">&quot;disconnect&quot;</span> ]; <span class="keyword">then</span></span><br><span class="line">        iptables -t nat -D PREROUTING -i zt+ -p udp --dport 53 -j DNAT --to <span class="variable">$l</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line">    <span class="built_in">break</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">exec</span> /usr/share/vpnc-scripts/vpnc-script</span><br></pre></td></tr></table></figure>
+
+<p>整合一下</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&quot;password&quot;</span> | openconnect address.example.org -u username --passwd-on-stdin --non-inter --script /root/openconnect/script.sh</span><br></pre></td></tr></table></figure>
+
+<p>完成。只不过，如果要看 bilibili 还需要设置 DNS 到国内，或者设置到网关上（上面的脚本配置了 DNS 转发）。而且 zerotier 只是为了虚拟局域网设计的，不如 anyconnect 能自动设置网关，路由，DNS方便。不过挺好玩的，还学了不少东西，over。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-girls-frontline-ankulua-vision" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2018-10-14T22:22:15.000Z"><a href="/2018/10/girls-frontline-ankulua-vision/">2018-10-14</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>最近在玩少女前线，这是一个手机游戏，over。不是，就真的没有什么好讲的嘛，了解的人早有耳闻，不了解的就只要知道这是个手机游戏就好了，嗯。</p>
+<p>然后，我会好好地，正常地，氪金地去玩这个游戏吗？不可能的，玩游戏哪有破解它有意思呢。当年破解 Ingress 是因为它用的 HTTPS 通信的，算是本行。百万亚瑟王是因为别人已经逆向好了，我只是写了一些 bot。现在这么办，玩不了了吗？作为一个不会安卓，不会逆向，不会汇编的菜鸡，那我只好上按键精灵了啊。于是乎，我找到了这个： <a target="_blank" rel="noopener" href="http://ankulua-tw.boards.net/thread/2/ankulua">AnkuLua</a></p>
+<blockquote>
+<p>AnkuLua 是一個專注在自動化的Android App<br>基本自動化動作有:</p>
+<ul>
+<li>抓取螢幕並找尋指定圖案 </li>
+<li>對找圖結果採取使用者要的動作(例如點擊、抓放(drag and drop)、打字…等等)</li>
+</ul>
+</blockquote>
+<p>最重要的是，它能运行 lua 脚本！虽然我是一个不会安卓，不会逆向，不会汇编的菜鸡，但是我会 lua 啊。</p>
+<h3 id="ankulua-vision"><a href="#ankulua-vision" class="headerlink" title="ankulua-vision"></a>ankulua-vision</h3><p>不过，在使用过程中发现，找寻指定图案，需要不断截图&#x2F;裁剪，这样太麻烦了。于是我又用 electron 做了一个可视化的截图资源管理器 <a target="_blank" rel="noopener" href="https://github.com/binux/ankulua-vision">ankulua-vision</a>，像这样的：</p>
+<p><img src="https://raw.githack.com/binux/ankulua-vision/master/static/Screenshot.png" alt="screenshot"></p>
+<p>基本思路就是，一般游戏是由众多 UI 界面组成的，点击某个按钮能跳转到某个界面上去。那么通过截图，标注<strong>识别区域</strong>，那么程序就能知道游戏现在所处的界面。通过标注<strong>按钮区域</strong>，那么只需要 <code>goto(&#39;battle&#39;)</code>，程序就能自动规划从当前界面到 battle 的可行路径，然后点啊点啊就完成需要的操作了。这样一方面不需要自己去裁剪图片了，另一方面通过框架代码，在运行过程中能够有更多的错误检查，自动应对可能出现的各种异常。</p>
+<p>理论上，对于点啊点的游戏，是能实现无代码的。即使不能，对于复杂的动作，也可以通过 lua 拓展。</p>
+<p>源码在这里：<a target="_blank" rel="noopener" href="https://github.com/binux/ankulua-vision">https://github.com/binux/ankulua-vision</a>  </p>
+<p>你依旧需要在安卓手机或者模拟器中安装 ankulua，然后加载生成的 start.lua 脚本。默认自带了一个简单的循环逻辑，运行后可以直接图形化界面配置运行。当然你也可以通过 lua 脚本拓展，除了 ankulua 本身的 API 可用之外，你也可以使用 <code>stateMachine</code> 这套界面跳转逻辑 API，重用简化步骤。<code>stateMachine</code> 的 API 在 README 中有简略的文档说明。</p>
+<p><img src="/assets/image/MuMu20181014200018.png" alt="setting screenshot"></p>
+<p>源码使用 GPLv3 或 MIT 许可证，取决于第一个有效 PR（例如 fix typo 不算），如果第一个 PR 之前有商业化需求或者 PR 作者要求，则 MIT。</p>
+<h3 id="少女前线拖尸脚本"><a href="#少女前线拖尸脚本" class="headerlink" title="少女前线拖尸脚本"></a>少女前线拖尸脚本</h3><p><strong>WARNING: 任何使用脚本的行为都是官方禁止的，我不对下文所述任何内容以及其后果负责</strong></p>
+<p>于是，这里就是 少女前线的拖尸脚本：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/binux/binux_github_com/releases/download/gf/shojo.zip">https://github.com/binux/binux_github_com/releases/download/gf/shojo.zip</a></p>
+<p>同时它也是一个 ankulua-vision 的项目，你可以通过 ankulua-vision 打开这个项目目录，调整截屏或者按钮位置。</p>
+<h4 id="脚本实现的功能"><a href="#脚本实现的功能" class="headerlink" title="脚本实现的功能"></a>脚本实现的功能</h4><ul>
+<li>43e, 02, 52n 拖尸</li>
+<li>自动重启后勤</li>
+<li>自动强化或者分解人形</li>
+<li>自动修理</li>
+</ul>
+<h4 id="使用方法"><a href="#使用方法" class="headerlink" title="使用方法"></a>使用方法</h4><ol>
+<li>根据 <a target="_blank" rel="noopener" href="http://bbs.nga.cn/read.php?tid=13670657">[填坑结束？][失了智]萌新向拖尸教学帖[更新8-1N相关]</a> 一文准备好打手和阵型，一队练级队，二队补给队，52n 还需要 3 队狗粮队。</li>
+<li>解压拷贝脚本到手机中，在 ankulua 中加载 start.lua。</li>
+<li>在启动界面中选择你的两个打手（每轮结束后，两个打手会交换），选择拖尸任务，如果仅自动后勤，选择 null 就好了。</li>
+</ol>
+<p>其中 52n 会在战斗中撤退 5, 8 号位 （见 NGA 文 “43e的说明” 展开部分），02 在选择 m4a1 时会撤退 1, 7 号位。</p>
+<p><img src="/assets/image/MuMu20181014200007.png" alt="setting screenshot"></p>
+<p>然后开始吧！</p>
+<p><strong>WARNING: 任何使用脚本的行为都是官方禁止的，我不对上文所述任何内容以及其后果负责</strong></p>
+<p>over</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-us" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2018-02-08T05:04:03.000Z"><a href="/2018/02/us/">2018-02-07</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2018/02/us/">2018 新的冒险</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>真的又是好久没有写 blog 了。</p>
+<p>年纪大了，记忆力下降，没有学习新东西的动力，也没精力折腾新的技术，新的领域了。每天就是看看斗鱼，打打游戏就过去了，现在的理想就是早点退休，当条咸鱼就好了。</p>
+<p>2017 年主要给公司开发了一套基于 electron (chromium) 的页面渲染后端，可以保证抓取时和用户浏览器中看到的保持一致。同时这个服务器端的浏览器，可以通过 websocket 连接用户浏览器，双向同步页面内容变化，录下用户操作，在抓取时进行重放。这些功能我真的很想做给 pyspider，但是确实不方便。眼见着 pyspider stars 过万，而我却渐渐没有精力去维护了。我的希望是以后从现在的公司离职之后能有2-6个月全职开发 pyspider，算是这几年项目荒废的补偿吧。</p>
+<p>公司终于把伦敦办公室关闭了，我也随着搬到了美国（湾区）。随便写一点美国的感受吧：</p>
+<ul>
+<li>加州税真高，比英国还高，英国人家好歹有免费医保啊</li>
+<li>美国真的是物资极大的丰富，真的可以理解为什么很多中国人来了就想要留下来，小富即安<ul>
+<li>地广人稀，使得超市都是 super 起步的，这样会让选择非常多，卖的量都是加大号的</li>
+<li>充足的停车场，汽车出行不用担心不方便停车</li>
+<li>汽车让生活半径极大扩大，湾区各种中餐半小时车程都能到达，而半小时车程也不过是正常通勤所花的时间</li>
+<li>各种服务比起英国齐全多了，而且周六日不休</li>
+<li>apartment 社区大都自带 365 天 7 * 24 开放恒温游泳池，健身房等设施（即使大冬天根本没有人去用，水也是恒温并更新的）</li>
+</ul>
+</li>
+<li>非实时记账，很多场合真的需要使用支票，需要通过账单付费；因为是后付费，需要 SSN 查询你的信用记录。真的很不方便。</li>
+<li>租房好贵，宽带好贵，手机卡好贵，小费好贵</li>
+</ul>
+<p>总体来说，英国更接近国内的政府+生活模式，而美国是只要你花钱，什么都有，不花钱，滚蛋。反正 L1 签证也就 3 年，也不能跳槽，而且就美国这个 H1B 抽奖 + 绿卡排队，比起英国来简直就是地狱模式。趁着这几年，在美国多玩一玩吧。9酱。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-data-highlighter" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2016-12-04T21:19:10.000Z"><a href="/2016/12/data-highlighter/">2016-12-04</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/12/data-highlighter/">Data Highlighter</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>又是好久没有写 blog 了。现在确实没有上学的时候愿意折腾了，能用钱解决的问题，就不自己动手了。但是，很久不写 blog 这事呢，其实就是因为懒 _ (:3」∠) _。</p>
+<p>这里带来的是 <a href="/2014/07/how-to-extract-data-from-web/"><br>如何从 WEB 页面中提取信息</a> 一文中提到的 data highlighter。但是由于开源需要重写代码，而我并不打算使用它，这里只给出 <a target="_blank" rel="noopener" href="https://demo.binux.me/data_highlighter.html">demo</a> 和算法思路。</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Data Highlighter 其实是一种生成提取规则的方式：</p>
+<blockquote>
+<p>Data Highlighter 的标注方式是：给一系列相似的页面，让用户标出（高亮）每个属性在页面中的位置。通过多个页面的标注信息，寻找每个属性的特征。当然了，这个特征可以是 xpath，也可以是上下文，也有可能是机器学习的特征向量。<br>Data Hightlighter 通过高亮 多个页面中相同属性 进行规则学习，省去了人为设置规则时的学习成本。实践表明，在单一页面模板下，标记2个页面就足以生成规则了。效率远大于手工设置规则。Google Data Highlighter 甚至对文字进行了切分，能在 英语 &#x2F; 汉语普通话 &#x2F; 粤语 xpath 相同的情况下，分别选出三种语言。是我目前见过的成熟度最高、通用性最好、最简便的数据抽取方式。</p>
+</blockquote>
+<p>那我们通过例子介绍一下使用方式。首先打开 <a target="_blank" rel="noopener" href="https://demo.binux.me/data_highlighter.html">demo</a>。这里列出了5个豆瓣电影的 sample 页面，点击 go 加载页面。将鼠标放在页面中，就会发现文字被高亮了，点击拖拽鼠标选择需要提取的文字，在弹出的菜单中选择属性名。</p>
+<br>
+
+<p><video controls autoplay loop src="/assets/image/screen-data-highlighter-select.mp4"></video></p>
+<p>然后分别点击 <code>gen_tpl</code> 和 <code>test_all</code> 就能看到生成的模板，以及提取效果了。</p>
+<p>![extraction sample](&#x2F;assets&#x2F;image&#x2F;Screenshot 2016-12-04 14.44.18.png)</p>
+<h2 id="算法解析"><a href="#算法解析" class="headerlink" title="算法解析"></a>算法解析</h2><p>点击 <code>gen_tpl</code> 就可以看到生成的模板了，<code>tpl</code> 字段的 key 为抽取的变量的名字，value 描述了一个 <a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%9C%89%E9%99%90%E7%8A%B6%E6%80%81%E6%9C%BA">状态机</a>。</p>
+<p>先看一个简单的例子，以下就是对 <code>name</code> 字段的模板，它描述了一个 <code>s0 -&gt; e0</code> 的状态机。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;need_more_sample&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;tips&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span><span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;tpl&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;name&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;states&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">        <span class="attr">&quot;s0&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;tag&quot;</span><span class="punctuation">:</span> <span class="string">&quot;start&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;transitions&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">            <span class="string">&quot;e0&quot;</span></span><br><span class="line">          <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;condition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;xpath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/html/body/div/div/h1/span/textnode&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;features&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">              <span class="attr">&quot;exclude&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">              <span class="attr">&quot;include&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">                <span class="string">&quot;ancestor::*[1][name()=\&quot;span\&quot; and @property=&#x27;v:itemreviewed&#x27;]&quot;</span></span><br><span class="line">              <span class="punctuation">]</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">        <span class="attr">&quot;e0&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">          <span class="attr">&quot;tag&quot;</span><span class="punctuation">:</span> <span class="string">&quot;end&quot;</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;transitions&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">          <span class="attr">&quot;condition&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">            <span class="attr">&quot;xpath&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/html/body/div/div/h1/span/textnode&quot;</span><span class="punctuation">,</span></span><br><span class="line">            <span class="attr">&quot;features&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">              <span class="attr">&quot;exclude&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">                <span class="string">&quot;following::*[position()=1 and name()=\&quot;textnode\&quot;]&quot;</span></span><br><span class="line">              <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">              <span class="attr">&quot;include&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">                <span class="string">&quot;ancestor::*[1]/*[last()-0] = ancestor-or-self::*[1]&quot;</span></span><br><span class="line">              <span class="punctuation">]</span></span><br><span class="line">            <span class="punctuation">&#125;</span></span><br><span class="line">          <span class="punctuation">&#125;</span></span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line">      <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;entrance_state&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">        <span class="string">&quot;s0&quot;</span></span><br><span class="line">      <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;is_list&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;data_type&quot;</span><span class="punctuation">:</span> <span class="string">&quot;TEXT&quot;</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>直接跳到 <code>tpl.name</code> 部分，它有4个字段，<code>is_list</code> 和 <code>data_type</code> 描述了字段的类型，它们在字段定义的时候就已经指定了，没什么好说的。<code>states</code> 和 <code>entrance_state</code> 为状态机的描述部分。</p>
+</blockquote>
+<blockquote>
+<p><code>entrance_state</code> 表示状态机的入口为 <code>s0</code>。</p>
+<p><code>states</code> 中描述了两个状态 <code>s0</code> 和 <code>e0</code>。 <code>s0.tag == start</code> 表示这是一个开始状态，即标示字段提取的开头，<code>e0.tag == end</code> 为结束状态，即字段的结尾。<code>s0.transitions == [e0]</code> 表示从 <code>s0</code> 能够转移到 <code>e0</code>，而由于 <code>e0.tag == end</code> 已经结束了，所以就没有转移状态了。<br><br><br>在执行时，<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86#.E5.85.88.E5.BA.8F.E9.81.8D.E5.8E.86.28Pre-Order_Traversal.29">先序遍历</a> DOM 树，根据 <code>condition</code> 的条件进行状态转移。</p>
+</blockquote>
+<blockquote>
+<p><code>s0.condition</code> 表示进入开始条件为：xpath <code>/html/body/div/div/h1/span/textnode</code> 并且满足 <code>ancestor::*[1][name()=\&quot;span\&quot; and @property=&#39;v:itemreviewed&#39;]</code>（父元素的 name 为 span，property 属性为 “v:itemreviewed”) 这个特征。  </p>
+</blockquote>
+<blockquote>
+<p>而进入结束条件为 <code>e0.condition</code>： xpath <code>/html/body/div/div/h1/span/textnode</code> 并且满足 <code>ancestor::*[1]/*[last()-0] = ancestor-or-self::*[1]</code>（最后一个元素），并排除满足 <code>following::*[position()=1 and name()=\&quot;textnode\&quot;]</code>（右兄弟为 textnode，实际与 include 互斥）的元素。</p>
+</blockquote>
+<blockquote>
+<p><strong>简单地说，这个状态机描述了 <code>属性 property=&#39;v:itemviewed&#39; 的 span 的所有 textnode 孩子</code> 这样一条规则。</strong></p>
+</blockquote>
+<blockquote>
+<p>而多状态的执行也是类似的，只不过它可能存在状态分支，或者在多个状态间循环。不过只要根据状态转移条件状态进行转移，再根据 <code>tag</code> 所标识的开始结束进行提取即可。</p>
+</blockquote>
+<p>为什么要使用状态机在后面的小结讲解，我们暂且将整个状态机理解为「描述字段提取的开头和结尾」，每个状态就描述了开头结尾的特征。先来看看状态是如何描述「字段提取的开头和结尾」的。</p>
+<h3 id="状态条件的生成"><a href="#状态条件的生成" class="headerlink" title="状态条件的生成"></a>状态条件的生成</h3><p>算法的基本思路是<strong>寻找多个样本间相同的特征，并使得特征排除其他相似元素</strong>。</p>
+<p>每一个元素可以根据 id, class 属性，文字内容，位置，前 n 个元素的特征，祖先元素特征生成一组特征集合。对多个样本的特征取交，对需要排除的元素取差。</p>
+<p>例如如果每次都选择第二个「豆瓣成员常用的标签」，就会生成</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;features&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;exclude&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;preceding::*[position()=2 and name()=\&quot;textnode\&quot;]&quot;</span></span><br><span class="line">  <span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;include&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;preceding::*[position()=2 and name()=\&quot;a\&quot;]&quot;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果每次都选择 2016 的标签，就会生成</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">&quot;features&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;exclude&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;include&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;ancestor::*[1][contains(., &#x27;2016&#x27;)]&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;contains(., &#x27;2016&#x27;)&quot;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+
+<p>通过特征集合的运算，算法能够通过样本，猜测出用户选择的意图。而这样的特征集合，可以不断地添加，以满足不同页面的需要。</p>
+<p>需要特别说明的是，特征并不需要像 demo 中使用某种特定的选择器(xpath)，由于模板执行时，可以再次为候选元素生成特征集合，对特征集合进行比较。实际上，你可以在特征集合中放入任何字符串，例如「第5元素」，「前一个字符为 answer，且值为 42」都是可以的。</p>
+<h3 id="状态机"><a href="#状态机" class="headerlink" title="状态机"></a>状态机</h3><p>不同于往常的选取一个元素（例如 pyspider 中的选择器），data highlighter 提供了</p>
+<ol>
+<li>元素内文字选取</li>
+<li>跨元素选取</li>
+</ol>
+<p>的功能，这使得正常的「元素选择器」不再好使，取而代之的是一种定位开始和结束的规则。描述为状态机即：<code>s0 -&gt; e0</code>。</p>
+<p>而 data highlighter 另一种需要支持的功能为列表选取：</p>
+<p><video controls autoplay loop src="/assets/image/screen-multi-select.mp4"></video></p>
+<p>就不能仅仅通过 <code>s0 -&gt; e0</code> 这样开头结尾的模式进行描述了。它需要准确描述出整个列表的开头，结尾，分隔符等信息，需要通过一个类似</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">s0 -&gt; e0 -&gt; s1 -&gt; e1 -&gt; s2 -&gt; e2</span><br><span class="line">            |------|</span><br></pre></td></tr></table></figure>
+
+<p>的状态机，<code>s0</code> 为整个列表的开头，<code>s1 -&gt; e1</code> 为中间循环的组，<code>e2</code> 为 整个列表的结束。</p>
+<p>而实际中，由于某些状态可以被合并，你可能会看到类似</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">s0 -&gt; e0 -&gt; s2 -&gt; e1</span><br><span class="line">       |</span><br><span class="line">       s1</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>e0 和 e1 被合并了，即第一个元素的结束条件和中间元素的结束没有不同</p>
+</blockquote>
+<p>的状态机</p>
+<h3 id="状态机的生成"><a href="#状态机的生成" class="headerlink" title="状态机的生成"></a>状态机的生成</h3><p>虽然状态机看起来非常复杂，但是用程序处理起来却不难。首先为每一个样本（包括列表选取）生成一条 <code>s0 -&gt; e0 -&gt; s1 -&gt; e1 -&gt; s2 -&gt; e2 -&gt; s3 -&gt; e3 ...</code> 的长链，然后尝试合并状态，然后将多个样本的链用同一规则合并。而不能合并的状态，就做个分支转移即可。</p>
+<p>而状态能否合并，取决于它们有没有共同特征，就是这么简单。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Data Highlighter 的算法设计，实际上是对元素特征选取的一种建模。通过设计合适的数据结构，使得多样本能够反映到模板中去。</p>
+<p>这个算法是两年前设计的，现在看起来实际上问题蛮多的，例如：</p>
+<ul>
+<li>无法使用组合特征，即要求元素同时满足满足多个条件</li>
+<li>没有设计合理的泛化机制</li>
+<li>模板不可读</li>
+</ul>
+<p>等，所以，我并不打算使用这个算法。</p>
+<p>只不过，最近些年，看到很多数据提取的公司，特别是国内的数据提取平台，还在停留在非常初级的 css selector 或者 xpath 点选生成。希望这篇文章能抛砖引玉，提供一些新的思路，为数据抽取提供更易用有效的工具。</p>
+<p>完。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-bilibili-pay-user-analysis" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2016-05-15T07:00:00.000Z"><a href="/2016/05/bilibili-pay-user-analysis/">2016-05-15</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/bilibili-pay-user-analysis/">bilibili 新番承包付费意愿调查</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>2014年10月1日 bilibili 正版新番承包上线，我就对 bilibili 这种自愿付费的方式感到好奇。而且经常听到「正版体验不佳」，「正版动画比起盗版，有何优势呢」的言论，那么中国用户在不插广告，不优先播放，不强制的情况下，到底愿意为「爱」付多少钱呢？</p>
+<blockquote>
+<p><strong>为什么 bilibili?</strong></p>
+<p>bilibili 早期，新番都是用户上传的，可以说是典型的「盗版网站」。那么这个拥有大量用户的「盗版网站」体验应该说不差吧。</p>
+<p>随着 bilibili 开始购买版权，现在新番实际上是正版盗版共存的模式，而 bilibili 不插前置广告（当然现在有「约不约」了），不强制付费；从体验上看，特别相对其他国内视频网站，应该是最接近「盗版」的了。</p>
+</blockquote>
+<h1 id="付费人数"><a href="#付费人数" class="headerlink" title="付费人数"></a>付费人数</h1><p>bilibili 新番承包人数可以非常方便的从番剧的介绍页面上获知：</p>
+<p><img src="/assets/image/Screenshot_2016-05-15_13_41_24.png" alt="sponsor count"></p>
+<p>但是由于动画的类型不同，热度不同，独播非独播用户（路人）成分不同，直接比较数字没有什么意义。需要首先找到一个基准来讨论播放和付费数之间的关系。</p>
+<p>我抓取了新番承包上线以来新开播的 142 部新番（<a target="_blank" rel="noopener" href="http://demo.pyspider.org/results?project=bgm_bilibili">http://demo.pyspider.org/results?project=bgm_bilibili</a>），去除话数小于10的 OAD，OVA 等，剩下 136 部。将总播放，追番人数，弹幕总数画为散点图：</p>
+<p>![追番人数，弹幕总数 &#x2F; 总播放](&#x2F;assets&#x2F;image&#x2F;Screenshot 2016-05-15 15.29.25.png)</p>
+<p>由图可知，弹幕总数和总播放数相关性比追番人数相关性更大（参照 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Coefficient_of_determination">R^2</a>）。独家和非独家新番在弹幕参与度上相差不大，但是非独家的追番率比独家新番少了一半。难道非独家新番用户大多是非 bilibili 注册用户吗？这说不通啊，明明应该是反过来，非会员不得不到 bilibili 上看才对啊。。</p>
+<h3 id="付费比例"><a href="#付费比例" class="headerlink" title="付费比例"></a>付费比例</h3><p>在开始写这一节的时候，我本想应该挺简单的，承包人数要么和播放数正相关，要么和活跃（弹幕数）相关，要么就和追番人数相关。但是经过了3个小时，当我尝试了：</p>
+<ul>
+<li>总播放数</li>
+<li>平均每集播放数</li>
+<li>弹幕数</li>
+<li>收藏（追番）人数</li>
+<li>时间</li>
+<li>是否独家新番</li>
+</ul>
+<p>画了20+张图之后发现，问题并没有这么简单。很难有一个什么方法能够预测出用户的付费意愿，有很多叫好不叫座，或者叫座不叫好，导致付费比例非常分散：</p>
+<p>![承包 &#x2F; 总播放数](&#x2F;assets&#x2F;image&#x2F;Screenshot 2016-05-15 17.55.25.png)</p>
+<blockquote>
+<p>图中左边是独播新番，右边为非独播</p>
+</blockquote>
+<p>这里面会发现一些有趣的地方：在独播和非独播中，都有一个承包比例非常高的点，分别是《电器街的漫画店》和《Fate&#x2F;stay night [Unlimited Blade Works] 第一季》，他们都是2014年10月番，正好是新番承包刚上线时的作品，可能用户对承包模式的尝鲜，或者前期宣传上的增益。</p>
+<p>将特异点排除之后，发现不管是否独播，他们的付费比例差别不大，但是非独播的方差大得多：</p>
+<p>![去除特异点后的 承包 &#x2F; 总播放数](&#x2F;assets&#x2F;image&#x2F;Screenshot 2016-05-15 18.00.02.png)</p>
+<p>平均上来说，<strong>bilibili 的付费比例约为播放数的万分之 1.447，收藏人数的千分之5.373</strong>。但是这只能是整体估计，具体到单个番剧就没有意义了。</p>
+<h3 id="用户到底为了什么付费？"><a href="#用户到底为了什么付费？" class="headerlink" title="用户到底为了什么付费？"></a>用户到底为了什么付费？</h3><p>那么，具体到每一部番剧，用户到底因为什么因素愿意付费呢？</p>
+<p>当我将付费比例前10与付费比例后10的放在一起比较，试图找出答案的时候，我真的失败了：</p>
+<p>![承包比例](&#x2F;assets&#x2F;image&#x2F;Screenshot 2016-05-15 21.11.35.png)</p>
+<p>在前10中有在我看来「这什么鬼」的，在后10中也有追过的，完全搞不懂拥有更高收费比例的番剧是为什么。当然，通过加入声优，导演，制作，类型 tag 等因素，或许可能找到原因，但这样少的数据，又很容易陷入过拟合的境地（如果有兴趣，可以<a target="_blank" rel="noopener" href="http://demo.pyspider.org/results?project=bgm_bilibili">下载数据</a>分析看看）。</p>
+<h1 id="付费金额"><a href="#付费金额" class="headerlink" title="付费金额"></a>付费金额</h1><h3 id="人均承包金额"><a href="#人均承包金额" class="headerlink" title="人均承包金额"></a>人均承包金额</h3><p>虽然在 bilibili 页面中有承包商排名，但是并不知道付费的金额，仅在你承包的时候，给出你当前的排名。为了了解承包商们在这样没有强制金额的「捐献」中愿意付多少钱，我从1元开始承包，然后查看我当前的排名来获得各个区段的人数：</p>
+<p>![承包总榜](&#x2F;assets&#x2F;image&#x2F;Screenshot 2016-05-15 21.16.24.png)</p>
+<p>为了消除连载中，独播，类型等影响，这里选择了连载中，非独播的的 <a target="_blank" rel="noopener" href="http://bangumi.bilibili.com/anime/3461">Re:Zero</a> 和已完结，独播，稍微腐女向的 <a target="_blank" rel="noopener" href="http://bangumi.bilibili.com/anime/2725">K RETURN</a>。</p>
+<p>![付费区间人数](&#x2F;assets&#x2F;image&#x2F;Screenshot 2016-05-15 18.32.14.png)</p>
+<p>从图中可以看出：</p>
+<ul>
+<li>主要用户的付费金额在 5-13（不要吐槽为什么是13，手抖了！）</li>
+<li>不同类型的番剧，承包金额的分布几乎是完全一样的</li>
+<li>TOP 付费用户的付费金额比较高，Re:Zero 我付到 500 元，依然有 3 个比我高的（于是我放弃了）</li>
+<li>同样付出 150 元，在 Re:Zero 中能排到 19，而在 K 中只能排到 37，还不论 K 的付费人数实际少于 Re:Zero（腐女还是有钱人多啊）</li>
+</ul>
+<p>那么，假如我们不考虑前 3 位的土豪，<strong>人均承包金额约为 13.08 元</strong>。因为我们并不知道土豪能为我们拉升多少身价，那，即使我们现在假设排名前三的土豪均承包五千块，人均承包金额也不过18元。为了简化，我们取20块好了。因为选取了两部因素差异蛮大的动画，得知不同因素对承包金额的分布影响不大，这个人均承包金额是可以套用到不同番剧上的。</p>
+<h3 id="承包收入"><a href="#承包收入" class="headerlink" title="承包收入"></a>承包收入</h3><p>那我们算一下，bilibili 通过新番承包，到底能赚多少钱呢？因为承包人数是公开的，乘以估计的人均20块的话，bilibili 承包收入收入排行：</p>
+<p>![承包收入排行](&#x2F;assets&#x2F;image&#x2F;Screenshot 2016-05-15 18.55.03.png)</p>
+<p>根据网上的传言，每集非独播新番版权价格大约是5万，独播更贵。那么好，我们统统算1万一集吧（对，就是这么任性）！那么也就 《Fate&#x2F;stay night [Unlimited Blade Works] 第一季》 和 《电器街的漫画店》 实现了盈利。记得我们前面说过的付费比例异常吗？对，就是这两部「盈利」了的番剧。</p>
+<p>从整体来看，bilibili 通过承包总收入为 288.7 万，平均每部番剧的承包收入是 21388 元，不打折的话，一集都买不起啊！</p>
+<h1 id="我想说什么"><a href="#我想说什么" class="headerlink" title="我想说什么"></a>我想说什么</h1><p>经常有人会用「正版体验不佳」作为盗版的理由，<strong>说得好像正版体验一样了就会付费了似的</strong>。bilibili 同时有提供正版和盗版内容，正版有比盗版体验差吗？难道正版看得人就少了吗？好，就算确实看正版的人少了，我们不看绝对值，那这寒酸的千分之5.373的付费比例是怎么回事？什么「正版体验不佳」啊，「要付钱当然体验不佳」啦。</p>
+<p>另外一个常见的理由是「学生党，没有钱」，人均 20 块太贵出不起。请回过头看看追番人数，要是每个人出<strong>一块钱</strong>，那也要比现在这千分之5.373，人均20块的总收入高啊！<strong>一块钱</strong>都出不起吗？这可是<strong>一季</strong>动画，而不是一集让你出一块钱啊！看动画都是因为爱，而这份爱，连一块钱都不值吗？</p>
+<p><img src="/assets/image/ai.jpg" alt="爱"></p>
+<p>bilibili 不想通过广告那样半强制地收回那么一点点版权费，然而看起来这「爱」并不畅销。<strong>所以，我弱弱地提议，各位有爱的小伙伴，在看完一季动画后（是的，不喜欢可以不承包），从微信红包（是的，不用银行卡）中拿出那么一块钱（是的，最低承包不是5块，是可以改的），承包一下你喜欢的动画吧。</strong>。希望在「劣币驱逐良币」之前，良币不会先自己饿死吧。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-deployment-of-demopyspiderorg" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2016-05-14T07:00:00.000Z"><a href="/2016/05/deployment-of-demopyspiderorg/">2016-05-14</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/05/deployment-of-demopyspiderorg/">demo.pyspider.org 部署经验</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>经常有人会问 <a target="_blank" rel="noopener" href="https://github.com/binux/pyspider">pyspider</a> 怎么进行分布式部署，这里以 <a target="_blank" rel="noopener" href="http://demo.pyspider.org/">demo.pyspider.org</a> 的实际部署经验做一个例子。</p>
+<p>因为 <a target="_blank" rel="noopener" href="https://github.com/binux/pyspider">pyspider</a> 支持分布式部署，为了验证也好，为了省钱多蹭 CPU 也好, <a target="_blank" rel="noopener" href="http://demo.pyspider.org/">demo.pyspider.org</a> 通过 docker 部署在同一机房的 3 台 VPS 上，VPS 间有内网传输（实际通过 <a target="_blank" rel="noopener" href="http://www.tinc-vpn.org/">tinc</a>）。</p>
+<p>使用 docker 的原因是实际上 pyspider 能够运行任何 python 脚本，至少需要 docker 环境逃逸。</p>
+<h1 id="数据库-amp-消息队列"><a href="#数据库-amp-消息队列" class="headerlink" title="数据库 &amp; 消息队列"></a>数据库 &amp; 消息队列</h1><p>demo.pyspider.org 的**数据库为 <a target="_blank" rel="noopener" href="http://www.postgresql.org/">PostgreSQL</a><strong>，理由是测试目的，磁盘占用和性能的折中。</strong>消息队列为 <a target="_blank" rel="noopener" href="http://redis.io/">Redis</a>**，因为部署简单。</p>
+<p>它们也是跑在 docker 中的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker run --name postgres -v /data/postgres/:/var/lib/postgresql/data -d -p <span class="variable">$LOCAL_IP</span>:5432:5432 -e POSTGRES_PASSWORD=<span class="string">&quot;&quot;</span> postgres</span><br><span class="line">docker run --name redis -d -p  <span class="variable">$LOCAL_IP</span>:6379:6379 redis</span><br></pre></td></tr></table></figure>
+
+<p>由于前面说过，机器间有内网，通过绑定内网 IP，没有做鉴权（反正 demo 会泄露）。</p>
+<h1 id="scheduler"><a href="#scheduler" class="headerlink" title="scheduler"></a>scheduler</h1><p>由于 scheduler 只能运行一个，并且需要进行大量的数据库操作，它与上面的数据库和消息队列部署在一台单独的机器上。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run --name scheduler -d -p <span class="variable">$LOCAL_IP</span>:23333:23333 --restart=always binux/pyspider \</span><br><span class="line"> --taskdb <span class="string">&quot;sqlalchemy+postgresql+taskdb://binux@10.21.0.7/taskdb&quot;</span> \</span><br><span class="line"> --resultdb <span class="string">&quot;sqlalchemy+postgresql+resultdb://binux@10.21.0.7/resultdb&quot;</span> \</span><br><span class="line"> --projectdb <span class="string">&quot;sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb&quot;</span> \</span><br><span class="line"> --message-queue <span class="string">&quot;redis://10.21.0.7:6379/1&quot;</span> \</span><br><span class="line"> scheduler --inqueue-limit 5000 --delete-time 43200</span><br></pre></td></tr></table></figure>
+
+<h1 id="其他组件"><a href="#其他组件" class="headerlink" title="其他组件"></a>其他组件</h1><p>所有其他的组件（fetcher, processor, result_worker）在剩余的两台 VPS 上以相同的配置启动。他们都是通过 docker-compose 管理的</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">phantomjs:</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">&#x27;binux/pyspider:latest&#x27;</span></span><br><span class="line">  <span class="attr">command:</span> <span class="string">phantomjs</span></span><br><span class="line">  <span class="attr">cpu_shares:</span> <span class="number">512</span></span><br><span class="line">  <span class="attr">environment:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;EXCLUDE_PORTS=5000,23333,24444&#x27;</span></span><br><span class="line">  <span class="attr">expose:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;25555&#x27;</span></span><br><span class="line">  <span class="attr">mem_limit:</span> <span class="string">512m</span></span><br><span class="line">  <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">phantomjs-lb:</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">&#x27;dockercloud/haproxy:latest&#x27;</span></span><br><span class="line">  <span class="attr">links:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">phantomjs</span></span><br><span class="line">  <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">  </span><br><span class="line"><span class="attr">fetcher:</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">&#x27;binux/pyspider:latest&#x27;</span></span><br><span class="line">  <span class="attr">command:</span> <span class="string">&#x27;--message-queue &quot;redis://10.21.0.7:6379/1&quot; --phantomjs-proxy &quot;phantomjs:80&quot; fetcher --xmlrpc&#x27;</span></span><br><span class="line">  <span class="attr">cpu_shares:</span> <span class="number">512</span></span><br><span class="line">  <span class="attr">environment:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;EXCLUDE_PORTS=5000,25555,23333&#x27;</span></span><br><span class="line">  <span class="attr">links:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;phantomjs-lb:phantomjs&#x27;</span></span><br><span class="line">  <span class="attr">mem_limit:</span> <span class="string">128m</span></span><br><span class="line">  <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">fetcher-lb:</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">&#x27;dockercloud/haproxy:latest&#x27;</span></span><br><span class="line">  <span class="attr">links:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">fetcher</span></span><br><span class="line">  <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">  </span><br><span class="line"><span class="attr">processor:</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">&#x27;binux/pyspider:latest&#x27;</span></span><br><span class="line">  <span class="attr">command:</span> <span class="string">&#x27;--projectdb &quot;sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb&quot; --message-queue &quot;redis://10.21.0.7:6379/1&quot; processor&#x27;</span></span><br><span class="line">  <span class="attr">cpu_shares:</span> <span class="number">512</span></span><br><span class="line">  <span class="attr">mem_limit:</span> <span class="string">256m</span></span><br><span class="line">  <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">  </span><br><span class="line"><span class="attr">result-worker:</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">&#x27;binux/pyspider:latest&#x27;</span></span><br><span class="line">  <span class="attr">command:</span> <span class="string">&#x27;--taskdb &quot;sqlalchemy+postgresql+taskdb://binux@10.21.0.7/taskdb&quot;  --projectdb &quot;sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb&quot; --resultdb &quot;sqlalchemy+postgresql+resultdb://binux@10.21.0.7/resultdb&quot; --message-queue &quot;redis://10.21.0.7:6379/1&quot; result_worker&#x27;</span></span><br><span class="line">  <span class="attr">cpu_shares:</span> <span class="number">512</span></span><br><span class="line">  <span class="attr">mem_limit:</span> <span class="string">256m</span></span><br><span class="line">  <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">  </span><br><span class="line"><span class="attr">webui:</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">&#x27;binux/pyspider:latest&#x27;</span></span><br><span class="line">  <span class="attr">command:</span> <span class="string">&#x27;--taskdb &quot;sqlalchemy+postgresql+taskdb://binux@10.21.0.7/taskdb&quot;  --projectdb &quot;sqlalchemy+postgresql+projectdb://binux@10.21.0.7/projectdb&quot; --resultdb &quot;sqlalchemy+postgresql+resultdb://binux@10.21.0.7/resultdb&quot; --message-queue &quot;redis://10.21.0.7:6379/1&quot; webui --max-rate 0.2 --max-burst 3 --scheduler-rpc &quot;http://o4.i.binux.me:23333/&quot; --fetcher-rpc &quot;http://fetcher/&quot;&#x27;</span></span><br><span class="line"></span><br><span class="line">  <span class="attr">cpu_shares:</span> <span class="number">512</span></span><br><span class="line">  <span class="attr">environment:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;EXCLUDE_PORTS=24444,25555,23333&#x27;</span></span><br><span class="line">  <span class="attr">links:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;fetcher-lb:fetcher&#x27;</span></span><br><span class="line">  <span class="attr">mem_limit:</span> <span class="string">256m</span></span><br><span class="line">  <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line"><span class="attr">webui-lb:</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">&#x27;dockercloud/haproxy:latest&#x27;</span></span><br><span class="line">  <span class="attr">links:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">webui</span></span><br><span class="line">  <span class="attr">restart:</span> <span class="string">always</span></span><br><span class="line">  </span><br><span class="line"><span class="attr">nginx:</span></span><br><span class="line">  <span class="attr">image:</span> <span class="string">&#x27;nginx&#x27;</span></span><br><span class="line">  <span class="attr">links:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;webui-lb:HAPROXY&#x27;</span></span><br><span class="line">  <span class="attr">ports:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">&#x27;0.0.0.0:80:80&#x27;</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/home/binux/nfs/profile/nginx/nginx.conf:/etc/nginx/nginx.conf</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">/home/binux/nfs/profile/nginx/conf.d/:/etc/nginx/conf.d/</span></span><br><span class="line">  <span class="attr">restart:</span> <span class="string">always</span></span><br></pre></td></tr></table></figure>
+
+<p>然后通过 <code>docker-compose scale phantomjs=2 processor=2 webui=4</code> 指定启动两个 phantomjs 进程，两个 processor 进程，4个 webui 进程。</p>
+<h4 id="phantomjs"><a href="#phantomjs" class="headerlink" title="phantomjs"></a>phantomjs</h4><p>由于 phantomjs 有内存泄露问题，限制下内存就好了。<code>EXCLUDE_PORTS</code> 是为了下面的 haproxy 能够正确的均衡负载正确端口。</p>
+<h4 id="phantomjs-lb"><a href="#phantomjs-lb" class="headerlink" title="phantomjs-lb"></a>phantomjs-lb</h4><p>通过 <a target="_blank" rel="noopener" href="https://hub.docker.com/r/dockercloud/haproxy/">haproxy</a> 自动负载均衡，只要将服务链接上去，就会将请求分发到不定多个 phantomjs 实例上，同时只暴露一个对外服务端口。</p>
+<h4 id="fetcher"><a href="#fetcher" class="headerlink" title="fetcher"></a>fetcher</h4><p>链接 <code>phantomjs-lb:phantomjs</code>，注意这里的 <code>--phantomjs-proxy &quot;phantomjs:80&quot;</code></p>
+<p>由于 fetcher 是异步 http 请求，如果没有发生堵塞，单个 fetcher 一般就足够了。</p>
+<h4 id="fetcher-lb"><a href="#fetcher-lb" class="headerlink" title="fetcher-lb"></a>fetcher-lb</h4><p>同 phantomjs-lb</p>
+<h4 id="processor"><a href="#processor" class="headerlink" title="processor"></a>processor</h4><p>processor 为最消耗 CPU 的组件，建议根据 CPU 的数量部署 +1&#x2F;2 个。</p>
+<h4 id="result-worker"><a href="#result-worker" class="headerlink" title="result-worker"></a>result-worker</h4><p>默认的 result-worker 只是在写数据库，除非发生堵塞，或者你重载了 result_worker，一个就够。</p>
+<h4 id="webui"><a href="#webui" class="headerlink" title="webui"></a>webui</h4><p>首先，webui 为了安全性，限制了最大抓取速率 <code>--max-rate 0.2 --max-burst 3</code>。</p>
+<p>然后通过实际的 fetcher 进行抓取 <code>--fetcher-rpc &quot;http://fetcher/&quot;</code> 而不是 webui 自己发起请求，最大程度模拟环境（IP，库版本），因为以前遇到过调试的时候没问题，跑起来失败，然后在调试器复现又没法复现的问题。fetcher-rpc 可以不用，这样的会 webui 会自己直接发起请求。</p>
+<p>因为 demo.pyspider.org 主要就是提供通过页面来尝试 pyspider, 这里的负载较大，而且实现上是同步的，任何脚本执行，抓取都是堵塞了，多一些 webui 会比较好。</p>
+<h4 id="webui-lb"><a href="#webui-lb" class="headerlink" title="webui-lb"></a>webui-lb</h4><p>同 phantpmjs-lb</p>
+<h4 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h4><p>这里做了一些前端缓存</p>
+<h4 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h4><p>因为懒得管，每小时我会重启除了 scheduler 以外的其他组件（反正会重试）。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-uk2" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2015-12-31T08:00:00.000Z"><a href="/2015/12/uk2/">2015-12-31</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/12/uk2/">足兆叉虫的2015</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>我是从来不记日子的，这导致我也不知道有些事情是2015年发生的，还是2014年发生的，亦或只是我的臆想。即便如此，2015年也是变化的一年。</p>
+<p>跳槽，工资没涨…… 到这里居然和2013年是一样的，但是当我在2015写下这篇日志的时候，国内已经2016。</p>
+<p>说来惭愧，这一年除了一月写了几篇教程之后，不但 blog 落下了，开源也没有做多少。看着 pyspider 的 star 数蹭蹭涨到 5813，但是并没有太多精力去更新。希望在 2016 年能有时间把 slime 模式的坑填了吧。</p>
+<p>其他的项目也就在年末的时候又重新玩了一把 WebRTC，基于的 <a target="_blank" rel="noopener" href="https://webtorrent.io/">WebTorrent</a> 经过一年的开发，已经成熟了很多，feross 在 javascript 上从 tracker 到 BT 协议都实现了一遍，比起我那时山寨的好了非常多，虽然 hybrid 模式还有很多问题。。。对了 2015 年参与过 technical review 的 <a target="_blank" rel="noopener" href="https://www.packtpub.com/web-development/learning-webrtc">Learning WebRTC</a> 也出版了，算是一次挺有趣的经历吧。</p>
+<p>8月到英国之后，就是各种适应，加上新公司的蜜月期，一门心思放在了公司的项目上。在新公司才算是第一次接触到了机器学习，给我带来了很多新的思路，有种能成的感觉吧。</p>
+<p>希望2016年能更有趣吧。</p>
+<h2 id="英国（二）"><a href="#英国（二）" class="headerlink" title="英国（二）"></a>英国（二）</h2><p>然后说一些「关于英国生活」类似的东西吧，想到什么写什么</p>
+<h3 id="衣食住行"><a href="#衣食住行" class="headerlink" title="衣食住行"></a>衣食住行</h3><ul>
+<li>夏天不热，这个冬天不冷</li>
+<li>冬天是雨季，几乎一半时间在下雨，但是从来没有在上下班的时候下</li>
+<li>英国不负「难吃国」之名，只要是英文店名的地方，那真是难吃 + 贵</li>
+<li>中午的饭点是1-2点，晚餐饭点是8-9点</li>
+<li>一个很大问题是，看菜单很多时候不知道是什么东西，查字典也没用</li>
+<li>一盒 200g 的毛豆都要卖20-30RMB，而且还被他们视为高贵的健康食品</li>
+<li>有很多中国人开的中餐馆和日式便当，这是唯一能吃的东西（除了 KFC）</li>
+<li>超市的肉类品种和部位很不同，炒出来很老，我用了3个月才想出来怎么吃</li>
+<li>鸡翅鸡腿比鸡胸便宜，只要10RMB&#x2F;斤</li>
+<li>肉比蔬菜便宜</li>
+<li>住非常贵，北京的7-8倍</li>
+<li>行非常贵，北京的5-10倍</li>
+<li>伦敦很小，和北京比起来</li>
+</ul>
+<h3 id="公司"><a href="#公司" class="headerlink" title="公司"></a>公司</h3><ul>
+<li>公司现在有40+个人，但是有15种国籍，22+种语言</li>
+<li>有4个华裔同事，但是任意两者之间只能用英语交流（除英语外会的语言分别是普通话，粤语，日语，马来语，德语）</li>
+<li>没有印度人</li>
+<li>一年25天年假，8天法定假日，没有年终奖</li>
+<li>不加班的主要原因是没有晚餐，肚子饿</li>
+<li>公司以外听不懂别人说什么 &#x3D;_&#x3D;</li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-uk" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2015-07-21T07:00:00.000Z"><a href="/2015/07/uk/">2015-07-21</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/07/uk/">英国</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>半年没有更新 blog 了，<del>其实我在憋(wan)个(W)大(O)招(W)</del>。一年半以前，我说过<a target="_blank" rel="noopener" href="http://blog.binux.me/2013/12/2013/">「想学日语，想出国」</a>，虽然这一年半也是没有干劲地随随便便过的，但是至少出国了。</p>
+<p>目的地英国，工作，8月初。</p>
+<p>要说经历，其实简单到爆。</p>
+<ol>
+<li>投简历（依旧是只投一家）</li>
+<li>视频面试（用我8年没用过的蹩脚英语）</li>
+<li>考雅思（而且只要4分，我只做了套剑9就去了）</li>
+<li>对方办 <a target="_blank" rel="noopener" href="https://www.gov.uk/tier-2-general/eligibility">certificates of sponsorship</a>（虽然每月有名额限制，按照打分排，但是以往的数据，只要满足条件，名额都够。）</li>
+<li>办签证（不像旅游签证，不用行程单，不用资产证明，有 COS 就 ok）</li>
+<li>买机票</li>
+<li>over</li>
+</ol>
+<p>工资没涨，物价大涨，难吃，加上烂英语，瞬间感觉生活甚是艰辛。。。不过， there is always a way，就当作一次挑战吧。</p>
+<p>就酱</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-pyspider-tutorial-level-3-render-with-phantomjs" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2015-01-10T08:00:00.000Z"><a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">2015-01-10</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>英文原文：<a target="_blank" rel="noopener" href="http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/">http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/</a></p>
+<p>在上两篇教程中，我们学习了怎么从 HTML 中提取信息，也学习了怎么处理一些请求复杂的页面。但是有一些页面，它实在太复杂了，无论是分析 API 请求的地址，还是渲染时进行了加密，让直接抓取请求非常麻烦。这时候就是 <a target="_blank" rel="noopener" href="http://phantomjs.org/">PhantomJS</a> 大显身手的时候了。</p>
+<p>在使用 <a target="_blank" rel="noopener" href="http://phantomjs.org/">PhantomJS</a> 之前，你需要安装它（<a target="_blank" rel="noopener" href="http://phantomjs.org/download.html">安装文档</a>）。当你安装了之后，在运行 <code>all</code> 模式的 pyspider 时就会自动启用了。当然，你也可以在 <a target="_blank" rel="noopener" href="http://demo.pyspider.org/">demo.pyspider.org</a> 上尝试。</p>
+<h2 id="使用-PhantomJS"><a href="#使用-PhantomJS" class="headerlink" title="使用 PhantomJS"></a>使用 PhantomJS</h2><p>当 pyspider 连上 PhantomJS 代理后，你就能通过在 <code>self.crawl</code> 中添加 <code>fetch_type=&#39;js&#39;</code> 的参数，开启使用 PhantomJS 抓取。例如，在教程二中，我们尝试抓取的 <a target="_blank" rel="noopener" href="http://movie.douban.com/explore">http://movie.douban.com/explore</a> 就可以通过 PhantomJS 直接抓取：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Handler</span>(<span class="title class_ inherited__">BaseHandler</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">on_start</span>(<span class="params">self</span>):</span><br><span class="line">        self.crawl(<span class="string">&#x27;http://movie.douban.com/explore&#x27;</span>,</span><br><span class="line">                   fetch_type=<span class="string">&#x27;js&#x27;</span>, callback=self.phantomjs_parser)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">phantomjs_parser</span>(<span class="params">self, response</span>):</span><br><span class="line">        <span class="keyword">return</span> [&#123;</span><br><span class="line">            <span class="string">&quot;title&quot;</span>: <span class="string">&quot;&quot;</span>.join(</span><br><span class="line">                s <span class="keyword">for</span> s <span class="keyword">in</span> x(<span class="string">&#x27;p&#x27;</span>).contents() <span class="keyword">if</span> <span class="built_in">isinstance</span>(s, basestring)</span><br><span class="line">            ).strip(),</span><br><span class="line">            <span class="string">&quot;rate&quot;</span>: x(<span class="string">&#x27;p strong&#x27;</span>).text(),</span><br><span class="line">            <span class="string">&quot;url&quot;</span>: x.attr.href,</span><br><span class="line">        &#125; <span class="keyword">for</span> x <span class="keyword">in</span> response.doc(<span class="string">&#x27;a.item&#x27;</span>).items()]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>我在这里使用了一些 PyQuery 的 API，你可以在 <a target="_blank" rel="noopener" href="https://pythonhosted.org/pyquery/api.html">PyQuery complete API</a> 获得完整的 API 手册。</li>
+</ul>
+</blockquote>
+<h2 id="在页面上执行自定义脚本"><a href="#在页面上执行自定义脚本" class="headerlink" title="在页面上执行自定义脚本"></a>在页面上执行自定义脚本</h2><p>你会发现，在上面我们使用 <a target="_blank" rel="noopener" href="http://phantomjs.org/">PhantomJS</a> 抓取的豆瓣热门电影只有 20 条。当你点击『加载更多』时，能获得更多的热门电影。为了获得更多的电影，我们可以使用 <code>self.crawl</code> 的 <code>js_script</code> 参数，在页面上执行一段脚本，点击加载更多：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">on_start</span>(<span class="params">self</span>):</span><br><span class="line">    self.crawl(<span class="string">&#x27;http://movie.douban.com/explore#more&#x27;</span>,</span><br><span class="line">               fetch_type=<span class="string">&#x27;js&#x27;</span>, js_script=<span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">               function() &#123;</span></span><br><span class="line"><span class="string">                 setTimeout(&quot;$(&#x27;.more&#x27;).click()&quot;, 1000);</span></span><br><span class="line"><span class="string">               &#125;&quot;&quot;&quot;</span>, callback=self.phantomjs_parser)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>这个脚本默认在页面加载结束后执行，你可以通过 <code>js_run_at</code> <a target="_blank" rel="noopener" href="http://docs.pyspider.org/en/latest//apis/self.crawl/#enable-javascript-fetcher-need-support-by-fetcher">参数</a> 修改这个行为</li>
+<li>由于是 AJAX 异步加载的，在页面加载完成时，第一页的电影可能还没有加载完，所以我们用 <code>setTimeout</code> 延迟 1 秒执行。</li>
+<li>你可以间隔一定时间，多次点击，这样可以加载更多页。</li>
+<li>由于相同 URL （实际是相同 taskid） 的任务会被去重，所以这里为 URL 加了一个 <code>#more</code></li>
+</ul>
+</blockquote>
+<p>上面两个例子，都可以在 <a target="_blank" rel="noopener" href="http://demo.pyspider.org/debug/tutorial_douban_explore">http://demo.pyspider.org/debug/tutorial_douban_explore</a> 中找到。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+
+<nav id="pagination">
+  
+  
+    <a href="/page/2/" class="alignright next">下一页</a>
+  
+  <div class="clearfix"></div>
+</nav></div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = '';
+this.page.identifier = '';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>让资源灌满你的离线空间吧 -- 迅雷离线插件 for flexget | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="OUT OF DATA
+迅雷离线空间已经开放到1PB了，总是用不完，手头上那个100M的种子压缩包里面东西好多啊，把它塞满离线空间如何？
+这个是一篇教程，适用于所有python环境，包括Linux, Windows, OSX, routers, NAS boxes，只要有python环境就可以。（不">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="让资源灌满你的离线空间吧 -- 迅雷离线插件 for flexget"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-xunlei_lixian_for_flexget" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-12-14T21:30:03.000Z"><a href="/2011/12/xunlei_lixian_for_flexget/">2011-12-14</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">让资源灌满你的离线空间吧 -- 迅雷离线插件 for flexget</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p><strong><font color=red>OUT OF DATA</font></strong></p>
+<p>迅雷离线空间已经开放到1PB了，总是用不完，手头上那个100M的种子压缩包里面东西好多啊，把它塞满离线空间如何？</p>
+<p>这个是一篇教程，适用于所有python环境，包括Linux, Windows, OSX, routers, NAS boxes，只要有python环境就可以。（不过搭建python环境并不是本文的内容，本文默认您已经有python了）</p>
+<h3 id="1、工具介绍"><a href="#1、工具介绍" class="headerlink" title="1、工具介绍"></a>1、工具介绍</h3><p>我们这次使用的主要是两个东西</p>
+<ul>
+<li><p><a target="_blank" rel="noopener" href="http://flexget.com/">flexget</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/binux/lixian.xunlei">lixian.xunlei</a></p>
+</li>
+</ul>
+<p><strong>flexget</strong>是一个能够从RSS，HTML页面，CSV文件，本地目录等等地方抓取资源，经过过滤，然后下载的一套框架。<br>flexget会自动监控追踪下载过的资源，保证不会被重复下载，后端可以调用各种BT，命令来处理这些资源。</p>
+<p>flexget对于操作分为三种基本类型：</p>
+<p>Inputs<br>Filters<br>Outputs</p>
+<p><strong>lixian.xunlei</strong>是我写得一个lixian.xunlei.com的python API封装，本身是为了挖迅雷墙角的，不过本着一物多用的原则，提供了一个flexget的插件，支持作为资源的output向迅雷推送资源，也可以作为input从迅雷取出资源。</p>
+<h3 id="2、环境准备"><a href="#2、环境准备" class="headerlink" title="2、环境准备"></a>2、环境准备</h3><p>介绍完插件，那么就开始动手吧，既然需要工具，那么首先安装他们。这里以linux环境为例，不过都是python的工具，你应该能很容易在其他的环境找到对应的命令。</p>
+<ol>
+<li>安装flexget<br>直接从pypi中安装即可，依赖会自动解决</li>
+</ol>
+<blockquote>
+<p>easy_install flexget</p>
+</blockquote>
+<ol start="2">
+<li>安装xunlei.lixian<br>由于暂时还没有自动安装脚本，只能手动了。。。首先是依赖</li>
+</ol>
+<blockquote>
+<p>easy_install requests<br>easy_install pyparsing<br>easy_install beautifulsoup</p>
+</blockquote>
+<p>然后安装插件：</p>
+<blockquote>
+<p>下载<a target="_blank" rel="noopener" href="https://gist.github.com/gists/1476520/download">https://gist.github.com/gists/1476520/download</a>，将文件解压到 ~&#x2F;.flexget&#x2F;plugins 文件文件夹中（若文件夹不存在，创建一个）<br>注意：解压出来带了一层gist********的目录，请将文件从那个目录中拷贝出来</p>
+</blockquote>
+<h3 id="3、配置"><a href="#3、配置" class="headerlink" title="3、配置"></a>3、配置</h3><p>flexget的配置使用的是yaml，虽然没有听说过，不过其实还是很简单的。。</p>
+<p>flexget的配置文件位于  ~&#x2F;.flexget&#x2F;config.yml （若不存在，创建一个即可）。<br>一个基本的配置是这样的：</p>
+<pre><code>feeds:
+  Fate/Zero:
+    rss: http://bt.ktxp.com/rss-search-Fate%2FZero+%E6%BE%84%E7%A9%BA%E5%AD%A6%E5%9B%AD+720p.xml
+    accept_all: true
+    xunlei_lixian:
+      username: &quot;&lt;your username&gt;&quot;
+      password: &quot;&lt;your password&gt;&quot;
+</code></pre>
+<p>flexget将多个不同的来源视为不同的feed，放在feeds下，Fate&#x2F;Zero是它的名字</p>
+<p>在前面我们说过，flexget有input, filter, output三种类型，在这个feed下面的配置中rss就是input, accept_all是filter, output是xunlei_lixian。</p>
+<p>对于一个feed来说，input, filter, output这三个角色是必不可少的，但是使用的插件是可以变化的，通过不同的插件组合来达到各种各样的功能。<br>更多的input, filter, output和他们的参数可以去<a target="_blank" rel="noopener" href="http://flexget.com/wiki/Plugins">http://flexget.com/wiki/Plugins</a>这里参看。</p>
+<p>虽然这三者总是需要的，但是每次都写一次完全相同的accept_all和xunlei_lixian也是一件麻烦的事情，于是你可以这么写</p>
+<pre><code>presets:
+  global:
+    accept_all: true
+    xunlei_lixian:
+      username: &quot;&lt;your username&gt;&quot;
+      password: &quot;&lt;your password&gt;&quot;
+
+feeds:
+  Fate/Zero:
+    rss: http://bt.ktxp.com/rss-search-Fate%2FZero+%E6%BE%84%E7%A9%BA%E5%AD%A6%E5%9B%AD+720p.xml
+  C3:
+    rss: http://bt.ktxp.com/rss-search-%E9%9B%AA%E9%85%B7%E5%AD%97%E5%B9%95%E7%BB%84+C3+%E7%B9%81%E4%BD%93+RMVB.xml
+  local_file:
+    find:
+      path: /home/me/incoming
+      mask: &#39;*.torrent&#39;
+</code></pre>
+<p>用presets就可以把一些公共的配置放到一起了</p>
+<p>需要注意的地方是，<strong>如果参数中带中文，或者有其他特殊支付，比如’*.torrent’，请用引号包起来。</strong></p>
+<p>你可能注意到了，本地文件也是可以作为input的，写法就是用find插件，像例子中那样。<br>不过，由于xunlei只接受种子，所有一定要记得过滤 ‘*.torrent’ 啊，不然我也不知道会怎么样。。</p>
+<p>好了，就是这样了，该做的都完成了，现在我们<strong>运行flexget</strong>看看吧：</p>
+<blockquote>
+<p>输入命令flexget看看吧<br>如果不放心，可以先使用命令： flexget –test 来试试结果是否正确。</p>
+</blockquote>
+<p>如果没出什么问题的话，资源已经通通导入到你的离线空间了，慢慢下载回来吧，或者也可以参考我的下一篇教程：<a target="_blank" rel="noopener" href="http://blog.binux.me/2011/12/from_xunlei_lixian_for_flexget/">自动将离线空间的内容通通下回本地</a></p>
+<p>除了这种用法，flexget也可以订阅资源到transmission中等其他软件中，配合RSS可以达到自动订阅新番的效果，具体参阅<a target="_blank" rel="noopener" href="http://flexget.com/wiki/Plugins">http://flexget.com/wiki/Plugins</a>中对应的插件就可以了。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+  
+  <div class="categories">
+    <a href="/categories/%E6%9C%AA%E5%88%86%E7%B1%BB/">未分类</a>
+  </div>
+
+        
+  
+  <div class="tags">
+    <a href="/tags/Linux/">Linux</a>, <a href="/tags/python/">python</a>, <a href="/tags/flexget/">flexget</a>, <a href="/tags/lixian/">lixian</a>, <a href="/tags/xunlei/">xunlei</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = 'https://binux.blog/2011/12/xunlei_lixian_for_flexget/';
+this.page.identifier = 'https://binux.blog/2011/12/xunlei_lixian_for_flexget/';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

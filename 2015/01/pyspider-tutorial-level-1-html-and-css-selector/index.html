@@ -1,0 +1,325 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>pyspider 爬虫教程（一）：HTML 和 CSS 选择器 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="description" content="虽然以前写过 如何抓取WEB页面 和 如何从 WEB 页面中提取信息。但是感觉还是需要一篇 step by step 的教程，不然没有一个总体的认识。不过，没想到这个教程居然会变成一篇译文，在这个爬虫教程系列文章中，会以实际的例子，由浅入深讨论爬取（抓取和解析）的一些关键问题。
+在 教程一 中，我们">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <meta property="og:title" content="pyspider 爬虫教程（一）：HTML 和 CSS 选择器"/>
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper"><article id="post-pyspider-tutorial-level-1-html-and-css-selector" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2015-01-04T08:00:00.000Z"><a href="/2015/01/pyspider-tutorial-level-1-html-and-css-selector/">2015-01-04</a></time>
+      
+      
+  
+    <h1 class="p-name title" itemprop="headline name">pyspider 爬虫教程（一）：HTML 和 CSS 选择器</h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>虽然以前写过 <a target="_blank" rel="noopener" href="http://blog.binux.me/2013/09/howto-crawl-web/">如何抓取WEB页面</a> 和 <a target="_blank" rel="noopener" href="http://blog.binux.me/2014/07/how-to-extract-data-from-web/">如何从 WEB 页面中提取信息</a>。但是感觉还是需要一篇 step by step 的教程，不然没有一个总体的认识。不过，没想到这个教程居然会变成一篇<a target="_blank" rel="noopener" href="http://docs.pyspider.org/en/latest/tutorial/HTML-and-CSS-Selector/">译文</a>，在这个爬虫教程系列文章中，会以实际的例子，由浅入深讨论爬取（抓取和解析）的一些关键问题。</p>
+<p>在 教程一 中，我们将要爬取的网站是豆瓣电影：<a target="_blank" rel="noopener" href="http://movie.douban.com/">http://movie.douban.com/</a></p>
+<p>你可以在: <a target="_blank" rel="noopener" href="http://demo.pyspider.org/debug/tutorial_douban_movie">http://demo.pyspider.org/debug/tutorial_douban_movie</a> 获得完整的代码，和进行测试。</p>
+<h2 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h2><p>由于教程是基于 pyspider 的，你可以安装一个 pyspider（<a target="_blank" rel="noopener" href="http://docs.pyspider.org/en/latest/Quickstart/">Quickstart</a>，也可以直接使用 pyspider 的 demo 环境： <a target="_blank" rel="noopener" href="http://demo.pyspider.org/">http://demo.pyspider.org/</a>。</p>
+<p>你还应该至少对万维网是什么有一个简单的认识：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/%E4%B8%87%E7%BB%B4%E7%BD%91">万维网</a>是一个由许多互相链接的超文本页面（以下简称网页）组成的系统。</li>
+<li>网页使用网址（<a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/%E7%BB%9F%E4%B8%80%E8%B5%84%E6%BA%90%E5%AE%9A%E4%BD%8D%E7%AC%A6">URL</a>）定位，并链接彼此</li>
+<li>网页使用 <a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/%E8%B6%85%E6%96%87%E6%9C%AC%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE">HTTP</a> 协议传输</li>
+<li>网页使用 <a target="_blank" rel="noopener" href="http://zh.wikipedia.org/wiki/HTML">HTML</a> 描述外观和语义</li>
+</ul>
+<p>所以，爬网页实际上就是：</p>
+<ol>
+<li>找到包含我们需要的信息的网址（URL）列表</li>
+<li>通过 HTTP 协议把页面下载回来</li>
+<li>从页面的 HTML 中解析出需要的信息</li>
+<li>找到更多这个的 URL，回到 2 继续</li>
+</ol>
+<h2 id="选取一个开始网址"><a href="#选取一个开始网址" class="headerlink" title="选取一个开始网址"></a>选取一个开始网址</h2><p>既然我们要爬所有的电影，首先我们需要抓一个电影列表，一个好的列表应该：</p>
+<ul>
+<li>包含足够多的电影的 URL</li>
+<li>通过翻页，可以遍历到所有的电影</li>
+<li>一个按照更新时间排序的列表，可以更快抓到最新更新的电影</li>
+</ul>
+<p>我们在 <a target="_blank" rel="noopener" href="http://movie.douban.com/">http://movie.douban.com/</a> 扫了一遍，发现并没有一个列表能包含所有电影，只能退而求其次，通过抓取分类下的所有的标签列表页，来遍历所有的电影： <a target="_blank" rel="noopener" href="http://movie.douban.com/tag/">http://movie.douban.com/tag/</a> </p>
+<h3 id="创建一个项目"><a href="#创建一个项目" class="headerlink" title="创建一个项目"></a>创建一个项目</h3><p>在 pyspider 的 dashboard 的右下角，点击 “Create” 按钮</p>
+<p><img src="/assets/image/creating_project.png" alt="Creating a project"></p>
+<p>替换 <code>on_start</code> 函数的 <code>self.crawl</code> 的 URL：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@every(<span class="params">minutes=<span class="number">24</span> * <span class="number">60</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">on_start</span>(<span class="params">self</span>):</span><br><span class="line">    self.crawl(<span class="string">&#x27;http://movie.douban.com/tag/&#x27;</span>, callback=self.index_page)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li><code>self.crawl</code> 告诉 pyspider 抓取指定页面，然后使用 <code>callback</code> 函数对结果进行解析。</li>
+<li><a href="(http://docs.pyspider.org/en/latest/apis/@every/)"><code>@every</code></a> 修饰器，表示 <code>on_start</code> 每天会执行一次，这样就能抓到最新的电影了。</li>
+</ul>
+</blockquote>
+<p>点击绿色的 <code>run</code> 执行，你会看到 <code>follows</code> 上面有一个红色的 1，切换到 <code>follows</code> 面板，点击绿色的播放按钮：</p>
+<p><img src="/assets/image/run_one_step.png" alt="Run ont step"></p>
+<h2 id="Tag-列表页"><a href="#Tag-列表页" class="headerlink" title="Tag 列表页"></a>Tag 列表页</h2><p>在 <a target="_blank" rel="noopener" href="http://movie.douban.com/tag/">tag 列表页</a> 中，我们需要提取出所有的 电影列表页 的 URL。你可能已经发现了，sample handler 已经提取了非常多大的 URL，所有，一种可行的提取列表页 URL 的方法就是用正则从中过滤出来：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> re</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="meta">    @config(<span class="params">age=<span class="number">10</span> * <span class="number">24</span> * <span class="number">60</span> * <span class="number">60</span></span>)</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">index_page</span>(<span class="params">self, response</span>):</span><br><span class="line">        <span class="keyword">for</span> each <span class="keyword">in</span> response.doc(<span class="string">&#x27;a[href^=&quot;http&quot;]&#x27;</span>).items():</span><br><span class="line">            <span class="keyword">if</span> re.<span class="keyword">match</span>(<span class="string">&quot;http://movie.douban.com/tag/\w+&quot;</span>, each.attr.href, re.U):</span><br><span class="line">                self.crawl(each.attr.href, callback=self.list_page)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>由于 电影列表页和 tag列表页长的并不一样，在这里新建了一个 <code>callback</code> 为 <code>self.list_page</code></li>
+<li><code>@config(age=10 * 24 * 60 * 60)</code> 在这表示我们认为 10 天内页面有效，不会再次进行更新抓取</li>
+</ul>
+</blockquote>
+<p>由于 pyspider 是纯 Python 环境，你可以使用 Python 强大的内置库，或者你熟悉的第三方库对页面进行解析。不过更推荐使用 CSS选择器。</p>
+<h2 id="电影列表页"><a href="#电影列表页" class="headerlink" title="电影列表页"></a>电影列表页</h2><p>再次点击 <code>run</code> 让我们进入一个电影列表页(<code>list_page</code>)。在这个页面中我们需要提取：</p>
+<ul>
+<li>电影的链接，例如，<a target="_blank" rel="noopener" href="http://movie.douban.com/subject/1292052/">http://movie.douban.com/subject/1292052/</a></li>
+<li>下一页的链接，用来翻页</li>
+</ul>
+<h3 id="CSS选择器"><a href="#CSS选择器" class="headerlink" title="CSS选择器"></a>CSS选择器</h3><p>CSS选择器，顾名思义，是 <a target="_blank" rel="noopener" href="http://www.w3school.com.cn/css/css_intro.asp">CSS</a> 用来定位需要设置样式的元素 所使用的表达式。既然前端程序员都使用 CSS选择器 为页面上的不同元素设置样式，我们也可以通过它定位需要的元素。你可以在 <a target="_blank" rel="noopener" href="http://www.w3school.com.cn/cssref/css_selectors.asp">CSS 选择器参考手册</a> 这里学习更多的 CSS选择器 语法。</p>
+<p>在 pyspider 中，内置了 <code>response.doc</code> 的 <a target="_blank" rel="noopener" href="https://pythonhosted.org/pyquery/">PyQuery</a> 对象，让你可以使用类似 jQuery 的语法操作 DOM 元素。你可以在 <a target="_blank" rel="noopener" href="https://pythonhosted.org/pyquery/">PyQuery</a> 的页面上找到完整的文档。</p>
+<h3 id="CSS-Selector-Helper"><a href="#CSS-Selector-Helper" class="headerlink" title="CSS Selector Helper"></a>CSS Selector Helper</h3><p>在 pyspider 中，还内置了一个 <code>CSS Selector Helper</code>，当你点击页面上的元素的时候，可以帮你生成它的 CSS选择器 表达式。你可以点击 <code>Enable CSS selector helper</code> 按钮，然后切换到 <code>web</code> 页面：</p>
+<p><img src="/assets/image/css_selector_helper.png" alt="css selector helper"></p>
+<p>开启后，鼠标放在元素上，会被黄色高亮，点击后，所有拥有相同 CSS选择器 表达式的元素会被高亮。表达式会被插入到 python 代码当前光标位置。创建下面的代码，将光标停留在单引号中间：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">list_page</span>(<span class="params">self, response</span>):</span><br><span class="line">    <span class="keyword">for</span> each <span class="keyword">in</span> response.doc(<span class="string">&#x27;&#x27;</span>).items():</span><br></pre></td></tr></table></figure>
+
+<p>点击一个电影的链接，CSS选择器 表达式将会插入到你的代码中，如此重复，插入翻页的链接：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">list_page</span>(<span class="params">self, response</span>):</span><br><span class="line">    <span class="keyword">for</span> each <span class="keyword">in</span> response.doc(<span class="string">&#x27;HTML&gt;BODY&gt;DIV#wrapper&gt;DIV#content&gt;DIV.grid-16-8.clearfix&gt;DIV.article&gt;DIV&gt;TABLE TR.item&gt;TD&gt;DIV.pl2&gt;A&#x27;</span>).items():</span><br><span class="line">        self.crawl(each.attr.href, callback=self.detail_page)</span><br><span class="line">    <span class="comment"># 翻页</span></span><br><span class="line">    <span class="keyword">for</span> each <span class="keyword">in</span> response.doc(<span class="string">&#x27;HTML&gt;BODY&gt;DIV#wrapper&gt;DIV#content&gt;DIV.grid-16-8.clearfix&gt;DIV.article&gt;DIV.paginator&gt;A&#x27;</span>).items():</span><br><span class="line">        self.crawl(each.attr.href, callback=self.list_page)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<ul>
+<li>翻页是一个到自己的 <code>callback</code> 回调</li>
+</ul>
+</blockquote>
+<h2 id="电影详情页"><a href="#电影详情页" class="headerlink" title="电影详情页"></a>电影详情页</h2><p>再次点击 <code>run</code>，follow 到详情页。使用 <code>css selector helper</code> 分别添加电影标题，打分和导演：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">detail_page</span>(<span class="params">self, response</span>):</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="string">&quot;url&quot;</span>: response.url,</span><br><span class="line">        <span class="string">&quot;title&quot;</span>: response.doc(<span class="string">&#x27;HTML&gt;BODY&gt;DIV#wrapper&gt;DIV#content&gt;H1&gt;SPAN&#x27;</span>).text(),</span><br><span class="line">        <span class="string">&quot;rating&quot;</span>: response.doc(<span class="string">&#x27;HTML&gt;BODY&gt;DIV#wrapper&gt;DIV#content&gt;DIV.grid-16-8.clearfix&gt;DIV.article&gt;DIV.indent.clearfix&gt;DIV.subjectwrap.clearfix&gt;DIV#interest_sectl&gt;DIV.rating_wrap.clearbox&gt;P.rating_self.clearfix&gt;STRONG.ll.rating_num&#x27;</span>).text(),</span><br><span class="line">        <span class="string">&quot;导演&quot;</span>: [x.text() <span class="keyword">for</span> x <span class="keyword">in</span> response.doc(<span class="string">&#x27;a[rel=&quot;v:directedBy&quot;]&#x27;</span>).items()],</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意，你会发现 <code>css selector helper</code> 并不是总是能提取到合适的 CSS选择器 表达式。你可以在 <a target="_blank" rel="noopener" href="https://developer.chrome.com/devtools">Chrome Dev Tools</a> 的帮助下，写一个合适的表达式：</p>
+<p><img src="/assets/image/chrome_dev_tools.png" alt="Chrome Dev Tools"></p>
+<p>右键点击需要提取的元素，点击审查元素。你并不需要像自动生成的表达式那样写出所有的祖先节点，只要写出那些能区分你不需要的元素的关键节点的属性就可以了。不过这需要抓取和网页前端的经验。所以，学习抓取的最好方法就是学会这个页面&#x2F;网站是怎么写的。</p>
+<p>你也可以在 Chrome Dev Tools 的 Javascript Console 中，使用 <code>$$(a[rel=&quot;v:directedBy&quot;])</code> 测试 CSS Selector。</p>
+<h2 id="开始抓取"><a href="#开始抓取" class="headerlink" title="开始抓取"></a>开始抓取</h2><ol>
+<li>使用 <code>run</code> 单步调试你的代码，对于用一个 <code>callback</code> 最好使用多个页面类型进行测试。<strong>然后保存。</strong></li>
+<li>回到 Dashboard，找到你的项目</li>
+<li>将 <code>status</code> 修改为 <code>DEBUG</code> 或 <code>RUNNING</code></li>
+<li>按 <code>run</code> 按钮</li>
+</ol>
+<p><img src="/assets/image/pyspider_index_page.png" alt="pyspider index page"></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+  
+  <div class="tags">
+    <a href="/tags/css-selector/">css selector</a>, <a href="/tags/pyspider/">pyspider</a>, <a href="/tags/scrape/">scrape</a>, <a href="/tags/crawl/">crawl</a>
+  </div>
+
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+<section id="comment">
+  <h1 class="title">留言</h1>
+
+  
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+  
+</section>
+
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = 'https://binux.blog/2015/01/pyspider-tutorial-level-1-html-and-css-selector/';
+this.page.identifier = 'https://binux.blog/2015/01/pyspider-tutorial-level-1-html-and-css-selector/';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>

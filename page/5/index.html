@@ -1,0 +1,978 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  
+  <title>第 5 页 | Binuxの杂货铺</title>
+  <meta name="author" content="Roy Binux">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="Binuxの杂货铺"/>
+
+  
+    <meta property="og:image" content=""/>
+  
+
+  <link rel="shortcut icon" href="/favicon.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Binuxの杂货铺" type="application/atom+xml">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  <!--[if lt IE 9]><script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+  
+<script>
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+	ga('create', 'UA-36392342-1', 'auto');
+	ga('send', 'pageview');
+
+</script>
+
+
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">Binuxの杂货铺</a></h1>
+  <h2><a href="/"></a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/null">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+      <li><a href="/projects">Projects</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div>
+</header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-dropbox-uploader-script" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2012-04-29T00:03:21.000Z"><a href="/2012/04/dropbox-uploader-script/">2012-04-28</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2012/04/dropbox-uploader-script/">Dropbox Uploader Script</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>Dropbox全平台并且各种工具齐全，在各个主机上都在用。用Dropbox备份VPS上的数据也很方便，但是之前看到的脚本都需要填写用户名密码，迟迟不敢用。。</p>
+<p>这里推荐这个使用API的Dropbox上传脚本，通过设置沙盒，把备份目录限制在应用中，保证其他文件的安全。<br>而且这个脚本是用curl驱动的，只有一个文件，在linux平台下毫无压力。</p>
+<p>Home page: <a target="_blank" rel="noopener" href="http://www.andreafabrizi.it/?dropbox_uploader">http://www.andreafabrizi.it/?dropbox_uploader</a><br>github: <a target="_blank" rel="noopener" href="https://github.com/andreafabrizi/Dropbox-Uploader">https://github.com/andreafabrizi/Dropbox-Uploader</a><br>原始版本是需要完全权限的，我fork了一个带沙盒限制的版本： github: <a target="_blank" rel="noopener" href="https://github.com/binux/Dropbox-Uploader">https://github.com/binux/Dropbox-Uploader</a></p>
+<p>使用方法：<br>第一次启动的时候会指引你去Dropbox创建一个应用，按照指引操作即可。</p>
+<p>上传： .&#x2F;dropbox_uploader.sh upload [LOCAL_FILE]<br>下载： .&#x2F;dropbox_uploader.sh download [REMOTE_FILE]<br>删除： .&#x2F;dropbox_uploader.sh delete [REMOTE_FILE]</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-hash_algorithm_of_xunlei" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2012-03-25T20:46:57.000Z"><a href="/2012/03/hash_algorithm_of_xunlei/">2012-03-25</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2012/03/hash_algorithm_of_xunlei/">迅雷Hash算法分析</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>从迅雷离线获得的地址中，存在着大量的Hash值，这些hash看似都是base64,sha1,md5但却有所不同。<br>比如这是一个典型的离线地址</p>
+<pre><code>http://gdl.lixian.vip.xunlei.com/download?
+fid=3KUoDlBy9IotAFn5vQAHc5VUIgKiwSgmAAAAAHYA3duVUUeWgaJI4JGu5syK9PLK&amp;     // base64: 与cid,size,gcid相关(size为小字节序)
+mid=666&amp;                                        // maybe: always 666
+threshold=150&amp;                                  // maybe: always 150
+tid=A950BAE38A2E7398186D4127315DB76F            // unknow: 256bit relate with size
+srcid=4                                         // maybe: always 4
+verno=1                                         // maybe: always 1
+g=7600DDDB9551479681A248E091AEE6CC8AF4F2CA&amp;     // gcid: for normal download gcid == cid
+scn=c7&amp;                                         // section
+i=3547930B96AFA7B0A1CFCC80D516ADE97A34DAE0&amp;     // cid == infoid == btih == ed2k hash, files share a same cid in a bt task, cid is the btih of the torrent
+t=6&amp;                                            // type: 1=normal 4=ed2k 6=bt
+ui=18×××9640&amp;                                  //userid
+ti=33742×××247&amp;                                //tid from get free url
+s=640205218&amp;                                    //totalByte
+m=0&amp;                                            // mayby: always 0
+n=01324486025B4775690D459D7F43726F770F6CBF6F345D5B46347DA817445D5B422876D1025B783236556EA51C335D2E6D0A47E45F00000000     // filename
+</code></pre>
+<p>根据已有的数据分析&#x2F;比对，大致各个字段的含义已经标识出来了。其中除了ui,ti是与用户相关的变元，cid是来源相关的变元，其他的字段对于某一个文件来说一般是相同的。</p>
+<h2 id="cid"><a href="#cid" class="headerlink" title="cid"></a>cid</h2><p>算法源码：</p>
+<pre><code>def cid_hash_file(path):
+    h = hashlib.sha1()
+    size = os.path.getsize(path)
+    with open(path, &#39;rb&#39;) as stream:
+        if size &lt; 0xF000:
+            h.update(stream.read())
+        else:
+            h.update(stream.read(0x5000))
+            stream.seek(size/3)
+            h.update(stream.read(0x5000))
+            stream.seek(size-0x5000)
+            h.update(stream.read(0x5000))
+    return h.hexdigest().upper()
+</code></pre>
+<p>算法来自于<a target="_blank" rel="noopener" href="https://github.com/iambus/xunlei-lixian">https://github.com/iambus/xunlei-lixian</a>。<br>在api中，cid主要用于文件的索引。观察代码可知，cid并没有hash整个文件，而是根据文件的头&#x2F;中&#x2F;尾部的0x5000字节的内容计算Hash。这样就可以在不下载完整个文件，就能够查询到其他服务器上可能的相同文件。于是在下载支持range的文件的时候，即使该地址没有被索引到，但是通过cid，依旧可以被p2sp加速。<br>当然了，由于没有hash整个文件，文件在事实上有可能是不同的，那么根据下面这个gcid就可以唯一确定一个文件了。</p>
+<h2 id="gcid"><a href="#gcid" class="headerlink" title="gcid"></a>gcid</h2><pre><code>def gcid_hash_file(path):
+    h = hashlib.sha1()
+    size = os.path.getsize(path)
+    psize = 0x40000
+    while size / psize &gt; 0x200 and psize &lt; 0x200000:
+        psize = psize &lt;&lt; 1
+    with open(path, &#39;rb&#39;) as stream:
+        data = stream.read(psize)
+        while data:
+            h.update(hashlib.sha1(data).digest())
+            data = stream.read(psize)
+    return h.hexdigest().upper()
+</code></pre>
+<p>这个算法是我完全没有通过逆向黑盒分析而来，虽然没有做完整的测试，但是一般来说是正确的。。分析借助了loli.lu的18万个已有文件的数据，以及<a target="_blank" rel="noopener" href="http://coffee.xunlei.com:8000/viewthread.php?tid=692&extra=page=1">迅雷咖啡吧</a>上的一句话：“如果文件很大，则计算gcid非常耗时，因此可以在大文件传输过程中计算gcid，文件传输完毕，则gcid也计算好了“。。<br>gcid的作用是文件的唯一键，在迅雷服务器上唯一确定一个文件。可以说，只要有了gcid，实际上是可以任意下载到需要的文件的。算法采用了分片hash再二次sha1的算法。。猜测原因是因为分片被限制在512个一下，当hash较大文件的时候，可以边下载边hash，再在最后hash那个不到512*20字节的串即可，当文件下载完成的时候就能立即得出gcid。还有一个原因是bt文件也是用sha1分片Hash的，那么获得种子文件也就同时有可能获得gcid了。同时，如果迅雷服务器保存了每个分片的sha1 hash的话，那么在下载通过cid匹配的文件同时，就能同时比较各个分片是否正确，以此保证最终结果。</p>
+<h2 id="fid"><a href="#fid" class="headerlink" title="fid"></a>fid</h2><p>算法如下：</p>
+<pre><code>def parse_fid(fid):
+    cid, size, gcid = struct.unpack(&quot;&lt;20sq20s&quot;, fid.decode(&quot;base64&quot;))
+    return cid.encode(&quot;hex&quot;).upper(), size, gcid.encode(&quot;hex&quot;).upper()
+
+def gen_fid(cid, size, gcid):
+    return struct.pack(&quot;&lt;20sq20s&quot;, cid.decode(&quot;hex&quot;), size, gcid.decode(&quot;hex&quot;)).encode(&quot;base64&quot;).strip()
+</code></pre>
+<p>首先这很明显是一个base64，但是一开始我并没有发现她们和cid,size,gcid的关系，<del>直到我膝盖中了一箭</del>。。<br>fid就是cid,size,gcid的二进制然后再base64而已。但是有了fid，神马cid,size,gcid这三大要素都不是问题了。应该是用于api分析url的便利，所做的一个接口性参数。</p>
+<h2 id="tid"><a href="#tid" class="headerlink" title="tid"></a>tid</h2><p>未知算法。<br>根据18万的文件数据，唯一能够知道的是，这个tid和文件大小一一对应。。size相同的文件tid一定相同，但是又不是size的直接hash，目前来说完全不知道这个参数的意义何在。。<br>如果有兴趣，您可以在<a target="_blank" rel="noopener" href="https://github.com/binux/lixian.xunlei/blob/master/tid.dict">https://github.com/binux/lixian.xunlei/blob/master/tid.dict</a>文件里面找到目前已知的映射。。如果分析出算法了请务必告诉我。</p>
+<h2 id="n"><a href="#n" class="headerlink" title="n"></a>n</h2><p>算法源码：</p>
+<pre><code>thunder_filename_mask = &quot;6131E45F00000000&quot;.decode(&quot;hex&quot;)
+def thunder_filename_encode(filename, encoding=&quot;gbk&quot;):
+    if isinstance(filename, unicode):
+        filename = filename.encode(encoding)
+    result = [&quot;01&quot;, ]
+    for i, word in enumerate(filename):
+        mask = thunder_filename_mask[i%len(thunder_filename_mask)]
+        result.append(&quot;%02X&quot; % (ord(word)^ord(mask)))
+    while len(result) % 8 != 1:
+        mask = thunder_filename_mask[len(result)%len(thunder_filename_mask)-1]
+        result.append(&quot;%02X&quot; % ord(mask))
+    return &quot;&quot;.join(result)
+
+def thunder_filename_decode(code, encoding=&quot;gbk&quot;):
+    assert code.startswith(&quot;01&quot;)
+    result = []
+    for i, word in enumerate(code[2:].decode(&quot;hex&quot;)):
+        mask = thunder_filename_mask[i%len(thunder_filename_mask)]
+        result.append(chr(ord(word)^ord(mask)))
+    result = &quot;&quot;.join(result).rstrip(&quot;\0&quot;)
+    return result.decode(encoding)
+</code></pre>
+<p>算法来源于<a target="_blank" rel="noopener" href="https://plus.google.com/109026361274947112731">+Zhang Youfu</a>。简单来说这个参数就是将文件名各位用掩码进行了简单转换而已，中文的编码与最终输出的header中的相同，既编码采用utf8，最终输出的也是utf8，值得指出的是默认的编码是gbk的。迅雷在输出文件名时会截断较长的文件名，但是实际上通过传递完整的n参数，可以无视这个限制。在<a target="_blank" rel="noopener" href="https://github.com/binux/ThunderLixianExporter/blob/master/ThunderLixianExporter.js#L300">binux&#x2F;ThunderLixianExporter</a>还有一个js版本的实现。 </p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>由上面的分析可见，一个文件的离线地址完全就是根据文件的信息生成的，于是你发现了什么？对了，完全不需要通过迅雷服务器我们就可以生成自己的离线地址！如果这个文件在迅雷服务器上存在，我们可以直接下载回来！（等等，你说n。。那不就是文件名嘛。。我只关心内容。。文件名这种小问题。。）<br>说到做到，<strong>您可以通过<a target="_blank" rel="noopener" href="https://github.com/binux/lixian.xunlei/blob/master/check_file.py">https://github.com/binux/lixian.xunlei/blob/master/check_file.py</a>这个文件直接计算出文件的cid,gcid,fid</strong>，如果可能的话也能计算出tid。<br>然后，把fake_url添加到迅雷软件里面。然后。。就可以直接下载了！可以开启高速通道，可以在快盘秒传，运气好可以开启离线秒传。。。<br>over</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-jshare" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2012-03-03T08:45:21.000Z"><a href="/2012/03/jshare/">2012-03-03</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2012/03/jshare/">一个网盘的终结(？)及由其而生的思考的思考</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>标题是思考的思考的原因是《<a target="_blank" rel="noopener" href="http://www.hexieshe.com/635859/">一个网盘的终结(？)及由其而生的思考—JSharer或宣布长期暂停服务</a>》这样一篇文章。<br>在JShare还叫JShare的时候，就知道这样一个有责远大理想，而且界面很漂亮的网盘。虽然很少会去收集稀有物，所以很少去，但是深知寻找资源的不易，特别是当需要的时候。。</p>
+<p>《<a target="_blank" rel="noopener" href="https://ra.gg/!rEOkP">标题一定要写的生存战略マル～</a>》这是电磁猫那边的公告帖。<strong>生存战略这个词准确的反映了网盘的最大的问题——生存。</strong></p>
+<h2 id="一、钱"><a href="#一、钱" class="headerlink" title="一、钱"></a>一、钱</h2><p>在二次元概念范围内，我一般都避免谈及这个词，这个即使在三次元中都俗到不行的词。但是，<strong>没有钱是不成的，网盘是很烧钱的。</strong><br>爱吗？二次元不缺少爱，但是用爱能支撑一个论坛，支撑一个PT&#x2F;BT，支撑几个内部FTP，但是支撑不起网盘; 网盘所需要的服务器，带宽都太多了，太花钱了。我相信，即使是115、腾讯、迅雷，单就网盘业务来说几乎肯定是亏损的，但是作为产品链中的一环，他们能通过其他业务支撑起这项服务，但是一个ACG向的网盘，难！</p>
+<p>解决的办法只有两个：</p>
+<h3 id="1-弄到钱"><a href="#1-弄到钱" class="headerlink" title="1.弄到钱"></a>1.弄到钱</h3><p>这很显而易见不是吗。如果能弄到钱就能做下去啦。<br>但是，收钱只有两种办法，向用户收，向第三方收。</p>
+<p>在中国，向用户收钱难，太难了。免费午餐吃惯了的中国网民，看到一个资源只会伸手，下载不了不骂娘就得感谢了。<br>即使对于有爱的人士来说，VIP收费+免费的模式是可以接受的，但是会有多少人付费？是否足以支撑这个项目？我个人认为难。</p>
+<p>向第三方收钱，最简单的例子就是广告了，但是依旧存在够不够烧的问题。<br>要知道对于一个点击，网盘可能需要付出的是1G的流量，换来的不过是不足0.5%的概率点击广告；这样的成本还是很难消化。</p>
+<h3 id="2-减低运营成本"><a href="#2-减低运营成本" class="headerlink" title="2.减低运营成本"></a>2.减低运营成本</h3><p>既然没钱，那就少花一点。</p>
+<h4 id="P2P"><a href="#P2P" class="headerlink" title="P2P"></a>P2P</h4><p>比如<a target="_blank" rel="noopener" href="http://www.loushao.net/">漏勺</a>就有这样的尝试，但是包括BT，PT，电驴的所有P2P方式都有一点硬伤——Peer：</p>
+<ul>
+<li><p>持续性  没法保证资源长时间在网存活，PT可以通过定期重新发布+免费来再次刺激下载，激活资源，可能会好一些</p>
+</li>
+<li><p>速度稳定  当Peer少的时候，速度依赖于Peer的网络状况</p>
+</li>
+<li><p>时间稳定  资源是否可以下载依赖于在线的Peer，但是并不是任何时段都有种子，或者有足够的种子在线</p>
+</li>
+</ul>
+<p>以上这些问题，在遇到冷门资源的时候更加明显，无种&#x2F;速度&#x2F;并不是随时可以下载，即使是采用了比较先进的管理方式的PT依旧存在。<br>但是，<strong>作为一个以“实现ACG资源长久分享的长期计划，目标是解决在资源分享的过程中一直存在的资源保存不便现状”的ACG网盘来说，冷门的问题依旧需要服务器和带宽资源来解决。</strong><br>当然了，P2P对于热门资源的解决能力依旧是可以借鉴的，毕竟互联网中的2&#x2F;8法则在这应该也是基本适用的。</p>
+<h4 id="网盘中转"><a href="#网盘中转" class="headerlink" title="网盘中转"></a>网盘中转</h4><p>这是我在做了<a target="_blank" rel="noopener" href="http://loli.lu/">loli.lu</a>之后的想法。<br>既然P2P无法保证一致的网络状况，自己又无法支撑网盘的资源开销，那就去用别人的网盘就好了。<br>每一份资源在本地服务器上保留一份，然后上传到别的网盘中，用户再通过别的网盘下载。由于网盘实际上不会真正删除他们服务器上的文件，并且存在秒传这样的机制，过期&#x2F;重传这样的问题实际是可以解决的。<br>那么，通过别的网盘，我们在保留资源持续有效的同时，通过提供多个网盘的下载，也能适应各种不同的网络环境和保持一致的下载体验。</p>
+<p>当然，缺点也是有的，这样的行为不可能被其他网盘官方许可，也就是说存在用户方针风险。</p>
+<h2 id="二、版权"><a href="#二、版权" class="headerlink" title="二、版权"></a>二、版权</h2><p>这又是掌握着网盘命脉的，至关重要的资源。<br>ＡＣＧ向网盘由于自身特点，注定存在大量的非法版权的内容，注定会受到政策的影响。更加上内容是保存在服务器上的，也不接受用户私人数据，于是很难逃避版权方面的限制。<br>找避风港或是寻找借口，决定了这个项目的生存能力。可能转向小众是解决这个问题的一般可行办法，但是能支撑多久，天知道。</p>
+<p>ＡＣＧ向网盘是个碉堡了的事情，但是真正做起来，难，太难了。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-upload-files-with-web-url-in-kuai-xunlei-com-without-a-vip-account" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2012-01-13T10:26:26.000Z"><a href="/2012/01/upload-files-with-web-url-in-kuai-xunlei-com-without-a-vip-account/">2012-01-13</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2012/01/upload-files-with-web-url-in-kuai-xunlei-com-without-a-vip-account/">让非会员也能使用kuai.xunlei.com的添加网络文件功能</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>没什么用的功能一则：<br>让非会员也能使用kuai.xunlei.com的添加网络文件功能。</p>
+<p>访问kuai.xunlei.com，登录，然后将下面的脚本粘贴到地址栏中执行即可：</p>
+<pre><code>javascript:$(&#39;#add_internet_file_btn&#39;).unbind().click(function()&#123;$(&#39;#add_internet_file_layer&#39;).fadeIn();$(&#39;#add_internet_file_layer .addingtips&#39;).hide();$(&#39;#add_internet_file_layer .apply_submit_btn&#39;).show();&#125;);
+</code></pre>
+<p>似乎这样就可以用xunlei来免费加速了，不支持BT是一大遗憾。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-bypassing-chrome-anti-xss-filter-with-specific-version-of-php" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2012-01-05T06:19:06.000Z"><a href="/2012/01/bypassing-chrome-anti-xss-filter-with-specific-version-of-php/">2012-01-04</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2012/01/bypassing-chrome-anti-xss-filter-with-specific-version-of-php/">利用特定版本PHP对query处理不一致，实现Chrome’s Anti-XSS绕过</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>完全是为了需要发现的，以至于bypass这个词也是第一次见到。。这个漏洞利用了Chrome和PHP对于请求URL处理上的不一致，对于Chrome不认为是query请求的连接，被PHP当作query部分正常处理了，以此来绕过Chrome的XSS过滤。</p>
+<p>受影响的浏览器和版本：<br>Google Chrome - 16.0.912.63 beta<br>Firefox - 9.0.1<br>Safari - 未亲自测试<br>Opera - 未亲自测试</p>
+<p>不受影响的浏览器：<br>IE10 - 未亲自测试，有截图</p>
+<p>漏洞尚在使用中…<br>绝对不是什么不好的用途啦..</p>
+<p>826b1112bf8521831b04b2e2985f81ab</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-vps-setup-log-1" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-12-24T19:33:03.000Z"><a href="/2011/12/vps-setup-log-1/">2011-12-24</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/12/vps-setup-log-1/">VPS配置记录（一）</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>一直想弄个VPS来玩，但都没有下定决心，随着<del>人民币升值</del>VPS变得更廉价，加上最近看到<a target="_blank" rel="noopener" href="http://www.yardvps.com/billing/aff.php?aff=1108">yardvps</a>的圣诞节20%续费优惠码，算下来一个512M XEN的VPS也不过40RMB&#x2F;月了。去除省去的VPN的钱，还算不错，于是决定入手一个玩玩。</p>
+<p>稍微介绍一下吧，<a target="_blank" rel="noopener" href="http://www.yardvps.com/billing/aff.php?aff=1108">yardvps</a> (推介链接)，是无管理型的VPS提供商，机房位于洛杉矶，<strong>支持支付宝支付</strong>。<br>我选的这个VPS配置如下：</p>
+<ul>
+<li><p>内存：512 MB</p>
+</li>
+<li><p>SWAP：1 GB</p>
+</li>
+<li><p>CPU: 1 个 Intel(R) Xeon(R) CPU E5620 @ 2.40GHz</p>
+</li>
+<li><p>硬盘： 20GB</p>
+</li>
+<li><p>流量： 1500GB</p>
+</li>
+<li><p>原生IPV6、PPTP VPN</p>
+</li>
+</ul>
+<p>由于有中文页面和新浪微博+支付宝，简直就是为中国人打造的。速度方面各地都不一样，到国内骨干网能有200-300KB&#x2F;S的速度。但是在我这（北京联通）还是挺悲剧的，也就30KB&#x2F;S的样子，而且丢包严重。。虽然也有其他地区朋友说速度不错。。不过最好还是亲自测试以下为好<br><a target="_blank" rel="noopener" href="http://208.87.242.2/download100.zip">官方测速100M</a>，<a target="_blank" rel="noopener" href="http://ipv4.binux.me/CSDN-%e4%b8%ad%e6%96%87IT%e7%a4%be%e5%8c%ba-600%e4%b8%87.rar">位于我服务器上的文件</a></p>
+<p>好，推介到此结束，下面正式开始，服务器系统用的是ArchLinux 64位版本，因为用得比较习惯了。。而且默认配置文件的分布还是比较舒服的。。</p>
+<h3 id="添加用户"><a href="#添加用户" class="headerlink" title="添加用户"></a>添加用户</h3><p>用adduser的交互式用户添加，比起useradd各种命令参数省心很多：</p>
+<pre><code>[root@localhost http]# adduser
+Login name for new user []: binux
+User ID (&#39;UID&#39;) [ defaults to next available ]: 
+Initial group [ users ]: 
+Additional groups (comma separated) []: bin,daemon,sys,adm,disk,wheel,log,audio
+Home directory [ /home/binux ] 
+Shell [ /bin/bash ] 
+Expiry date (YYYY-MM-DD) []: 
+
+New account will be created as follows:
+---------------------------------------
+Login name.......:  binux
+UID..............:  [ Next available ]
+Initial group....:  users
+Additional groups:  bin,daemon,sys,adm,disk,wheel,log,audio
+Home directory...:  /home/binux
+Shell............:  /bin/bash
+Expiry date......:  [ Never ]
+
+This is it... if you want to bail out, hit Control-C.  Otherwise, press
+ENTER to go ahead and make the account.
+</code></pre>
+<h3 id="x2F-etc-x2F-sudoers"><a href="#x2F-etc-x2F-sudoers" class="headerlink" title="&#x2F;etc&#x2F;sudoers"></a>&#x2F;etc&#x2F;sudoers</h3><p>由于我都是用sshkey验证登录的，总是不记得密码，于是给wheel组加上了免密码sudo，至于为什么不直接用root是因为这样可以防止手抖。。</p>
+<pre><code>[root@localhost binux]# sudoedit /etc/sudoers
+
+## Same thing without a password
+-# %wheel ALL=(ALL) NOPASSWD: ALL
++%wheel ALL=(ALL) NOPASSWD: ALL
+
+## Uncomment to allow members of group sudo to execute any command
+-# %sudo   ALL=(ALL) ALL
++%sudo   ALL=(ALL) ALL
+</code></pre>
+<p>然后就是改掉密码什么的</p>
+<h3 id="pacman-amp-amp-python-amp-amp-vim"><a href="#pacman-amp-amp-python-amp-amp-vim" class="headerlink" title="pacman &amp;&amp; python &amp;&amp; vim"></a>pacman &amp;&amp; python &amp;&amp; vim</h3><p>随手打开一些源</p>
+<pre><code>[root@localhost ~]# vi /etc/pacman.d/mirrorlist
+Server = http://mirrors.kernel.org/archlinux/$repo/os/$arch
+
+
+
+
+
+[root@localhost ~]# pacman -Sy
+[root@localhost ~]# pacman -S python
+[root@localhost ~]# pacman -S python2
+[root@localhost ~]# pacman -S vim
+</code></pre>
+<h3 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a>nginx</h3><pre><code>pacman -S nginx
+
+
+
+
+
+[root@localhost ~]# vim /etc/nginx/conf/nginx.conf
+
+-#user http;
++user http;
+
+-    #keepalive_timeout  65;
++    keepalive_timeout  20;
+
+-    #gzip  on;
++    gzip  on;
+
+    server &#123;
+        listen       80;
+        server_name  localhost;
+
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        location / &#123;
+-            root   http;
++            root   /srv/http;
+            index  index.html index.htm;
+            autoindex on;
+        &#125;
+
+     &#125;
+
++    include vhost/*.conf;
+</code></pre>
+<p>这里我们已经把nginx的目录统一放到&#x2F;srv&#x2F;http下了。为了让nginx所在的http组也能访问修改这个路径，把这个目录的所有人改成http，然后将binux也加入这个组来修改里面的文件。<br>然后建立vhost目录，然后include到主配置中来，为了以后方便添加虚拟主机。</p>
+<pre><code>[root@localhost conf]# cd /etc/nginx/conf/
+[root@localhost conf]# mkdir vhost
+
+[root@localhost conf]# cd /srv/
+[root@localhost srv]# chown http:http http
+[root@localhost srv]# chmod 775 http
+[root@localhost srv]# usermod -a -G http binux
+
+[root@localhost srv]# rc.d start nginx
+</code></pre>
+<h3 id="PPTP-Server"><a href="#PPTP-Server" class="headerlink" title="PPTP Server"></a>PPTP Server</h3><p>参考：<a target="_blank" rel="noopener" href="https://wiki.archlinux.org/index.php/PPTP_Server_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)">https://wiki.archlinux.org/index.php/PPTP_Server_(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)</a></p>
+<pre><code>[root@localhost ~]# pacman -S pptpd
+[root@localhost ~]# vim /etc/pptpd.conf
+
++3行
+option /etc/ppp/pptpd-options
+localip 172.16.36.1
+remoteip 172.16.36.2-254
+
+[root@localhost ~]# vim /etc/ppp/pptpd-options
+
++14行
+name pptpd
+refuse-pap
+refuse-chap
+refuse-mschap
+require-mschap-v2
+require-mppe-128
+proxyarp
+lock
+nobsdcomp
+novj
+novjccomp
+nologfd
+ms-dns 8.8.8.8
+ms-dns 8.8.4.4
+
+[root@localhost ~]# vim /etc/ppp/chap-secrets
+
++binux   pptpd   passwd  *
+
+[root@localhost ~]# vim /etc/sysctl.conf
+
+# Disable packet forwarding
+-net.ipv4.ip_forward=0
++net.ipv4.ip_forward=1
+
+[root@localhost ~]# iptables -A INPUT -i ppp+ -j ACCEPT
+[root@localhost ~]# iptables -A OUTPUT -o ppp+ -j ACCEPT
+
+[root@localhost ~]# iptables -A INPUT -p tcp --dport 1723 -j ACCEPT
+[root@localhost ~]# iptables -A INPUT -p 47 -j ACCEPT
+[root@localhost ~]# iptables -A OUTPUT -p 47 -j ACCEPT
+
+[root@localhost ~]# iptables -F FORWARD
+[root@localhost ~]# iptables -A FORWARD -j ACCEPT
+[root@localhost ~]# iptables -A POSTROUTING -t nat -o eth0 -j MASQUERADE
+[root@localhost ~]# iptables -A POSTROUTING -t nat -o ppp+ -j MASQUERADE
+
+[root@localhost ~]# rc.d save iptables
+</code></pre>
+<p>然后在线启用端口转发，然后可以启用pptpd了。</p>
+<pre><code>echo 1 &gt;/proc/sys/net/ipv4/ip_forward
+rc.d start pptpd
+</code></pre>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-how_to_download_resource_from_loli-lu" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-12-24T08:27:20.000Z"><a href="/2011/12/how_to_download_resource_from_loli-lu/">2011-12-24</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/12/how_to_download_resource_from_loli-lu/">[教程] 如何下载loli.lu的资源 For Windows</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>loli.lu已关闭！<br>如需使用迅雷会员功能，请<a target="_blank" rel="noopener" href="http://vip.xunlei.com/">购买迅雷会员服务</a><br>如需在OSX，Linux环境下下载迅雷离线，请参阅<a href="/2012/07/thunderlixianexporter/">ThunderLixianExporter</a></p>
+</blockquote>
+<p>迅雷从早期的多线程下载，到P2SP多服务器下载，然后各种P2P吸血，到最后的迅雷离线服务，确确实实地建立起了一个互联网资源数据库。<br>无论是热门新番，还是上古时代的里番，几乎都能在迅雷的硬盘上找到，即使种子无人做种，即使ed2k没有资源，只要你付费，迅雷离线几乎都能满足你的欲望。</p>
+<p>但是要让迅雷的吸血流氓客户端 钻进计算姬的身体里，总是觉得不舒服。于是我们有用回了干净清爽“少功能”的多线程下载软件。<br>ACG圈内听说的比较多的就是IDM（<a target="_blank" rel="noopener" href="http://www.internetdownloadmanager.com/">Internet Download Manager</a>）了。</p>
+<p>于是这篇windows教程就说说怎么用IDM下载<a target="_blank" rel="noopener" href="http://loli.lu/">loli.lu</a>的资源。。不过首先让我们扔掉那<a target="_blank" rel="noopener" href="http://blog.binux.me/2011/12/fuck-ie/">恼人的IE</a>吧。。</p>
+<h3 id="工具介绍"><a href="#工具介绍" class="headerlink" title="工具介绍"></a>工具介绍</h3><h4 id="IDM"><a href="#IDM" class="headerlink" title="IDM"></a>IDM</h4><p>IDM是一个多线程下载软件。没了。。对真的没了。<br>没了就是这个东西的优势所在，没有乱七八糟的广告，没有没有必要的功能，一次付费<del>破解</del>终身适用。<br>IDM将多线程发挥到极致，自动的续传判断，自动的最大可开启线程数判断，资源嗅探，多浏览器支持等特性，是迅雷很好的替换。</p>
+<p><img src="http://s3.binux.me/201112/2890/14352_o.jpg"></p>
+<p>您可以很容易的从互联网上寻找到付费<del>破解</del>方式。。（我也不知道现在用的版本是哪里来的了）</p>
+<h4 id="loli-lu"><a href="#loli-lu" class="headerlink" title="loli.lu"></a>loli.lu</h4><p>是我所编写的开源项目，旨在帮助Linux和MAC用户更好的适用迅雷离线的丰富资源。在Martian支持下提供的ACG离线内容分享服务。<br>通过这个项目的中转，你可以免费获得可供下载的迅雷离线地址，并且可以将地址分享给好友进行下载。</p>
+<h3 id="获取下载链接"><a href="#获取下载链接" class="headerlink" title="获取下载链接"></a>获取下载链接</h3><p>访问：<a target="_blank" rel="noopener" href="https://loli.lu/">https://loli.lu/</a>，点击右上角的登录，使用Google账户授权：<br><a target="_blank" rel="noopener" href="http://s0.binux.me/201112/2890/14223_o.png"><img src="http://s0.binux.me/201112/2890/14223_z.png" alt="login"></a></p>
+<p>点击想要下载的资源，然后在批量下载对话框中选择“IDM导出”</p>
+<p><img src="http://s2.binux.me/201112/2890/14351_o.png"></p>
+<p>将导出文件保存到本地，然后打开“IDM &gt; 任务 &gt; 导入 &gt; 从IDM导出文件”</p>
+<p><img src="http://s1.binux.me/201112/2890/14353_o.jpg"></p>
+<p>选择刚才下载到的文件，确认下链接确认就可以了。<br><strong>注意，这个时候任务并不会立即开始，请到任务列表的最下端手动恢复任务。</strong></p>
+<p><img src="http://s1.binux.me/201112/2890/14354_o.jpg"></p>
+<p>好了，现在试试能不能满速下载吧：）</p>
+<p>如果您每次都是使用“IDM导出”功能进行下载，是没有必要安装插件的，这时候您可以点击左边栏的“我无须使用浏览器下载功能”链接来关闭红色的文字提示，并且可以显示tag列表。</p>
+<p><a target="_blank" rel="noopener" href="http://blog.binux.me/wp-content/uploads/2011/12/LOLI.LU-%E8%BF%85%E9%9B%B7%E7%A6%BB%E7%BA%BF%E4%B8%8B%E8%BD%BD%E5%88%86%E4%BA%AB.png"><img src="http://blog.binux.me/wp-content/uploads/2011/12/LOLI.LU-%E8%BF%85%E9%9B%B7%E7%A6%BB%E7%BA%BF%E4%B8%8B%E8%BD%BD%E5%88%86%E4%BA%AB-112x300.png"></a></p>
+<h3 id="添加资源"><a href="#添加资源" class="headerlink" title="添加资源"></a>添加资源</h3><p>在登录后就可以在右上角找到添加资源的链接啦<br><a target="_blank" rel="noopener" href="http://s0.binux.me/201112/2890/14223_o.png"><img src="http://s0.binux.me/201112/2890/14223_z.png" alt="bar"></a><br><img src="http://s1.binux.me/201112/2890/14225_o.png" alt="add task"><br>当然了，如果觉得麻烦，也可以直接填写链接获得高速下载链接：<br><img src="http://s0.binux.me/201112/2890/14227_o.png" alt="add task 2"></p>
+<p>对了，及时不是发布资源，获得的下载链接依旧可以分享给好友，只需要点击分享按钮，将链接复制给好友就可以了。<br>当然你也可以适用我们的一键分享功能：<br><a target="_blank" rel="noopener" href="http://s3.binux.me/201112/2890/14228_o.png"><img src="http://s3.binux.me/201112/2890/14228_o.png" alt="share"></a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-fuck-ie" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-12-24T07:35:15.000Z"><a href="/2011/12/fuck-ie/">2011-12-23</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/12/fuck-ie/">IE难伺候啊</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>一开始还想要为<a target="_blank" rel="noopener" href="http://loli.lu/">loli.lu</a>添加IE支持的，但是用linux习惯了，一直没有切到windows下看一眼loli.lu实际的效果，只是做了IE8版本以下的限制。</p>
+<p>于是，我错了，即使在IE8之下。。</p>
+<p><a target="_blank" rel="noopener" href="http://s3.binux.me/201112/2890/14348_o.jpg"><img src="http://s3.binux.me/201112/2890/14348_z.jpg"></a></p>
+<p>完全就是一团糟嘛！圆角，文字旋转不支持就算了。media query不支持，饿。。完全没法看啊这！</p>
+<p><a target="_blank" rel="noopener" href="http://s1.binux.me/201112/2890/14347_o.jpg"><img src="http://s1.binux.me/201112/2890/14347_o.jpg"></a></p>
+<p>也就是简单点的页面好一些，稍微可用。</p>
+<p>&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;<br>不过好消息是IE9页面基本正常了。。于是，支持到IE9吧，反正IE也没插件，无法直接浏览器下载资源，直接蓝屏给你看！</p>
+<p><a target="_blank" rel="noopener" href="http://s0.binux.me/201112/2890/14349_o.jpg"><img src="http://s0.binux.me/201112/2890/14349_z.jpg"></a></p>
+<p>蓝屏，蓝屏。。额。。。。。。。。。。。。。好吧，蓝屏页面在IE下也没法看。。<br>IE我真的伤不起啊。。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-howto_download_xunlei_offline_for_linux" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-12-21T06:28:09.000Z"><a href="/2011/12/howto_download_xunlei_offline_for_linux/">2011-12-20</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/12/howto_download_xunlei_offline_for_linux/">[教程] Linux下使用aria2+loli.lu免费下载迅雷离线资源</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>loli.lu已关闭！<br>如需使用迅雷会员功能，请<a target="_blank" rel="noopener" href="http://vip.xunlei.com/">购买迅雷会员服务</a><br>如需在OSX，Linux环境下下载迅雷离线，请参阅<a href="/2012/07/thunderlixianexporter/">ThunderLixianExporter</a></p>
+</blockquote>
+<p>对于Linux用户，无论你用不用Windows，都不会不知道迅雷和迅雷离线。<br>面对国内这苦B的网络环境，用http,ftp太慢，bt,ed2k过期，想用迅雷，额。。没客户端。。渣一样的客户端，用浏览器下吧，下一半断了还不能多线程，用命令行又有cookie验证。。。</p>
+<p>这篇教程旨在帮助大家打造一个方便的高速下载平台，下载工具采用多线程的aria2c，中转网站采用<a target="_blank" rel="noopener" href="https://loli.lu/">loli.lu</a>（迅雷离线分享）的导出功能，方便地解决这个问题。</p>
+<h3 id="工具介绍"><a href="#工具介绍" class="headerlink" title="工具介绍"></a>工具介绍</h3><h4 id="aria2"><a href="#aria2" class="headerlink" title="aria2"></a>aria2</h4><p><a target="_blank" rel="noopener" href="http://aria2.sourceforge.net/">aria2c</a>是一个跨平台开源，<strong>多线程</strong>，多协议支持的下载器。<br>支持包括HTTP&#x2F;HTTPS, FTP, BitTorrent多种内容的下载，并且支持多来源，多线程，有<a target="_blank" rel="noopener" href="http://sourceforge.net/apps/trac/aria2/wiki#GUIFrontends">丰富的前端</a>可供选用。</p>
+<h4 id="loli-lu"><a href="#loli-lu" class="headerlink" title="loli.lu"></a>loli.lu</h4><p>是我在<a target="_blank" rel="noopener" href="http://4321.la/">Martian</a>支持下共同创建的一个迅雷离线下载分享的<a target="_blank" rel="noopener" href="https://github.com/binux/lixian.xunlei">开源</a>项目。旨在帮助Linux和MAC用户更好的适用迅雷离线的丰富资源。<br>通过这个项目的中转，你可以<strong>免费获得</strong>可供下载的迅雷离线地址，并且可以将地址分享给好友进行下载。</p>
+<h3 id="安装aria2"><a href="#安装aria2" class="headerlink" title="安装aria2"></a>安装aria2</h3><p>如果您的发行版带有包管理器，aria2很有可能已经包含在源中，直接安装即可。例如来自<a target="_blank" rel="noopener" href="http://sourceforge.net/apps/trac/aria2/wiki/Download">http://sourceforge.net/apps/trac/aria2/wiki/Download</a>的安装说明：</p>
+<blockquote>
+<p>  <strong>Debian and Ubuntu</strong><br><br>  apt-get install aria2</p>
+</blockquote>
+<blockquote>
+<p>  <strong>Fedora</strong><br><br>  yum install aria2</p>
+</blockquote>
+<blockquote>
+<p>  <strong>Mandriva</strong><br><br>  urpmi aria2</p>
+</blockquote>
+<blockquote>
+<p>  <strong>Arch</strong><br><br>  pacman -S aria2</p>
+</blockquote>
+<blockquote>
+<p>  <strong>Gentoo</strong><br><br>  emerge aria2</p>
+</blockquote>
+<blockquote>
+<p>  <strong>OpenSUSE</strong><br><br>  Build Service <a target="_blank" rel="noopener" href="http://download.opensuse.org/repositories/network:/utilities/">http://download.opensuse.org/repositories/network:/utilities/</a></p>
+</blockquote>
+<blockquote>
+<p>  <strong>Lunar Linux</strong><br><br>  lin aria2</p>
+</blockquote>
+<blockquote>
+<p>  <strong>AgiliaLinux</strong><br><br>  mpkg-install aria2</p>
+</blockquote>
+<blockquote>
+<p>  <strong>FreeBSD</strong><br><br>  <a target="_blank" rel="noopener" href="http://www.freebsd.org/cgi/cvsweb.cgi/ports/www/aria2/">http://www.freebsd.org/cgi/cvsweb.cgi/ports/www/aria2/</a></p>
+</blockquote>
+<blockquote>
+<p>  <strong>Mac OS X</strong><br><br>  <a target="_blank" rel="noopener" href="http://www.macports.org/">http://www.macports.org/</a></p>
+</blockquote>
+<blockquote>
+<p>  <strong>Fink</strong><br><br>  <a target="_blank" rel="noopener" href="http://pdb.finkproject.org/pdb/package.php/aria2">http://pdb.finkproject.org/pdb/package.php/aria2</a></p>
+</blockquote>
+<blockquote>
+<p>  <strong>Cygwin</strong><br><br>  <a target="_blank" rel="noopener" href="http://sourceware.org/cygwin/packages/aria2/">http://sourceware.org/cygwin/packages/aria2/</a></p>
+</blockquote>
+<p>如果您的发行版很不幸的不在上述发行版中，请前往<a target="_blank" rel="noopener" href="http://sourceforge.net/projects/aria2/files/stable/">http://sourceforge.net/projects/aria2/files/stable/</a>尝试适用源码安装。</p>
+<p>当您安装完成之后输入</p>
+<pre><code>aria2c -v
+</code></pre>
+<p>出现</p>
+<pre><code>aria2 version 1.13.0
+Copyright (C) 2006, 2011 Tatsuhiro Tsujikawa
+
+......
+</code></pre>
+<p>表明安装成功，注意，由于aria2在1.10后参数变化，而我们的Loli.lu导出的是新的参数设定，<strong>需要aria2的版本高于1.10</strong>。</p>
+<h3 id="获取下载链接"><a href="#获取下载链接" class="headerlink" title="获取下载链接"></a>获取下载链接</h3><p>访问：<a target="_blank" rel="noopener" href="https://loli.lu/">https://loli.lu/</a>，点击右上角的登录，使用Google账户授权：<br><a target="_blank" rel="noopener" href="http://s0.binux.me/201112/2890/14223_o.png"><img src="http://s0.binux.me/201112/2890/14223_z.png" alt="login"></a></p>
+<p>然后点击想要下载的资源，在弹出的浮动框中的批量下载中，点击aria2的链接：<br><a target="_blank" rel="noopener" href="http://s1.binux.me/201112/2890/14224_o.png"><img src="http://s1.binux.me/201112/2890/14224_o.png" alt="get link"></a></p>
+<p>之后，浮动框中会输出这个资源的所有aria2的链接：</p>
+<pre><code>aria2c -c -x5 --out \[SumiSora\]\[C3\]\[01\]\[GB\]\[x264\_aac\]\[720p\]\(5393D704\)\.ass --header &#39;Cookie:gdriveid=4B281B37A54B63BF6F47BBF2A8A22675;&#39; &#39;http://gdl.lixian.vip.xunlei.com/download?fid=umOXSXI/nn0XdbUzcpjfYhEs+g2K7wAAAAAAAFEZlKH8Vp3sMEiGuAwWb4ynfSaB&amp;mid;=666&amp;threshold;=150&amp;tid;=F0991DB1D9D3D750F20EB62624DE99D4&amp;srcid;=4&amp;verno;=1&amp;g;=511994A1FC569DEC304886B80C166F8CA77D2681&amp;scn;=c8&amp;i;=59B01E2CB9D2E7B1B5A83016DF97D4D445BAE247&amp;t;=6&amp;ui;=191942368&amp;ti;=50569010689&amp;s;=61322&amp;m;=0&amp;n;=01145C8D0C6F72615D3A72D7025B30315D3A76A6025B783236556E853E635D5B3753019402283533395275D36F34292E611242E45F00000000&#39;
+aria2c -c -x5 --out \[SumiSora\]\[C3\]\[01\]\[GB\]\[x264\_aac\]\[720p\]\(5393D704\)\.mkv --header &#39;Cookie:gdriveid=4B281B37A54B63BF6F47BBF2A8A22675;&#39; &#39;http://gdl.lixian.vip.xunlei.com/download?fid=2QPCJq1fI2pyx9Nbr9XkGGw/NgK7SEMVAAAAAIc3sATS9kleYgkLISA6zY0DXbEj&amp;mid;=666&amp;threshold;=150&amp;tid;=7568C4810EDDE63A3C2982ADE0BF4234&amp;srcid;=4&amp;verno;=1&amp;g;=8737B004D2F6495E62090B21203ACD8D035DB123&amp;scn;=c10&amp;i;=59B01E2CB9D2E7B1B5A83016DF97D4D445BAE247&amp;t;=6&amp;ui;=191942368&amp;ti;=50569010689&amp;s;=356731067&amp;m;=0&amp;n;=01145C8D0C6F72615D3A72D7025B30315D3A76A6025B783236556E853E635D5B3753019402283533395275D36F34292E6D0A47E45F00000000&#39;
+......
+</code></pre>
+<p><strong>现在开始下载吧</strong>，先新建一个目录，比如</p>
+<pre><code>mkdir -p &#39;[澄空学园][C3-魔幻三次方-][01-12][GB][720p MKV][全]&#39;
+cd &#39;[澄空学园][C3-魔幻三次方-][01-12][GB][720p MKV][全]&#39;
+</code></pre>
+<p>然后粘贴入这些命令</p>
+<pre><code> *** Download Progress Summary as of Tue Dec 20 22:10:06 2011 ***               
+================================================================================
+[#1 SIZE:8.7MiB/340.2MiB(2%) CN:5 SPD:170.6KiBs ETA:33m08s]
+FILE: /home/binux/work/lixian.xunlei/[SumiSora][C3][01][GB][x264_aac][720p](5393D704).mkv
+--------------------------------------------------------------------------------
+
+[#1 SIZE:11.9MiB/340.2MiB(3%) CN:5 SPD:142.4KiBs ETA:39m20s]
+    SIZE:文件大小，进度      CN:线程数 SPD:速度      ETA:剩余时间
+</code></pre>
+<p>对了，如果如果中间打断一个任务，只要在原来的目录下，再次执行下载命令就可以继续下载了。<br>如果一个任务的连接过多，也可以考虑建一个文件先保存起来，然后sh down.sh这样下载就好了。</p>
+<h3 id="添加资源"><a href="#添加资源" class="headerlink" title="添加资源"></a>添加资源</h3><p>在登录后就可以在右上角找到添加资源的链接啦<br><a target="_blank" rel="noopener" href="http://s0.binux.me/201112/2890/14223_o.png"><img src="http://s0.binux.me/201112/2890/14223_z.png" alt="bar"></a><br><img src="http://s1.binux.me/201112/2890/14225_o.png" alt="add task"><br>当然了，如果觉得麻烦，也可以直接填写链接获得高速下载链接：<br><img src="http://s0.binux.me/201112/2890/14227_o.png" alt="add task 2"></p>
+<p>对了，及时不是发布资源，获得的下载链接依旧可以分享给好友，只需要点击分享按钮，将链接复制给好友就可以了。<br>当然你也可以适用我们的一键分享功能：<br><a target="_blank" rel="noopener" href="http://s3.binux.me/201112/2890/14228_o.png"><img src="http://s3.binux.me/201112/2890/14228_o.png" alt="share"></a></p>
+<h3 id="x3D-x3D-x3D"><a href="#x3D-x3D-x3D" class="headerlink" title="&#x3D;&#x3D;&#x3D;"></a>&#x3D;&#x3D;&#x3D;</h3><p>如果有任何问题，欢迎留言，或<a target="_blank" rel="noopener" href="http://gplus.to/binux">+足兆叉虫</a><br>或者直接提交BUG：<a target="_blank" rel="noopener" href="https://github.com/binux/lixian.xunlei/issues">https://github.com/binux/lixian.xunlei/issues</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article id="post-from_xunlei_lixian_for_flexget" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-12-14T22:19:07.000Z"><a href="/2011/12/from_xunlei_lixian_for_flexget/">2011-12-14</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/12/from_xunlei_lixian_for_flexget/">迅雷离线脚本+flexget 将离线资源自动下载回本地</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p><strong><font color=red>OUT OF DATA</font></strong></p>
+<p>这个也是一篇教程，上接 “<a target="_blank" rel="noopener" href="http://blog.binux.me/2011/12/xunlei_lixian_for_flexget/">让资源灌满你的离线空间吧 — 迅雷离线插件 for flexget</a>“。需要的工具依旧是flexget和lixian.xunlei插件。</p>
+<p>本文是应+<a target="_blank" rel="noopener" href="https://plus.google.com/u/0/111086731636961623060">平芜泫</a>的需求，自动将迅雷离线里面的文件下载回vps，然后再从教育网用IPV6下回本地。前两步不再复述，参考前文的步骤即可，直接步骤3。先上配置文件：</p>
+<pre><code>feeds:
+  some_name:
+    from_xunlei_lixian:
+      username: &quot;&lt;your username&gt;&quot;
+      password: &quot;&lt;your password&gt;&quot;
+      limit: 30
+      fields:
+        base_path: /home/me/downloads
+    accept_all: true
+    exec:
+      auto_escape: yes
+      on_output:
+        for_accepted: mkdir -p &#123;&#123; fields.base_path &#125;&#125;/&#123;&#123; taskname &#125;&#125; &amp;&amp; aria2c -c -x5 --out &#39;&#123;&#123; fields.base_path &#125;&#125;/&#123;&#123; taskname &#125;&#125;/&#123;&#123; title &#125;&#125;&#39; --header &#39;&#123;&#123; cookie &#125;&#125;&#39; &#39;&#123;&#123; url &#125;&#125;&#39;
+</code></pre>
+<p>这又是一个yaml的配置文件，其中from_xunlei_lixian是input，accept_all是过滤器，而exec作为输出来进行下载。</p>
+<p>from_xunlei_lixian中，limit限制一次取出多少条结果，fields可以将里面的参数传递到output中。<br>output中可以使用的字段包括</p>
+<ul>
+<li><p>title         文件名</p>
+</li>
+<li><p>url           离线地址</p>
+</li>
+<li><p>cookie     下载所需要的cookie</p>
+</li>
+<li><p>taskname 所属的任务名（比如BT）</p>
+</li>
+<li><p>size         文件大小</p>
+</li>
+<li><p>format     文件格式（不准确）</p>
+</li>
+<li><p>fields       在上文中设置的那些东西</p>
+</li>
+</ul>
+<p>exec的文档在<a target="_blank" rel="noopener" href="http://flexget.com/wiki/Plugins/exec">http://flexget.com/wiki/Plugins/exec</a>，auto_escape可以escape掉文件名中的奇怪字符，on_output和for_accepted对每一个文件进行下载任务。</p>
+<p>指令中：</p>
+<blockquote>
+<p> mkdir -p &#x2F;</p>
+</blockquote>
+<p>用于在base_path下创建一个以taskname命名的文件夹，这样BT这样多文件的时候就会下载到同一个目录下了。</p>
+<blockquote>
+<p>aria2c -c -x5 –out ‘&#x2F;&#x2F;迅雷离线脚本+flexget 将离线资源自动下载回本地‘ –header ‘‘ ‘‘</p>
+</blockquote>
+<p>使用aria2c使用5个线程，将文件下载到本地。当然，也可以使用wget，这么写就可以了：</p>
+<blockquote>
+<p>wget -c -O ‘ &#x2F;&#x2F;迅雷离线脚本+flexget 将离线资源自动下载回本地‘ –header ‘‘ ‘‘</p>
+</blockquote>
+<p>好了，现在运行flexget –test试试吧，flexget会输出将要执行的命令，但是并不会真正的执行，可以作为测试。</p>
+<p>可能你的离线空间里面已经积累了大量已经下载回本地的文件，重新下一遍是没有意义的，对吧，来试试这个命令：</p>
+<blockquote>
+<p>flexget –learn</p>
+</blockquote>
+<p>这样可以跳过下载步骤，但是这些文件依旧会记录下来，再执行flexget的时候就只会下载之后添加的文件了。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+
+<nav id="pagination">
+  
+    <a href="/page/4/" class="alignleft prev">上一页</a>
+  
+  
+    <a href="/page/6/" class="alignright next">下一页</a>
+  
+  <div class="clearfix"></div>
+</nav></div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="搜索">
+    <input type="hidden" name="as_sitesearch" value="binux.blog">
+  </form>
+</div>
+
+
+  <div class="widget tag about_me">
+  <h3 class="title">About Me</h3>
+  <ul class="entry">
+    
+    <li>
+      <span class="icon email"></span>
+      <a href="mailto:roy@binux.me" target=_blank rel=me>roy@binux.me</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon github"></span>
+      <a href="https://github.com/binux" target=_blank rel=me>github.com/binux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon twitter"></span>
+      <a href="https://twitter.com/roybinux" target=_blank rel=me>@roybinux</a>
+    </li>
+    
+
+    
+    <li>
+      <span class="icon gplus"></span>
+      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
+    </li>
+    
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">最新文章</h3>
+  <ul class="entry">
+    
+      <li>
+        <a href="/2020/01/home-assistant/">家居自动化</a>
+      </li>
+    
+      <li>
+        <a href="/2019/03/zerotier-nat-gateway-and-iptables-debug/">Zerotier Nat 网关出口 和 iptables 调试</a>
+      </li>
+    
+      <li>
+        <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
+      </li>
+    
+      <li>
+        <a href="/2018/02/us/">2018 新的冒险</a>
+      </li>
+    
+      <li>
+        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  <div class="widget tag recent-comments">
+  <h3 class="title">近期评论</h3>
+  <div class="entry">
+    <script type="text/javascript" src="//binux.disqus.com/recent_comments_widget.js?num_items=5&amp;hide_avatars=0&amp;avatar_size=32&amp;excerpt_length=50"></script>
+  </div>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2022 Roy Binux
+  
+</div>
+<div class="clearfix"></div></footer>
+  
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+<script src="/js/jquery.imagesloaded.min.js"></script>
+
+
+<script src="/js/gallery.js"></script>
+
+
+
+<script>
+var disqus_shortname = 'binux';
+var disqus_config = function () {
+this.page.url = '';
+this.page.identifier = '';
+};
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = 'https://' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+<script>
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+
+</body>
+</html>
