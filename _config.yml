@@ -16,6 +16,9 @@ url: https://binux.blog
 root: /
 permalink: :year/:month/:title/
 permalink_defaults:
+pretty_urls:
+  trailing_index: false
+  trailing_html: false
 
 # Directory
 source_dir: source
@@ -31,7 +34,8 @@ skip_render:
 new_post_name: :year-:month-:day-:title.md
 default_layout: post
 titlecase: false # Transform title into titlecase
-external_link: true # Open external links in new tab
+external_link:
+  enable: true # Open external links in new tab
 filename_case: 0
 render_drafts: false
 post_asset_folder: false
@@ -42,6 +46,9 @@ highlight:
   line_number: true
   auto_detect: false
   tab_replace:
+
+# Index
+index_generator:
 
 # Category & Tag
 default_category: uncategorized
@@ -69,15 +76,15 @@ theme: light
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   - type: git
-    repo: git@github.com:binux/binux_github_com.git
+    repo: https://github.com/binux/binux_github_com.git
     branch: gh-pages
-  - type: rsync
-    host: c3.binux.me
-    user: binux
-    root: /srv/binux.blog/
-    delete: true
-    verbose: true
-    ignore_errors: true
+  # - type: rsync
+  #   host: c3.binux.me
+  #   user: binux
+  #   root: /srv/binux.blog/
+  #   delete: true
+  #   verbose: true
+  #   ignore_errors: true
 
 disqus_shortname: binux
 feed:

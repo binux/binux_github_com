@@ -45,7 +45,7 @@ Hub
 
 首先跟着[文档](https://www.home-assistant.io/integrations/xiaomi_aqara/)将米家多功能网关接入 Home Assistant，然后就可以添加 Automation 了：
 
-```
+```yaml
 - id: '1561354113814'
   alias: Turn On Bathroom
   trigger:
@@ -107,7 +107,7 @@ Wyze Cam 就是[小方智能摄像机](https://www.mi.com/xiaofang) 的国外版
 
 然后是控制投影的开关，当米家万能遥控器接入 Home Assistant 后，可以通过 `xiaomi_miio.remote_learn_command` 指令学习投影遥控的开关机代码，然后在 Home Assistant 中建立一个虚拟开关：
 
-```
+```yaml
 remote:
   - platform: xiaomi_miio
     host: 192.168.1.104
@@ -163,7 +163,7 @@ DisplaySwitch.exe 位于 `C:\Windows\System32\DisplaySwitch.exe` 不知道为什
 
 然后可以在 Home Assistant 中加一个 pc_screen 的 switch：
 
-```
+```yaml
 switch:
   - platform: template
       pc_screen:

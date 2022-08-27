@@ -18,7 +18,7 @@ tags: [zerotier, nat gateway, full tunnel mode, iptables]
 
 当你将本地计算机和一台服务器加入网络后，然后就是根据 [这个教程](https://zerotier.atlassian.net/wiki/spaces/SD/pages/7110693/Overriding+Default+Route+Full+Tunnel+Mode) 。运行下面4个命令就行了：
 
-```
+```bash
 sudo sysctl -w net.ipv4.ip_forward=1
 sudo iptables -t nat -A POSTROUTING -o eth0 -s 10.6.4.0/22 -j SNAT --to-source 45.32.69.220
 sudo iptables -A FORWARD -i zt+ -s 10.6.4.0/22 -d 0.0.0.0/0 -j ACCEPT
@@ -34,7 +34,7 @@ sudo iptables -A FORWARD -i eth0 -s 0.0.0.0/0 -d 10.6.4.0/0 -j ACCEPT
 
 命令是这样的：
 
-```
+```bath
 sudo sysctl -w net.ipv4.ip_forward=1
 sudo iptables -t nat -A POSTROUTING -o venet0 -s 192.168.111.0/24 -j SNAT --to-source 123.45.67.89
 sudo iptables -A FORWARD -i zt+ -s 192.168.111.0/24 -d 0.0.0.0/0 -j ACCEPT
@@ -49,7 +49,7 @@ sudo iptables -A FORWARD -i venet0 -s 0.0.0.0/0 -d 192.168.111.0/24 -j ACCEPT
 
 首先当然是把默认路由改回来。然后，如果只是为了调试，是不需要设置默认路由的，或者说最好不要设置默认路由到这台机器上的，你可以通过
 
-```
+```bash
 # macos
 sudo route add -net 98.76.54.32 192.168.111.1
 # linux
@@ -64,7 +64,7 @@ sudo route add -net 98.76.54.32 192.168.111.1
 
 #### 本机 -> 网关
 
-```
+```bash
 iptables -t raw -A PREROUTING -p TCP -s 192.168.111.20 -j LOG
 ```
 
@@ -82,7 +82,7 @@ Mar  2 15:53:14 myserver kernel: [5377966.960574] IN=zthnhi321 OUT= MAC=88:55:bb
 然后可以用 TRACE 追踪这个包是否触发了 NAT。
 > 在一些环境中，你可能需要开启 TRACE 内核支持，参考 [How to Enable IPtables TRACE Target on Debian Squeeze (6)](https://serverfault.com/questions/385937/how-to-enable-iptables-trace-target-on-debian-squeeze-6)
 
-```
+```bash
 iptables -t raw -A PREROUTING -p TCP -s 192.168.111.20 -j TRACE 
 ```
 
@@ -111,13 +111,13 @@ Mar  2 15:58:11 myserver kernel: [5378263.921763] TRACE: nat:POSTROUTING:rule:1 
 
 你可以通过
 
-```
+```bash
 iptables -t nat -nvL --line-numbers
 ```
 
 查看对应的规则编号。在这里，可以看到 `filter:FORWARD:rule:1` 和 `nat:POSTROUTING:rule:1` 被触发了。即
 
-```
+```bash
 sudo iptables -A FORWARD -i zt+ -s 192.168.111.0/24 -d 0.0.0.0/0 -j ACCEPT
 sudo iptables -t nat -A POSTROUTING -o venet0 -s 192.168.111.0/24 -j SNAT --to-source 123.45.67.89
 ```
@@ -128,14 +128,14 @@ sudo iptables -t nat -A POSTROUTING -o venet0 -s 192.168.111.0/24 -j SNAT --to-s
 
 这次我们一步到位
 
-```
+```bash
 iptables -t raw -A PREROUTING -p TCP -s 98.76.54.32 -j LOG
 iptables -t raw -A PREROUTING -p TCP -s 98.76.54.32 -j TRACE
 ```
 
 另外为了防止日志太多，这里可以把刚才添加的那条 TRACE 删掉：
 
-```
+```bash
 iptables -t raw -D PREROUTING -p TCP -s 192.168.111.20 -j TRACE 
 ```
 
@@ -171,7 +171,7 @@ drop
 
 既然有网关了，我就想能不能再搞个智能回国网关。，只要我连上这个局域网，就能听网易云音乐了。我用的 vnet.one 用的是 anyconnect 连接，它有一个开源实现 openconnect，于是我[这样](https://stackoverflow.com/questions/38369950/openconnect-not-able-to-connect-to-gateway/42342253)：
 
-```
+```bash
 sudo apt-get install curl vpnc-scripts build-essential libssl-dev libxml2-dev liblz4-dev
 wget ftp://ftp.infradead.org/pub/openconnect/openconnect-8.02.tar.gz
 tar xzf openconnect-8.02.tar.gz
@@ -184,14 +184,14 @@ sudo ldconfig /usr/local/lib
 
 然后用 [bestroutetb](https://github.com/ashi009/bestroutetb) 生成个路由：
 
-```
+```bash
 bestroutetb --route.net=US,GB  --route.vpn=CN -p json -o routes.json -f
 jq '.[] | select(.gateway == "vpn") | .prefix + "/" + (.length | tostring)'  routes.json  -c -r > routes.cn
 ```
 
 整个设置路由的脚本
 
-```
+```bash
 #!/bin/bash
 source /root/.bashrc
 
@@ -263,7 +263,7 @@ exec /usr/share/vpnc-scripts/vpnc-script
 
 整合一下
 
-```
+```bash
 echo "password" | openconnect address.example.org -u username --passwd-on-stdin --non-inter --script /root/openconnect/script.sh
 ```
 

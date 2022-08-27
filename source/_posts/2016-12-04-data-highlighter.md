@@ -33,7 +33,7 @@ Data Highlighter 其实是一种生成提取规则的方式：
 
 先看一个简单的例子，以下就是对 `name` 字段的模板，它描述了一个 `s0 -> e0` 的状态机。
 
-```
+```json
 {
   "need_more_sample": true,
   "tips": {},
@@ -107,7 +107,7 @@ Data Highlighter 其实是一种生成提取规则的方式：
 
 例如如果每次都选择第二个「豆瓣成员常用的标签」，就会生成
 
-```
+```json
             "features": {
               "exclude": [
                 "preceding::*[position()=2 and name()=\"textnode\"]"
@@ -120,7 +120,7 @@ Data Highlighter 其实是一种生成提取规则的方式：
 
 如果每次都选择 2016 的标签，就会生成
 
-```
+```json
             "features": {
               "exclude": [],
               "include": [
