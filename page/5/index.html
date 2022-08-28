@@ -60,6 +60,42 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-yet-another-aria2-web-frontend" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2012-05-06T20:55:07.000Z"><a href="/2012/05/yet-another-aria2-web-frontend/">2012-05-06</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2012/05/yet-another-aria2-web-frontend/">Yet Another Aria2 Web Frontend</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>aria2是个好软件，多线程，<strong>HTTP&#x2F;FTP&#x2F;BT通吃</strong>，参数设置丰富，功能强大。在我的TL-WR703n上比transmission快多了。</p>
+<p>看了官网上的3个web前端，两个是php的，一个是c的。先不说c的那个界面。。php我尝试在路由上跑，依赖实在太多。<br>简单man了一下aria2，这货明明可以JSON-RPC的啊，根本就用不着后端啊！　于是，就有了这个坑——YAAW。</p>
+<h3 id="YAAW简介"><a href="#YAAW简介" class="headerlink" title="YAAW简介"></a>YAAW简介</h3><p>YAAW - Yet Another Aria2 Web Frontend<br>是一个纯前端实现的Aria2 Web前端界面。无需架设任何服务器，只需要在浏览器中打开即刻使用。</p>
+<h3 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h3><p>首页&#x2F;demo： <a target="_blank" rel="noopener" href="http://binux.github.com/yaaw/">http://binux.github.com/yaaw/</a><br>GitHub: <a target="_blank" rel="noopener" href="https://github.com/binux/yaaw">https://github.com/binux/yaaw</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article id="post-dropbox-uploader-script" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
@@ -748,92 +784,6 @@ FILE: /home/binux/work/lixian.xunlei/[SumiSora][C3][01][GB][x264_aac][720p](5393
 
 
 
-  <article id="post-from_xunlei_lixian_for_flexget" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time class="dt-published" datetime="2011-12-14T22:19:07.000Z"><a href="/2011/12/from_xunlei_lixian_for_flexget/">2011-12-14</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2011/12/from_xunlei_lixian_for_flexget/">迅雷离线脚本+flexget 将离线资源自动下载回本地</a></h1>
-  
-
-    </header>
-    <div class="e-content entry" itemprop="articleBody">
-      
-        <p><strong><font color=red>OUT OF DATA</font></strong></p>
-<p>这个也是一篇教程，上接 “<a target="_blank" rel="noopener" href="http://blog.binux.me/2011/12/xunlei_lixian_for_flexget/">让资源灌满你的离线空间吧 — 迅雷离线插件 for flexget</a>“。需要的工具依旧是flexget和lixian.xunlei插件。</p>
-<p>本文是应+<a target="_blank" rel="noopener" href="https://plus.google.com/u/0/111086731636961623060">平芜泫</a>的需求，自动将迅雷离线里面的文件下载回vps，然后再从教育网用IPV6下回本地。前两步不再复述，参考前文的步骤即可，直接步骤3。先上配置文件：</p>
-<pre><code>feeds:
-  some_name:
-    from_xunlei_lixian:
-      username: &quot;&lt;your username&gt;&quot;
-      password: &quot;&lt;your password&gt;&quot;
-      limit: 30
-      fields:
-        base_path: /home/me/downloads
-    accept_all: true
-    exec:
-      auto_escape: yes
-      on_output:
-        for_accepted: mkdir -p &#123;&#123; fields.base_path &#125;&#125;/&#123;&#123; taskname &#125;&#125; &amp;&amp; aria2c -c -x5 --out &#39;&#123;&#123; fields.base_path &#125;&#125;/&#123;&#123; taskname &#125;&#125;/&#123;&#123; title &#125;&#125;&#39; --header &#39;&#123;&#123; cookie &#125;&#125;&#39; &#39;&#123;&#123; url &#125;&#125;&#39;
-</code></pre>
-<p>这又是一个yaml的配置文件，其中from_xunlei_lixian是input，accept_all是过滤器，而exec作为输出来进行下载。</p>
-<p>from_xunlei_lixian中，limit限制一次取出多少条结果，fields可以将里面的参数传递到output中。<br>output中可以使用的字段包括</p>
-<ul>
-<li><p>title         文件名</p>
-</li>
-<li><p>url           离线地址</p>
-</li>
-<li><p>cookie     下载所需要的cookie</p>
-</li>
-<li><p>taskname 所属的任务名（比如BT）</p>
-</li>
-<li><p>size         文件大小</p>
-</li>
-<li><p>format     文件格式（不准确）</p>
-</li>
-<li><p>fields       在上文中设置的那些东西</p>
-</li>
-</ul>
-<p>exec的文档在<a target="_blank" rel="noopener" href="http://flexget.com/wiki/Plugins/exec">http://flexget.com/wiki/Plugins/exec</a>，auto_escape可以escape掉文件名中的奇怪字符，on_output和for_accepted对每一个文件进行下载任务。</p>
-<p>指令中：</p>
-<blockquote>
-<p> mkdir -p &#x2F;</p>
-</blockquote>
-<p>用于在base_path下创建一个以taskname命名的文件夹，这样BT这样多文件的时候就会下载到同一个目录下了。</p>
-<blockquote>
-<p>aria2c -c -x5 –out ‘&#x2F;&#x2F;迅雷离线脚本+flexget 将离线资源自动下载回本地‘ –header ‘‘ ‘‘</p>
-</blockquote>
-<p>使用aria2c使用5个线程，将文件下载到本地。当然，也可以使用wget，这么写就可以了：</p>
-<blockquote>
-<p>wget -c -O ‘ &#x2F;&#x2F;迅雷离线脚本+flexget 将离线资源自动下载回本地‘ –header ‘‘ ‘‘</p>
-</blockquote>
-<p>好了，现在运行flexget –test试试吧，flexget会输出将要执行的命令，但是并不会真正的执行，可以作为测试。</p>
-<p>可能你的离线空间里面已经积累了大量已经下载回本地的文件，重新下一遍是没有意义的，对吧，来试试这个命令：</p>
-<blockquote>
-<p>flexget –learn</p>
-</blockquote>
-<p>这样可以跳过下载步骤，但是这些文件依旧会记录下来，再执行flexget的时候就只会下载之后添加的文件了。</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -878,11 +828,6 @@ FILE: /home/binux/work/lixian.xunlei/[SumiSora][C3][01][GB][x264_aac][720p](5393
     
 
     
-    <li>
-      <span class="icon gplus"></span>
-      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
-    </li>
-    
   </ul>
 </div>
 
@@ -891,6 +836,10 @@ FILE: /home/binux/work/lixian.xunlei/[SumiSora][C3][01][GB][x264_aac][720p](5393
 <div class="widget tag">
   <h3 class="title">最新文章</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/2022/08/cat-planet-bot-part-1-touch-simulation/">猫之城物理钓鱼挂（一）：物理模拟触屏点击</a>
+      </li>
     
       <li>
         <a href="/2020/01/home-assistant/">家居自动化</a>
@@ -906,10 +855,6 @@ FILE: /home/binux/work/lixian.xunlei/[SumiSora][C3][01][GB][x264_aac][720p](5393
     
       <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
-      </li>
-    
-      <li>
-        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
       </li>
     
   </ul>

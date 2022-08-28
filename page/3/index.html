@@ -60,6 +60,55 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-xunlei-lixian-ftp-proxy" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2013-11-17T08:00:00.000Z"><a href="/2013/11/xunlei-lixian-ftp-proxy/">2013-11-17</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/xunlei-lixian-ftp-proxy/">用FTP的方式访问迅雷离线</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>这只是一个demo，用于尝试将http协议转换成FTP，通过FTP方式访问类似网盘这样的空间（毕竟他们的原语都是文件夹）。使用 tornado ioloop 实现完全异步，在 tornado 的 iostream 之上手写了一个ftp服务器。</p>
+<p><strong>如果你想要快速使用：</strong></p>
+<p>ftp方式访问迅雷：<br><code>python -c &quot;u=&#39;http://f.binux.me/pyproxy.zip&#39;;import urllib2,sys,tempfile;f=tempfile.NamedTemporaryFile(suffix=&#39;.zip&#39;);urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler()));f.write(urllib2.urlopen(u).read());sys.path.insert(0,f.name);f.flush();from xunlei_ftpserver import run;run();&quot;</code></p>
+<p>http串流离线内容<br><code>python -c &quot;u=&#39;http://f.binux.me/pyproxy.zip&#39;;import urllib2,sys,tempfile;f=tempfile.NamedTemporaryFile(suffix=&#39;.zip&#39;);urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler()));f.write(urllib2.urlopen(u).read());sys.path.insert(0,f.name);f.flush();from xunlei_webserver import run;run();&quot;</code></p>
+<p>另外还有一个使用代理api方式直接共享离线空间的例子：<br><a target="_blank" rel="noopener" href="http://jsbin.com/uQinidA/2/quiet">http://jsbin.com/uQinidA/2/quiet</a></p>
+<p>github地址：<a target="_blank" rel="noopener" href="https://github.com/binux/xunlei-lixian-proxy">https://github.com/binux/xunlei-lixian-proxy</a></p>
+<p>中文简介</p>
+<ul>
+<li>通过ftp的方式访问你的迅雷离线空间</li>
+<li>在线串流离线空间中的视频到任何播放器</li>
+<li>完全异步化(使用tornado ioloop)</li>
+<li>这只是一个多协议转换的原理验证演示，不保证可以用于生产环境</li>
+</ul>
+<hr />
+
+<p>用了几天，发现tornado的iostream其实问题还是蛮多的，比如当上下游速度不一致的时候，会有大量的数据堵在上游的 read buffer 或者 下游的 write buffer 上。因为tornado是定位于web服务器的，单个请求大都不大，但是在代理文件的时候 buffer 就会占用大量的内存。代码里面有尝试修复，但是效果不理想，在小内存的 Linux 盒子上经常因为爆内存被 kill。</p>
+<p>写了这个东西，感觉完全异步不总是好的，ftp作为有状态的协议，请求以及返回的顺序很重要，异步了之后这样的顺序就很难控制（比如客户端紧接着RETR发送了一个PWD，必须先响应完RETR才能响应PWD，但是由于是异步的，实际有可能PWD先返回了，这需要双方至少有一方严格按照顺序处理）</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article id="post-bangumi-subscribe-from-ktxp-to-xunlei" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
@@ -686,123 +735,6 @@ Google+给Blogger添加了Google+的评论组件，看起来可以移植到别�
 
 
 
-  <article id="post-xunlei-any-down" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time class="dt-published" datetime="2012-12-10T08:00:00.000Z"><a href="/2012/12/xunlei-any-down/">2012-12-10</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2012/12/xunlei-any-down/">迅雷随便下</a></h1>
-  
-
-    </header>
-    <div class="e-content entry" itemprop="articleBody">
-      
-        
-<p>本来这个漏洞在loli.lu关闭的时候就已经被发现，并且也告知了相关人员，而且我一度认为这个漏洞是有意留下的。后来经<a href="https://plus.google.com/u/1/112035543705440091116" target="_blank">+李草木</a>提起，发现为数众多的迅雷云点播破解依旧用的是这个漏洞。<b>既然要玩，就要玩票大的。</b></p>
-
-<ul>
-  <li> 任意地址，任意类型，立即提取下载链接</li>
-  <li> 管开坑，<b>不管填</b></li>
-  <li><b>您可能需要登陆一个迅雷账号（不需要VIP）</b></li>
-</ul>
-
-<hr />
-
-<section style="margin-top: 20px;">
-<script src="http://dynamic.vod.lixian.xunlei.com/fx"></script>
-<script src="http://lib.sinaapp.com/js/jquery/1.8.3/jquery.min.js"></script>
-<form id="xunlei-form">
-  <input id="xunlei-url" type=text placeholder="在这里填入各种链接" style="width:550px" /> <input type="submit" value="go" id="xunlei-go" />
-</form>
-
-<table><tbody id="result-table"></tbody></table>
-
-<script>
-$("#xunlei-form").on("submit", function() {
-  function doo() {
-    var url = $("#xunlei-url").val();
-    if (url) {
-      $("#result-table").empty().append("<tr><td>loading</td></tr>")
-      $.getJSON("http://roybinux.duapp.com/get?callback=?", {url: url, userid: window.xunlei_userid},
-        function(data) {
-          data = data.data;
-          if (data.items && data.items.length) {
-            $("#result-table").empty()
-            $.each(data.items, function(n, e) {
-              if (e.url) {
-                $("#result-table").append("<tr><td><a href='"+e.url+"' target='_blank'>"+e.title+"</a></td><td>"+format_size(parseInt(e.size))+"</td></tr>");
-              } else {
-                $("#result-table").append("<tr><td>"+e.title+"</td><td>"+format_size(parseInt(e.size))+"</td></tr>");
-              }
-            });
-          } else {
-            $("#result-table").empty().append("<tr><td>没有找到资源</td></tr>");
-          }
-        }).error(function() {
-          $("#result-table").empty().append("<tr><td>请求出错</td></tr>")
-        });
-    } else {
-      $("#result-table").empty().append("<tr><td>需要url</td></tr>")
-    }
-  }
-
-  if (!window.xunlei_userid) {
-    $.getJSON('http://i.vod.xunlei.com/req_subBT?jsonp=?', function(data) {
-      window.xunlei_userid = data.resp.userid || 21;
-      doo();
-    });
-  } else {
-    doo();
-  }
-  return false;
-});
-function format_size(spare_size)
-{
-  if (spare_size == 0)
-    return "0B";
-	var spare_str;
-	var spare_left;
-	if( spare_size >= 1024*1024*1024  )
-	{
-		spare_left = Math.floor(spare_size/(1024*1024*1024)*10);
-		spare_str = (spare_left/10).toString()+"GB";
-	}else if( spare_size >= 1024*1024 ){
-		spare_left = (Math.floor(spare_size*100/(1024*1024)))/100;
-		spare_str = spare_left.toString()+"MB";
-	}
-	else if(spare_size >= 1024){
-		spare_left = Math.floor(spare_size/1024);
-		spare_str = spare_left.toString()+"KB";
-	}
-	else{
-		spare_str = spare_size + "B";
-	}
-
-	return spare_str;
-}
-</script>
-</section>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -847,11 +779,6 @@ function format_size(spare_size)
     
 
     
-    <li>
-      <span class="icon gplus"></span>
-      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
-    </li>
-    
   </ul>
 </div>
 
@@ -860,6 +787,10 @@ function format_size(spare_size)
 <div class="widget tag">
   <h3 class="title">最新文章</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/2022/08/cat-planet-bot-part-1-touch-simulation/">猫之城物理钓鱼挂（一）：物理模拟触屏点击</a>
+      </li>
     
       <li>
         <a href="/2020/01/home-assistant/">家居自动化</a>
@@ -875,10 +806,6 @@ function format_size(spare_size)
     
       <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
-      </li>
-    
-      <li>
-        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
       </li>
     
   </ul>

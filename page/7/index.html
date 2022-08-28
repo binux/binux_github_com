@@ -60,6 +60,49 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-python-tools-pprint" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-03-06T22:16:25.000Z"><a href="/2011/03/python-tools-pprint/">2011-03-06</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/03/python-tools-pprint/">python工具脚本：pprint.py 中文支持</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>这是一个支持unicode的pprint修改版本，来自<a target="_blank" rel="noopener" href="http://groups.google.com/group/python-cn/browse_thread/thread/d881b328386ce396/e68057c8a7531326">http://groups.google.com/group/python-cn/browse_thread&#x2F;thread&#x2F;d881b328386ce396&#x2F;e68057c8a7531326</a></p>
+<p>默认使用pprint的时候，list, tuple, dict中的中文都显示成这个样子：</p>
+<blockquote>
+<p>&gt;&gt;&gt; from pprint import pprint<br>&gt;&gt;&gt; pprint([‘中文字符串’, u’中文统一码字符串’, {‘中文键名’: ‘中文键值’, u’中文 unicode 键名’: u’中文unicode 键值’}])</p>
+<p>[‘xe4xb8xadxe6x96x87xe5xadx97xe7xacxa6xe4xb8xb2’,<br>u’u4e2du6587u7edfu4e00u7801u5b57u7b26u4e32’,<br>{u’u4e2du6587 unicode u952eu540d’: u’u4e2du6587 unicode<br>u952eu503c’,<br>‘xe4xb8xadxe6x96x87xe9x94xaexe5x90x8d’:<br>‘xe4xb8xadxe6x96x87xe9x94xaexe5x80xbc’}]</p>
+</blockquote>
+<p>修改之后会把字符串中文形式输出，而不是repr的形式：</p>
+<blockquote>
+<p>&gt;&gt;&gt; from pprint import pprint<br>&gt;&gt;&gt; pprint([‘中文字符串’, u’中文统一码字符串’, {‘中文键名’: ‘中文键值’, u’中文 unicode 键名’: u’中文unicode 键值’}])</p>
+<p>[‘中文字符串’,<br>u’中文统一码字符串’,<br>{u’中文 unicode 键名’: u’中文 unicode 键值’,<br>‘中文键名’: ‘中文键值’}]</p>
+</blockquote>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article id="post-e5a4aae5b0b4e5b0ace4ba86efbc8ce4b88de68c82e4bba3e79086e8a2abe5a299e5a299efbc8ce68c82vpne8a2abgooglee5a299" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
@@ -514,11 +557,6 @@ ebuild rtorrent-0.8.6.ebuild merge
     
 
     
-    <li>
-      <span class="icon gplus"></span>
-      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
-    </li>
-    
   </ul>
 </div>
 
@@ -527,6 +565,10 @@ ebuild rtorrent-0.8.6.ebuild merge
 <div class="widget tag">
   <h3 class="title">最新文章</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/2022/08/cat-planet-bot-part-1-touch-simulation/">猫之城物理钓鱼挂（一）：物理模拟触屏点击</a>
+      </li>
     
       <li>
         <a href="/2020/01/home-assistant/">家居自动化</a>
@@ -542,10 +584,6 @@ ebuild rtorrent-0.8.6.ebuild merge
     
       <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
-      </li>
-    
-      <li>
-        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
       </li>
     
   </ul>

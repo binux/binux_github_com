@@ -60,6 +60,103 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-cat-planet-bot-part-1-touch-simulation" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2022-08-28T00:22:58.000Z"><a href="/2022/08/cat-planet-bot-part-1-touch-simulation/">2022-08-27</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2022/08/cat-planet-bot-part-1-touch-simulation/">猫之城物理钓鱼挂（一）：物理模拟触屏点击</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>真的有2年半没有写 blog 了。我是那种不愿意在事情尘埃落定之前，把它写下来的类型。在这两年半里，H1B 抽到了，也跳槽了。收入上去之后，也更愿意花钱解决问题，而不是自己做点什么，有好几次想要提笔，又感觉没什么好写的。以后会改善吗？我觉得不会，虽然我依旧会去尝试各种新的东西，但是觉得有必要写下来的变少了，现在我更多的是追求安稳的生活吧。</p>
+<p>言归正传，这次带来的是一个手游《猫之城》的物理挂。4年以前，我做过一个<a href="/2018/10/girls-frontline-ankulua-vision/">《少前》的脚本</a>，使用的是一个机器内的 App 来采集图像然后驱动控制的，然后就被封号了：P 。于是这一次就打算使用物理的方法，在机器外部实现所有的信息处理和控制。比如下面这一段视频，就是这个物理挂识别游戏内的钓鱼小游戏，然后通过电极模拟触控实现的：</p>
+<p><video controls src="/assets/image/cat-planet-bot-demo.mp4"></video></p>
+<p>在这一系列 blog 中，我会分为</p>
+<ul>
+<li>模拟物理点击</li>
+<li>图像采集以及画面分类</li>
+<li>游戏图像细节信息提取</li>
+<li>控制与 bot 状态机</li>
+</ul>
+<p>等篇章讲解这个 bot 的实现，同时源代码已经上传到了 github: <a target="_blank" rel="noopener" href="https://github.com/binux/cat-planet-bot">cat-planet-bot</a>。<strong>注意</strong>：使用外挂是违反游戏用户协议的行为。由于代码中使用了大量 hard coded 图像坐标，我并不认为你能直接使用它。这份代码仅在 blog 中作为引用，讲解学习。</p>
+<p>我也是第一次做硬件，电子电路以及图像处理开发（所以使用的最简单的 Arduino），我只会很简单地介绍这方面的知识，如果有什么错误，或者更好的方案，欢迎在评论中指出。</p>
+<h3 id="电容屏的物理触控"><a href="#电容屏的物理触控" class="headerlink" title="电容屏的物理触控"></a>电容屏的物理触控</h3><p>简单的说，现在的平板手机的触摸屏都是<a target="_blank" rel="noopener" href="https://zh.m.wikipedia.org/zh-hans/%E7%94%B5%E5%AE%B9%E5%BC%8F%E6%84%9F%E5%BA%94">电容屏</a>，它是通过<strong>测量</strong>手指靠近屏幕导致的电容<strong>变化</strong>来获取点击位置的，所以只要你能造成屏幕上某个区域的电容变化，就能模拟出点击。不过，不管怎么说，不同屏幕实现方式和灵敏度还是有区别的，最靠谱简单的方式还是实践。毕竟只要某个方案在你自己的机器上有效就可以了嘛。这里我直接使用了一个<a target="_blank" rel="noopener" href="https://patrickhlauke.github.io/touch/tracker/multi-touch-tracker-pointer-hud.html">网页</a>，在 iPad 上测试了一些可行和不可行的例子：</p>
+<p>不可行的：</p>
+<ul>
+<li>塑料的笔（和其他绝缘材料）</li>
+<li>没有接地的硬币（比如你手拿着硬币就可以认为是有效接地）</li>
+<li>没有接地的铝箔卷（在形状合适的情况下，不接地的铝箔卷可以形成点击，类似多芯导线形成的毛刷）</li>
+<li>接地了的硬币边缘</li>
+<li>单芯导线，回形针或者金属餐具（和屏幕接触面积只有一个点，无论是否接地）</li>
+</ul>
+<p>可行的：</p>
+<ul>
+<li>电容笔或者触控笔（无论是否接地）</li>
+<li>接地并躺平的硬币</li>
+<li>接地了的铝箔卷</li>
+<li>不接地的多芯导线形成的毛刷</li>
+<li>电池正负极（类似上一条）</li>
+</ul>
+<p>总结起来这里有两个关键：</p>
+<ul>
+<li>接触面积要足够大（面积要和手指类似）</li>
+<li>是否接地不是关键，但接地可以改变触控状态（这一点很重要，它是我们能够通过电路控制的关键）</li>
+</ul>
+<p>于是，我这里选择的是：<a target="_blank" rel="noopener" href="https://www.google.com/search?q=%E7%94%B5%E5%87%BB+%E6%8C%89%E6%91%A9%E8%B4%B4">电击按摩贴</a>。首先，这东西导电，而且可以随意裁剪大小，并且自带粘性，可以粘在屏幕上。通过控制是否接地（初次粘贴时屏幕会感应为持续按住状态，需要关闭再打开屏幕reset，原因见下文）可以控制触摸状态。最最最重要的是，这东西在美国很容易买到，并且我家里有：D 。如果你在国内，可以买到成品连点器，或者直接买吸盘造型的导电橡胶，价格实惠，卖家甚至已经给你接好了导线。</p>
+<p><img src="/assets/image/touch-contact.jpg" alt="touch contact"></p>
+<h3 id="电脑控制触控"><a href="#电脑控制触控" class="headerlink" title="电脑控制触控"></a>电脑控制触控</h3><p>在上一步我们知道可以通过电极的接地与否，模拟触摸的按下和抬起，这时候就需要一个 PC 到这个接地电路的控制器，这里一般是一个与 PC 通信的 MUC 中导出的 GPIO 接口。我这里使用的是 Arduino，一个非常成熟的入门级开发板和配套程序。不过你也可以用例如 树莓派，STM32，ESP32 等等平台，它们的开发板可能更便宜，而且有的还能做到无线控制。</p>
+<p>然后电路具体怎么实现呢？简单查询，网上有说使用<a target="_blank" rel="noopener" href="https://electronics.stackexchange.com/questions/423740/simulate-capacitive-touch">继电器，伺服电机的</a>，也有说可以使用 <a target="_blank" rel="noopener" href="https://electronics.stackexchange.com/questions/60070/how-do-i-make-a-micro-controller-act-as-a-finger-on-a-touch-screen">N-channel MOSFET</a>（也有说用 <a target="_blank" rel="noopener" href="https://electronics.stackexchange.com/questions/328031/how-to-physically-stimulate-a-touch-screen-with-an-external-device">P-channel</a> 或者<a target="_blank" rel="noopener" href="https://electronics.stackexchange.com/a/60424">不能用的</a>）。但是都有一个问题：没有实物，而且我也不知道需要买什么规格的啊。在美国，如果一次没有搞定，重复购买的话，光运费就会多花出很多钱了。于是，我把镜头看向了国内，刷到了 <a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1wB4y1A76k">【单片机】Arduino光遇自动弹琴机器人2.0来了</a> 这个视频，视频中 UP 主使用了光耦甚至给出了型号。那还说什么呢？照着来呗。</p>
+<blockquote>
+<p>选择这个方案还有一些原因是，其他方案里的，伺服电机存在机械机构，安装麻烦；继电器往往是电磁继电器，开关时会发出噪音；而 MOSFET 的电路<a target="_blank" rel="noopener" href="https://electronics.stackexchange.com/a/60424">不完全隔离</a>，可能会因为自身存在一些电容，而屏幕判断不准确。</p>
+</blockquote>
+<p>在面包板上将一个 GPIO 端口，与一个发光二极管，光耦，限流电阻串联，然后接地就可以了；光耦的另一端分别接按摩贴做的电极和地：</p>
+<p><img src="/assets/image/circle-connection.png" alt="circle connection"></p>
+<p>在 GPIO 高电平时，光耦开关闭合，会将电极和地连通，从而模拟出按下的状态。</p>
+<blockquote>
+<p>光耦和 LED 类似，需要串联一个限流电阻。例如我使用的 PC817 的 Forward Voltage 是 1.2V，电流 20mA。而 Arduino 的 GPIO 输出是 5V 的，通过 <a target="_blank" rel="noopener" href="http://www.chinaaet.com/tools/led_current_limiting_resistance.html">计算</a> 我们需要串联一个大约 190Ω 的电阻。（什么，你说我还串联了一个 LED ？管它呢，又不是不能用）</p>
+</blockquote>
+<h4 id="Arduino-控制程序"><a href="#Arduino-控制程序" class="headerlink" title="Arduino 控制程序"></a>Arduino 控制程序</h4><p>Arduino 非常简单地提供了一个 IDE，插上开发板的 USB 就可以开始编程了，你首先可以照着 Arduino 的标准教程 <a target="_blank" rel="noopener" href="https://www.arduino.cc/en/Tutorial/BuiltInExamples/Blink">Blink</a> 熟悉下环境，当程序上传到开发板之后就不需要 IDE 了。PC 将通过 USB 连接 Arduino UART 串口进行通信。Arduino 部分的代码如下：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">setup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="built_in">Serial</span>.<span class="built_in">begin</span>(<span class="number">9600</span>);</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">8</span>; i &lt;= <span class="number">13</span>; i++) &#123;</span><br><span class="line">    <span class="built_in">pinMode</span>(i, <span class="literal">OUTPUT</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">for</span> (<span class="type">int</span> i = A0; i &lt;= A5; i++) &#123;</span><br><span class="line">    <span class="built_in">pinMode</span>(i, <span class="literal">OUTPUT</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">Serial</span>.<span class="built_in">println</span>(<span class="string">&quot;OK&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">loop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  <span class="keyword">while</span> (<span class="built_in">Serial</span>.<span class="built_in">available</span>()) &#123;</span><br><span class="line">    <span class="type">String</span> command = <span class="built_in">Serial</span>.<span class="built_in">readStringUntil</span>(<span class="string">&#x27;\n&#x27;</span>);</span><br><span class="line">    <span class="type">String</span> op = command.<span class="built_in">substring</span>(<span class="number">0</span>, <span class="number">3</span>);</span><br><span class="line">    <span class="type">String</span> rest = command.<span class="built_in">substring</span>(<span class="number">3</span>);</span><br><span class="line">    <span class="keyword">if</span> (op == <span class="string">&quot;LOW&quot;</span>) &#123;</span><br><span class="line">      <span class="built_in">digitalWrite</span>(rest.<span class="built_in">toInt</span>(), <span class="literal">LOW</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (op == <span class="string">&quot;HIG&quot;</span>) &#123;</span><br><span class="line">      <span class="built_in">digitalWrite</span>(rest.<span class="built_in">toInt</span>(), <span class="literal">HIGH</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>是不是很简单呢？这里首先初始化了开发板的串口，和一些 GPIO 作为输出。然后我们定义了一个通信协议：HIG00 和 LOW00 来控制 GPIO 的高低电平。注意，这里开发板在初始化后会立即发送一个 OK 信息，这是因为 Arduino UNO 会在串口连接上时<a target="_blank" rel="noopener" href="https://playground.arduino.cc/Main/DisablingAutoResetOnSerialConnection/">重启</a>，这个 OK 信息可以让 PC 端知道开发板已经准备好了。</p>
+<h4 id="PC-端"><a href="#PC-端" class="headerlink" title="PC 端"></a>PC 端</h4><p>PC 这边可以用 <a target="_blank" rel="noopener" href="https://pyserial.readthedocs.io/en/latest/index.html">pySerial</a> 这个包，当开发板连接上 PC 或者 Mac 之后，会显示为 COM* 或者 &#x2F;dev&#x2F;tty* 设备。pySerial 也有 <code>serial.tools.list_ports.comports()</code> API 可以列出所有的串口设备，我们可以通过一些条件找到 Arduino：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/binux/cat-planet-bot/blob/main/arduino.py">https://github.com/binux/cat-planet-bot/blob/main/arduino.py</a></p>
+<p>代码中我还实现了一些 helper function 例如 <code>throttle_press</code> 和 <code>autorelease</code> 并且记录了每个 pin 的按下状态。这些都只是为了方便，并不是必须的，串口的速率是完全足够直接发送每个指令的，并且我测试中也没有感觉到任何延迟。</p>
+<h4 id="更多？"><a href="#更多？" class="headerlink" title="更多？"></a>更多？</h4><p>只要在面包板上插上更多的光耦和 Arduino GPIO 连接，然后制作更多的电极，就能支持多点触控了。但是，很明显的，这个数量是有限制的。而且无法改变点击位置，也无法实现滑动。那么有解决方案吗？我这里有一些想法：</p>
+<p>首先，可以增加电极的数量，以至于覆盖到整个屏幕，然后在屏幕上分区分块控制每个点的电容变化。这个想法在 <a target="_blank" rel="noopener" href="http://www.fpl2012.org/Presentations/PHD7.pdf">这篇论文</a> 中有描述，但是我并没有找到成品。</p>
+<p>而另一个更可行的方案是通过机械控制触控笔，实现全屏覆盖。例如改装一个 3D 打印机，将喷头换成一只触控笔，通过 3D 打印机的精确 3 轴移动来模拟点击。这个方案的好处在于 3D 打印机是一个非常便宜的成品，省去了零散零件采购的成本，而且很多 3D 打印机的固件是开源的，可以很容易地通过 <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/G-code">G-code</a> 操作。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>到这里，我们就打通了 PC 到平板的物理触控了。使用这些东西，就可以开发一些固定的自动化脚本了，例如下面这个脚本每次执行，自动按了 99 次 +10 然后购买：</p>
+<p><video controls src="/assets/image/cat-planet-bot-demo-2.mp4"></video></p>
+<p>在使用中，有一些影响触控成功率的经验：</p>
+<ol>
+<li>在安装电极后，需要关闭屏幕再打开。（刚安装上的贴片，无论是否接地都会被检测为按下，重启屏幕可以将这个状态重置为抬起，这样接地时改变的电容就会检测为按下了。）</li>
+<li>将平板接上电源效果会更好。（这样可以给平板接地，类似你手持平板的状态。但是并不需要和 Arduino 接在一起。）</li>
+<li>我在电极和地之间接了一个电阻，可见导线的长度并没有关系。不需要担心导线太长产生的电容。</li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article id="post-home-assistant" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
@@ -872,61 +969,6 @@
 
 
 
-  <article id="post-pyspider-tutorial-level-3-render-with-phantomjs" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time class="dt-published" datetime="2015-01-10T08:00:00.000Z"><a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">2015-01-10</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/01/pyspider-tutorial-level-3-render-with-phantomjs/">pyspider 爬虫教程（三）：使用 PhantomJS 渲染带 JS 的页面</a></h1>
-  
-
-    </header>
-    <div class="e-content entry" itemprop="articleBody">
-      
-        <p>英文原文：<a target="_blank" rel="noopener" href="http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/">http://docs.pyspider.org/en/latest/tutorial/Render-with-PhantomJS/</a></p>
-<p>在上两篇教程中，我们学习了怎么从 HTML 中提取信息，也学习了怎么处理一些请求复杂的页面。但是有一些页面，它实在太复杂了，无论是分析 API 请求的地址，还是渲染时进行了加密，让直接抓取请求非常麻烦。这时候就是 <a target="_blank" rel="noopener" href="http://phantomjs.org/">PhantomJS</a> 大显身手的时候了。</p>
-<p>在使用 <a target="_blank" rel="noopener" href="http://phantomjs.org/">PhantomJS</a> 之前，你需要安装它（<a target="_blank" rel="noopener" href="http://phantomjs.org/download.html">安装文档</a>）。当你安装了之后，在运行 <code>all</code> 模式的 pyspider 时就会自动启用了。当然，你也可以在 <a target="_blank" rel="noopener" href="http://demo.pyspider.org/">demo.pyspider.org</a> 上尝试。</p>
-<h2 id="使用-PhantomJS"><a href="#使用-PhantomJS" class="headerlink" title="使用 PhantomJS"></a>使用 PhantomJS</h2><p>当 pyspider 连上 PhantomJS 代理后，你就能通过在 <code>self.crawl</code> 中添加 <code>fetch_type=&#39;js&#39;</code> 的参数，开启使用 PhantomJS 抓取。例如，在教程二中，我们尝试抓取的 <a target="_blank" rel="noopener" href="http://movie.douban.com/explore">http://movie.douban.com/explore</a> 就可以通过 PhantomJS 直接抓取：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Handler</span>(<span class="title class_ inherited__">BaseHandler</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">on_start</span>(<span class="params">self</span>):</span><br><span class="line">        self.crawl(<span class="string">&#x27;http://movie.douban.com/explore&#x27;</span>,</span><br><span class="line">                   fetch_type=<span class="string">&#x27;js&#x27;</span>, callback=self.phantomjs_parser)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">phantomjs_parser</span>(<span class="params">self, response</span>):</span><br><span class="line">        <span class="keyword">return</span> [&#123;</span><br><span class="line">            <span class="string">&quot;title&quot;</span>: <span class="string">&quot;&quot;</span>.join(</span><br><span class="line">                s <span class="keyword">for</span> s <span class="keyword">in</span> x(<span class="string">&#x27;p&#x27;</span>).contents() <span class="keyword">if</span> <span class="built_in">isinstance</span>(s, basestring)</span><br><span class="line">            ).strip(),</span><br><span class="line">            <span class="string">&quot;rate&quot;</span>: x(<span class="string">&#x27;p strong&#x27;</span>).text(),</span><br><span class="line">            <span class="string">&quot;url&quot;</span>: x.attr.href,</span><br><span class="line">        &#125; <span class="keyword">for</span> x <span class="keyword">in</span> response.doc(<span class="string">&#x27;a.item&#x27;</span>).items()]</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<ul>
-<li>我在这里使用了一些 PyQuery 的 API，你可以在 <a target="_blank" rel="noopener" href="https://pythonhosted.org/pyquery/api.html">PyQuery complete API</a> 获得完整的 API 手册。</li>
-</ul>
-</blockquote>
-<h2 id="在页面上执行自定义脚本"><a href="#在页面上执行自定义脚本" class="headerlink" title="在页面上执行自定义脚本"></a>在页面上执行自定义脚本</h2><p>你会发现，在上面我们使用 <a target="_blank" rel="noopener" href="http://phantomjs.org/">PhantomJS</a> 抓取的豆瓣热门电影只有 20 条。当你点击『加载更多』时，能获得更多的热门电影。为了获得更多的电影，我们可以使用 <code>self.crawl</code> 的 <code>js_script</code> 参数，在页面上执行一段脚本，点击加载更多：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">on_start</span>(<span class="params">self</span>):</span><br><span class="line">    self.crawl(<span class="string">&#x27;http://movie.douban.com/explore#more&#x27;</span>,</span><br><span class="line">               fetch_type=<span class="string">&#x27;js&#x27;</span>, js_script=<span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">               function() &#123;</span></span><br><span class="line"><span class="string">                 setTimeout(&quot;$(&#x27;.more&#x27;).click()&quot;, 1000);</span></span><br><span class="line"><span class="string">               &#125;&quot;&quot;&quot;</span>, callback=self.phantomjs_parser)</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<ul>
-<li>这个脚本默认在页面加载结束后执行，你可以通过 <code>js_run_at</code> <a target="_blank" rel="noopener" href="http://docs.pyspider.org/en/latest//apis/self.crawl/#enable-javascript-fetcher-need-support-by-fetcher">参数</a> 修改这个行为</li>
-<li>由于是 AJAX 异步加载的，在页面加载完成时，第一页的电影可能还没有加载完，所以我们用 <code>setTimeout</code> 延迟 1 秒执行。</li>
-<li>你可以间隔一定时间，多次点击，这样可以加载更多页。</li>
-<li>由于相同 URL （实际是相同 taskid） 的任务会被去重，所以这里为 URL 加了一个 <code>#more</code></li>
-</ul>
-</blockquote>
-<p>上面两个例子，都可以在 <a target="_blank" rel="noopener" href="http://demo.pyspider.org/debug/tutorial_douban_explore">http://demo.pyspider.org/debug/tutorial_douban_explore</a> 中找到。</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -969,11 +1011,6 @@
     
 
     
-    <li>
-      <span class="icon gplus"></span>
-      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
-    </li>
-    
   </ul>
 </div>
 
@@ -982,6 +1019,10 @@
 <div class="widget tag">
   <h3 class="title">最新文章</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/2022/08/cat-planet-bot-part-1-touch-simulation/">猫之城物理钓鱼挂（一）：物理模拟触屏点击</a>
+      </li>
     
       <li>
         <a href="/2020/01/home-assistant/">家居自动化</a>
@@ -997,10 +1038,6 @@
     
       <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
-      </li>
-    
-      <li>
-        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
       </li>
     
   </ul>

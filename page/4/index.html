@@ -60,6 +60,123 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-xunlei-any-down" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2012-12-10T08:00:00.000Z"><a href="/2012/12/xunlei-any-down/">2012-12-10</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2012/12/xunlei-any-down/">迅雷随便下</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        
+<p>本来这个漏洞在loli.lu关闭的时候就已经被发现，并且也告知了相关人员，而且我一度认为这个漏洞是有意留下的。后来经<a href="https://plus.google.com/u/1/112035543705440091116" target="_blank">+李草木</a>提起，发现为数众多的迅雷云点播破解依旧用的是这个漏洞。<b>既然要玩，就要玩票大的。</b></p>
+
+<ul>
+  <li> 任意地址，任意类型，立即提取下载链接</li>
+  <li> 管开坑，<b>不管填</b></li>
+  <li><b>您可能需要登陆一个迅雷账号（不需要VIP）</b></li>
+</ul>
+
+<hr />
+
+<section style="margin-top: 20px;">
+<script src="http://dynamic.vod.lixian.xunlei.com/fx"></script>
+<script src="http://lib.sinaapp.com/js/jquery/1.8.3/jquery.min.js"></script>
+<form id="xunlei-form">
+  <input id="xunlei-url" type=text placeholder="在这里填入各种链接" style="width:550px" /> <input type="submit" value="go" id="xunlei-go" />
+</form>
+
+<table><tbody id="result-table"></tbody></table>
+
+<script>
+$("#xunlei-form").on("submit", function() {
+  function doo() {
+    var url = $("#xunlei-url").val();
+    if (url) {
+      $("#result-table").empty().append("<tr><td>loading</td></tr>")
+      $.getJSON("http://roybinux.duapp.com/get?callback=?", {url: url, userid: window.xunlei_userid},
+        function(data) {
+          data = data.data;
+          if (data.items && data.items.length) {
+            $("#result-table").empty()
+            $.each(data.items, function(n, e) {
+              if (e.url) {
+                $("#result-table").append("<tr><td><a href='"+e.url+"' target='_blank'>"+e.title+"</a></td><td>"+format_size(parseInt(e.size))+"</td></tr>");
+              } else {
+                $("#result-table").append("<tr><td>"+e.title+"</td><td>"+format_size(parseInt(e.size))+"</td></tr>");
+              }
+            });
+          } else {
+            $("#result-table").empty().append("<tr><td>没有找到资源</td></tr>");
+          }
+        }).error(function() {
+          $("#result-table").empty().append("<tr><td>请求出错</td></tr>")
+        });
+    } else {
+      $("#result-table").empty().append("<tr><td>需要url</td></tr>")
+    }
+  }
+
+  if (!window.xunlei_userid) {
+    $.getJSON('http://i.vod.xunlei.com/req_subBT?jsonp=?', function(data) {
+      window.xunlei_userid = data.resp.userid || 21;
+      doo();
+    });
+  } else {
+    doo();
+  }
+  return false;
+});
+function format_size(spare_size)
+{
+  if (spare_size == 0)
+    return "0B";
+	var spare_str;
+	var spare_left;
+	if( spare_size >= 1024*1024*1024  )
+	{
+		spare_left = Math.floor(spare_size/(1024*1024*1024)*10);
+		spare_str = (spare_left/10).toString()+"GB";
+	}else if( spare_size >= 1024*1024 ){
+		spare_left = (Math.floor(spare_size*100/(1024*1024)))/100;
+		spare_str = spare_left.toString()+"MB";
+	}
+	else if(spare_size >= 1024){
+		spare_left = Math.floor(spare_size/1024);
+		spare_str = spare_left.toString()+"KB";
+	}
+	else{
+		spare_str = spare_size + "B";
+	}
+
+	return spare_str;
+}
+</script>
+</section>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article id="post-moefm-playlist" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
@@ -482,42 +599,6 @@
 
 
 
-  <article id="post-yet-another-aria2-web-frontend" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time class="dt-published" datetime="2012-05-06T20:55:07.000Z"><a href="/2012/05/yet-another-aria2-web-frontend/">2012-05-06</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2012/05/yet-another-aria2-web-frontend/">Yet Another Aria2 Web Frontend</a></h1>
-  
-
-    </header>
-    <div class="e-content entry" itemprop="articleBody">
-      
-        <p>aria2是个好软件，多线程，<strong>HTTP&#x2F;FTP&#x2F;BT通吃</strong>，参数设置丰富，功能强大。在我的TL-WR703n上比transmission快多了。</p>
-<p>看了官网上的3个web前端，两个是php的，一个是c的。先不说c的那个界面。。php我尝试在路由上跑，依赖实在太多。<br>简单man了一下aria2，这货明明可以JSON-RPC的啊，根本就用不着后端啊！　于是，就有了这个坑——YAAW。</p>
-<h3 id="YAAW简介"><a href="#YAAW简介" class="headerlink" title="YAAW简介"></a>YAAW简介</h3><p>YAAW - Yet Another Aria2 Web Frontend<br>是一个纯前端实现的Aria2 Web前端界面。无需架设任何服务器，只需要在浏览器中打开即刻使用。</p>
-<h3 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h3><p>首页&#x2F;demo： <a target="_blank" rel="noopener" href="http://binux.github.com/yaaw/">http://binux.github.com/yaaw/</a><br>GitHub: <a target="_blank" rel="noopener" href="https://github.com/binux/yaaw">https://github.com/binux/yaaw</a></p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -562,11 +643,6 @@
     
 
     
-    <li>
-      <span class="icon gplus"></span>
-      <a href="https://plus.google.com/+RoyBinux" target=_blank rel=me>+RoyBinux</a>
-    </li>
-    
   </ul>
 </div>
 
@@ -575,6 +651,10 @@
 <div class="widget tag">
   <h3 class="title">最新文章</h3>
   <ul class="entry">
+    
+      <li>
+        <a href="/2022/08/cat-planet-bot-part-1-touch-simulation/">猫之城物理钓鱼挂（一）：物理模拟触屏点击</a>
+      </li>
     
       <li>
         <a href="/2020/01/home-assistant/">家居自动化</a>
@@ -590,10 +670,6 @@
     
       <li>
         <a href="/2018/02/us/">2018 新的冒险</a>
-      </li>
-    
-      <li>
-        <a href="/2016/12/data-highlighter/">Data Highlighter</a>
       </li>
     
   </ul>
