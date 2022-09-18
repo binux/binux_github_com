@@ -6,7 +6,7 @@
   <link href="https://binux.blog/atom.xml" rel="self"/>
   
   <link href="https://binux.blog/"/>
-  <updated>2022-08-28T07:49:57.921Z</updated>
+  <updated>2022-09-18T22:19:13.280Z</updated>
   <id>https://binux.blog/</id>
   
   <author>
@@ -15,6 +15,36 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>猫之城物理钓鱼挂（二）：图像采集以及画面分类</title>
+    <link href="https://binux.blog/2022/09/cat-planet-bot-part-2-video-capture-and-classification/"/>
+    <id>https://binux.blog/2022/09/cat-planet-bot-part-2-video-capture-and-classification/</id>
+    <published>2022-09-18T15:53:15.000Z</published>
+    <updated>2022-09-18T22:19:13.280Z</updated>
+    
+    <content type="html"><![CDATA[<p>上一篇中，我们实现了屏幕触控的物理输出，但是钓鱼这个小游戏还是需要根据画面反馈来做动作的。我一开始的想法是用一个摄像头拍摄平板的画面然后进行图像处理。尝试了一会发现，就摄像头这 720P 的分辨率，光是梯形校正准确率都不高，可能做个图像分类还行，但是要分辨画面中的信息对我来说还是有些困难。然后睡前一阵查找，发现了软件实现的 AirPlay。</p><h1 id="图像采集"><a href="#图像采集" class="headerlink" title="图像采集"></a>图像采集</h1><p>AirPlay 是 Apple 的屏幕镜像和投影协议，这个协议已经被逆向并且有软件实现了，例如 <a href="https://letsview.com/">LetsView</a>, <a href="https://www.airserver.com/">AirServer</a>。通过 AirPlay + 接收软件，我们可以将 iPad 画面镜像投影到电脑上，分辨率更高，而且没有<strong>色差</strong>，处理起来就更简单了。如果是安卓的平板，也可以通过 Chromecast 或者 Miracast 协议投影，原理是一样的。</p><p>当图像投影到 PC 上之后，就可以通过截取 PC 屏幕窗口的的方式获取到平板画面内容。第一种方案是使用 <a href="https://python-mss.readthedocs.io/">MSS</a>，一个跨平台的 Python 截图包，它能以大约 20 FPS 的速度捕获图片。使用也很简单，首先需要获取投影软件的窗口位置和大小，然后按帧截图发送给 OpenCV 处理。实现的代码在这里：<a href="https://github.com/binux/cat-planet-bot/blob/main/screen_capture.py">screen_capture.py</a>。由于 MSS 并没有提供获取窗口大小的方法，它的区域捕获仅仅依靠的是屏幕坐标。所以获取窗口还是需要我们自己实现的，而这部分不是跨平台的，也没办法获知窗口移动。再加上 MSS 仅仅是截图，当窗口在后台时就失效了，使用起来并不方便。</p><p>而更好的方法是通过 <a href="https://obsproject.com/">OBS</a> + 虚拟摄像头 + OpenCV，对的，就是平时游戏主播使用的直播软件。简单来说就是使用 OBS 捕获投影软件窗口，再通过虚拟摄像头输出给 OpenCV。OBS 软件本身是跨平台的（但是在不同平台可能会有些不同），FPS 要多少有多少，而且窗口可以被遮挡（窗口不能最小化到后台，但是可以放在另一个 Virtual Desktop），窗口移动什么的也完全没有问题，专业的确实就是专业。OBS 设置部分很简单，只要增加一个 Source，然后再根据需要调整输出分辨率就好了。Python 部分的源代码在：<a href="https://github.com/binux/cat-planet-bot/blob/main/obs_capture.py">obs_capture.py</a>。</p><p><img src="/assets/image/OBS-window-capture.png" alt="OBS Capture Setting"></p><p>Note：虽然最新的 OBS 自带了 Virtual Cam，但是似乎在 Windows 上和 OpenCV 有兼容性问题，捕获的画面是黑的，依旧需要使用<a href="https://github.com/Fenrirthviti/obs-virtual-cam">插件</a>解决。</p><h1 id="画面分类"><a href="#画面分类" class="headerlink" title="画面分类"></a>画面分类</h1><p>现在采集到了平板上的游戏画面，下一步就是给画面进行分类，来获得游戏所处的界面。这么做主要有这些原因：</p><ol><li>很多游戏操作是有网络交互的，当点击按钮之后，会有不定长的延迟进入下一个界面，在下一步操作前进行画面分类识别能更<a href="https://baike.baidu.com/item/%E9%B2%81%E6%A3%92%E6%80%A7/832302">鲁棒</a>。</li><li>在有的界面中，存在需要进一步识别的交互内容，例如钓鱼小游戏的浮标。先识别界面类型，能更有效和准确地决定是否需要进行这些信息提取。</li><li>获取当前状态可以使 bot 更灵活，脚本可以从任意状态启动。这一部分会再 第四篇 blog 中讲到。</li></ol><p>在这个项目中，我直接抄了 <a href="https://www.tensorflow.org/">tensorflow</a> 的 <a href="https://www.tensorflow.org/tutorials/images/classification">Image Classification Tutorial</a>。对于这种标准的 UI 界面，随便什么模型效果应该都不差：<a href="https://github.com/binux/cat-planet-bot/blob/main/classifier_training.ipynb">classifier_training.ipynb</a>。</p><p>做图片分类的第一步是采集训练样本，你会注意到 <a href="https://github.com/binux/cat-planet-bot/blob/main/screen_capture.py">screen_capture.py</a> 和 <a href="https://github.com/binux/cat-planet-bot/blob/main/obs_capture.py">obs_capture.py</a> 的 <code>__main__</code> 部分都有 <code>cv.imwrite</code> 以及对应的按键绑定的代码。我首先会在开启图像采集的过程中，游玩游戏，手动进行需要自动化的整个流程，手动或者每 1 秒地频率采集一些原始图像。然后对应每一个分类新建一个文件夹，例如在《猫之城》中，我有 fish_idle, fish_ring, fish_drag, fish_reward 和 not_supported 这样一些分类。然后将采集到的图片拖到对应分类的文件夹中，我对于分类和图片的选取是这样的：</p><ul><li>分类之间的图像需要有较大的不同。例如，点击之后显示的确认对话框就没必要单独建立一个分类。</li><li>每个分类选取至少 10-20 张 <strong>不同</strong> 的图片，尽量涵盖这个类别可能出现的所有变种，例如《猫之城》中 fish_idle 会出现不同的场景导致背景不一样。</li><li>单个类别不应该有远多于别的类别的样本，最多和最少之间不超过 10 倍这样。</li><li>not_supported 可以用来放一些脚本用不到的 UI 截图来增加类别之间的差异性，以及在进入没有分类的页面的时候不会错误激活脚本。</li></ul><p>然后就是套代码了，图片分类并不需要很高的图片分辨率，这里我随便选了一个 220x300 来保持图片宽高比，套示例模型就能达到 99% 的准确度了。因为是 UI 界面，也不存在裁切变换，之后实际测试结果也非常好。最后将分类列表和模型保存下来就可以啦。为了保存单个文件，并且减少体积，使用的是 <a href="https://www.tensorflow.org/lite/">TensorFlow Lite</a> 模型，predict 的代码在 <a href="https://github.com/binux/cat-planet-bot/blob/main/classifier.py">classifier.py</a>。唯一需要注意的是使用的时候需要自己 resize 到 220x300，并且 OpenCV 图片的颜色是 BGR 而 tensorflow 是 RGB 的，需要要进行转换。其他就没什么了，总共有效代码也就 15 行，踩着巨人的肩膀，使用成熟的库之后还是挺简单的。</p><p><img src="/assets/image/cat-plant-bot-image-classification-sample.jpg" alt="Image Classification Demo"></p><p>Note: 图片中的 <code>fish_ring = 099%</code> 就是图片分类的结果和 score，而其他的图片识别内容和辅助线就在下一篇 blog 中讲解啦。</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;上一篇中，我们实现了屏幕触控的物理输出，但是钓鱼这个小游戏还是需要根据画面反馈来做动作的。我一开始的想法是用一个摄像头拍摄平板的画面然后进行图像处理。尝试了一会发现，就摄像头这 720P 的分辨率，光是梯形校正准确率都不高，可能做个图像分类还行，但是要分辨画面中的信息对我来</summary>
+      
+    
+    
+    
+    
+    <category term="自动化" scheme="https://binux.blog/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/"/>
+    
+    <category term="open-source" scheme="https://binux.blog/tags/open-source/"/>
+    
+    <category term="github" scheme="https://binux.blog/tags/github/"/>
+    
+    <category term="tensorflow" scheme="https://binux.blog/tags/tensorflow/"/>
+    
+    <category term="ML" scheme="https://binux.blog/tags/ML/"/>
+    
+  </entry>
   
   <entry>
     <title>猫之城物理钓鱼挂（一）：物理模拟触屏点击</title>
@@ -505,29 +535,6 @@
     <category term="vpn" scheme="https://binux.blog/tags/vpn/"/>
     
     <category term="route" scheme="https://binux.blog/tags/route/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>足兆叉虫的2013</title>
-    <link href="https://binux.blog/2013/12/2013/"/>
-    <id>https://binux.blog/2013/12/2013/</id>
-    <published>2013-12-29T08:00:00.000Z</published>
-    <updated>2022-08-27T19:30:55.683Z</updated>
-    
-    <content type="html"><![CDATA[<p>我是从来不记日子的，这导致我也不知道有些事情是2013年发生的，还是2012年发生的，亦或只是我的臆想。即便如此，2013年也是变化的一年。</p><p>跳槽，工资没涨，工作忙了2倍，但经手了更大的系统（虽然设计很渣），更多协调，带小弟，基本达到了初衷，也说不上是好是坏。搬离大学生活圈、一个人住，第一次有家的感觉，虽然依旧一个人。</p><p>想学日语，想出国，但完全没有干劲。</p><p>依旧是没有理想，没有希望的一年，就这样一觉不起就好了。</p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;我是从来不记日子的，这导致我也不知道有些事情是2013年发生的，还是2012年发生的，亦或只是我的臆想。即便如此，2013年也是变化的一年。&lt;/p&gt;
-&lt;p&gt;跳槽，工资没涨，工作忙了2倍，但经手了更大的系统（虽然设计很渣），更多协调，带小弟，基本达到了初衷，也说不上是好是坏。</summary>
-      
-    
-    
-    
-    
-    <category term="2013" scheme="https://binux.blog/tags/2013/"/>
     
   </entry>
   

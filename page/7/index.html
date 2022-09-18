@@ -60,6 +60,53 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-python-tools-chinese-digit" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2011-03-06T22:38:33.000Z"><a href="/2011/03/python-tools-chinese-digit/">2011-03-06</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2011/03/python-tools-chinese-digit/">python工具脚本： chinese_digit.py - 中文数字 转换为 阿拉伯数字</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <h2 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h2><p>经常会有这种需要将中文数字如 “五千三百零一”，全角数字”１２３４５”等等各种中文数字，转换成阿拉伯数字的场合。嘛，毕竟中文比较复杂，这种东西还是很发杂的。</p>
+<p>下面这段代码来源于<a target="_blank" rel="noopener" href="http://bbs.chinaunix.net/redirect.php?tid=1755895">http://bbs.chinaunix.net/redirect.php?tid=1755895</a>。</p>
+<p><strong>但是这段代码有如下的BUG：</strong></p>
+<p>1、只能正确转换亿亿以下的数</p>
+<p>2、”十万”等十之前没有个位数字的字符串转换错误</p>
+<p><strong>而且有如下不足：</strong></p>
+<p>1、不能转换大写中文（壹贰叁）和全角数字</p>
+<p>2、不能转换电话号码（如 一零零五）</p>
+<p>下面是一个修改过的python脚本，支持如上的所有特性，并修正了BUG</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="comment"># author: binux(17175297.hk@gmail.com)</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">dict</span> =&#123;<span class="string">u&#x27;零&#x27;</span>:<span class="number">0</span>, <span class="string">u&#x27;一&#x27;</span>:<span class="number">1</span>, <span class="string">u&#x27;二&#x27;</span>:<span class="number">2</span>, <span class="string">u&#x27;三&#x27;</span>:<span class="number">3</span>, <span class="string">u&#x27;四&#x27;</span>:<span class="number">4</span>, <span class="string">u&#x27;五&#x27;</span>:<span class="number">5</span>, <span class="string">u&#x27;六&#x27;</span>:<span class="number">6</span>, <span class="string">u&#x27;七&#x27;</span>:<span class="number">7</span>, <span class="string">u&#x27;八&#x27;</span>:<span class="number">8</span>, <span class="string">u&#x27;九&#x27;</span>:<span class="number">9</span>, <span class="string">u&#x27;十&#x27;</span>:<span class="number">10</span>, <span class="string">u&#x27;百&#x27;</span>:<span class="number">100</span>, <span class="string">u&#x27;千&#x27;</span>:<span class="number">1000</span>, <span class="string">u&#x27;万&#x27;</span>:<span class="number">10000</span>,</span><br><span class="line">       <span class="string">u&#x27;０&#x27;</span>:<span class="number">0</span>, <span class="string">u&#x27;１&#x27;</span>:<span class="number">1</span>, <span class="string">u&#x27;２&#x27;</span>:<span class="number">2</span>, <span class="string">u&#x27;３&#x27;</span>:<span class="number">3</span>, <span class="string">u&#x27;４&#x27;</span>:<span class="number">4</span>, <span class="string">u&#x27;５&#x27;</span>:<span class="number">5</span>, <span class="string">u&#x27;６&#x27;</span>:<span class="number">6</span>, <span class="string">u&#x27;７&#x27;</span>:<span class="number">7</span>, <span class="string">u&#x27;８&#x27;</span>:<span class="number">8</span>, <span class="string">u&#x27;９&#x27;</span>:<span class="number">9</span>,</span><br><span class="line">                <span class="string">u&#x27;壹&#x27;</span>:<span class="number">1</span>, <span class="string">u&#x27;贰&#x27;</span>:<span class="number">2</span>, <span class="string">u&#x27;叁&#x27;</span>:<span class="number">3</span>, <span class="string">u&#x27;肆&#x27;</span>:<span class="number">4</span>, <span class="string">u&#x27;伍&#x27;</span>:<span class="number">5</span>, <span class="string">u&#x27;陆&#x27;</span>:<span class="number">6</span>, <span class="string">u&#x27;柒&#x27;</span>:<span class="number">7</span>, <span class="string">u&#x27;捌&#x27;</span>:<span class="number">8</span>, <span class="string">u&#x27;玖&#x27;</span>:<span class="number">9</span>, <span class="string">u&#x27;拾&#x27;</span>:<span class="number">10</span>, <span class="string">u&#x27;佰&#x27;</span>:<span class="number">100</span>, <span class="string">u&#x27;仟&#x27;</span>:<span class="number">1000</span>, <span class="string">u&#x27;萬&#x27;</span>:<span class="number">10000</span>,</span><br><span class="line">       <span class="string">u&#x27;亿&#x27;</span>:<span class="number">100000000</span>&#125;</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">getResultForDigit</span>(<span class="params">a, encoding=<span class="string">&quot;utf-8&quot;</span></span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(a, <span class="built_in">str</span>):</span><br><span class="line">        a = a.decode(encoding)</span><br><span class="line"></span><br><span class="line">    count = <span class="number">0</span></span><br><span class="line">    result = <span class="number">0</span></span><br><span class="line">    tmp = <span class="number">0</span></span><br><span class="line">    Billion = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> count &lt; <span class="built_in">len</span>(a):</span><br><span class="line">        tmpChr = a[count]</span><br><span class="line">        <span class="comment">#print tmpChr</span></span><br><span class="line">        tmpNum = <span class="built_in">dict</span>.get(tmpChr, <span class="literal">None</span>)</span><br><span class="line">        <span class="comment">#如果等于1亿</span></span><br><span class="line">        <span class="keyword">if</span> tmpNum == <span class="number">100000000</span>:</span><br><span class="line">            result = result + tmp</span><br><span class="line">            result = result * tmpNum</span><br><span class="line">            <span class="comment">#获得亿以上的数量，将其保存在中间变量Billion中并清空result</span></span><br><span class="line">            Billion = Billion * <span class="number">100000000</span> + result</span><br><span class="line">            result = <span class="number">0</span></span><br><span class="line">            tmp = <span class="number">0</span></span><br><span class="line">        <span class="comment">#如果等于1万</span></span><br><span class="line">        <span class="keyword">elif</span> tmpNum == <span class="number">10000</span>:</span><br><span class="line">            result = result + tmp</span><br><span class="line">            result = result * tmpNum</span><br><span class="line">            tmp = <span class="number">0</span></span><br><span class="line">        <span class="comment">#如果等于十或者百，千</span></span><br><span class="line">        <span class="keyword">elif</span> tmpNum &gt;= <span class="number">10</span>:</span><br><span class="line">            <span class="keyword">if</span> tmp == <span class="number">0</span>:</span><br><span class="line">                tmp = <span class="number">1</span></span><br><span class="line">            result = result + tmpNum * tmp</span><br><span class="line">            tmp = <span class="number">0</span></span><br><span class="line">        <span class="comment">#如果是个位数</span></span><br><span class="line">        <span class="keyword">elif</span> tmpNum <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">            tmp = tmp * <span class="number">10</span> + tmpNum</span><br><span class="line">        count += <span class="number">1</span></span><br><span class="line">    result = result + tmp</span><br><span class="line">    result = result + Billion</span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+
+
+<p>**完整版带测试用例的版本可以从这里获得：</p>
+<p>** <a target="_blank" rel="noopener" href="https://github.com/binux/binux-tools/blob/master/python/chinese_digit.py">https://github.com/binux/binux-tools/blob/master/python/chinese_digit.py</a></p>
+<p>测试用例来源于：<a target="_blank" rel="noopener" href="http://fayaa.com/code/view/37/">http://fayaa.com/code/view/37/</a>（不记得一开始在哪看到的了&#x3D;。&#x3D;）</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article id="post-python-tools-pprint" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
@@ -567,6 +614,10 @@ ebuild rtorrent-0.8.6.ebuild merge
   <ul class="entry">
     
       <li>
+        <a href="/2022/09/cat-planet-bot-part-2-video-capture-and-classification/">猫之城物理钓鱼挂（二）：图像采集以及画面分类</a>
+      </li>
+    
+      <li>
         <a href="/2022/08/cat-planet-bot-part-1-touch-simulation/">猫之城物理钓鱼挂（一）：物理模拟触屏点击</a>
       </li>
     
@@ -580,10 +631,6 @@ ebuild rtorrent-0.8.6.ebuild merge
     
       <li>
         <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
-      </li>
-    
-      <li>
-        <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
   </ul>

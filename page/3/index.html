@@ -60,6 +60,42 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-2013" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2013-12-29T08:00:00.000Z"><a href="/2013/12/2013/">2013-12-29</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/2013/">足兆叉虫的2013</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>我是从来不记日子的，这导致我也不知道有些事情是2013年发生的，还是2012年发生的，亦或只是我的臆想。即便如此，2013年也是变化的一年。</p>
+<p>跳槽，工资没涨，工作忙了2倍，但经手了更大的系统（虽然设计很渣），更多协调，带小弟，基本达到了初衷，也说不上是好是坏。搬离大学生活圈、一个人住，第一次有家的感觉，虽然依旧一个人。</p>
+<p>想学日语，想出国，但完全没有干劲。</p>
+<p>依旧是没有理想，没有希望的一年，就这样一觉不起就好了。</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article id="post-xunlei-lixian-ftp-proxy" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
@@ -655,86 +691,6 @@ Google+给Blogger添加了Google+的评论组件，看起来可以移植到别�
 
 
 
-  <article id="post-aria2-examples" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time class="dt-published" datetime="2012-12-24T08:00:00.000Z"><a href="/2012/12/aria2-examples/">2012-12-24</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2012/12/aria2-examples/">aria2配置示例</a></h1>
-  
-
-    </header>
-    <div class="e-content entry" itemprop="articleBody">
-      
-        <p>其实面对man的存在，写什么总结完全没有必要，一切宝藏都在<a target="_blank" rel="noopener" href="http://aria2.sourceforge.net/manual/en/html/aria2c.html">manual</a>。不过反正不会有人会读就是了。那我就写一下吧</p>
-<p>##基础<br>首先，aria2或者叫做aria2c，它是一个下载器，嗯。<br>常用的两种模式是直接下载，比如 <code>aria2c &quot;http://host/file.zip&quot;</code> 这样，当它完成后就退出了，就像wget（估计你们也不知道吧）那样。<br>另一种就是rpc server模式，特点就是，它启动之后什么都不干，然后等着从rpc接口添加任务，下载完也不退出，而是一直等着。对，就像迅雷干的那样，当然，它不会上传你硬盘上的数据。</p>
-<p>因为第一种方式要每次都敲命令，除非像我是原生<em>nix，没有命令行就没法用电脑，估计也没什么用，于是常用的就是第二种。一般启动命令是 <code>aria2c --enable-rpc --rpc-listen-all=true --rpc-allow-origin-all -c -D</code> 。但是，其实*<em>这个命令是不好的！不要使用这种启动方式。</em></em><br>首先，用命令方式导致配置不方便修改保存，<code>-D</code>导致无法看到出错信息。</p>
-<p><strong>推荐启动方式是使用配置文件</strong> <code>$HOME/.aria2/aria2.conf</code> 。嗯，我知道路由上这个地址是无法修改或者重启后会丢失的，那么你可以放到别的地方，然后 <code>aria2c --conf-path=&lt;PATH&gt;</code> 注意 <code>&lt;PATH&gt;</code> 填完整路径，因为鬼知道这个程序是从那个路径启动的。<code>-D</code> (用于后台执行, 这样ssh断开连接后程序不会退出） 只有在确认OK之后在启动脚本中使用。</p>
-<p><strong>以下方案都基于配置文件方式</strong></p>
-<p>##图形界面<br>aria2是没有图形界面的，已知相对好用的图形界面有：</p>
-<ul>
-<li>我的<a target="_blank" rel="noopener" href="http://blog.binux.me/yaaw/">YAAW</a></li>
-<li>另一个web前端<a target="_blank" rel="noopener" href="http://ziahamza.github.com/webui-aria2/">webui-aria2</a></li>
-</ul>
-<p><strong>请使用chrome，firefox等现代浏览器访问。</strong>这两个东西都可以直接使用，除了看英文不爽以外，有什么必要下载回来使用？（吐槽：难道你们就不觉得webui-aria2的title总是被压成好几行，诡异的配色（对，说的就是那个蓝色背景，深蓝颜色的 <code>Use custom IP and port settings</code> 按钮）不难看吗？）<br><strong>这两个东西上的配置在重启后都会失效!</strong> 使用配置文件保存您的设置</p>
-<ul>
-<li>windows下有<a target="_blank" rel="noopener" href="http://sourceforge.net/projects/aria2cremote/">Aria2c Remote Control</a></li>
-<li>iphone有<a target="_blank" rel="noopener" href="https://itunes.apple.com/us/app/aria2-download-manager-remote/id525944692">Aria2 Download Manager</a></li>
-</ul>
-<p>图形界面基本都基于RPC模式，所以一定<strong>确定开启了RPC，IP端口可访问，并且在管理器中填写了正确的地址</strong>。</p>
-<p>##配置</p>
-<p><strong>请将所有配置置于配置文件中</strong><br><strong>只有在确认配置无误后再加上 <code>-D</code> 选项</strong><br><strong>请阅读出错信息!</strong></p>
-<p>###RPC<br><strong>需要1.14及以上版本</strong><br><a target="_blank" rel="noopener" href="http://aria2.sourceforge.net/manual/en/html/aria2c.html#rpc-options">http://aria2.sourceforge.net/manual/en/html/aria2c.html#rpc-options</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#允许rpc</span></span><br><span class="line">enable-rpc=<span class="literal">true</span></span><br><span class="line"><span class="comment">#允许所有来源, web界面跨域权限需要</span></span><br><span class="line">rpc-allow-origin-all=<span class="literal">true</span></span><br><span class="line"><span class="comment">#允许非外部访问</span></span><br><span class="line">rpc-listen-all=<span class="literal">true</span></span><br><span class="line"><span class="comment">#RPC端口, 仅当默认端口被占用时修改</span></span><br><span class="line"><span class="comment">#rpc-listen-port=6800</span></span><br></pre></td></tr></table></figure>
-
-<p>如果启动时出现 <code>Initializing EpollEventPoll failed.</code> 或相似错误, 在配置中加上 <code>event-poll=select</code></p>
-<p><strong>使用token验证（建议使用，需要1.18.4以上版本，帐号密码方式将在后续版本中停用！）</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># token验证</span></span><br><span class="line">rpc-secret=secret</span><br></pre></td></tr></table></figure>
-<p>在YAAW中使用 <code>http://token:secret@hostname:port/jsonrpc</code> 的地址格式设置secret.</p>
-<p>如果需要使用密码验证（需要1.15.2以上，1.18.6以下版本）</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#用户名</span></span><br><span class="line">rpc-user=username</span><br><span class="line"><span class="comment">#密码</span></span><br><span class="line">rpc-passwd=passwd</span><br></pre></td></tr></table></figure>
-<p>在YAAW中使用 <code>http://username:passwd@hostname:port/jsonrpc</code> 的地址格式设置密码.<br>对于RPC模式来说, 界面和后端是分离的, 只要给后端设置密码即可. 前端认证什么的是毫无意义的.<br>如果你比较新潮, 在YAAW中也可以用 <code>ws://</code> 为前缀,只用websocket连接aria2c, 如果你不知道websocket是什么. 那就算了.</p>
-<p>###速度相关</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#最大同时下载数(任务数), 路由建议值: 3</span></span><br><span class="line">max-concurrent-downloads=5</span><br><span class="line"><span class="comment">#断点续传</span></span><br><span class="line"><span class="built_in">continue</span>=<span class="literal">true</span></span><br><span class="line"><span class="comment">#同服务器连接数</span></span><br><span class="line">max-connection-per-server=5</span><br><span class="line"><span class="comment">#最小文件分片大小, 下载线程数上限取决于能分出多少片, 对于小文件重要</span></span><br><span class="line">min-split-size=10M</span><br><span class="line"><span class="comment">#单文件最大线程数, 路由建议值: 5</span></span><br><span class="line"><span class="built_in">split</span>=10</span><br><span class="line"><span class="comment">#下载速度限制</span></span><br><span class="line">max-overall-download-limit=0</span><br><span class="line"><span class="comment">#单文件速度限制</span></span><br><span class="line">max-download-limit=0</span><br><span class="line"><span class="comment">#上传速度限制</span></span><br><span class="line">max-overall-upload-limit=0</span><br><span class="line"><span class="comment">#单文件速度限制</span></span><br><span class="line">max-upload-limit=0</span><br><span class="line"><span class="comment">#断开速度过慢的连接</span></span><br><span class="line"><span class="comment">#lowest-speed-limit=0</span></span><br><span class="line"><span class="comment">#验证用，需要1.16.1之后的release版本</span></span><br><span class="line"><span class="comment">#referer=*</span></span><br></pre></td></tr></table></figure>
-
-<p>###进度保存相关<br>aria2c只有在正常退出时(ctrl-c), 突然断电是无法保存进度的. 在第一次使用的时候会出现会话文件不存在的错误, 手动创建一个空文件即可. 如果您编写的是自动启动脚本, 在启动aria2前加上 <code>touch aria2.session</code> 这句命令.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">input-file=/some/where/aria2.session</span><br><span class="line">save-session=/some/where/aria2.session</span><br><span class="line"><span class="comment">#定时保存会话，需要1.16.1之后的release版</span></span><br><span class="line"><span class="comment">#save-session-interval=60</span></span><br></pre></td></tr></table></figure>
-
-<p>###磁盘相关</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#文件保存路径, 默认为当前启动位置</span></span><br><span class="line"><span class="built_in">dir</span>=/some/where</span><br><span class="line"><span class="comment">#文件缓存, 使用内置的文件缓存, 如果你不相信Linux内核文件缓存和磁盘内置缓存时使用, 需要1.16及以上版本</span></span><br><span class="line"><span class="comment">#disk-cache=0</span></span><br><span class="line"><span class="comment">#另一种Linux文件缓存方式, 使用前确保您使用的内核支持此选项, 需要1.15及以上版本(?)</span></span><br><span class="line"><span class="comment">#enable-mmap=true</span></span><br><span class="line"><span class="comment">#文件预分配, 能有效降低文件碎片, 提高磁盘性能. 缺点是预分配时间较长</span></span><br><span class="line"><span class="comment">#所需时间 none &lt; falloc ? trunc &lt;&lt; prealloc, falloc和trunc需要文件系统和内核支持</span></span><br><span class="line">file-allocation=prealloc</span><br></pre></td></tr></table></figure>
-
-<p>###BT相关<br><a target="_blank" rel="noopener" href="http://aria2.sourceforge.net/manual/en/html/aria2c.html#bittorrent-specific-options">http://aria2.sourceforge.net/manual/en/html/aria2c.html#bittorrent-specific-options</a></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#启用本地节点查找</span></span><br><span class="line">bt-enable-lpd=<span class="literal">true</span></span><br><span class="line"><span class="comment">#添加额外的tracker</span></span><br><span class="line"><span class="comment">#bt-tracker=&lt;URI&gt;,…</span></span><br><span class="line"><span class="comment">#单种子最大连接数</span></span><br><span class="line"><span class="comment">#bt-max-peers=55</span></span><br><span class="line"><span class="comment">#强制加密, 防迅雷必备</span></span><br><span class="line"><span class="comment">#bt-require-crypto=true</span></span><br><span class="line"><span class="comment">#当下载的文件是一个种子(以.torrent结尾)时, 自动下载BT</span></span><br><span class="line">follow-torrent=<span class="literal">true</span></span><br><span class="line"><span class="comment">#BT监听端口, 当端口屏蔽时使用</span></span><br><span class="line"><span class="comment">#listen-port=6881-6999</span></span><br></pre></td></tr></table></figure>
-
-<p>aria2亦可以用于PT下载, 下载的关键在于伪装</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#不确定是否需要，为保险起见，need more test</span></span><br><span class="line">enable-dht=<span class="literal">false</span></span><br><span class="line">bt-enable-lpd=<span class="literal">false</span></span><br><span class="line">enable-peer-exchange=<span class="literal">false</span></span><br><span class="line"><span class="comment">#修改特征</span></span><br><span class="line">user-agent=uTorrent/2210(25130)</span><br><span class="line">peer-id-prefix=-UT2210-</span><br><span class="line"><span class="comment">#修改做种设置, 允许做种</span></span><br><span class="line">seed-ratio=0</span><br><span class="line"><span class="comment">#保存会话</span></span><br><span class="line">force-save=<span class="literal">true</span></span><br><span class="line">bt-hash-check-seed=<span class="literal">true</span></span><br><span class="line">bt-seed-unverified=<span class="literal">true</span></span><br><span class="line">bt-save-metadata=<span class="literal">true</span></span><br><span class="line"><span class="comment">#定时保存会话，需要1.16.1之后的某个release版本（比如1.16.2）</span></span><br><span class="line"><span class="comment">#save-session-interval=60</span></span><br></pre></td></tr></table></figure>
-
-<p>##常见问题<br>###Internal server error<br>手动访问你的JSON-RPC地址 <code>http://hostname:port/jsonrpc?jsoncallback=1</code> 如果没有返回, 请确认aria2是否启动以及连通性. 如果aria2在路由器后或没有公网IP, 请做好端口映射.</p>
-<p>###如何使用迅雷离线</p>
-<p><a target="_blank" rel="noopener" href="http://binux.github.com/ThunderLixianExporter/">http://binux.github.com/ThunderLixianExporter/</a><br>安装后, 在迅雷离线的右上角的设置中设置RPC地址.<br>提供chrome插件: <a target="_blank" rel="noopener" href="https://chrome.google.com/webstore/detail/thunderlixianassistant/eehlmkfpnagoieibahhcghphdbjcdmen">https://chrome.google.com/webstore/detail/thunderlixianassistant/eehlmkfpnagoieibahhcghphdbjcdmen</a></p>
-<p>###如何使用旋风离线(QQ离线)<br><a target="_blank" rel="noopener" href="http://userscripts.org/scripts/show/142624">http://userscripts.org/scripts/show/142624</a>安装脚本后, 在旋风离线页面使用.</p>
-<p>###如何安装aria2<br>我也不知道, 看你的box上有什么开源包管理器之类的东西, 有什么用什么. 如果没有, google之, 如果没有, 放弃吧.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -789,6 +745,10 @@ Google+给Blogger添加了Google+的评论组件，看起来可以移植到别�
   <ul class="entry">
     
       <li>
+        <a href="/2022/09/cat-planet-bot-part-2-video-capture-and-classification/">猫之城物理钓鱼挂（二）：图像采集以及画面分类</a>
+      </li>
+    
+      <li>
         <a href="/2022/08/cat-planet-bot-part-1-touch-simulation/">猫之城物理钓鱼挂（一）：物理模拟触屏点击</a>
       </li>
     
@@ -802,10 +762,6 @@ Google+给Blogger添加了Google+的评论组件，看起来可以移植到别�
     
       <li>
         <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
-      </li>
-    
-      <li>
-        <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
   </ul>

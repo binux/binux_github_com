@@ -60,6 +60,42 @@
 </header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article id="post-fancybox-xsse6bc8fe6b49ee5afbce887b4htmle8bdace4b989e697a0e69588" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time class="dt-published" datetime="2012-05-10T07:37:53.000Z"><a href="/2012/05/fancybox-xsse6bc8fe6b49ee5afbce887b4htmle8bdace4b989e697a0e69588/">2012-05-10</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2012/05/fancybox-xsse6bc8fe6b49ee5afbce887b4htmle8bdace4b989e697a0e69588/">fancybox xss漏洞导致html转义无效</a></h1>
+  
+
+    </header>
+    <div class="e-content entry" itemprop="articleBody">
+      
+        <p>从老的1.3.4到新的2.0.7都有影响</p>
+<p>验证：<br>如果对以下地址使用fancybox，当fancybox打开时会触发脚本。<br>xss</p>
+<p>原理：<br>fancybox在取title的时候取的是$(obj).attr(‘title’)，没有进行转义就拼接进结果中。导致<strong>即使原代码进行了转义，在使用了fancybox时依旧会产生xss</strong></p>
+<p>解决方法：<br>1、停止使用title特性<br>2、修改_format_title函数，将title进行转义</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article id="post-yet-another-aria2-web-frontend" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   
   <div class="post-content">
@@ -672,118 +708,6 @@ rc.d start pptpd
 
 
 
-  <article id="post-howto_download_xunlei_offline_for_linux" class="h-entry post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time class="dt-published" datetime="2011-12-21T06:28:09.000Z"><a href="/2011/12/howto_download_xunlei_offline_for_linux/">2011-12-20</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2011/12/howto_download_xunlei_offline_for_linux/">[教程] Linux下使用aria2+loli.lu免费下载迅雷离线资源</a></h1>
-  
-
-    </header>
-    <div class="e-content entry" itemprop="articleBody">
-      
-        <blockquote>
-<p>loli.lu已关闭！<br>如需使用迅雷会员功能，请<a target="_blank" rel="noopener" href="http://vip.xunlei.com/">购买迅雷会员服务</a><br>如需在OSX，Linux环境下下载迅雷离线，请参阅<a href="/2012/07/thunderlixianexporter/">ThunderLixianExporter</a></p>
-</blockquote>
-<p>对于Linux用户，无论你用不用Windows，都不会不知道迅雷和迅雷离线。<br>面对国内这苦B的网络环境，用http,ftp太慢，bt,ed2k过期，想用迅雷，额。。没客户端。。渣一样的客户端，用浏览器下吧，下一半断了还不能多线程，用命令行又有cookie验证。。。</p>
-<p>这篇教程旨在帮助大家打造一个方便的高速下载平台，下载工具采用多线程的aria2c，中转网站采用<a target="_blank" rel="noopener" href="https://loli.lu/">loli.lu</a>（迅雷离线分享）的导出功能，方便地解决这个问题。</p>
-<h3 id="工具介绍"><a href="#工具介绍" class="headerlink" title="工具介绍"></a>工具介绍</h3><h4 id="aria2"><a href="#aria2" class="headerlink" title="aria2"></a>aria2</h4><p><a target="_blank" rel="noopener" href="http://aria2.sourceforge.net/">aria2c</a>是一个跨平台开源，<strong>多线程</strong>，多协议支持的下载器。<br>支持包括HTTP&#x2F;HTTPS, FTP, BitTorrent多种内容的下载，并且支持多来源，多线程，有<a target="_blank" rel="noopener" href="http://sourceforge.net/apps/trac/aria2/wiki#GUIFrontends">丰富的前端</a>可供选用。</p>
-<h4 id="loli-lu"><a href="#loli-lu" class="headerlink" title="loli.lu"></a>loli.lu</h4><p>是我在<a target="_blank" rel="noopener" href="http://4321.la/">Martian</a>支持下共同创建的一个迅雷离线下载分享的<a target="_blank" rel="noopener" href="https://github.com/binux/lixian.xunlei">开源</a>项目。旨在帮助Linux和MAC用户更好的适用迅雷离线的丰富资源。<br>通过这个项目的中转，你可以<strong>免费获得</strong>可供下载的迅雷离线地址，并且可以将地址分享给好友进行下载。</p>
-<h3 id="安装aria2"><a href="#安装aria2" class="headerlink" title="安装aria2"></a>安装aria2</h3><p>如果您的发行版带有包管理器，aria2很有可能已经包含在源中，直接安装即可。例如来自<a target="_blank" rel="noopener" href="http://sourceforge.net/apps/trac/aria2/wiki/Download">http://sourceforge.net/apps/trac/aria2/wiki/Download</a>的安装说明：</p>
-<blockquote>
-<p>  <strong>Debian and Ubuntu</strong><br><br>  apt-get install aria2</p>
-</blockquote>
-<blockquote>
-<p>  <strong>Fedora</strong><br><br>  yum install aria2</p>
-</blockquote>
-<blockquote>
-<p>  <strong>Mandriva</strong><br><br>  urpmi aria2</p>
-</blockquote>
-<blockquote>
-<p>  <strong>Arch</strong><br><br>  pacman -S aria2</p>
-</blockquote>
-<blockquote>
-<p>  <strong>Gentoo</strong><br><br>  emerge aria2</p>
-</blockquote>
-<blockquote>
-<p>  <strong>OpenSUSE</strong><br><br>  Build Service <a target="_blank" rel="noopener" href="http://download.opensuse.org/repositories/network:/utilities/">http://download.opensuse.org/repositories/network:/utilities/</a></p>
-</blockquote>
-<blockquote>
-<p>  <strong>Lunar Linux</strong><br><br>  lin aria2</p>
-</blockquote>
-<blockquote>
-<p>  <strong>AgiliaLinux</strong><br><br>  mpkg-install aria2</p>
-</blockquote>
-<blockquote>
-<p>  <strong>FreeBSD</strong><br><br>  <a target="_blank" rel="noopener" href="http://www.freebsd.org/cgi/cvsweb.cgi/ports/www/aria2/">http://www.freebsd.org/cgi/cvsweb.cgi/ports/www/aria2/</a></p>
-</blockquote>
-<blockquote>
-<p>  <strong>Mac OS X</strong><br><br>  <a target="_blank" rel="noopener" href="http://www.macports.org/">http://www.macports.org/</a></p>
-</blockquote>
-<blockquote>
-<p>  <strong>Fink</strong><br><br>  <a target="_blank" rel="noopener" href="http://pdb.finkproject.org/pdb/package.php/aria2">http://pdb.finkproject.org/pdb/package.php/aria2</a></p>
-</blockquote>
-<blockquote>
-<p>  <strong>Cygwin</strong><br><br>  <a target="_blank" rel="noopener" href="http://sourceware.org/cygwin/packages/aria2/">http://sourceware.org/cygwin/packages/aria2/</a></p>
-</blockquote>
-<p>如果您的发行版很不幸的不在上述发行版中，请前往<a target="_blank" rel="noopener" href="http://sourceforge.net/projects/aria2/files/stable/">http://sourceforge.net/projects/aria2/files/stable/</a>尝试适用源码安装。</p>
-<p>当您安装完成之后输入</p>
-<pre><code>aria2c -v
-</code></pre>
-<p>出现</p>
-<pre><code>aria2 version 1.13.0
-Copyright (C) 2006, 2011 Tatsuhiro Tsujikawa
-
-......
-</code></pre>
-<p>表明安装成功，注意，由于aria2在1.10后参数变化，而我们的Loli.lu导出的是新的参数设定，<strong>需要aria2的版本高于1.10</strong>。</p>
-<h3 id="获取下载链接"><a href="#获取下载链接" class="headerlink" title="获取下载链接"></a>获取下载链接</h3><p>访问：<a target="_blank" rel="noopener" href="https://loli.lu/">https://loli.lu/</a>，点击右上角的登录，使用Google账户授权：<br><a target="_blank" rel="noopener" href="http://s0.binux.me/201112/2890/14223_o.png"><img src="http://s0.binux.me/201112/2890/14223_z.png" alt="login"></a></p>
-<p>然后点击想要下载的资源，在弹出的浮动框中的批量下载中，点击aria2的链接：<br><a target="_blank" rel="noopener" href="http://s1.binux.me/201112/2890/14224_o.png"><img src="http://s1.binux.me/201112/2890/14224_o.png" alt="get link"></a></p>
-<p>之后，浮动框中会输出这个资源的所有aria2的链接：</p>
-<pre><code>aria2c -c -x5 --out \[SumiSora\]\[C3\]\[01\]\[GB\]\[x264\_aac\]\[720p\]\(5393D704\)\.ass --header &#39;Cookie:gdriveid=4B281B37A54B63BF6F47BBF2A8A22675;&#39; &#39;http://gdl.lixian.vip.xunlei.com/download?fid=umOXSXI/nn0XdbUzcpjfYhEs+g2K7wAAAAAAAFEZlKH8Vp3sMEiGuAwWb4ynfSaB&amp;mid;=666&amp;threshold;=150&amp;tid;=F0991DB1D9D3D750F20EB62624DE99D4&amp;srcid;=4&amp;verno;=1&amp;g;=511994A1FC569DEC304886B80C166F8CA77D2681&amp;scn;=c8&amp;i;=59B01E2CB9D2E7B1B5A83016DF97D4D445BAE247&amp;t;=6&amp;ui;=191942368&amp;ti;=50569010689&amp;s;=61322&amp;m;=0&amp;n;=01145C8D0C6F72615D3A72D7025B30315D3A76A6025B783236556E853E635D5B3753019402283533395275D36F34292E611242E45F00000000&#39;
-aria2c -c -x5 --out \[SumiSora\]\[C3\]\[01\]\[GB\]\[x264\_aac\]\[720p\]\(5393D704\)\.mkv --header &#39;Cookie:gdriveid=4B281B37A54B63BF6F47BBF2A8A22675;&#39; &#39;http://gdl.lixian.vip.xunlei.com/download?fid=2QPCJq1fI2pyx9Nbr9XkGGw/NgK7SEMVAAAAAIc3sATS9kleYgkLISA6zY0DXbEj&amp;mid;=666&amp;threshold;=150&amp;tid;=7568C4810EDDE63A3C2982ADE0BF4234&amp;srcid;=4&amp;verno;=1&amp;g;=8737B004D2F6495E62090B21203ACD8D035DB123&amp;scn;=c10&amp;i;=59B01E2CB9D2E7B1B5A83016DF97D4D445BAE247&amp;t;=6&amp;ui;=191942368&amp;ti;=50569010689&amp;s;=356731067&amp;m;=0&amp;n;=01145C8D0C6F72615D3A72D7025B30315D3A76A6025B783236556E853E635D5B3753019402283533395275D36F34292E6D0A47E45F00000000&#39;
-......
-</code></pre>
-<p><strong>现在开始下载吧</strong>，先新建一个目录，比如</p>
-<pre><code>mkdir -p &#39;[澄空学园][C3-魔幻三次方-][01-12][GB][720p MKV][全]&#39;
-cd &#39;[澄空学园][C3-魔幻三次方-][01-12][GB][720p MKV][全]&#39;
-</code></pre>
-<p>然后粘贴入这些命令</p>
-<pre><code> *** Download Progress Summary as of Tue Dec 20 22:10:06 2011 ***               
-================================================================================
-[#1 SIZE:8.7MiB/340.2MiB(2%) CN:5 SPD:170.6KiBs ETA:33m08s]
-FILE: /home/binux/work/lixian.xunlei/[SumiSora][C3][01][GB][x264_aac][720p](5393D704).mkv
---------------------------------------------------------------------------------
-
-[#1 SIZE:11.9MiB/340.2MiB(3%) CN:5 SPD:142.4KiBs ETA:39m20s]
-    SIZE:文件大小，进度      CN:线程数 SPD:速度      ETA:剩余时间
-</code></pre>
-<p>对了，如果如果中间打断一个任务，只要在原来的目录下，再次执行下载命令就可以继续下载了。<br>如果一个任务的连接过多，也可以考虑建一个文件先保存起来，然后sh down.sh这样下载就好了。</p>
-<h3 id="添加资源"><a href="#添加资源" class="headerlink" title="添加资源"></a>添加资源</h3><p>在登录后就可以在右上角找到添加资源的链接啦<br><a target="_blank" rel="noopener" href="http://s0.binux.me/201112/2890/14223_o.png"><img src="http://s0.binux.me/201112/2890/14223_z.png" alt="bar"></a><br><img src="http://s1.binux.me/201112/2890/14225_o.png" alt="add task"><br>当然了，如果觉得麻烦，也可以直接填写链接获得高速下载链接：<br><img src="http://s0.binux.me/201112/2890/14227_o.png" alt="add task 2"></p>
-<p>对了，及时不是发布资源，获得的下载链接依旧可以分享给好友，只需要点击分享按钮，将链接复制给好友就可以了。<br>当然你也可以适用我们的一键分享功能：<br><a target="_blank" rel="noopener" href="http://s3.binux.me/201112/2890/14228_o.png"><img src="http://s3.binux.me/201112/2890/14228_o.png" alt="share"></a></p>
-<h3 id="x3D-x3D-x3D"><a href="#x3D-x3D-x3D" class="headerlink" title="&#x3D;&#x3D;&#x3D;"></a>&#x3D;&#x3D;&#x3D;</h3><p>如果有任何问题，欢迎留言，或<a target="_blank" rel="noopener" href="http://gplus.to/binux">+足兆叉虫</a><br>或者直接提交BUG：<a target="_blank" rel="noopener" href="https://github.com/binux/lixian.xunlei/issues">https://github.com/binux/lixian.xunlei/issues</a></p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -838,6 +762,10 @@ FILE: /home/binux/work/lixian.xunlei/[SumiSora][C3][01][GB][x264_aac][720p](5393
   <ul class="entry">
     
       <li>
+        <a href="/2022/09/cat-planet-bot-part-2-video-capture-and-classification/">猫之城物理钓鱼挂（二）：图像采集以及画面分类</a>
+      </li>
+    
+      <li>
         <a href="/2022/08/cat-planet-bot-part-1-touch-simulation/">猫之城物理钓鱼挂（一）：物理模拟触屏点击</a>
       </li>
     
@@ -851,10 +779,6 @@ FILE: /home/binux/work/lixian.xunlei/[SumiSora][C3][01][GB][x264_aac][720p](5393
     
       <li>
         <a href="/2018/10/girls-frontline-ankulua-vision/">少女前线拖尸脚本 和 生成它的可视化工具</a>
-      </li>
-    
-      <li>
-        <a href="/2018/02/us/">2018 新的冒险</a>
       </li>
     
   </ul>
